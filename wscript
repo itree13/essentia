@@ -47,7 +47,7 @@ def options(ctx):
                    help='debug, release or default')
 
     ctx.add_option('--std', action='store',
-                   dest='STD', default='c++11',
+                   dest='STD', default='c++14',
                    help='C++ standard to compile for [c++11 c++14 c++17 ...]')
 
     ctx.add_option('--arch', action='store',
@@ -118,13 +118,13 @@ def configure(ctx):
     ctx.env.WITH_CPPTESTS = ctx.options.WITH_CPPTESTS
 
     # compiler flags
-    ctx.env.CXXFLAGS = ['-std=' + ctx.options.STD]  # c++11 by default
+    ctx.env.CXXFLAGS = ['/std:' + ctx.options.STD]  # c++11 by default
 
     if sys.platform != 'win32':
         # msvc does not support -pipe
         ctx.env.CXXFLAGS += ['-pipe', '-Wall']
     else:
-        ctx.env.CXXFLAGS += ['-W2', '-EHsc']
+        ctx.env.CXXFLAGS += ['/w', '/EHsc']
 
     # Force using SSE floating point for all x86 platforms (default for 64-bit
     # in gcc) instead of 387 floating point (used for 32-bit in gcc) to avoid
@@ -143,11 +143,17 @@ def configure(ctx):
 
     if ctx.options.MODE == 'debug':
         print ('→ Building in debug mode')
-        ctx.env.CXXFLAGS += ['-g']
+        if sys.platform != 'win32':
+            ctx.env.CXXFLAGS += ['-g']
+        else:
+            ctx.env.CXXFLAGS += ['/Z7', '/FS', '/Od', '/MDd', '/bigobj']
 
     elif ctx.options.MODE == 'release':
         print ('→ Building in release mode')
-        ctx.env.CXXFLAGS += ['-O2']  # '-march=native' ] # '-msse3', '-mfpmath=sse' ]
+        if sys.platform != 'win32':
+            ctx.env.CXXFLAGS += ['-O2']  # '-march=native' ] # '-msse3', '-mfpmath=sse' ]
+        else:
+            ctx.env.CXXFLAGS += ['/FS', '/Ox', '/MD', '/bigobj']
 
     elif ctx.options.MODE == 'default':
         pass
