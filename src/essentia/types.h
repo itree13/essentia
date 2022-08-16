@@ -33,6 +33,32 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 
 
+#include <algorithm>
+#define STD_MAX (std::max)
+#define STD_MIN (std::min)
+
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+namespace std {
+    template <class _Arg, class _Result>
+    struct unary_function { // base class for unary functions
+        using argument_type = _Arg;
+        using result_type = _Result;
+    };
+
+    template <class _Arg1, class _Arg2, class _Result>
+    struct binary_function { // base class for binary functions
+        using first_argument_type = _Arg1;
+        using second_argument_type = _Arg2;
+        using result_type = _Result;
+    };
+}
+#endif
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+
 // fixed-size int types
 
 #ifndef OS_WIN32

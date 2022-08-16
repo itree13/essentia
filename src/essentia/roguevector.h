@@ -52,53 +52,53 @@ class RogueVector : public std::vector<T> {
   }
 
   // Those need to be implementation specific
-  void setData(T* data);
-  void setSize(size_t size);
+  void setData(T* data) {}
+  void setSize(size_t size) {}
 };
 
-// Clang/LLVM implementation
-#if defined(__clang__) || defined(__EMSCRIPTEN__)
+// // Clang/LLVM implementation
+// #if defined(__clang__) || defined(__EMSCRIPTEN__)
 
-// TODO: this is a big hack that relies on clang/libcpp not changing the memory
-//       layout of the std::vector (very dangerous, but works for now...)
+// // TODO: this is a big hack that relies on clang/libcpp not changing the memory
+// //       layout of the std::vector (very dangerous, but works for now...)
 
-template <typename T>
-void RogueVector<T>::setData(T* data) { *reinterpret_cast<T**>(this) = data; }
+// template <typename T>
+// void RogueVector<T>::setData(T* data) { *reinterpret_cast<T**>(this) = data; }
 
-template <typename T>
-void RogueVector<T>::setSize(size_t size) {
-    T** start = reinterpret_cast<T**>(this);
-    *(start+1) = *start + size;
-    *(start+2) = *start + size;
-}
+// template <typename T>
+// void RogueVector<T>::setSize(size_t size) {
+//     T** start = reinterpret_cast<T**>(this);
+//     *(start+1) = *start + size;
+//     *(start+2) = *start + size;
+// }
 
-// Linux implementation
-#elif defined(OS_LINUX) || defined(OS_MINGW)
+// // Linux implementation
+// #elif defined(OS_LINUX) || defined(OS_MINGW)
 
-template <typename T>
-void RogueVector<T>::setData(T* data) { this->_M_impl._M_start = data; }
+// template <typename T>
+// void RogueVector<T>::setData(T* data) { this->_M_impl._M_start = data; }
 
-template <typename T>
-void RogueVector<T>::setSize(size_t size) {
-  this->_M_impl._M_finish = this->_M_impl._M_start + size;
-  this->_M_impl._M_end_of_storage = this->_M_impl._M_start + size;
-}
+// template <typename T>
+// void RogueVector<T>::setSize(size_t size) {
+//   this->_M_impl._M_finish = this->_M_impl._M_start + size;
+//   this->_M_impl._M_end_of_storage = this->_M_impl._M_start + size;
+// }
 
-// Windows implementation
-#elif defined(OS_WIN32)
+// // Windows implementation
+// #elif defined(OS_WIN32)
 
-template <typename T>
-void RogueVector<T>::setData(T* data) {
-  this->_Myfirst() = data;
-}
+// template <typename T>
+// void RogueVector<T>::setData(T* data) {
+//   this->_Myfirst() = data;
+// }
 
-template <typename T>
-void RogueVector<T>::setSize(size_t size) {
-  this->_Mylast() = this->_Myfirst() + size;
-  this->_Myend() = this->_Myfirst() + size;
-}
+// template <typename T>
+// void RogueVector<T>::setSize(size_t size) {
+//   this->_Mylast() = this->_Myfirst() + size;
+//   this->_Myend() = this->_Myfirst() + size;
+// }
 
-#endif
+// #endif
 
 } // namespace essentia
 
