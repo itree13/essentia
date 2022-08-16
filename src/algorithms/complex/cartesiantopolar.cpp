@@ -44,18 +44,18 @@ const char* CartesianToPolar::description = DOC("This algorithm converts an arra
 
 void CartesianToPolar::compute() {
 
-  const std::vector<std::complex<Real> >& c = _complex.get();
-  std::vector<Real>& magnitude = _magnitude.get();
-  std::vector<Real>& phase = _phase.get();
+  const ::essentia::VectorEx<std::complex<Real> >& c = _complex.get();
+  ::essentia::VectorEx<Real>& magnitude = _magnitude.get();
+  ::essentia::VectorEx<Real>& phase = _phase.get();
 
   magnitude.resize(c.size());
   phase.resize(c.size());
 
-  for (std::vector<Real>::size_type i=0; i<magnitude.size(); i++) {
+  for (::essentia::VectorEx<Real>::size_type i=0; i<magnitude.size(); i++) {
     magnitude[i] = sqrt(c[i].real()*c[i].real() + c[i].imag()*c[i].imag());
   }
 
-  for (std::vector<Real>::size_type i=0; i<phase.size(); i++) {
+  for (::essentia::VectorEx<Real>::size_type i=0; i<phase.size(); i++) {
     phase[i] = atan2(c[i].imag(), c[i].real());
   }
 }

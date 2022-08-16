@@ -32,11 +32,11 @@ class SprModelAnal : public Algorithm {
 
  protected:
 
-  Input<std::vector<Real> > _frame;
-  Output<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _frequencies;
-  Output<std::vector<Real> > _phases;
-  Output<std::vector<Real> >_res;
+  Input<::essentia::VectorEx<Real> > _frame;
+  Output<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _frequencies;
+  Output<::essentia::VectorEx<Real> > _phases;
+  Output<::essentia::VectorEx<Real> >_res;
 
   int _stocSize;
   Algorithm* _window;
@@ -112,11 +112,11 @@ class SprModelAnal : public StreamingAlgorithmWrapper {
 
  protected:
   
-  Sink<std::vector<Real> > _frame; // input
-  Source<std::vector<Real> > _frequencies;
-  Source<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _phases;
-  Source<std::vector<Real> > _res;
+  Sink<::essentia::VectorEx<Real> > _frame; // input
+  Source<::essentia::VectorEx<Real> > _frequencies;
+  Source<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _phases;
+  Source<::essentia::VectorEx<Real> > _res;
 
  public:
   SprModelAnal() {

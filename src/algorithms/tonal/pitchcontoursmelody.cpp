@@ -100,13 +100,13 @@ void PitchContoursMelody::configure() {
 
 void PitchContoursMelody::compute() {
 
-  const vector<vector<Real> >& contoursBins = _contoursBins.get();
-  const vector<vector<Real> >& contoursSaliences = _contoursSaliences.get();
-  const vector<Real>& contoursStartTimes = _contoursStartTimes.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins = _contoursBins.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursSaliences = _contoursSaliences.get();
+  const ::essentia::VectorEx<Real>& contoursStartTimes = _contoursStartTimes.get();
   const Real& duration = _duration.get();
 
-  vector <Real>& pitch = _pitch.get();
-  vector <Real>& pitchConfidence = _pitchConfidence.get();
+  ::essentia::VectorEx<Real>& pitch = _pitch.get();
+  ::essentia::VectorEx<Real>& pitchConfidence = _pitchConfidence.get();
 
   // do sanity checks
 
@@ -217,7 +217,7 @@ void PitchContoursMelody::compute() {
   }
 }
 
-bool PitchContoursMelody::detectVoiceVibrato(vector<Real> contourBins, const Real binMean) {
+bool PitchContoursMelody::detectVoiceVibrato(::essentia::VectorEx<Real> contourBins, const Real binMean) {
 
   /*
     Algorithm details are taken from personal communication with Justin Salamon. There should be only one (and it should be
@@ -240,20 +240,20 @@ bool PitchContoursMelody::detectVoiceVibrato(vector<Real> contourBins, const Rea
 
   // apply FFT and check for a prominent peak in the expected frequency range for human vibrato (5-8Hz)
 
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   _frameCutter->input("signal").set(contourBins);
   _frameCutter->output("frame").set(frame);
 
-  vector<Real> frameWindow;
+  ::essentia::VectorEx<Real> frameWindow;
   _windowing->input("frame").set(frame);
   _windowing->output("frame").set(frameWindow);
 
-  vector<Real> vibratoSpectrum;
+  ::essentia::VectorEx<Real> vibratoSpectrum;
   _spectrum->input("frame").set(frameWindow);
   _spectrum->output("spectrum").set(vibratoSpectrum);
 
-  vector<Real> peakFrequencies;
-  vector<Real> peakMagnitudes;
+  ::essentia::VectorEx<Real> peakFrequencies;
+  ::essentia::VectorEx<Real> peakMagnitudes;
   _spectralPeaks->input("spectrum").set(vibratoSpectrum);
   _spectralPeaks->output("frequencies").set(peakFrequencies);
   _spectralPeaks->output("magnitudes").set(peakMagnitudes);
@@ -303,9 +303,9 @@ bool PitchContoursMelody::detectVoiceVibrato(vector<Real> contourBins, const Rea
   return false;
 }
 
-void PitchContoursMelody::voicingDetection(const vector<vector<Real> >& contoursBins,
-                                           const vector<vector<Real> >& contoursSaliences,
-                                           const vector<Real>& contoursStartTimes) {
+void PitchContoursMelody::voicingDetection(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins,
+                                           const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursSaliences,
+                                           const ::essentia::VectorEx<Real>& contoursStartTimes) {
 
   _contoursStartIndices.resize(_numberContours);
   _contoursEndIndices.resize(_numberContours);
@@ -317,8 +317,8 @@ void PitchContoursMelody::voicingDetection(const vector<vector<Real> >& contours
   _contoursSelected.clear();
   _contoursIgnored.clear();
 
-  vector<Real> contoursBinsMin;
-  vector<Real> contoursBinsMax;
+  ::essentia::VectorEx<Real> contoursBinsMin;
+  ::essentia::VectorEx<Real> contoursBinsMax;
   contoursBinsMin.resize(_numberContours);
   contoursBinsMax.resize(_numberContours);
 
@@ -358,7 +358,7 @@ void PitchContoursMelody::voicingDetection(const vector<vector<Real> >& contours
   _contoursIgnoredInitially = _contoursIgnored;
 }
 
-void PitchContoursMelody::computeMelodyPitchMean(const vector<vector<Real> >& contoursBins) {
+void PitchContoursMelody::computeMelodyPitchMean(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins) {
 
   /*
     Additional suggestion by Justin Salamon: implement a soft bias against the lowest frequencies:
@@ -367,7 +367,7 @@ void PitchContoursMelody::computeMelodyPitchMean(const vector<vector<Real> >& co
     80Hz for the minimum frequency allowed for salience peaks. Therefore the bias is not implemented.
   */
 
-  vector<Real> melodyPitchMeanSmoothed;
+  ::essentia::VectorEx<Real> melodyPitchMeanSmoothed;
   Real sumSalience;
 
   // compute melody pitch mean (weighted mean for all present contours) for each frame
@@ -415,10 +415,10 @@ void PitchContoursMelody::computeMelodyPitchMean(const vector<vector<Real> >& co
   _melodyPitchMean.resize(_numberFrames + _averagerShift, _melodyPitchMean.back());
   _melodyPitchMean.insert(_melodyPitchMean.begin(), _averagerShift, _melodyPitchMean.front());
   _movingAverage->compute();
-  _melodyPitchMean = vector<Real>(melodyPitchMeanSmoothed.begin() + 2*_averagerShift, melodyPitchMeanSmoothed.end());
+  _melodyPitchMean = ::essentia::VectorEx<Real>(melodyPitchMeanSmoothed.begin() + 2*_averagerShift, melodyPitchMeanSmoothed.end());
 }
 
-void PitchContoursMelody::detectContourDuplicates(const vector<vector<Real> >& contoursBins) {
+void PitchContoursMelody::detectContourDuplicates(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins) {
   /*
     To compare contour trajectories we compute the distance between their pitch values on a per-frame basis for the
     region in which they overlap, and compute the mean over this region. If the mean distance is within 1200+-50 cents,
@@ -493,7 +493,7 @@ void PitchContoursMelody::removeContourDuplicates() {
   _contoursIgnored = _contoursIgnoredInitially;
 
   // compute average melody pitch mean on the intervals corresponding to all contours
-  vector<Real> contoursMelodyPitchMean;
+  ::essentia::VectorEx<Real> contoursMelodyPitchMean;
   contoursMelodyPitchMean.resize(_numberContours);
   for (size_t i=0; i<_contoursSelected.size(); i++) {
     size_t ii = _contoursSelected[i];
@@ -528,7 +528,7 @@ void PitchContoursMelody::removePitchOutliers() {
   // compute average melody pitch mean on the intervals corresponding to all contour
   // remove pitch outliers by deleting contours at a distance more that one octave from melody pitch mean
 
-  for (std::vector<size_t>::iterator iter = _contoursSelected.begin(); iter != _contoursSelected.end();) {
+  for (::essentia::VectorEx<size_t>::iterator iter = _contoursSelected.begin(); iter != _contoursSelected.end();) {
     size_t ii = *iter;
     Real contourMelodyPitchMean = accumulate(_melodyPitchMean.begin() + _contoursStartIndices[ii], _melodyPitchMean.begin() + _contoursEndIndices[ii] + 1, 0.0);
     contourMelodyPitchMean /= (_contoursEndIndices[ii] - _contoursStartIndices[ii] + 1);

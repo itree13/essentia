@@ -45,7 +45,7 @@ void PCA::compute() {
   // get data from the pool
   string nameIn = parameter("namespaceIn").toString();
   string nameOut = parameter("namespaceOut").toString();
-  vector<vector<Real> > rawFeats = poolIn.value<vector<vector<Real> > >(nameIn);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > rawFeats = poolIn.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(nameIn);
 
   // how many dimensions are there?
   int bands = rawFeats[0].size();
@@ -55,7 +55,7 @@ void PCA::compute() {
   // and more maintainable to use an algorithm that computes covariance.
   // Using singleGaussian algo seems to give slightly different results for variances (8 decimal places)
   Array2D<Real> matrix, covMatrix, icov;
-  vector<Real> means;
+  ::essentia::VectorEx<Real> means;
   matrix = vecvecToArray2D(rawFeats);
   Algorithm* sg = AlgorithmFactory::create("SingleGaussian");
   sg->input("matrix").set(matrix);
@@ -92,7 +92,7 @@ void PCA::compute() {
   // transform all the frames and add to the output
   Array2D<Real> featVector(1,bands, 0.0);
   Array2D<Real> outFeatVector(1,requiredDimensions, 0.0);
-  vector<Real> results = vector<Real>(requiredDimensions, 0.0);
+  ::essentia::VectorEx<Real> results = ::essentia::VectorEx<Real>(requiredDimensions, 0.0);
   for (int row=0; row<nFrames; row++) {
     for (int col=0; col<bands; col++) {
       featVector[0][col] = rawFeats[row][col];

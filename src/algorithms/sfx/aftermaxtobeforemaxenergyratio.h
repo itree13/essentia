@@ -28,7 +28,7 @@ namespace standard {
 class AfterMaxToBeforeMaxEnergyRatio : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _pitch;
+  Input<::essentia::VectorEx<Real> > _pitch;
   Output<Real> _afterMaxToBeforeMaxEnergyRatio;
 
  public:
@@ -60,7 +60,7 @@ class AfterMaxToBeforeMaxEnergyRatio : public Algorithm {
   Sink<Real> _pitch;
   Source<Real> _afterMaxToBeforeMaxEnergyRatio;
 
-  std::vector<Real> _accu;
+  ::essentia::VectorEx<Real> _accu;
 
  public:
   AfterMaxToBeforeMaxEnergyRatio() {

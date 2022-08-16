@@ -29,9 +29,9 @@ namespace standard {
 class PitchMelodia : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _pitch;
-  Output<std::vector<Real> > _pitchConfidence;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _pitch;
+  Output<::essentia::VectorEx<Real> > _pitchConfidence;
 
   // Pre-processing
   Algorithm* _frameCutter;
@@ -140,8 +140,8 @@ class PitchMelodia : public AlgorithmComposite {
   standard::Algorithm* _pitchContoursMelody;
 
   SinkProxy<Real> _signal;
-  Source<std::vector<Real> > _pitch;
-  Source<std::vector<Real> > _pitchConfidence;
+  Source<::essentia::VectorEx<Real> > _pitch;
+  Source<::essentia::VectorEx<Real> > _pitchConfidence;
 
   Pool _pool;
   Algorithm* _poolStorageBins;

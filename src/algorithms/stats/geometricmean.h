@@ -28,7 +28,7 @@ namespace standard {
 class GeometricMean : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _geometricMean;
 
  public:
@@ -58,7 +58,7 @@ namespace streaming {
 class GeometricMean : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _geometricMean;
 
  public:

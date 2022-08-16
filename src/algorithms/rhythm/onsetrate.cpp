@@ -63,28 +63,28 @@ void OnsetRate::configure() {
 }
 
 void OnsetRate::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& onsetRate = _onsetRate.get();
-  vector<Real>& onsetTimes = _onsetTimes.get();
+  ::essentia::VectorEx<Real>& onsetTimes = _onsetTimes.get();
   if (signal.empty()) {
     throw EssentiaException("OnsetRate: empty input signal");
   }
 
   // Pre-processing
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   _frameCutter->input("signal").set(signal);
   _frameCutter->output("frame").set(frame);
 
-  vector<Real> frameWindowed;
+  ::essentia::VectorEx<Real> frameWindowed;
   _windowing->input("frame").set(frame);
   _windowing->output("frame").set(frameWindowed);
 
-  vector<complex<Real> > frameFFT;
+  ::essentia::VectorEx<complex<Real> > frameFFT;
   _fft->input("frame").set(frameWindowed);
   _fft->output("fft").set(frameFFT);
 
-  vector<Real> frameSpectrum;
-  vector<Real> framePhase;
+  ::essentia::VectorEx<Real> frameSpectrum;
+  ::essentia::VectorEx<Real> framePhase;
   _cartesian2polar->input("complex").set(frameFFT);
   _cartesian2polar->output("magnitude").set(frameSpectrum);
   _cartesian2polar->output("phase").set(framePhase);
@@ -99,8 +99,8 @@ void OnsetRate::compute() {
   _onsetComplex->input("phase").set(framePhase);
   _onsetComplex->output("onsetDetection").set(frameComplex);
 
-  vector<Real> hfc;
-  vector<Real> complexdomain;
+  ::essentia::VectorEx<Real> hfc;
+  ::essentia::VectorEx<Real> complexdomain;
 
   while (true) {
     // get a frame
@@ -138,7 +138,7 @@ void OnsetRate::compute() {
     detections[1][j] = complexdomain[j];
   }
 
-  vector<Real> weights(2);
+  ::essentia::VectorEx<Real> weights(2);
   weights[0] = 1.0;
   weights[1] = 1.0;
 
@@ -252,11 +252,11 @@ void OnsetRate::configure() {
 AlgorithmStatus OnsetRate::process() {
   if (!shouldStop()) return PASS;
 
-  const vector<Real>& hfc = _pool.value<vector<Real> >("internal.hfc");
-  const vector<Real>& complexdomain = _pool.value<vector<Real> >("internal.complexdomain");
+  const ::essentia::VectorEx<Real>& hfc = _pool.value<::essentia::VectorEx<Real> >("internal.hfc");
+  const ::essentia::VectorEx<Real>& complexdomain = _pool.value<::essentia::VectorEx<Real> >("internal.complexdomain");
   // Time onsets
   TNT::Array2D<Real> detections;
-  vector<Real> onsetTimes;
+  ::essentia::VectorEx<Real> onsetTimes;
   detections = TNT::Array2D<Real>(2, hfc.size());
 
   for (int j=0; j<int(hfc.size()); j++) {
@@ -264,7 +264,7 @@ AlgorithmStatus OnsetRate::process() {
     detections[1][j] = complexdomain[j];
   }
 
-  vector<Real> weights(2);
+  ::essentia::VectorEx<Real> weights(2);
   weights[0] = 1.0;
   weights[1] = 1.0;
 

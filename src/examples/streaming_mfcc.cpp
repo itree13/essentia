@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
   aggr->output("output").set(aggrPool);
   aggr->compute();
 
-  aggrPool.merge("lowlevel.mfcc.frames", pool.value<vector<vector<Real> > >("lowlevel.mfcc"));
+  aggrPool.merge("lowlevel.mfcc.frames", pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("lowlevel.mfcc"));
 
   // write results to file
   cout << "-------- writing results to file " << outputFilename << " --------" << endl;

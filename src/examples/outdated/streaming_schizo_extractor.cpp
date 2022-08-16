@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
   if (computeSegmentation) {
     computeReplayGain(audioFilename, startTime, endTime, pool, oldPool, options);
     computeSegments(audioFilename, startTime, endTime, pool, oldPool, options);
-    vector<Real> segments = pool.value<vector<Real> >("segmentation.timestamps");
+    ::essentia::VectorEx<Real> segments = pool.value<::essentia::VectorEx<Real> >("segmentation.timestamps");
     for (int i=0; i<int(segments.size()-1); ++i) {
       Real start = segments[i];
       Real end = segments[i+1];
@@ -140,7 +140,7 @@ int main(int argc, char* argv[]) {
 
       // set segment scope
       ns.str(""); ns << "segments." << sn << ".scope";
-      vector<Real> scope(2, 0);
+      ::essentia::VectorEx<Real> scope(2, 0);
       scope[0] = start;
       scope[1] = end;
       pool.set(ns.str(), scope);
@@ -204,9 +204,9 @@ void computeSegments(const string& audioFilename, Real startTime, Real endTime, 
   // compute low level features to feed SBIc
   computeLowLevel(audioFilename, startTime, endTime, pool, oldPool, options);
 
-  vector<vector<Real> > features;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > features;
   try {
-    features = pool.value<vector<vector<Real> > >("lowlevel.mfcc");
+    features = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("lowlevel.mfcc");
   }
   catch(const EssentiaException&) {
     cout << "Error: could not find MFCC features in low level pool. Aborting..." << endl;
@@ -223,7 +223,7 @@ void computeSegments(const string& audioFilename, Real startTime, Real endTime, 
   standard::Algorithm* sbic = standard::AlgorithmFactory::create("SBic", "size1", size1, "inc1", inc1,
                                                                  "size2", size2, "inc2", inc2, "cpw", cpw,
                                                                  "minLength", minimumSegmentsLength);
-  vector<Real> segments;
+  ::essentia::VectorEx<Real> segments;
   sbic->input("features").set(featuresArray);
   sbic->output("segmentation").set(segments);
   sbic->compute();
@@ -342,7 +342,7 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime,
   Real analysisSampleRate = options.value<Real>("analysisSampleRate");
   //Real analysisSampleRate = 44100;
 
-  const vector<string>& desc = pool.descriptorNames();
+  const ::essentia::VectorEx<string>& desc = pool.descriptorNames();
   if (find(desc.begin(), desc.end(), "metadata.audio_properties.replay_gain") != desc.end()) {
     replayGain = pool.value<Real>("metadata.audio_properties.replay_gain");
   }
@@ -461,7 +461,7 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime,
   // check if we processed enough audio for it to be useful, in particular did
   // we manage to get an estimation for the loudness (2 seconds required)
   try {
-    pool.value<vector<Real> >(llspace + "loudness");
+    pool.value<::essentia::VectorEx<Real> >(llspace + "loudness");
   }
   catch (EssentiaException&) {
     cout << "ERROR: File is too short (< 2sec)... Aborting..." << endl;
@@ -469,11 +469,11 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime,
   }
 
   // compute onset rate = len(onsets) / len(audio)
-  pool.set(rhythmspace + "onset_rate", pool.value<vector<Real> >(rhythmspace + "onset_times").size()
+  pool.set(rhythmspace + "onset_rate", pool.value<::essentia::VectorEx<Real> >(rhythmspace + "onset_times").size()
                                        / (Real)audio_2->output("audio").totalProduced()
                                        * pool.value<Real>("metadata.audio_properties.analysis_sample_rate"));
 
-  oldPool.set(rhythmspace + "onset_rate", oldPool.value<vector<Real> >(rhythmspace + "onset_times").size()
+  oldPool.set(rhythmspace + "onset_rate", oldPool.value<::essentia::VectorEx<Real> >(rhythmspace + "onset_times").size()
                                           / (Real)audio_2->output("audio").totalProduced()
                                           * oldPool.value<Real>("metadata.audio_properties.analysis_sample_rate"));
 }
@@ -489,7 +489,7 @@ void computeMidLevel(const string& audioFilename, Real startTime, Real endTime,
   Real replayGain = 0;
   Real analysisSampleRate = options.value<Real>("analysisSampleRate");
   //Real analysisSampleRate = 44100;
-  const vector<string>& desc = pool.descriptorNames();
+  const ::essentia::VectorEx<string>& desc = pool.descriptorNames();
   if (find(desc.begin(), desc.end(), "metadata.audio_properties.replay_gain") != desc.end()) {
     replayGain = pool.value<Real>("metadata.audio_properties.replay_gain");
   }
@@ -535,7 +535,7 @@ void computeMidLevel(const string& audioFilename, Real startTime, Real endTime,
   // Compute the loudness at the beats position (needed beats position)
   string rhythmspace = "rhythm.";
   if (!nspace.empty()) rhythmspace = nspace + ".rhythm.";
-  vector<Real> ticks = pool.value<vector<Real> >(rhythmspace + "beats_position");
+  ::essentia::VectorEx<Real> ticks = pool.value<::essentia::VectorEx<Real> >(rhythmspace + "beats_position");
 
   Algorithm* beatsLoudness = factory.create("BeatsLoudness",
                                             "sampleRate", analysisSampleRate,
@@ -546,7 +546,7 @@ void computeMidLevel(const string& audioFilename, Real startTime, Real endTime,
   connect(beatsLoudness->output("loudnessBandRatio"), pool, rhythmspace + "beats_loudness_band_ratio");
 
 
-  vector<Real> neqticks = oldPool.value<vector<Real> >(rhythmspace + "beats_position");
+  ::essentia::VectorEx<Real> neqticks = oldPool.value<::essentia::VectorEx<Real> >(rhythmspace + "beats_position");
 
   Algorithm* beatsLoudness2 = factory.create("BeatsLoudness",
                                              "sampleRate", analysisSampleRate,
@@ -627,7 +627,7 @@ void computeAggregation(Pool& pool, const Pool& options, const string& outputFil
   const char* value[] = { "copy" };
 
 
-  map<string, vector<string> > exceptions;
+  map<string, ::essentia::VectorEx<string> > exceptions;
   exceptions["lowlevel.mfcc"] = arrayToVector<string>(mfccStats);
 
   // in case there is segmentation:

@@ -31,14 +31,14 @@ class VectorInput : public Algorithm {
  protected:
   Source<TokenType> _output;
 
-  const std::vector<TokenType>* _inputVector;
+  const ::essentia::VectorEx<TokenType>* _inputVector;
   bool _ownVector;
   int _idx;
   int _acquireSize;
 
  public:
 
-  VectorInput(const std::vector<TokenType>* input=0, bool own = false)
+  VectorInput(const ::essentia::VectorEx<TokenType>* input=0, bool own = false)
     : _inputVector(input), _ownVector(own) {
     setName("VectorInput");
     setAcquireSize(acquireSize);
@@ -46,7 +46,7 @@ class VectorInput : public Algorithm {
     reset();
   }
 
-  VectorInput(std::vector<TokenType>* input, bool own = false)
+  VectorInput(::essentia::VectorEx<TokenType>* input, bool own = false)
     : _inputVector(input), _ownVector(own) {
     setName("VectorInput");
     setAcquireSize(acquireSize);
@@ -57,7 +57,7 @@ class VectorInput : public Algorithm {
   template <typename Array>
   VectorInput(const Array& inputArray, bool own = true) {
     setName("VectorInput");
-    _inputVector = new std::vector<TokenType>(arrayToVector<TokenType>(inputArray));
+    _inputVector = new ::essentia::VectorEx<TokenType>(arrayToVector<TokenType>(inputArray));
     _ownVector = true;
     setAcquireSize(acquireSize);
     declareOutput(_output, _acquireSize, "data", "the values read from the vector");
@@ -72,7 +72,7 @@ class VectorInput : public Algorithm {
     setName("VectorInput");
 
     // convert TNT array to vector-vector
-    std::vector<TokenType>* inputVector = new std::vector<TokenType>();
+    ::essentia::VectorEx<TokenType>* inputVector = new ::essentia::VectorEx<TokenType>();
     inputVector->resize(input.dim1());
 
     for (int i=0; i<input.dim1(); ++i) {
@@ -101,7 +101,7 @@ class VectorInput : public Algorithm {
   /**
    * TODO: Should we make a copy of the vector here or only keep the ref?
    */
-  void setVector(const std::vector<TokenType>* input, bool own=false) {
+  void setVector(const ::essentia::VectorEx<TokenType>* input, bool own=false) {
     clear();
     _inputVector = input;
     _ownVector = own;
@@ -190,7 +190,7 @@ void operator>>(VectorInput<T>& v, SinkBase& sink) {
 // TODO: in order to use this function runGenerator should be able to be called
 // with a vector
 template <typename T>
-void connect(std::vector<T>& v, SinkBase& sink) {
+void connect(::essentia::VectorEx<T>& v, SinkBase& sink) {
   VectorInput<T>* vectorInput = new VectorInput<T>(&v);
 
   // optimize acquire/release sizes to seldom sink's sizes
@@ -205,7 +205,7 @@ void connect(std::vector<T>& v, SinkBase& sink) {
 }
 
 template <typename T>
-void operator>>(std::vector<T>& v, SinkBase& sink) {
+void operator>>(::essentia::VectorEx<T>& v, SinkBase& sink) {
   connect(v, sink);
 }
 

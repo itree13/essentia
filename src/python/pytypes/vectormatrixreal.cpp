@@ -24,7 +24,7 @@ using namespace essentia;
 DEFINE_PYTHON_TYPE(VectorMatrixReal);
 
 
-PyObject* VectorMatrixReal::toPythonCopy(const vector<TNT::Array2D<Real> >* matVec) {
+PyObject* VectorMatrixReal::toPythonCopy(const ::essentia::VectorEx<TNT::Array2D<Real> >* matVec) {
   int size = matVec->size();
   PyObject* result = PyList_New(size);
 
@@ -61,7 +61,7 @@ void* VectorMatrixReal::fromPythonCopy(PyObject* obj) {
   }
 
   int size = PyList_Size(obj);
-  vector<TNT::Array2D<Real> >* v = new vector<TNT::Array2D<Real> >(size);
+  ::essentia::VectorEx<TNT::Array2D<Real> >* v = new ::essentia::VectorEx<TNT::Array2D<Real> >(size);
 
   for (int i=0; i<size; ++i) {
     TNT::Array2D<Real>* mat;

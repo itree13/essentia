@@ -28,7 +28,7 @@ namespace standard {
 class Meter : public Algorithm {
 
  private:
-  Input<std::vector<std::vector<Real> > > _beatogram;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _beatogram;
   Output<Real> _meter;
 
  public:
@@ -64,7 +64,7 @@ namespace streaming {
 class Meter : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::vector<Real> > > _beatogram;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _beatogram;
   Source<Real> _meter;
 
  public:

@@ -29,7 +29,7 @@ namespace standard {
 class Key : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _pcp;
+  Input<::essentia::VectorEx<Real> > _pcp;
 
   Output<std::string> _key;
   Output<std::string> _scale;
@@ -70,13 +70,13 @@ protected:
     MAJMIN = 2
   };
 
-  std::vector<Real> _m;
-  std::vector<Real> _M;
-  std::vector<Real> _O;
+  ::essentia::VectorEx<Real> _m;
+  ::essentia::VectorEx<Real> _M;
+  ::essentia::VectorEx<Real> _O;
 
-  std::vector<Real> _profile_doM;
-  std::vector<Real> _profile_dom;
-  std::vector<Real> _profile_doO;
+  ::essentia::VectorEx<Real> _profile_doM;
+  ::essentia::VectorEx<Real> _profile_dom;
+  ::essentia::VectorEx<Real> _profile_doO;
 
   Real _mean_profile_M;
   Real _mean_profile_m;
@@ -90,13 +90,13 @@ protected:
   int _numHarmonics;
   std::string _profileType;
 
-  std::vector<std::string> _keys;
+  ::essentia::VectorEx<std::string> _keys;
   bool _useMajMin;
 
-  Real correlation(const std::vector<Real>& v1, const Real mean1, const Real std1, const std::vector<Real>& v2, const Real mean2, const Real std2, const int shift) const;
-  void addContributionHarmonics(const int pitchclass, const Real contribution, std::vector<Real>& M_chords) const;
-  void addMajorTriad(const int root, const Real contribution, std::vector<Real>& M_chords) const;
-  void addMinorTriad(int root, Real contribution, std::vector<Real>& M_chords) const;
+  Real correlation(const ::essentia::VectorEx<Real>& v1, const Real mean1, const Real std1, const ::essentia::VectorEx<Real>& v2, const Real mean2, const Real std2, const int shift) const;
+  void addContributionHarmonics(const int pitchclass, const Real contribution, ::essentia::VectorEx<Real>& M_chords) const;
+  void addMajorTriad(const int root, const Real contribution, ::essentia::VectorEx<Real>& M_chords) const;
+  void addMinorTriad(int root, Real contribution, ::essentia::VectorEx<Real>& M_chords) const;
   void resize(int size);
 };
 
@@ -111,7 +111,7 @@ namespace streaming {
 
 class Key : public AlgorithmComposite {
  protected:
-  Sink<std::vector<Real> > _pcp;
+  Sink<::essentia::VectorEx<Real> > _pcp;
 
   Source<std::string> _key;
   Source<std::string> _scale;
@@ -124,9 +124,9 @@ class Key : public AlgorithmComposite {
   bool _averageDetuningCorrection;
   Real _pcpThreshold;
 
-  void normalizePcpPeak(std::vector<Real>& pcp);
-  void pcpGate(std::vector<Real>& pcp, Real threshold);
-  void shiftPcp(std::vector<Real>& pcp);
+  void normalizePcpPeak(::essentia::VectorEx<Real>& pcp);
+  void pcpGate(::essentia::VectorEx<Real>& pcp, Real threshold);
+  void shiftPcp(::essentia::VectorEx<Real>& pcp);
 
 
  public:

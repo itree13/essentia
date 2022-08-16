@@ -36,12 +36,12 @@ void Beatogram::configure() {
 }
 
 void Beatogram::compute() {
-  const vector<Real>& loudness = _loudness.get();
-  const vector<vector<Real> >& loudnessBand = _loudnessBandRatio.get();
-  vector<vector<Real> >& beatogram = _beatogram.get();
+  const ::essentia::VectorEx<Real>& loudness = _loudness.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& loudnessBand = _loudnessBandRatio.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& beatogram = _beatogram.get();
   int nticks = loudnessBand.size();
-  vector<Real> meanRatiosPerTick(nticks, 0.0);
-  vector<Real> medianRatiosPerTick(nticks, 0.0);
+  ::essentia::VectorEx<Real> meanRatiosPerTick(nticks, 0.0);
+  ::essentia::VectorEx<Real> medianRatiosPerTick(nticks, 0.0);
   for (int i=0; i<nticks; i++) {
     meanRatiosPerTick[i] = mean(loudnessBand[i]);
     medianRatiosPerTick[i] = median(loudnessBand[i]);
@@ -50,15 +50,15 @@ void Beatogram::compute() {
   beatogram = transpose(loudnessBand);
   int nbands = beatogram.size();
   // compute mean ratios for each tick around a window of 16 beats:
-  vector<vector<Real> > meanRatiosPerBand(nbands, vector<Real>(nticks));
-  vector<vector<Real> > medianRatiosPerBand(nbands, vector<Real>(nticks));
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > meanRatiosPerBand(nbands, ::essentia::VectorEx<Real>(nticks));
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > medianRatiosPerBand(nbands, ::essentia::VectorEx<Real>(nticks));
   for (int iBand=0; iBand<nbands; iBand++) {
     for (int iTick=0; iTick<nticks; iTick++) {
       int start = max(0, iTick - _windowSize/2);
       int end = min(nticks, start + _windowSize);
       if (end == nticks) start = end-_windowSize;
-      const vector<Real>& band = beatogram[iBand];
-      vector<Real> window(band.begin()+start, band.begin()+end);
+      const ::essentia::VectorEx<Real>& band = beatogram[iBand];
+      ::essentia::VectorEx<Real> window(band.begin()+start, band.begin()+end);
       meanRatiosPerBand[iBand][iTick] = mean(window);
       medianRatiosPerBand[iBand][iTick] = median(window);
     }

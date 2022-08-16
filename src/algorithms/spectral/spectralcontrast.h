@@ -28,10 +28,10 @@ namespace standard {
 class SpectralContrast : public Algorithm {
 
 protected:
-  Input<std::vector<Real> >   _spectrum;
-  Output<std::vector<Real> >  _spectralcontrast;
-  Output<std::vector<Real> >  _valleys;
-  std::vector<int>            _numberOfBinsInBands;
+  Input<::essentia::VectorEx<Real> >   _spectrum;
+  Output<::essentia::VectorEx<Real> >  _spectralcontrast;
+  Output<::essentia::VectorEx<Real> >  _valleys;
+  ::essentia::VectorEx<int>            _numberOfBinsInBands;
   Real                        _neighbourRatio;
   int                         _startAtBin;
   int                         _frameSize;
@@ -74,10 +74,10 @@ namespace streaming {
 class SpectralContrast : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> >    _spectrum;
-  Source<std::vector<Real> >  _spectralcontrast;
-  Source<std::vector<Real> >  _valleys;
-  std::vector<Real>           _numberOfBinsInBands;
+  Sink<::essentia::VectorEx<Real> >    _spectrum;
+  Source<::essentia::VectorEx<Real> >  _spectralcontrast;
+  Source<::essentia::VectorEx<Real> >  _valleys;
+  ::essentia::VectorEx<Real>           _numberOfBinsInBands;
   Real                        _neighbourRatio;
   int                         _startAtBin;
 

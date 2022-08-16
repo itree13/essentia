@@ -28,7 +28,7 @@ namespace standard {
 class DistributionShape : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _centralMoments;
+  Input<::essentia::VectorEx<Real> > _centralMoments;
   Output<Real> _spread;
   Output<Real> _skewness;
   Output<Real> _kurtosis;
@@ -62,7 +62,7 @@ namespace streaming {
 class DistributionShape : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _centralMoments;
+  Sink<::essentia::VectorEx<Real> > _centralMoments;
   Source<Real> _skewness;
   Source<Real> _spread;
   Source<Real> _kurtosis;

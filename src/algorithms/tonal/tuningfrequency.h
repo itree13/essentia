@@ -28,8 +28,8 @@ namespace standard {
 class TuningFrequency : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _magnitudes;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
   Output<Real> _tuningCents;
   Output<Real> _tuningFrequency;
 
@@ -64,8 +64,8 @@ class TuningFrequency : public Algorithm {
 
  protected:
   Real _resolution;
-  std::vector<Real> _histogram;
-  std::vector<Real> _globalHistogram;
+  ::essentia::VectorEx<Real> _histogram;
+  ::essentia::VectorEx<Real> _globalHistogram;
 
   Real currentTuningCents() const;
   Real tuningFrequencyFromCents(Real cents) const;
@@ -83,8 +83,8 @@ namespace streaming {
 class TuningFrequency : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _magnitudes;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
   Source<Real> _tuningCents;
   Source<Real> _tuningFrequency;
 

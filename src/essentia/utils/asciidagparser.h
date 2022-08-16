@@ -45,27 +45,27 @@ class AsciiDAGParser {
   /**
    * Return the node names. They are sorted lexicographically.
    */
-  const std::vector<std::string>& nodes() const { return _nodes; }
+  const ::essentia::VectorEx<std::string>& nodes() const { return _nodes; }
 
 
   /**
    * Return the edges. They are sorted lexicographically.
    */
-  const std::vector<std::pair<std::string, std::string> >& namedEdges() const { return _namedEdges; }
+  const ::essentia::VectorEx<std::pair<std::string, std::string> >& namedEdges() const { return _namedEdges; }
   /**
    * Return the edges using node indices, to avoid ambiguities if 2 or more nodes have the same name.
    * They are sorted in the same order as the named edges.
    */
-  const std::vector<std::pair<int, int> >& edges() const { return _edges; }
+  const ::essentia::VectorEx<std::pair<int, int> >& edges() const { return _edges; }
 
 
  protected:
   AsciiCanvas _network;
-  std::vector<std::string> _nodes;
-  std::vector<std::pair<int, int> > _edges; // node id -> node id
-  std::vector<std::pair<std::string, std::string> > _namedEdges; // node name -> node name
+  ::essentia::VectorEx<std::string> _nodes;
+  ::essentia::VectorEx<std::pair<int, int> > _edges; // node id -> node id
+  ::essentia::VectorEx<std::pair<std::string, std::string> > _namedEdges; // node name -> node name
 
-  void parseEdges(const std::vector<AsciiBox>& boxes);
+  void parseEdges(const ::essentia::VectorEx<AsciiBox>& boxes);
 };
 
 } // namespace essentia

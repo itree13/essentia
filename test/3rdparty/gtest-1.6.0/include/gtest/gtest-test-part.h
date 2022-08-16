@@ -134,7 +134,7 @@ class GTEST_API_ TestPartResultArray {
   int size() const;
 
  private:
-  std::vector<TestPartResult> array_;
+  ::essentia::VectorEx<TestPartResult> array_;
 
   GTEST_DISALLOW_COPY_AND_ASSIGN_(TestPartResultArray);
 };

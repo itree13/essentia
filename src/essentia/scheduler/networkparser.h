@@ -43,9 +43,9 @@ class NetworkParser {
     delete _network;
   }
 
-  const std::vector<std::string>& algorithms() const { return _graph.nodes(); }
-  const std::vector<std::pair<int, int> >& connections() const { return _graph.edges(); }
-  const std::vector<std::pair<std::string, std::string> >& namedConnections() const { return _graph.namedEdges(); }
+  const ::essentia::VectorEx<std::string>& algorithms() const { return _graph.nodes(); }
+  const ::essentia::VectorEx<std::pair<int, int> >& connections() const { return _graph.edges(); }
+  const ::essentia::VectorEx<std::pair<std::string, std::string> >& namedConnections() const { return _graph.namedEdges(); }
 
   Network* network() { return _network; }
 
@@ -58,7 +58,7 @@ class NetworkParser {
   void createConnections();
 
   // algos that have been instantiated
-  std::vector<streaming::Algorithm*> _algos;
+  ::essentia::VectorEx<streaming::Algorithm*> _algos;
 
 };
 

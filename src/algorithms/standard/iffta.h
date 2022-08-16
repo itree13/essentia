@@ -31,8 +31,8 @@ namespace standard {
 class IFFTA : public Algorithm {
 
  protected:
-  Input<std::vector<std::complex<Real> > > _fft;
-  Output<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<std::complex<Real> > > _fft;
+  Output<::essentia::VectorEx<Real> > _signal;
 
  public:
   IFFTA() {
@@ -89,8 +89,8 @@ namespace streaming {
 class IFFTA : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::complex<Real> > > _fft;
-  Source<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _fft;
+  Source<::essentia::VectorEx<Real> > _signal;
 
  public:
   IFFTA() {

@@ -80,7 +80,7 @@ void TensorflowInputMusiCNN::configure() {
 
 
 void TensorflowInputMusiCNN::compute() {
-  const std::vector<Real>& frame = _frame.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
 
   if (frame.size() != 512) {
     throw(EssentiaException("TensorflowInputMusiCNN: This algorithm only accepts input frames of size 512."));

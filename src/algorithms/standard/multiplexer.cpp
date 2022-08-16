@@ -50,7 +50,7 @@ void Multiplexer::configure() {
 
   num = parameter("numberVectorRealInputs").toInt();
   for (int i=0; i<num; i++) {
-    _vectorRealInputs.push_back(new Sink<vector<Real> >());
+    _vectorRealInputs.push_back(new Sink<::essentia::VectorEx<Real> >());
     ostringstream inputName; inputName << "vector_" << i;
     ostringstream inputIndex; inputIndex << i;
     declareInput(*_vectorRealInputs.back(), 1, inputName.str(), "frame input #" + inputIndex.str());
@@ -74,7 +74,7 @@ SinkBase& Multiplexer::input(const string& name) {
     int inputNumber;
     parser >> inputNumber;
     if (inputNumber > int(_vectorRealInputs.size())) {
-      throw EssentiaException("Multiplexer: not enough vector<real> inputs: ", inputNumber);
+      throw EssentiaException("Multiplexer: not enough ::essentia::VectorEx<real> inputs: ", inputNumber);
     }
     return *_vectorRealInputs[inputNumber];
   }
@@ -92,7 +92,7 @@ AlgorithmStatus Multiplexer::process() {
 
   EXEC_DEBUG("acquired successfully");
 
-  vector<Real>& output = _output.firstToken();
+  ::essentia::VectorEx<Real>& output = _output.firstToken();
   output.clear();
 
   for (int i=0; i<(int)_realInputs.size(); i++) {
@@ -100,7 +100,7 @@ AlgorithmStatus Multiplexer::process() {
   }
 
   for (int i=0; i<(int)_vectorRealInputs.size(); i++) {
-    const vector<Real>& frame = _vectorRealInputs[i]->firstToken();
+    const ::essentia::VectorEx<Real>& frame = _vectorRealInputs[i]->firstToken();
     for (int j=0; j<(int)frame.size(); j++) {
       output.push_back(frame[j]);
     }
@@ -124,7 +124,7 @@ const char* Multiplexer::name = "Multiplexer";
 const char* Multiplexer::category = "Standard";
 const char* Multiplexer::description = DOC("This algorithm returns a single vector from a given number of real values and/or frames. Frames from different inputs are multiplexed onto a single stream in an alternating fashion.\n"
 "\n"
-"This algorithm throws an exception if the number of input reals (or vector<real>) is less than the number specified in configuration parameters or if the user tries to acces an input which has not been specified.\n"
+"This algorithm throws an exception if the number of input reals (or ::essentia::VectorEx<real>) is less than the number specified in configuration parameters or if the user tries to acces an input which has not been specified.\n"
 "\n"
 "References:\n"
 "  [1] Multiplexer - Wikipedia, the free encyclopedia,\n"
@@ -143,13 +143,13 @@ void Multiplexer::configure() {
   int numReals = parameter("numberRealInputs").toInt();
   int numVectors = parameter("numberVectorRealInputs").toInt();
   for (int i=0; i<numReals; ++i) {
-    _realInputs.push_back(new Input<vector<Real> >());
+    _realInputs.push_back(new Input<::essentia::VectorEx<Real> >());
     ostringstream inputName; inputName << "real_" << i;
     ostringstream inputIndex; inputIndex << i;
     declareInput(*_realInputs.back(), inputName.str(), "signal input #" + inputIndex.str());
   }
   for (int i=0; i<numVectors; i++) {
-    _vectorRealInputs.push_back(new Input<vector<vector<Real> > >());
+    _vectorRealInputs.push_back(new Input<::essentia::VectorEx<::essentia::VectorEx<Real> > >());
     ostringstream inputName; inputName << "vector_" << i;
     ostringstream inputIndex; inputIndex << i;
     declareInput(*_vectorRealInputs.back(), inputName.str(), "frame input #" + inputIndex.str());
@@ -172,7 +172,7 @@ InputBase& Multiplexer::input(const string& name) {
     int inputNumber;
     parser >> inputNumber;
     if (inputNumber > int(_vectorRealInputs.size())) {
-      throw EssentiaException("Multiplexer: not enough vector<real> inputs: ", inputNumber);
+      throw EssentiaException("Multiplexer: not enough ::essentia::VectorEx<real> inputs: ", inputNumber);
     }
     return *_vectorRealInputs[inputNumber];
   }
@@ -183,7 +183,7 @@ InputBase& Multiplexer::input(const string& name) {
 }
 
 void Multiplexer::compute() {
-    vector<vector<Real> >& output = _output.get();
+    ::essentia::VectorEx<::essentia::VectorEx<Real> >& output = _output.get();
     output.clear();
     int size = 0;
     int nFrames = 0;
@@ -192,7 +192,7 @@ void Multiplexer::compute() {
     else throw EssentiaException("Multiplexer: no inputs available");
 
     for (int i=0; i<int(_realInputs.size()); i++) {
-      const vector<Real> vec = _realInputs[i]->get();
+      const ::essentia::VectorEx<Real> vec = _realInputs[i]->get();
       if (int(vec.size()) != nFrames) {
         throw EssentiaException("Multiplexer: inputs with different length are not allowed");
       }
@@ -201,7 +201,7 @@ void Multiplexer::compute() {
     size = _realInputs.size();
     for (int i=0; i<int(_vectorRealInputs.size()); i++) {
       int maxVecSize = 0;
-      const vector<vector<Real> >& frame = _vectorRealInputs[i]->get();
+      const ::essentia::VectorEx<::essentia::VectorEx<Real> >& frame = _vectorRealInputs[i]->get();
       if (int(frame.size()) != nFrames) {
         throw EssentiaException("Multiplexer: inputs with different length are not allowed");
       }
@@ -221,7 +221,7 @@ void Multiplexer::compute() {
       }
 
       for (int i=0; i<int(_vectorRealInputs.size()); i++) {
-        const vector<Real>& frame = _vectorRealInputs[i]->get()[n];
+        const ::essentia::VectorEx<Real>& frame = _vectorRealInputs[i]->get()[n];
         for (int j=0; j<int(frame.size()); j++) {
           output[n].push_back(frame[j]);
         }

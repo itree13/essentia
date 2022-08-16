@@ -246,7 +246,7 @@ AlgorithmStatus RhythmExtractor::process() {
 
   // if the file was too short, fill the rest of the buffer with zeros
   // compute the beat candidates on the last incomplete buffer
-  vector<Real> empty;
+  ::essentia::VectorEx<Real> empty;
   //
   // onsets (3 values) + bands(8 values)
   if (_useOnset && _useBands)  empty.resize(11);
@@ -269,8 +269,8 @@ AlgorithmStatus RhythmExtractor::process() {
   }
   */
 
-  const vector<vector<Real> >& list_ticks = _pool.value<vector<vector<Real> > >("internal.ticks");
-  vector<Real> ticks;
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& list_ticks = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.ticks");
+  ::essentia::VectorEx<Real> ticks;
   for (int i = 0; i < (int)list_ticks.size(); i++) {
     for (int j = 0; j < (int)list_ticks[i].size(); j++) {
       ticks.push_back(list_ticks[i][j]);
@@ -326,8 +326,8 @@ AlgorithmStatus RhythmExtractor::process() {
   }
   _ticks.push(ticks);
 
-  const vector<vector<Real> >& matchingPeriods = _pool.value<vector<vector<Real> > >("internal.matchingPeriods");
-  vector<Real> bpmEstimateList;
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& matchingPeriods = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.matchingPeriods");
+  ::essentia::VectorEx<Real> bpmEstimateList;
 
   for (int i=0; i < int(matchingPeriods.size()); ++i) {
     for (int j=0; j < int(matchingPeriods[i].size()); ++j) {
@@ -338,11 +338,11 @@ AlgorithmStatus RhythmExtractor::process() {
     }
   }
 
-  vector<Real> estimates;
+  ::essentia::VectorEx<Real> estimates;
   Real bpm;
   if (bpmEstimateList.size() > 0) {
     Real closestBpm = 0;
-    vector<Real> countedBins;
+    ::essentia::VectorEx<Real> countedBins;
     for (int i=0; i < int(bpmEstimateList.size()); ++i) {
       bpmEstimateList[i] /= 2.;
     }
@@ -369,7 +369,7 @@ AlgorithmStatus RhythmExtractor::process() {
   _estimates.push(estimates);
   _bpm.push(bpm);
 
-  vector<Real> bpmIntervals;
+  ::essentia::VectorEx<Real> bpmIntervals;
   if (ticks.size() > 1) {
     // computing beats intervals
     bpmIntervals.resize(ticks.size() - 1);
@@ -378,7 +378,7 @@ AlgorithmStatus RhythmExtractor::process() {
     }
 
     // computing rubato regions
-    //vector<Real> rubatoStart, rubatoStop;
+    //::essentia::VectorEx<Real> rubatoStart, rubatoStop;
     //int rubatoNumber;
     //_bpmRubato->input("beats").set(ticks);
     //_bpmRubato->output("rubatoStart").set(rubatoStart);
@@ -468,28 +468,28 @@ void RhythmExtractor::createInnerNetwork() {
 }
 
 void RhythmExtractor::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
 
   Real& bpm = _bpm.get();
-  vector<Real>& ticks = _ticks.get();
-  vector<Real>& estimates = _estimates.get();
-  //vector<Real>& rubatoStart = _rubatoStart.get();
-  //vector<Real>& rubatoStop = _rubatoStop.get();
+  ::essentia::VectorEx<Real>& ticks = _ticks.get();
+  ::essentia::VectorEx<Real>& estimates = _estimates.get();
+  //::essentia::VectorEx<Real>& rubatoStart = _rubatoStart.get();
+  //::essentia::VectorEx<Real>& rubatoStop = _rubatoStop.get();
   //int& rubatoNumber = _rubatoNumber.get();
-  vector<Real>& bpmIntervals = _bpmIntervals.get();
+  ::essentia::VectorEx<Real>& bpmIntervals = _bpmIntervals.get();
 
   bpm = _pool.value<Real>("internal.bpm");
-  ticks = _pool.value<vector<Real> >("internal.ticks");
-  estimates = _pool.value<vector<Real> >("internal.estimates");
-  bpmIntervals = _pool.value<vector<Real> >("internal.bpmIntervals");
+  ticks = _pool.value<::essentia::VectorEx<Real> >("internal.ticks");
+  estimates = _pool.value<::essentia::VectorEx<Real> >("internal.estimates");
+  bpmIntervals = _pool.value<::essentia::VectorEx<Real> >("internal.bpmIntervals");
   //rubatoNumber = (int) _pool.value<Real>("internal.rubatoNumber");
   //try {
-  //    rubatoStart = _pool.value<vector<Real> >("internal.rubatoStart");
-  //    rubatoStop = _pool.value<vector<Real> >("internal.rubatoStop");
+  //    rubatoStart = _pool.value<::essentia::VectorEx<Real> >("internal.rubatoStart");
+  //    rubatoStop = _pool.value<::essentia::VectorEx<Real> >("internal.rubatoStop");
   //}
   //catch (EssentiaException&) {
   //  // no rubato regions then

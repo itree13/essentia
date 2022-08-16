@@ -29,16 +29,16 @@ namespace standard {
 class TempoCNN : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _audio;
+  Input<::essentia::VectorEx<Real> > _audio;
   Output<Real> _globalTempo;
-  Output<std::vector<Real> > _localTempo;
-  Output<std::vector<Real> > _localTempoProbs;
+  Output<::essentia::VectorEx<Real> > _localTempo;
+  Output<::essentia::VectorEx<Real> > _localTempoProbs;
 
   Algorithm* _tensorflowPredictTempoCNN;
 
   std::string _aggregationMethod;
 
-  std::vector<std::vector<Real> > _predictions;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _predictions;
 
  public:
   TempoCNN() {
@@ -85,10 +85,10 @@ namespace streaming {
 class TempoCNN : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _audio;
+  Sink<::essentia::VectorEx<Real> > _audio;
   Source<Real> _globalTempo;
-  Source<std::vector<Real> > _localTempo;
-  Source<std::vector<Real> > _localTempoProbs;
+  Source<::essentia::VectorEx<Real> > _localTempo;
+  Source<::essentia::VectorEx<Real> > _localTempoProbs;
 
  public:
   TempoCNN() {

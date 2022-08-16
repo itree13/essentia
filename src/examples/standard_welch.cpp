@@ -52,13 +52,13 @@ int main (int argc,char* argv[]) {
   cout << "-------- connecting algos ---------" << endl;
 
   // Audio -> FrameCutter
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
 
   audio->output("audio").set(audioBuffer);
   fc->input("signal").set(audioBuffer);
 
   // FrameCutter -> Welch
-  vector<Real> frame, psd;
+  ::essentia::VectorEx<Real> frame, psd;
   fc->output("frame").set(frame);
   w->input("frame").set(frame);
   w->output("psd").set(psd);

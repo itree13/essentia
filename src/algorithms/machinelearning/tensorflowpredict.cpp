@@ -146,7 +146,7 @@ void TensorflowPredict::configure() {
 void TensorflowPredict::openGraph() {
   // Prioritize savedModel when both are specified.
   if (!_savedModel.empty()) {
-    std::vector<char*> tags_c;
+    ::essentia::VectorEx<char*> tags_c;
     tags_c.reserve(_tags.size());
     for (size_t i = 0; i < _tags.size(); i++) {
       tags_c.push_back(const_cast<char*>(_tags[i].c_str()));
@@ -284,7 +284,7 @@ void TensorflowPredict::compute() {
 TF_Tensor* TensorflowPredict::TensorToTF(
     const Tensor<Real>& tensorIn) {
   int dims = 1;
-  vector<int64_t> shape;
+  ::essentia::VectorEx<int64_t> shape;
 
   // With squeeze, the Batch dimension is the only one allowed to be singleton
   shape.push_back((int64_t)tensorIn.dimension(0));
@@ -411,10 +411,10 @@ TF_Output TensorflowPredict::graphOperationByName(const string nodeName) {
   return output;
 }
 
-vector<string> TensorflowPredict::nodeNames() {
+::essentia::VectorEx<string> TensorflowPredict::nodeNames() {
   size_t pos = 0;
   TF_Operation *oper;
-  vector<string> nodeNames;
+  ::essentia::VectorEx<string> nodeNames;
 
   while ((oper = TF_GraphNextOperation(_graph, &pos)) != NULL) {
     nodeNames.push_back(string(TF_OperationName(oper)));

@@ -131,7 +131,7 @@ int main(int argc, char* argv[]) {
     // pool for storing segments:
     computeReplayGain(audioFilename, startTime, endTime, pool);
     computeSegments(audioFilename, startTime, endTime, pool);
-    vector<Real> segments = pool.value<vector<Real> >("segmentation.timestamps");
+    ::essentia::VectorEx<Real> segments = pool.value<::essentia::VectorEx<Real> >("segmentation.timestamps");
     for (int i=0; i<int(segments.size()-1); ++i) {
       Real start = segments[i];
       Real end = segments[i+1];
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
 
       // set segment scope
       ns.str(""); ns << "segments." << sn << ".scope";
-      vector<Real> scope(2, 0);
+      ::essentia::VectorEx<Real> scope(2, 0);
       scope[0] = start;
       scope[1] = end;
       pool.set(ns.str(), scope);
@@ -215,9 +215,9 @@ void computeSegments(const string& audioFilename, Real startTime, Real endTime, 
   // compute low level features to feed SBIc
   computeLowLevel(audioFilename, startTime, endTime, pool);
 
-  vector<vector<Real> > features;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > features;
   try {
-    features = pool.value<vector<vector<Real> > >("lowlevel.mfcc");
+    features = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("lowlevel.mfcc");
   }
   catch(const EssentiaException&) {
     cerr << "Error: could not find MFCC features in low level pool. Aborting..." << endl;
@@ -234,7 +234,7 @@ void computeSegments(const string& audioFilename, Real startTime, Real endTime, 
   standard::Algorithm* sbic = standard::AlgorithmFactory::create("SBic", "size1", size1, "inc1", inc1,
                                                                  "size2", size2, "inc2", inc2, "cpw", cpw,
                                                                  "minLength", minimumSegmentsLength);
-  vector<Real> segments;
+  ::essentia::VectorEx<Real> segments;
   sbic->input("features").set(featuresArray);
   sbic->output("segmentation").set(segments);
   sbic->compute();
@@ -386,7 +386,7 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime, 
   connect(eqloudSource, lowLevelSpectral->input("signal"));
   // connect outputs:
   const char * sfxDescArray[] = {"inharmonicity", "oddtoevenharmonicenergyratio", "tristimulus"};
-  vector<string> sfxDesc = arrayToVector<string>(sfxDescArray);
+  ::essentia::VectorEx<string> sfxDesc = arrayToVector<string>(sfxDescArray);
   OutputMap::const_iterator it = lowLevelSpectral->outputs().begin();
   for (; it != lowLevelSpectral->outputs().end(); ++it) {
     string output_name = it->first;
@@ -454,7 +454,7 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime, 
   // check if we processed enough audio for it to be useful, in particular did
   // we manage to get an estimation for the loudness (2 seconds required)
   try {
-    pool.value<vector<Real> >(llspace + "loudness")[0];
+    pool.value<::essentia::VectorEx<Real> >(llspace + "loudness")[0];
   }
   catch (const EssentiaException& e) {
     cout << "ERROR: File is too short (< 2sec)... Aborting..." << endl;
@@ -462,7 +462,7 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime, 
   }
 
   // compute onset rate = len(onsets) / len(audio)
-  pool.set(rhythmspace + "onset_rate", pool.value<vector<Real> >(rhythmspace + "onset_times").size()
+  pool.set(rhythmspace + "onset_rate", pool.value<::essentia::VectorEx<Real> >(rhythmspace + "onset_times").size()
      / (Real)audio_2->output("audio").totalProduced()
      * pool.value<Real>("metadata.audio_properties.analysis_sample_rate"));
 
@@ -503,7 +503,7 @@ void computeMidLevel(const string& audioFilename, Real startTime, Real endTime, 
   SourceBase& audioSource_2 = audio_3->output("audio");
 
   // Compute Tonal descriptors (needed TuningFrequency before)
-  Real tuningFreq = pool.value<vector<Real> >(tonalspace + "tuning_frequency").back();
+  Real tuningFreq = pool.value<::essentia::VectorEx<Real> >(tonalspace + "tuning_frequency").back();
   Algorithm * tonalDescriptors = new TonalDescriptorsExtractor();
   tonalDescriptors->configure("frameSize", _tonalFrameSize,
                               "hopSize", _tonalHopSize,
@@ -516,7 +516,7 @@ void computeMidLevel(const string& audioFilename, Real startTime, Real endTime, 
   }
 
   // Compute the loudness at the beats position (needed beats position)
-  vector<Real> ticks = pool.value<vector<Real> >(rhythmspace + "beats_position");
+  ::essentia::VectorEx<Real> ticks = pool.value<::essentia::VectorEx<Real> >(rhythmspace + "beats_position");
 
   Algorithm* beatsLoudness = factory.create("BeatsLoudness",
                                             "sampleRate", analysisSampleRate,
@@ -599,10 +599,10 @@ Pool computeAggregation(Pool& pool, int nSegments) {
   // choose which descriptors stats to output
   const char* stats[] = { "mean", "var", "min", "max", "dmean", "dmean2", "dvar", "dvar2" };
   const char* mfccStats[] = { "mean", "cov", "icov" };
-  vector<string> value(1);
+  ::essentia::VectorEx<string> value(1);
   value[0] = "copy";
 
-  map<string, vector<string> > exceptions;
+  map<string, ::essentia::VectorEx<string> > exceptions;
   exceptions["lowlevel.mfcc"] = arrayToVector<string>(mfccStats);
 
   // in case there is segmentation:

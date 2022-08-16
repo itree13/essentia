@@ -26,17 +26,17 @@ namespace essentia {
   namespace util {
     class BPF {
       protected:
-        std::vector<Real> _xPoints;
-        std::vector<Real> _yPoints;
-        std::vector<Real> _slopes;
+        ::essentia::VectorEx<Real> _xPoints;
+        ::essentia::VectorEx<Real> _yPoints;
+        ::essentia::VectorEx<Real> _slopes;
 
       public:
         BPF() {
         }
-        BPF(std::vector<Real> xPoints, std::vector<Real> yPoints) {
+        BPF(::essentia::VectorEx<Real> xPoints, ::essentia::VectorEx<Real> yPoints) {
           init(xPoints,yPoints);
         }
-        void init(std::vector<Real> xPoints, std::vector<Real> yPoints) {
+        void init(::essentia::VectorEx<Real> xPoints, ::essentia::VectorEx<Real> yPoints) {
           _xPoints = xPoints;
           _yPoints = yPoints;
           if (_xPoints.size() != _yPoints.size()) {
@@ -70,7 +70,7 @@ namespace essentia {
             throw EssentiaException("BPF: Input x-value is past the last point");
           }
 
-          std::vector<Real>::size_type j = 0;
+          ::essentia::VectorEx<Real>::size_type j = 0;
           while (x > _xPoints[j+1]) {
             j += 1;
           }

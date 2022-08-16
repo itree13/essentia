@@ -174,13 +174,13 @@ AlgorithmStatus LoudnessEBUR128::process() {
   // of values, as it is implemented now. However, this would lead to a 
   // necessity to compute log value for each value of the vector.
 
-  if (!_pool.contains<vector<Real> >("integrated_power") || !_pool.contains<vector<Real> >("shortterm_power")) {
+  if (!_pool.contains<::essentia::VectorEx<Real> >("integrated_power") || !_pool.contains<::essentia::VectorEx<Real> >("shortterm_power")) {
     // do not push anything in the case of empty signal
     E_WARNING("LoudnessEBUR128: empty input signal");
     return FINISHED;
   }
 
-  const vector<Real>& powerI = _pool.value<vector<Real> >("integrated_power");
+  const ::essentia::VectorEx<Real>& powerI = _pool.value<::essentia::VectorEx<Real> >("integrated_power");
   
   // compute gated loudness with absolute threshold: 
   // ignore values below -70 LKFS and computed mean of the rest
@@ -208,7 +208,7 @@ AlgorithmStatus LoudnessEBUR128::process() {
   _integratedLoudness.push(power2loudness(n ? sum / n : _absoluteThreshold));
   
   // Compute loudness range based on short-term loudness
-  const vector<Real>& powerST = _pool.value<vector<Real> >("shortterm_power");
+  const ::essentia::VectorEx<Real>& powerST = _pool.value<::essentia::VectorEx<Real> >("shortterm_power");
 
   // compute gated loudness with absolute threshold: 
   // ignore values below -70 LKFS and computed mean of the rest
@@ -225,7 +225,7 @@ AlgorithmStatus LoudnessEBUR128::process() {
   threshold = n ? max(sum / n / 100, _absoluteThreshold) : _absoluteThreshold;
   
   // remove values lower than the relative threshold
-  vector<Real> powerSTGated;
+  ::essentia::VectorEx<Real> powerSTGated;
   powerSTGated.reserve(powerST.size());
   for (size_t i=0; i<powerST.size(); ++i) {
     if (powerST[i]>=threshold) {
@@ -332,7 +332,7 @@ void LoudnessEBUR128::createInnerNetwork() {
 }
 
 void LoudnessEBUR128::compute() {
-  const vector<StereoSample>& signal = _signal.get();
+  const ::essentia::VectorEx<StereoSample>& signal = _signal.get();
   if (!signal.size()) {
     throw EssentiaException("LoudnessEBUR128: empty input signal");
   }
@@ -340,15 +340,15 @@ void LoudnessEBUR128::compute() {
   _vectorInput->setVector(&signal);
   _network->run();
 
-  vector<Real>& momentaryLoudness = _momentaryLoudness.get();
-  vector<Real>& shortTermLoudness = _shortTermLoudness.get();
+  ::essentia::VectorEx<Real>& momentaryLoudness = _momentaryLoudness.get();
+  ::essentia::VectorEx<Real>& shortTermLoudness = _shortTermLoudness.get();
   Real& integratedLoudness = _integratedLoudness.get();
   Real& loudnessRange = _loudnessRange.get();
-  //vector<Real>& momentaryLoudnessMax = _momentaryLoudnessMax.get();
-  //vector<Real>& shortTermLoudnessMax = _shortTermLoudnessMax.get();
+  //::essentia::VectorEx<Real>& momentaryLoudnessMax = _momentaryLoudnessMax.get();
+  //::essentia::VectorEx<Real>& shortTermLoudnessMax = _shortTermLoudnessMax.get();
 
-  momentaryLoudness = _pool.value<vector<Real> >("momentaryLoudness");
-  shortTermLoudness = _pool.value<vector<Real> >("shortTermLoudness");
+  momentaryLoudness = _pool.value<::essentia::VectorEx<Real> >("momentaryLoudness");
+  shortTermLoudness = _pool.value<::essentia::VectorEx<Real> >("shortTermLoudness");
   integratedLoudness = _pool.value<Real>("integratedLoudness");
   loudnessRange = _pool.value<Real>("loudnessRange");
 
@@ -358,8 +358,8 @@ void LoudnessEBUR128::compute() {
   //will desire to build a real-time loudness meter for broadcasting 
   //applications.
 
-  //momentaryLoudnessMax = _pool.value<vector<Real> >("momentaryLoudnessMax");
-  //shortTermLoudnessMax = _pool.value<vector<Real> >("shortTermLoudnessMax");
+  //momentaryLoudnessMax = _pool.value<::essentia::VectorEx<Real> >("momentaryLoudnessMax");
+  //shortTermLoudnessMax = _pool.value<::essentia::VectorEx<Real> >("shortTermLoudnessMax");
 
   //TODO: should output the final max values instead of all observed max values 
   //      as the analysis goes through frames?

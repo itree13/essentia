@@ -63,14 +63,14 @@ class FreesoundExtractor : public Algorithm {
   int rhythmMinTempo;
   int rhythmMaxTempo;
 
-  std::vector<std::string> lowlevelStats;
-  std::vector<std::string> tonalStats;
-  std::vector<std::string> rhythmStats;
-  std::vector<std::string> mfccStats;
-  std::vector<std::string> gfccStats;
+  ::essentia::VectorEx<std::string> lowlevelStats;
+  ::essentia::VectorEx<std::string> tonalStats;
+  ::essentia::VectorEx<std::string> rhythmStats;
+  ::essentia::VectorEx<std::string> mfccStats;
+  ::essentia::VectorEx<std::string> gfccStats;
 
 #if HAVE_GAIA2 
-  std::vector<std::string> svmModels;
+  ::essentia::VectorEx<std::string> svmModels;
 #endif
 
   Real replayGain;
@@ -122,8 +122,8 @@ class FreesoundExtractor : public Algorithm {
   
     const char* statsArray[] = { "mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2" };
     const char* cepstrumStatsArray[] = { "mean", "cov", "icov" };
-    vector<string> stats = arrayToVector<string>(statsArray);
-    vector<string> cepstrumStats = arrayToVector<string>(cepstrumStatsArray);
+    ::essentia::VectorEx<string> stats = arrayToVector<string>(statsArray);
+    ::essentia::VectorEx<string> cepstrumStats = arrayToVector<string>(cepstrumStatsArray);
 
     declareParameter("lowlevelStats", "the statistics to compute for low-level features", "", stats);
     declareParameter("tonalStats", "the statistics to compute for tonal features", "", stats);

@@ -74,7 +74,7 @@ void PitchYin::configure() {
 
 
 void PitchYin::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   if (signal.empty()) {
     throw EssentiaException("PitchYin: Cannot compute pitch detection on empty signal frame.");
   }

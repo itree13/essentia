@@ -34,7 +34,7 @@ const char* TCToTotal::description = DOC("This algorithm calculates the ratio of
 
 void TCToTotal::compute() {
 
-  const vector<Real>& envelope = _envelope.get();
+  const ::essentia::VectorEx<Real>& envelope = _envelope.get();
   Real& TCToTotal = _TCToTotal.get();
 
   if (envelope.size() < 2) {
@@ -67,7 +67,7 @@ const char* TCToTotal::name = essentia::standard::TCToTotal::name;
 const char* TCToTotal::description = essentia::standard::TCToTotal::description;
 
 void TCToTotal::consume() {
-  const vector<Real>& envelope = *((const vector<Real>*)_envelope.getTokens());
+  const ::essentia::VectorEx<Real>& envelope = *((const ::essentia::VectorEx<Real>*)_envelope.getTokens());
 
   for (int i=0; i<(int)envelope.size(); i++) {
     _num += envelope[i] * _idx;

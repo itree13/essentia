@@ -57,12 +57,12 @@ void StochasticModelAnal::configure() {
 
 void StochasticModelAnal::compute() {
   // inputs and outputs
-  const std::vector<Real>& frame = _frame.get();
-  std::vector<Real>& stocEnv = _stocenv.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
+  ::essentia::VectorEx<Real>& stocEnv = _stocenv.get();
 
-  std::vector<Real> wframe;
-  std::vector<std::complex<Real> > fftin;
-  std::vector<Real> magResDB;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<std::complex<Real> > fftin;
+  ::essentia::VectorEx<Real> magResDB;
 
 
   // frame is of size 2*hopsize
@@ -91,7 +91,7 @@ void StochasticModelAnal::compute() {
 // ---------------------------
 // additional methods
 
-void StochasticModelAnal::getSpecEnvelope(const std::vector<std::complex<Real> > fftRes,std::vector<Real> &magResDB)
+void StochasticModelAnal::getSpecEnvelope(const ::essentia::VectorEx<std::complex<Real> > fftRes,::essentia::VectorEx<Real> &magResDB)
 {
 
 // get spectral envelope in DB

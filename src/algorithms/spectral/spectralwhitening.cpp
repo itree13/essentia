@@ -45,17 +45,17 @@ void SpectralWhitening::configure() {
 }
 
 void SpectralWhitening::compute() {
-  const vector<Real>& spectrum = _spectrum.get();
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
-  vector<Real>& magnitudesWhite = _magnitudesWhite.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
+  ::essentia::VectorEx<Real>& magnitudesWhite = _magnitudesWhite.get();
 
   if (magnitudes.size() != frequencies.size()) {
     throw EssentiaException("SpectralWhitening: frequency and magnitude input vectors have different size");
   }
 
   const int nPeaks = magnitudes.size();
-  vector<Real> magnitudesdB(nPeaks, 0.0);
+  ::essentia::VectorEx<Real> magnitudesdB(nPeaks, 0.0);
   magnitudesWhite.resize(nPeaks);
 
   // If there are no magnitudes to whiten, do nothing
@@ -77,8 +77,8 @@ void SpectralWhitening::compute() {
   }
 
   // compute envelope
-  vector<Real> xPointsNoiseBPF;
-  vector<Real> yPointsNoiseBPF;
+  ::essentia::VectorEx<Real> xPointsNoiseBPF;
+  ::essentia::VectorEx<Real> yPointsNoiseBPF;
 
   Real incr = bpfResolution;
   int specSize = spectrum.size();

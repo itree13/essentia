@@ -78,11 +78,11 @@ void ERBBands::createFilters(int spectrumSize) {
   }
 
   int filterSize = _numberBands;
-  vector<complex<Real> > ucirc = vector<complex<Real> >(spectrumSize);
+  ::essentia::VectorEx<complex<Real> > ucirc = ::essentia::VectorEx<complex<Real> >(spectrumSize);
   complex<Real> oneJ(0,1);
   Real order = 1;
   Real pi = Real(M_PI);
-  _filterCoefficients = vector<vector<Real> >(filterSize, vector<Real>(spectrumSize, 0.0));
+  _filterCoefficients = ::essentia::VectorEx<::essentia::VectorEx<Real> >(filterSize, ::essentia::VectorEx<Real>(spectrumSize, 0.0));
   Real fftSize = (spectrumSize-1)*2;
   for (int i=0; i<spectrumSize; i++) {
  	  ucirc[i] = exp((oneJ*Real(2.0)*pi*Real(i))/fftSize);
@@ -113,7 +113,7 @@ void ERBBands::createFilters(int spectrumSize) {
     Real A13 = -(gtCos + 2*sqrM * gtSin)/2;
     Real A14 = -(gtCos - 2*sqrM * gtSin)/2;
 
-	  vector<Real> zeros = vector<Real>(4);
+	  ::essentia::VectorEx<Real> zeros = ::essentia::VectorEx<Real>(4);
 	  zeros[0] = - A11 / T;
 	  zeros[1] = - A12 / T;
 	  zeros[2] = - A13 / T;
@@ -142,8 +142,8 @@ void ERBBands::createFilters(int spectrumSize) {
 
 void ERBBands::compute() {
 
-  const std::vector<Real>& spectrum = _spectrumInput.get();
-  std::vector<Real>& bands = _bandsOutput.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrumInput.get();
+  ::essentia::VectorEx<Real>& bands = _bandsOutput.get();
 
   int filterSize = _numberBands;
   int spectrumSize = spectrum.size();

@@ -42,12 +42,12 @@ void HarmonicMask::configure()
 
 void HarmonicMask::compute()
 {
-  const std::vector<std::complex<Real> >& fft = _fft.get();
-  // const std::vector<Real> & pitchIn = _pitchIn.get();
-  //const std::vector<Real >& pitch = _pitch.get(); // if input is a vector (Predominant)
+  const ::essentia::VectorEx<std::complex<Real> >& fft = _fft.get();
+  // const ::essentia::VectorEx<Real> & pitchIn = _pitchIn.get();
+  //const ::essentia::VectorEx<Real >& pitch = _pitch.get(); // if input is a vector (Predominant)
   const Real& pitch = _pitch.get(); // input pitch is a scalar yinPitch
 
-  std::vector<std::complex<Real> >& outfft = _outfft.get();
+  ::essentia::VectorEx<std::complex<Real> >& outfft = _outfft.get();
 
   int fftsize = fft.size();
   outfft.resize(fftsize);
@@ -63,7 +63,7 @@ void HarmonicMask::compute()
   }
 
   // create mask
-  vector<Real> mask;
+  ::essentia::VectorEx<Real> mask;
   int maskSize = fftsize; // in Essentia the size of FFT output is (frameSize/2 +1).
   mask.resize(maskSize);
   int i, j;

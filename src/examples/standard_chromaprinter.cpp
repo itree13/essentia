@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
                                             "maxLength", chromaprintDuration,
                                             "sampleRate", sampleRate);
 
-  vector<Real> audio;
+  ::essentia::VectorEx<Real> audio;
   string chromaprint;
 
   audioLoader->output("audio").set(audio);

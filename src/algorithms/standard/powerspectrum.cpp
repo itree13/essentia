@@ -41,8 +41,8 @@ void PowerSpectrum::configure() {
 
 void PowerSpectrum::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
-  std::vector<Real>& powerSpectrum = _powerSpectrum.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& powerSpectrum = _powerSpectrum.get();
 
   // no need to make checks regarding the size of the input here, as they
   // will be checked anyway in the FFT algorithm.

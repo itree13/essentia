@@ -55,8 +55,8 @@ void BeatsLoudness::configure() {
   Real beatWindowDuration = parameter("beatWindowDuration").toReal();
   Real beatDuration = parameter("beatDuration").toReal();
 
-  vector<Real> ticks = parameter("beats").toVectorReal();
-  vector<Real> startTimes(ticks.size()), endTimes(ticks.size());
+  ::essentia::VectorEx<Real> ticks = parameter("beats").toVectorReal();
+  ::essentia::VectorEx<Real> startTimes(ticks.size()), endTimes(ticks.size());
 
   for (int i=0; i<int(ticks.size()); ++i) {
     startTimes[i] = ticks[i] - beatWindowDuration/2.0;
@@ -122,19 +122,19 @@ void BeatsLoudness::configure() {
 }
 
 void BeatsLoudness::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   if (signal.empty())
     throw EssentiaException("BeatsLoudness: Cannot compute loudness of an empty signal");
 
-  vector<Real>& loudness = _loudness.get();
-  vector<vector<Real> >& loudnessBand = _loudnessBand.get();
+  ::essentia::VectorEx<Real>& loudness = _loudness.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& loudnessBand = _loudnessBand.get();
 
   _vectorInput->setVector(&signal);
 
   _network->run();
   try {
-    loudness = _pool.value<vector<Real> >("internal.loudness");
-    loudnessBand = _pool.value<vector<vector<Real> > >("internal.loudnessBandRatio");
+    loudness = _pool.value<::essentia::VectorEx<Real> >("internal.loudness");
+    loudnessBand = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.loudnessBandRatio");
   }
   catch (EssentiaException&) {
     // probably beats were not specified, or slicer did not produce any windows

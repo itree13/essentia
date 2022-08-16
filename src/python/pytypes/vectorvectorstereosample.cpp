@@ -23,7 +23,7 @@ using namespace essentia;
 
 DEFINE_PYTHON_TYPE(VectorVectorStereoSample);
 
-PyObject* VectorVectorStereoSample::toPythonCopy(const vector<vector<StereoSample> >* v) {
+PyObject* VectorVectorStereoSample::toPythonCopy(const ::essentia::VectorEx<::essentia::VectorEx<StereoSample> >* v) {
   npy_intp dims[2] = { 0, 0 };
   dims[0] = v->size();
   if (!v->empty()) dims[1] = (*v)[0].size();
@@ -78,7 +78,7 @@ void* VectorVectorStereoSample::fromPythonRef(PyObject* obj) {
 
   if (PyList_Check(obj)) {
     int size = PyList_Size(obj);
-    vector<vector<StereoSample> >* v = new vector<vector<StereoSample> >(size, vector<StereoSample>());
+    ::essentia::VectorEx<::essentia::VectorEx<StereoSample> >* v = new ::essentia::VectorEx<::essentia::VectorEx<StereoSample> >(size, ::essentia::VectorEx<StereoSample>());
 
     for (int i=0; i<size; i++) {
       PyObject* row = PyList_GetItem(obj, i);
@@ -107,6 +107,6 @@ void* VectorVectorStereoSample::fromPythonRef(PyObject* obj) {
     return v;
   }
 
-  cout << "VectorVectorStereoSample::fromPython: not a vector<StereoSample>: " << strtype(obj) << endl;
+  cout << "VectorVectorStereoSample::fromPython: not a ::essentia::VectorEx<StereoSample>: " << strtype(obj) << endl;
   return NULL;
 }

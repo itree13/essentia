@@ -28,8 +28,8 @@ namespace standard {
 class CentralMoments : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
-  Output<std::vector<Real> > _centralMoments;
+  Input<::essentia::VectorEx<Real> > _array;
+  Output<::essentia::VectorEx<Real> > _centralMoments;
 
  protected:
   Real _range;
@@ -66,8 +66,8 @@ namespace streaming {
 class CentralMoments : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
-  Source<std::vector<Real> > _centralMoments;
+  Sink<::essentia::VectorEx<Real> > _array;
+  Source<::essentia::VectorEx<Real> > _centralMoments;
 
  public:
   CentralMoments() {

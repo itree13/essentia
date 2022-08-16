@@ -24,7 +24,7 @@
 
 namespace essentia {
 
-  void outputYAMLArray(std::ostream& out, const std::vector<Real>& v) {
+  void outputYAMLArray(std::ostream& out, const ::essentia::VectorEx<Real>& v) {
     out.precision(10);
 
     if (v.empty()) {
@@ -55,7 +55,7 @@ namespace essentia {
     out << "]";
   }
 
-  void outputYAMLMatrix(std::ostream& out, const std::vector<std::vector<Real> >& v) {
+  void outputYAMLMatrix(std::ostream& out, const ::essentia::VectorEx<::essentia::VectorEx<Real> >& v) {
     out.precision(10);
 
     out << "[ [ ";

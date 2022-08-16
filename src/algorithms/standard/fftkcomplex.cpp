@@ -57,8 +57,8 @@ FFTKComplex::~FFTKComplex() {
 
 void FFTKComplex::compute() {
 
-  const vector<complex<Real> >& signal = _signal.get();
-  vector<complex<Real> >& fft = _fft.get();
+  const ::essentia::VectorEx<complex<Real> >& signal = _signal.get();
+  ::essentia::VectorEx<complex<Real> >& fft = _fft.get();
 
   // check if input is OK
   int size = int(signal.size());

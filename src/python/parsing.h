@@ -39,7 +39,7 @@ void parseParameters(essentia::ParameterMap* params, PyObject* args, PyObject* k
 /**
  * This function unpacks a python tuple into a vector of separate PyObjects.
  */
-std::vector<PyObject*> unpack(PyObject* args);
+::essentia::VectorEx<PyObject*> unpack(PyObject* args);
 
 
 /**
@@ -47,7 +47,7 @@ std::vector<PyObject*> unpack(PyObject* args);
  * a vector of outputs. It automatically chooses the correct output type
  * (None, simple value, tuple of values) wrt the number of outputs.
  */
-PyObject* buildReturnValue(const std::vector<PyObject*>& result_vec);
+PyObject* buildReturnValue(const ::essentia::VectorEx<PyObject*>& result_vec);
 
 PyObject* toPython(void* obj, Edt tp);
 

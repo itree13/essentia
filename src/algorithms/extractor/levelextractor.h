@@ -67,8 +67,8 @@ namespace standard {
 
 class LevelExtractor : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _loudness;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _loudness;
 
   bool _configured;
 

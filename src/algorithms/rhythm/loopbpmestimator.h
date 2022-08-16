@@ -27,7 +27,7 @@ namespace standard {
 
 class LoopBpmEstimator : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real > _bpm;
   Algorithm* _percivalBpmEstimator;
   Algorithm* _loopBpmConfidence;
@@ -72,7 +72,7 @@ namespace streaming {
 class LoopBpmEstimator : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _bpm;
 
  public:

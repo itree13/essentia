@@ -75,7 +75,7 @@ void MusicTonalDescriptors::createNetwork(SourceBase& source, Pool& pool) {
   string windowType = options.value<string>("tonal.windowType");
   int zeroPadding = int(options.value<Real>("tonal.zeroPadding"));
 
-  Real tuningFreq = pool.value<vector<Real> >(nameSpace + "tuning_frequency").back();
+  Real tuningFreq = pool.value<::essentia::VectorEx<Real> >(nameSpace + "tuning_frequency").back();
 
   AlgorithmFactory& factory = AlgorithmFactory::instance();
 
@@ -229,7 +229,7 @@ void MusicTonalDescriptors::createNetwork(SourceBase& source, Pool& pool) {
 
 void MusicTonalDescriptors::computeTuningSystemFeatures(Pool& pool){
 
-  vector<Real> hpcp_highres = meanFrames(pool.value<vector<vector<Real> > >(nameSpace + "hpcp_highres"));
+  ::essentia::VectorEx<Real> hpcp_highres = meanFrames(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(nameSpace + "hpcp_highres"));
   pool.remove(nameSpace + "hpcp_highres");
   normalize(hpcp_highres);
 
@@ -269,10 +269,10 @@ void MusicTonalDescriptors::computeTuningSystemFeatures(Pool& pool){
   pool.set(nameSpace + "tuning_nontempered_energy_ratio", ntEnergy);
 
   // 3- THPCP
-  vector<Real> hpcp = meanFrames(pool.value<vector<vector<Real> > >(nameSpace + "hpcp"));
+  ::essentia::VectorEx<Real> hpcp = meanFrames(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(nameSpace + "hpcp"));
   normalize(hpcp);
   int idxMax = argmax(hpcp);
-  vector<Real> hpcp_bak = hpcp;
+  ::essentia::VectorEx<Real> hpcp_bak = hpcp;
   for (int i=idxMax; i<(int)hpcp.size(); i++) {
     hpcp[i-idxMax] = hpcp_bak[i];
   }

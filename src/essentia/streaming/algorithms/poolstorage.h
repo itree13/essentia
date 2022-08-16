@@ -94,7 +94,7 @@ class PoolStorage : public PoolStorageBase {
   }
 
   template <typename T>
-  void addToPool(const std::vector<T>& value) {
+  void addToPool(const ::essentia::VectorEx<T>& value) {
     if (_setSingle) {
       for (int i=0; i<(int)value.size();++i)
       _pool->add(_descriptorName, value[i]);
@@ -102,7 +102,7 @@ class PoolStorage : public PoolStorageBase {
     else _pool->add(_descriptorName, value);
   }
 
-  void addToPool(const std::vector<Real>& value) {
+  void addToPool(const ::essentia::VectorEx<Real>& value) {
     if (_setSingle) _pool->set(_descriptorName, value);
     else            _pool->add(_descriptorName, value);
   }

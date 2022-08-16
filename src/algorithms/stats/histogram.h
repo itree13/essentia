@@ -28,9 +28,9 @@ namespace standard {
 class Histogram : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _array;
-  Output<std::vector<Real> > _histogram;
-  Output<std::vector<Real> > _binEdges;
+  Input<::essentia::VectorEx<Real> > _array;
+  Output<::essentia::VectorEx<Real> > _histogram;
+  Output<::essentia::VectorEx<Real> > _binEdges;
 
   std::string  _normalize;
   Real _minValue;
@@ -39,7 +39,7 @@ class Histogram : public Algorithm {
 
  private:
   Real binWidth;
-  std::vector<Real> tempBinEdges;  
+  ::essentia::VectorEx<Real> tempBinEdges;  
 
  public:
   Histogram() {
@@ -75,9 +75,9 @@ namespace streaming {
 class Histogram : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
-  Source<std::vector<Real> > _histogram;
-  Source<std::vector<Real> > _binEdges;
+  Sink<::essentia::VectorEx<Real> > _array;
+  Source<::essentia::VectorEx<Real> > _histogram;
+  Source<::essentia::VectorEx<Real> > _binEdges;
 
  public:
   Histogram() {

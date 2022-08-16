@@ -28,7 +28,7 @@ namespace standard {
 class TonicIndianArtMusic : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _tonic;
 
   // Pre-processing

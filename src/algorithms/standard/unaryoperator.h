@@ -43,8 +43,8 @@ class UnaryOperator : public Algorithm {
 
   OpType typeFromString(const std::string& name) const;
 
-  Input<std::vector<Real> > _input;
-  Output<std::vector<Real> > _output;
+  Input<::essentia::VectorEx<Real> > _input;
+  Output<::essentia::VectorEx<Real> > _output;
 
   OpType _type;
   Real _scale;
@@ -87,8 +87,8 @@ namespace streaming {
 class UnaryOperator : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _input;
-  Source<std::vector<Real> > _output;
+  Sink<::essentia::VectorEx<Real> > _input;
+  Source<::essentia::VectorEx<Real> > _output;
 
  public:
   UnaryOperator() {

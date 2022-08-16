@@ -28,7 +28,7 @@ namespace standard {
 class Intensity : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<int> _intensity;
 
   // spectrum

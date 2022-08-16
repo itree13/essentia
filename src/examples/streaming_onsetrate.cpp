@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
   int totalSamples = audioloader->output("audio").totalProduced();
   Real fileLength = totalSamples / pool.value<Real>("metadata.sampleRate");
 
-  const vector<Real>& onsetTimes = pool.value<vector<Real> >("rhythm.onsetTimes");
+  const ::essentia::VectorEx<Real>& onsetTimes = pool.value<::essentia::VectorEx<Real> >("rhythm.onsetTimes");
 
   cout << "onsetRate: " << onsetTimes.size() / fileLength << endl;
   cout << "onsetTimes: " << onsetTimes << endl;

@@ -23,8 +23,8 @@ using namespace std;
 
 namespace essentia {
 
-AsciiCanvas& AsciiCanvas::operator=(const std::vector<std::string>& other) {
-  vector<string>::operator=(other);
+AsciiCanvas& AsciiCanvas::operator=(const ::essentia::VectorEx<std::string>& other) {
+  ::essentia::VectorEx<string>::operator=(other);
   return *this;
 }
 
@@ -45,8 +45,8 @@ void AsciiCanvas::fill(char c) {
 }
 
 
-vector<string> makeRectangle(const char* const* network, int size) {
-  vector<string> result(size);
+::essentia::VectorEx<string> makeRectangle(const char* const* network, int size) {
+  ::essentia::VectorEx<string> result(size);
   if (size == 0) return result;
 
   int maxl = -1;
@@ -61,8 +61,8 @@ vector<string> makeRectangle(const char* const* network, int size) {
   return result;
 }
 
-vector<string> makeRectangle(const string& network) {
-  vector<string> result = tokenize(network, "\n", true);
+::essentia::VectorEx<string> makeRectangle(const string& network) {
+  ::essentia::VectorEx<string> result = tokenize(network, "\n", true);
 
   if (result.empty()) return result;
 
@@ -80,7 +80,7 @@ inline bool isIn(int x, int a, int b) {
 }
 
 
-AsciiBox::AsciiBox(const vector<string>& network, int x, int y)
+AsciiBox::AsciiBox(const ::essentia::VectorEx<string>& network, int x, int y)
   : posX(x), posY(y), width(0), height(0)
 {
   int nrows = network.size();
@@ -103,7 +103,7 @@ bool AsciiBox::borderContains(int x, int y) const {
 }
 
 
-bool AsciiBox::isBox(const vector<string>& network, int x, int y) {
+bool AsciiBox::isBox(const ::essentia::VectorEx<string>& network, int x, int y) {
   int nrows = network.size();
   int ncols = network[0].size();
 
@@ -131,10 +131,10 @@ bool AsciiBox::isBox(const vector<string>& network, int x, int y) {
   return true;
 }
 
-vector<AsciiBox> AsciiBox::findBoxes(const vector<string>& network) {
+::essentia::VectorEx<AsciiBox> AsciiBox::findBoxes(const ::essentia::VectorEx<string>& network) {
   int nrows = network.size();
   int ncols = network[0].size();
-  vector<AsciiBox> result;
+  ::essentia::VectorEx<AsciiBox> result;
 
   for (int y=0; y<nrows; y++) {
     for (int x=0; x<ncols; x++) {

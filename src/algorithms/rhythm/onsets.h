@@ -30,8 +30,8 @@ class Onsets : public Algorithm {
 
  protected:
   Input<TNT::Array2D<Real> > _detections;
-  Input<std::vector<Real> > _weights;
-  Output<std::vector<Real> > _onsets;
+  Input<::essentia::VectorEx<Real> > _weights;
+  Output<::essentia::VectorEx<Real> > _onsets;
 
   Real _frameRate;
   int _bufferSize;
@@ -83,9 +83,9 @@ namespace streaming {
 class Onsets : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _weights;
+  Sink<::essentia::VectorEx<Real> > _weights;
   Sink<TNT::Array2D<Real> > _detections;
-  Source<std::vector<Real> > _onsets;
+  Source<::essentia::VectorEx<Real> > _onsets;
 
  public:
   Onsets() {

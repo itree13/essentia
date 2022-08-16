@@ -53,12 +53,12 @@ void PitchContours::configure() {
 }
 
 void PitchContours::compute() {
-  const vector<vector<Real> >& peakBins = _peakBins.get();
-  const vector<vector<Real> >& peakSaliences = _peakSaliences.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& peakBins = _peakBins.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& peakSaliences = _peakSaliences.get();
 
-  vector<vector<Real> >& contoursBins = _contoursBins.get();
-  vector<vector<Real> >& contoursSaliences =_contoursSaliences.get();
-  vector<Real>& contoursStartTimes = _contoursStartTimes.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins = _contoursBins.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursSaliences =_contoursSaliences.get();
+  ::essentia::VectorEx<Real>& contoursStartTimes = _contoursStartTimes.get();
   Real& duration = _duration.get();
 
   // do sanity checks
@@ -100,7 +100,7 @@ void PitchContours::compute() {
   _nonSalientPeaksBins.resize(_numberFrames);
   _nonSalientPeaksValues.resize(_numberFrames);
 
-  vector<pair<size_t, size_t> > salientInFrame;
+  ::essentia::VectorEx<pair<size_t, size_t> > salientInFrame;
 
   for (size_t i=0; i<_numberFrames; i++) {
     if (peakSaliences[i].size() == 0) { // avoiding that argmax will return 0 on empty vector
@@ -128,7 +128,7 @@ void PitchContours::compute() {
 
   // gather distribution statistics for overall peak filtering
 
-  vector <Real> allPeakValues;
+  ::essentia::VectorEx<Real> allPeakValues;
   for (size_t i=0; i<salientInFrame.size(); i++) {
     size_t ii = salientInFrame[i].first;
     size_t jj = salientInFrame[i].second;
@@ -154,8 +154,8 @@ void PitchContours::compute() {
   // peak streaming
   while(true) {
     size_t index;
-    vector<Real> contourBins;
-    vector<Real> contourSaliences;
+    ::essentia::VectorEx<Real> contourBins;
+    ::essentia::VectorEx<Real> contourSaliences;
 
     trackPitchContour(index, contourBins, contourSaliences);
 
@@ -175,7 +175,7 @@ void PitchContours::compute() {
   }
 }
 
-int PitchContours::findNextPeak(vector<vector<Real> >& peaksBins, vector<Real>& contourBins, size_t i, bool backward) {
+int PitchContours::findNextPeak(::essentia::VectorEx<::essentia::VectorEx<Real> >& peaksBins, ::essentia::VectorEx<Real>& contourBins, size_t i, bool backward) {
   // order = 1 to search forewards, = -1 to search backwards
   // i refers to a frame to search in for the next peak
   Real distance;
@@ -195,12 +195,12 @@ int PitchContours::findNextPeak(vector<vector<Real> >& peaksBins, vector<Real>& 
   return best_peak_j;
 }
 
-void PitchContours::removePeak(vector<vector<Real> >& peaksBins, vector<vector<Real> >& peaksValues, size_t i, int j) {
+void PitchContours::removePeak(::essentia::VectorEx<::essentia::VectorEx<Real> >& peaksBins, ::essentia::VectorEx<::essentia::VectorEx<Real> >& peaksValues, size_t i, int j) {
   peaksBins[i].erase(peaksBins[i].begin() + j);
   peaksValues[i].erase(peaksValues[i].begin() + j);
 }
 
-void PitchContours::trackPitchContour(size_t& index, vector<Real>& contourBins, vector<Real>& contourSaliences) {
+void PitchContours::trackPitchContour(size_t& index, ::essentia::VectorEx<Real>& contourBins, ::essentia::VectorEx<Real>& contourSaliences) {
   // find the highest salient peak through all frames
   size_t max_i = 0;
   int max_j = 0;
@@ -221,7 +221,7 @@ void PitchContours::trackPitchContour(size_t& index, vector<Real>& contourBins, 
     return;
   }
 
-  vector<pair<size_t,int> > removeNonSalientPeaks;
+  ::essentia::VectorEx<pair<size_t,int> > removeNonSalientPeaks;
 
   // start new contour with this peak
   index = max_i; // the starting index of the contour

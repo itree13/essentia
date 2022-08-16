@@ -29,11 +29,11 @@ namespace standard {
 class PitchCREPE : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _audio;
-  Output<std::vector<Real> > _time;
-  Output<std::vector<Real> > _frequency;
-  Output<std::vector<Real> > _confidence;
-  Output<std::vector<std::vector<Real> > > _activations;
+  Input<::essentia::VectorEx<Real> > _audio;
+  Output<::essentia::VectorEx<Real> > _time;
+  Output<::essentia::VectorEx<Real> > _frequency;
+  Output<::essentia::VectorEx<Real> > _confidence;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _activations;
 
   Algorithm* _tensorflowPredictCREPE;
 
@@ -42,13 +42,13 @@ class PitchCREPE : public Algorithm {
   const float _sampleRate = 16000;
 
   // Cents mapping parameters
-  std::vector<Real> _centsMapping;
+  ::essentia::VectorEx<Real> _centsMapping;
   const int _nPitches = 360;
   const Real _end = 7180;
   const Real _shift = 1997.3794084376191;
   const Real _delta = _end / (_nPitches - 1);
 
-  std::vector<Real> toLocalAverageCents(std::vector<std::vector<Real> > &activations);
+  ::essentia::VectorEx<Real> toLocalAverageCents(::essentia::VectorEx<::essentia::VectorEx<Real> > &activations);
 
  public:
   PitchCREPE() {
@@ -95,11 +95,11 @@ namespace streaming {
 class PitchCREPE : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _audio;
-  Source<std::vector<Real> > _time;
-  Source<std::vector<Real> > _frequency;
-  Source<std::vector<Real> > _confidence;
-  Source<std::vector<std::vector<Real> > > _activations;
+  Sink<::essentia::VectorEx<Real> > _audio;
+  Source<::essentia::VectorEx<Real> > _time;
+  Source<::essentia::VectorEx<Real> > _frequency;
+  Source<::essentia::VectorEx<Real> > _confidence;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _activations;
 
  public:
   PitchCREPE() {

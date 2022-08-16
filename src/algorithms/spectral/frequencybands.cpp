@@ -52,8 +52,8 @@ void FrequencyBands::configure() {
 }
 
 void FrequencyBands::compute() {
-  const std::vector<Real>& spectrum = _spectrumInput.get();
-  std::vector<Real>& bands = _bandsOutput.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrumInput.get();
+  ::essentia::VectorEx<Real>& bands = _bandsOutput.get();
 
   if (spectrum.size() <= 1) {
     throw EssentiaException("FrequencyBands: the size of the input spectrum is not greater than one");

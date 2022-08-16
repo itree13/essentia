@@ -34,8 +34,8 @@ namespace standard {
 class Magnitude : public Algorithm {
 
  private:
-  Input<std::vector<std::complex<Real> > > _complex;
-  Output<std::vector<Real> > _magnitude;
+  Input<::essentia::VectorEx<std::complex<Real> > > _complex;
+  Output<::essentia::VectorEx<Real> > _magnitude;
 
  public:
   Magnitude() {
@@ -60,8 +60,8 @@ namespace streaming {
 class Magnitude : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::complex<Real> > > _complex;
-  Source<std::vector<Real> > _magnitude;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _complex;
+  Source<::essentia::VectorEx<Real> > _magnitude;
 
  public:
   Magnitude() {

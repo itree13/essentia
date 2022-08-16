@@ -49,12 +49,12 @@ const char* HighResolutionFeatures::description = DOC("This algorithm computes h
 "  [2] https://en.wikipedia.org/wiki/Equal_temperament");
 
 
-vector<Peak> detectPeaks(const vector<Real>& hpcp, int maxPeaks) {
-  vector<Peak> peaks;
+::essentia::VectorEx<Peak> detectPeaks(const ::essentia::VectorEx<Real>& hpcp, int maxPeaks) {
+  ::essentia::VectorEx<Peak> peaks;
 
   // wrap the hpcp around the first and last bin
   int size = int(hpcp.size());
-  vector<Real> hpcpw(size + 2);
+  ::essentia::VectorEx<Real> hpcpw(size + 2);
   hpcpw[0] = hpcp[size-1];
   for (int i=0; i<size; ++i) {
     hpcpw[i+1] = hpcp[i];
@@ -77,7 +77,7 @@ vector<Peak> detectPeaks(const vector<Real>& hpcp, int maxPeaks) {
 }
 
 void HighResolutionFeatures::compute() {
-  const vector<Real>& hpcp = _hpcp.get();
+  const ::essentia::VectorEx<Real>& hpcp = _hpcp.get();
 
   const int hpcpSize = int(hpcp.size());
   const int binsPerSemitone = hpcpSize / 12;
@@ -100,7 +100,7 @@ void HighResolutionFeatures::compute() {
   // amplitude. This means that we get the 24 largest peaks, which are assumed
   // to be the most relevant for this algorithm. As to whether it should become
   // a parameter, yes. I'll add it on the next commit. -rtoscano
-  vector<Peak> peaks = detectPeaks(hpcp, parameter("maxPeaks").toInt());
+  ::essentia::VectorEx<Peak> peaks = detectPeaks(hpcp, parameter("maxPeaks").toInt());
 
   const int peaksSize = int(peaks.size());
 
@@ -189,7 +189,7 @@ HighResolutionFeatures::HighResolutionFeatures() : AlgorithmComposite() {
 
 
   _highResAlgo = standard::AlgorithmFactory::create("HighResolutionFeatures");
-  _poolStorage = new PoolStorage<vector<Real> >(&_pool, "internal.highres_hpcp");
+  _poolStorage = new PoolStorage<::essentia::VectorEx<Real> >(&_pool, "internal.highres_hpcp");
 
   _pcp  >>  _poolStorage->input("data");
 }
@@ -201,8 +201,8 @@ void HighResolutionFeatures::configure() {
 AlgorithmStatus HighResolutionFeatures::process() {
   if (!shouldStop()) return PASS;
 
-  //cout << _pool.value<vector<vector<Real> > >("internal.highres_hpcp") << endl;
-  const vector<Real>& hpcp = _pool.value<vector<vector<Real> > >("internal.highres_hpcp")[0];
+  //cout << _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.highres_hpcp") << endl;
+  const ::essentia::VectorEx<Real>& hpcp = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.highres_hpcp")[0];
   Real deviation;
   Real energyRatio;
   Real peaksEnergyRatio;

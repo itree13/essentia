@@ -29,11 +29,11 @@ namespace standard {
 class PowerSpectrum : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _powerSpectrum;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _powerSpectrum;
 
   Algorithm* _fft;
-  std::vector<std::complex<Real> > _fftBuffer;
+  ::essentia::VectorEx<std::complex<Real> > _fftBuffer;
 
  public:
   PowerSpectrum() {
@@ -72,8 +72,8 @@ namespace streaming {
 class PowerSpectrum : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
-  Source<std::vector<Real> > _powerSpectrum;
+  Sink<::essentia::VectorEx<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _powerSpectrum;
 
  public:
   PowerSpectrum() {

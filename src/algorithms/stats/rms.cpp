@@ -34,7 +34,7 @@ const char* RMS::description = DOC("This algorithm computes the root mean square
 
 void RMS::compute() {
 
-  const std::vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
   Real& rms = _rms.get();
 
   if (array.empty()) {

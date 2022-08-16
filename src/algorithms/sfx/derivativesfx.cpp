@@ -37,7 +37,7 @@ const char* DerivativeSFX::description = DOC("This algorithm computes two descri
 
 void DerivativeSFX::compute() {
 
-  const vector<Real>& envelope = _envelope.get();
+  const ::essentia::VectorEx<Real>& envelope = _envelope.get();
   Real& derAvAfterMax = _derAvAfterMax.get();
   Real& maxDerBeforeMax = _maxDerBeforeMax.get();
 

@@ -28,7 +28,7 @@ namespace standard {
 class Decrease : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _decrease;
 
  public:
@@ -64,7 +64,7 @@ namespace streaming {
 class Decrease : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _decrease;
 
  public:

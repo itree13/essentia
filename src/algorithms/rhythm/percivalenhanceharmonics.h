@@ -27,8 +27,8 @@ namespace standard {
 class PercivalEnhanceHarmonics : public Algorithm {
 
   protected:
-    Input<std::vector<Real> > _input;
-    Output<std::vector<Real> > _output;
+    Input<::essentia::VectorEx<Real> > _input;
+    Output<::essentia::VectorEx<Real> > _output;
 
   public:
     PercivalEnhanceHarmonics() {
@@ -61,8 +61,8 @@ namespace streaming {
 class PercivalEnhanceHarmonics : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _input;
-  Source<std::vector<Real> > _output;
+  Sink<::essentia::VectorEx<Real> > _input;
+  Source<::essentia::VectorEx<Real> > _output;
 
  public:
   PercivalEnhanceHarmonics() {

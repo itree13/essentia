@@ -28,10 +28,10 @@ namespace standard {
 class TempoTapTicks : public Algorithm {
 
  private:
-  Input< std::vector<Real> > _periods;
-  Input< std::vector<Real> > _phases;
-  Output<std::vector<Real> > _ticks;
-  Output<std::vector<Real> > _matchingPeriods;
+  Input< ::essentia::VectorEx<Real> > _periods;
+  Input< ::essentia::VectorEx<Real> > _phases;
+  Output<::essentia::VectorEx<Real> > _ticks;
+  Output<::essentia::VectorEx<Real> > _matchingPeriods;
   Real _frameTime;
   Real _sampleRate;
   int _nextPhase;
@@ -77,10 +77,10 @@ namespace streaming {
 class TempoTapTicks : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _periods;
-  Sink<std::vector<Real> > _phases;
-  Source<std::vector<Real> > _ticks;
-  Source<std::vector<Real> > _matchingPeriods;
+  Sink<::essentia::VectorEx<Real> > _periods;
+  Sink<::essentia::VectorEx<Real> > _phases;
+  Source<::essentia::VectorEx<Real> > _ticks;
+  Source<::essentia::VectorEx<Real> > _matchingPeriods;
 
  public:
   TempoTapTicks() {

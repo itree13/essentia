@@ -32,7 +32,7 @@ const char* Danceability::description = DOC("This algorithm estimates danceabili
 "  Signals: Danceability Estimation and further Semantic Characterization,\n"
 "  Proceedings of the AES 118th Convention, Barcelona, Spain, 2005");
 
-Real Danceability::stddev(const vector<Real>& array, int start, int end) const {
+Real Danceability::stddev(const ::essentia::VectorEx<Real>& array, int start, int end) const {
 
   Real mean_array = mean(array, start, end);
   Real var = 0.0;
@@ -64,9 +64,9 @@ void Danceability::configure() {
 
 void Danceability::compute() {
 
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& danceability = _danceability.get();
-  vector<Real>& dfa = _dfa.get();
+  ::essentia::VectorEx<Real>& dfa = _dfa.get();
   Real sampleRate = parameter("sampleRate").toReal();
 
   //---------------------------------------------------------------------
@@ -78,7 +78,7 @@ void Danceability::compute() {
   int frameSize = int(0.01 * sampleRate); // 10ms
   int numFrames = numSamples / frameSize;
 
-  vector<Real> s(numFrames, 0.0);
+  ::essentia::VectorEx<Real> s(numFrames, 0.0);
 
   for (int i=0; i<numFrames; i++) {
     int frameBegin = i * frameSize;
@@ -100,7 +100,7 @@ void Danceability::compute() {
   //---------------------------------------------------------------------
   // processing
 
-  vector<Real> F(_tau.size(), 0.0);
+  ::essentia::VectorEx<Real> F(_tau.size(), 0.0);
 
   int nFValues = 0;
 
@@ -223,9 +223,9 @@ AlgorithmStatus Danceability::process() {
   if (!shouldStop()) return PASS;
 
   Real danceability;
-  vector<Real> dfa;
+  ::essentia::VectorEx<Real> dfa;
   
-  _danceabilityAlgo->input("signal").set(_pool.value<vector<Real> >("internal.signal"));
+  _danceabilityAlgo->input("signal").set(_pool.value<::essentia::VectorEx<Real> >("internal.signal"));
   _danceabilityAlgo->output("danceability").set(danceability);
   _danceabilityAlgo->output("dfa").set(dfa);
   _danceabilityAlgo->compute();

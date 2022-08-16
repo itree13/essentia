@@ -31,8 +31,8 @@ namespace standard {
 class IFFTW : public Algorithm {
 
  protected:
-  Input<std::vector<std::complex<Real> > > _fft;
-  Output<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<std::complex<Real> > > _fft;
+  Output<::essentia::VectorEx<Real> > _signal;
 
  public:
   IFFTW() : _fftPlan(0), _input(0), _output(0) {
@@ -76,8 +76,8 @@ namespace streaming {
 class IFFTW : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::complex<Real> > > _fft;
-  Source<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _fft;
+  Source<::essentia::VectorEx<Real> > _signal;
 
  public:
   IFFTW() {

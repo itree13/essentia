@@ -28,7 +28,7 @@ namespace standard {
 class MaxToTotal : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _envelope;
+  Input<::essentia::VectorEx<Real> > _envelope;
   Output<Real> _maxToTotal;
 
  public:

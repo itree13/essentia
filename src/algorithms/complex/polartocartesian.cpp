@@ -38,9 +38,9 @@ const char* PolarToCartesian::description = DOC("This algorithm converts an arra
 
 void PolarToCartesian::compute() {
 
-  const vector<Real>& magnitude = _magnitude.get();
-  const vector<Real>& phase = _phase.get();
-  vector<complex<Real> >& complexVec = _complex.get();
+  const ::essentia::VectorEx<Real>& magnitude = _magnitude.get();
+  const ::essentia::VectorEx<Real>& phase = _phase.get();
+  ::essentia::VectorEx<complex<Real> >& complexVec = _complex.get();
 
   if (magnitude.size() != phase.size()) {
     ostringstream msg;

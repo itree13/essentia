@@ -28,8 +28,8 @@ namespace standard {
 class DCT : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _array;
-  Output<std::vector<Real> > _dct;
+  Input<::essentia::VectorEx<Real> > _array;
+  Output<::essentia::VectorEx<Real> > _dct;
 
  public:
   DCT() {
@@ -57,7 +57,7 @@ class DCT : public Algorithm {
   Real _lifter;
   void createDctTableII(int inputSize, int outputSize);
   void createDctTableIII(int inputSize, int outputSize);
-  std::vector<std::vector<Real> > _dctTable;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _dctTable;
   int _type;
 };
 
@@ -73,8 +73,8 @@ namespace streaming {
 class DCT : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
-  Source<std::vector<Real> > _dct;
+  Sink<::essentia::VectorEx<Real> > _array;
+  Source<::essentia::VectorEx<Real> > _dct;
 
  public:
   DCT() {

@@ -29,10 +29,10 @@ namespace standard {
 
 class NSGConstantQ : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector< std::vector<std::complex<Real> > > >_constantQ ;
-  Output<std::vector<std::complex<Real> > > _constantQDC;
-  Output<std::vector<std::complex<Real> > > _constantQNF;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx< ::essentia::VectorEx<std::complex<Real> > > >_constantQ ;
+  Output<::essentia::VectorEx<std::complex<Real> > > _constantQDC;
+  Output<::essentia::VectorEx<std::complex<Real> > > _constantQNF;
 
  public:
   NSGConstantQ() {
@@ -97,10 +97,10 @@ class NSGConstantQ : public Algorithm {
   int _windowSizeFactor;
 
   // windowing vectors
-  std::vector< std::vector<Real> > _freqWins;
-  std::vector<int> _shifts;
-  std::vector<int> _winsLen;
-  std::vector<Real> _baseFreqs;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > _freqWins;
+  ::essentia::VectorEx<int> _shifts;
+  ::essentia::VectorEx<int> _winsLen;
+  ::essentia::VectorEx<Real> _baseFreqs;
   int _binsNum;
 };
 
@@ -115,11 +115,11 @@ namespace streaming {
 
 class NSGConstantQ : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
 
-  Source<std::vector<std::vector<std::complex<Real> > > >_constantQ ;
-  Source<std::vector<std::complex<Real> > > _constantQDC;
-  Source<std::vector<std::complex<Real> > > _constantQNF;
+  Source<::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > > >_constantQ ;
+  Source<::essentia::VectorEx<std::complex<Real> > > _constantQDC;
+  Source<::essentia::VectorEx<std::complex<Real> > > _constantQNF;
 
  public:
   NSGConstantQ() {

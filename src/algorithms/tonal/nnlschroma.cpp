@@ -116,7 +116,7 @@ void NNLSChroma::configure() {
 
   int tempn = nNote * _frameSize;
 
-  vector<Real> tempkernel(tempn);
+  ::essentia::VectorEx<Real> tempkernel(tempn);
 
   logFreqMatrix(_sampleRate, _frameSize, tempkernel);
   _kernelValue.clear();
@@ -147,13 +147,13 @@ void NNLSChroma::reset() {
 }
 
 void NNLSChroma::compute() {
-  const vector<vector<Real> >& logSpectrum = _logSpectrum.get();
-  const vector<Real>& meanTuning = _meanTuning.get();
-  const vector<Real>& localTuning = _localTuning.get();
-  vector<vector<Real> >& tunedLogfreqSpectrum = _tunedLogfreqSpectrum.get();
-  vector<vector<Real> >& semitoneSpectrum = _semitoneSpectrum.get();
-  vector<vector<Real> >& bassChromagram = _bassChromagram.get();
-  vector<vector<Real> >& chromagram = _chromagram.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& logSpectrum = _logSpectrum.get();
+  const ::essentia::VectorEx<Real>& meanTuning = _meanTuning.get();
+  const ::essentia::VectorEx<Real>& localTuning = _localTuning.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& tunedLogfreqSpectrum = _tunedLogfreqSpectrum.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& semitoneSpectrum = _semitoneSpectrum.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& bassChromagram = _bassChromagram.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& chromagram = _chromagram.get();
 
   if (logSpectrum.size() <= 1)
     throw EssentiaException("NNLSChroma: input vector is empty");
@@ -185,7 +185,7 @@ void NNLSChroma::compute() {
   **/   
   Real tempValue = 0;
 
-  tunedLogfreqSpectrum.assign(logSpectrum.size(), vector<Real>(2, 0.f));
+  tunedLogfreqSpectrum.assign(logSpectrum.size(), ::essentia::VectorEx<Real>(2, 0.f));
   
   for (int i = 0; i < (int)logSpectrum.size(); i++) {
     if (_tuningMode) {
@@ -204,8 +204,8 @@ void NNLSChroma::compute() {
     tunedLogfreqSpectrum[i].push_back(0.0);
     tunedLogfreqSpectrum[i].push_back(0.0);  // upper edge
 
-    vector<Real> runningmean = SpecialConvolution(tunedLogfreqSpectrum[i], _hw);
-    vector<Real> runningstd;
+    ::essentia::VectorEx<Real> runningmean = SpecialConvolution(tunedLogfreqSpectrum[i], _hw);
+    ::essentia::VectorEx<Real> runningstd;
 
     // First step: squared values into vector (variance).
     for (int j = 0; j < nNote; j++) {
@@ -235,9 +235,9 @@ void NNLSChroma::compute() {
       Three different kinds of chromagram are calculated, "treble", "bass", and "both" (which 
       means bass and treble stacked onto each other).
   **/
-  semitoneSpectrum.assign(logSpectrum.size(), vector<Real>());
-  chromagram.assign(logSpectrum.size(), vector<Real>());
-  bassChromagram.assign(logSpectrum.size(), vector<Real>());
+  semitoneSpectrum.assign(logSpectrum.size(), ::essentia::VectorEx<Real>());
+  chromagram.assign(logSpectrum.size(), ::essentia::VectorEx<Real>());
+  bassChromagram.assign(logSpectrum.size(), ::essentia::VectorEx<Real>());
 
   for (int i = 0; i < (int)logSpectrum.size(); i++) {
     Real b[nNote];
@@ -255,8 +255,8 @@ void NNLSChroma::compute() {
 
     // Here's where the non-negative least squares algorithm calculates the note
     // activation x.
-    vector<Real> chroma = vector<Real>(12, 0);
-    vector<Real> basschroma = vector<Real>(12, 0);
+    ::essentia::VectorEx<Real> chroma = ::essentia::VectorEx<Real>(12, 0);
+    ::essentia::VectorEx<Real> basschroma = ::essentia::VectorEx<Real>(12, 0);
     Real currval;
     int iSemitone = 0;
 
@@ -282,7 +282,7 @@ void NNLSChroma::compute() {
           x[j] = 1.0;
         } 
 
-        vector<int> signifIndex;
+        ::essentia::VectorEx<int> signifIndex;
         int index = 0;
         sumb /= 84.0;
 
@@ -332,7 +332,7 @@ void NNLSChroma::compute() {
     bassChromagram[i] = basschroma;
 
     if (_doNormalizeChroma > 0) {
-      vector<Real> chromanorm = vector<Real>(3, 0);
+      ::essentia::VectorEx<Real> chromanorm = ::essentia::VectorEx<Real>(3, 0);
 
       switch (_doNormalizeChroma) {
         case 0:  // should never end up here
@@ -345,22 +345,22 @@ void NNLSChroma::compute() {
           chromanorm[2] = max(chromanorm[0], chromanorm[1]);
           break;
         case 2:
-          for (vector<Real>::iterator it = chromagram[i].begin();
+          for (::essentia::VectorEx<Real>::iterator it = chromagram[i].begin();
                it != chromagram[i].end(); ++it) {
             chromanorm[0] += *it;
           }
-          for (vector<Real>::iterator it = bassChromagram[i].begin();
+          for (::essentia::VectorEx<Real>::iterator it = bassChromagram[i].begin();
                it != bassChromagram[i].end(); ++it) {
             chromanorm[1] += *it;
           }
           break;
         case 3:
-          for (vector<Real>::iterator it = chromagram[i].begin();
+          for (::essentia::VectorEx<Real>::iterator it = chromagram[i].begin();
                it != chromagram[i].end(); ++it) {
             chromanorm[0] += pow(*it, 2);
           }
           chromanorm[0] = sqrt(chromanorm[0]);
-          for (vector<Real>::iterator it = bassChromagram[i].begin();
+          for (::essentia::VectorEx<Real>::iterator it = bassChromagram[i].begin();
                it != bassChromagram[i].end(); ++it) {
             chromanorm[1] += pow(*it, 2);
           }
@@ -390,13 +390,13 @@ void NNLSChroma::compute() {
   	calculated using zero padding simply have the same values as the first 
   	(last) valid convolution bin.
 **/
-vector<Real> NNLSChroma::SpecialConvolution(vector<Real> convolvee, vector<Real> kernel) {
+::essentia::VectorEx<Real> NNLSChroma::SpecialConvolution(::essentia::VectorEx<Real> convolvee, ::essentia::VectorEx<Real> kernel) {
   Real s;
   int m, n;
   int lenConvolvee = convolvee.size();
   int lenKernel = kernel.size();
 
-  vector<Real> Z(nNote, 0);
+  ::essentia::VectorEx<Real> Z(nNote, 0);
   assert(lenKernel % 2 != 0);  // no exception handling !!!
 
   for (n = lenKernel - 1; n < lenConvolvee; n++) {
@@ -422,7 +422,7 @@ vector<Real> NNLSChroma::SpecialConvolution(vector<Real> convolvee, vector<Real>
   Calculates a matrix that can be used to linearly map from the magnitude spectrum to a pitch-scale spectrum.
   return this always returns true, which is a bit stupid, really. The main purpose of the function is to change the values in the "matrix" pointed to by *outmatrix
 */
-bool NNLSChroma::logFreqMatrix(Real fs, int frameSize, vector<Real> outmatrix) {
+bool NNLSChroma::logFreqMatrix(Real fs, int frameSize, ::essentia::VectorEx<Real> outmatrix) {
   // TODO: rewrite so that everyone understands what is done here.
   // TODO: make this more general, such that it works with all minoctave,
   // maxoctave and whatever nBPS (or check if it already does)
@@ -433,7 +433,7 @@ bool NNLSChroma::logFreqMatrix(Real fs, int frameSize, vector<Real> outmatrix) {
   int oversampling = 80;
 
   // Linear frequency vector.
-  vector<Real> fft_f;
+  ::essentia::VectorEx<Real> fft_f;
   for (int i = 0; i < frameSize; ++i) {
     fft_f.push_back(i * (fs * 1.0 / ((frameSize - 1.f) * 2.f)));
   }
@@ -441,7 +441,7 @@ bool NNLSChroma::logFreqMatrix(Real fs, int frameSize, vector<Real> outmatrix) {
   Real fft_width = fs / (frameSize - 1.f);
 
   // Linear oversampled frequency vector.
-  vector<Real> oversampled_f;
+  ::essentia::VectorEx<Real> oversampled_f;
   for (int i = 0; i < oversampling * frameSize; ++i) {
     oversampled_f.push_back(
         i * ((fs * 1.0 / ((frameSize - 1.f) * 2.f)) / oversampling));
@@ -451,7 +451,7 @@ bool NNLSChroma::logFreqMatrix(Real fs, int frameSize, vector<Real> outmatrix) {
   int minMIDI =
       21 + minoctave * 12 - 1;        // this includes one additional semitone!
   int maxMIDI = 21 + maxoctave * 12;  // this includes one additional semitone!
-  vector<Real> cq_f;
+  ::essentia::VectorEx<Real> cq_f;
   Real oob = 1.0 / binspersemitone;  // one over binspersemitone
   for (int i = minMIDI; i < maxMIDI; ++i) {
     for (int k = 0; k < binspersemitone; ++k) {
@@ -462,7 +462,7 @@ bool NNLSChroma::logFreqMatrix(Real fs, int frameSize, vector<Real> outmatrix) {
 
   int nFFT = fft_f.size();
 
-  vector<Real> fft_activation;
+  ::essentia::VectorEx<Real> fft_activation;
   for (int iOS = 0; iOS < 2 * oversampling; ++iOS) {
     Real cosp = cospuls(oversampled_f[iOS], fft_f[1], fft_width);
     fft_activation.push_back(cosp);
@@ -521,7 +521,7 @@ Real NNLSChroma::pitchCospuls(Real x, Real centre, int binsperoctave) {
   return out;
 }
 
-void NNLSChroma::dictionaryMatrix(vector<Real> dm, Real s_param) {
+void NNLSChroma::dictionaryMatrix(::essentia::VectorEx<Real> dm, Real s_param) {
   // TODO: make this more general, such that it works with all minoctave,
   // maxoctave and even more than one note per semitone
   int binspersemitone = nBPS;
@@ -532,7 +532,7 @@ void NNLSChroma::dictionaryMatrix(vector<Real> dm, Real s_param) {
   int minMIDI =
       21 + minoctave * 12 - 1;        // this includes one additional semitone!
   int maxMIDI = 21 + maxoctave * 12;  // this includes one additional semitone!
-  vector<Real> cq_f;
+  ::essentia::VectorEx<Real> cq_f;
   Real oob = 1.0 / binspersemitone;  // one over binspersemitone
   for (int i = minMIDI; i < maxMIDI; ++i) {
     for (int k = 0; k < binspersemitone; ++k) {

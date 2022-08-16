@@ -32,14 +32,14 @@ namespace standard {
 class SpsModelSynth : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _magnitudes;
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _phases;
-  Input<std::vector<Real> > _stocenv;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _phases;
+  Input<::essentia::VectorEx<Real> > _stocenv;
 
-  Output<std::vector<Real> > _outframe;
-  Output<std::vector<Real> > _outsineframe;
-  Output<std::vector<Real> > _outstocframe;
+  Output<::essentia::VectorEx<Real> > _outframe;
+  Output<::essentia::VectorEx<Real> > _outsineframe;
+  Output<::essentia::VectorEx<Real> > _outstocframe;
 
   Real _sampleRate;
   int _fftSize;
@@ -108,14 +108,14 @@ namespace streaming {
 class SpsModelSynth : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _magnitudes;
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _phases;
-  Sink<std::vector<Real> > _stocenv;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _phases;
+  Sink<::essentia::VectorEx<Real> > _stocenv;
 
-  Source<std::vector<Real> > _outframe;
-  Source<std::vector<Real> > _outsineframe;
-  Source<std::vector<Real> > _outstocframe;
+  Source<::essentia::VectorEx<Real> > _outframe;
+  Source<::essentia::VectorEx<Real> > _outsineframe;
+  Source<::essentia::VectorEx<Real> > _outstocframe;
 
  public:
   SpsModelSynth() {

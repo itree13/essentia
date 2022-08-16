@@ -44,8 +44,8 @@ void CentralMoments::configure() {
 
 void CentralMoments::compute() {
 
-  const std::vector<Real>& array = _array.get();
-  std::vector<Real>& centralMoments = _centralMoments.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
+  ::essentia::VectorEx<Real>& centralMoments = _centralMoments.get();
   centralMoments.resize(5);
 
   if (array.empty()) {

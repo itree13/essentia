@@ -77,7 +77,7 @@ InputDomain getInputDomain() const { return TimeDomain; }                \
                                                                          \
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) { \
     RogueVector<float> inputr(const_cast<float*>(inputBuffers[0]), _blockSize);\
-    vector<float>& input = static_cast<vector<float>&>(inputr);\
+    ::essentia::VectorEx<float>& input = static_cast<::essentia::VectorEx<float>&>(inputr);\
                                                                          \
       outputType value;                                                  \
                                                                          \

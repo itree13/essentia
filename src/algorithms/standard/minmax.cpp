@@ -38,7 +38,7 @@ MinMax::OpType MinMax::typeFromString(const std::string& name) const {
 
 void MinMax::compute() {
 
-  const std::vector<Real>& input = _input.get();
+  const ::essentia::VectorEx<Real>& input = _input.get();
   int& index = _index.get();
   Real& value = _value.get();
 

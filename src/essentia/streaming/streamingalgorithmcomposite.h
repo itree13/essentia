@@ -82,11 +82,11 @@ class AlgorithmComposite : public Algorithm {
   // needs to be declared so that the scheduler knows what to do with this
   virtual void declareProcessOrder() = 0;
 
-  // TODO: can we make this return a const vector<ProcessStep>& instead?
+  // TODO: can we make this return a const ::essentia::VectorEx<ProcessStep>& instead?
   //  No: because we need to call the declareProcessOrder just at the moment we need
   //      to know it and not before, because the process order might be dependent on
   //      the configuration of the algorithm, e.g. see ReplayGain implementation
-  std::vector<ProcessStep> processOrder();
+  ::essentia::VectorEx<ProcessStep> processOrder();
 
   /**
    * Specialized implementation of the reset() method that will call reset() on all
@@ -97,7 +97,7 @@ class AlgorithmComposite : public Algorithm {
   void declareProcessStep(const ProcessStep& step);
 
 protected:
-  std::vector<ProcessStep> _processOrder;
+  ::essentia::VectorEx<ProcessStep> _processOrder;
 };
 
 

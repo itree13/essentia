@@ -206,7 +206,7 @@ void KeyExtractor::createInnerNetwork() {
 }
 
 void KeyExtractor::compute() {
-  const vector<Real>& audio = _audio.get();
+  const ::essentia::VectorEx<Real>& audio = _audio.get();
 
   string& key      = _key.get();
   string& scale    = _scale.get();

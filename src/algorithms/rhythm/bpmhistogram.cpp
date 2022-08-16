@@ -120,7 +120,7 @@ void BpmHistogram::createWindow(int size) {
   standard::Algorithm* windowing = standard::AlgorithmFactory::create("Windowing",
                                                                       "zeroPhase", false,
                                                                       "type",parameter("windowType"));
-  vector<Real> ones(size, 1.0);
+  ::essentia::VectorEx<Real> ones(size, 1.0);
   windowing->input("frame").set(ones);
   windowing->output("frame").set(_window);
   windowing->compute();
@@ -129,15 +129,15 @@ void BpmHistogram::createWindow(int size) {
 }
 
 void BpmHistogram::computeBpm() {
-  const vector<vector<Real> >& magnitudes = _pool.value<vector<vector<Real> > >("magnitudes");
-  const vector<vector<Real> >& peaks = _pool.value<vector<vector<Real> > >("peaks_positions");
-  const vector<vector<Real> >& peaksValue = _pool.value<vector<vector<Real> > >("peaks_value");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& magnitudes = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("magnitudes");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& peaks = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("peaks_positions");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& peaksValue = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("peaks_value");
   
   Real bpmRatio = _binWidth*60.0;
   Real threshold = 0.;
   
   for (int i=0; i<(int)peaks.size();i++) {
-    vector<Real> tempogram(int(_maxBpm+1), 0.);
+    ::essentia::VectorEx<Real> tempogram(int(_maxBpm+1), 0.);
     try {
       // only use peaks that are VERY prominent
       //threshold = max(Real(1e-4), max(median(peaksValue), mean(peaksValue)));
@@ -151,7 +151,7 @@ void BpmHistogram::computeBpm() {
       threshold = numeric_limits<int>::max();
     }
 
-    vector<Real> mainPeaks, mainBpms;
+    ::essentia::VectorEx<Real> mainPeaks, mainBpms;
     mainPeaks.reserve(peaks[i].size());
     mainBpms.reserve(peaks[i].size());
 
@@ -173,7 +173,7 @@ void BpmHistogram::computeBpm() {
     if (mainPeaks.size() < 1) {
       mainPeaks.clear();
       mainBpms.clear();
-      _pool.add("magnitudes", vector<Real>(magnitudes[i].size(), 0));
+      _pool.add("magnitudes", ::essentia::VectorEx<Real>(magnitudes[i].size(), 0));
       _pool.add("bpmCandidates", 0);
       _pool.add("bpmAmplitudes", 0);
     }
@@ -192,7 +192,7 @@ void BpmHistogram::unwrapPhase(Real& ph, const Real& uwph) {
 	ph += Real(k)*M_2PI;
 }
 
-void BpmHistogram::createTicks(Real bpm) { //const vector<Real>& bpms) {
+void BpmHistogram::createTicks(Real bpm) { //const ::essentia::VectorEx<Real>& bpms) {
   if (bpm==0) {
     // this could happen:
     // 1. if any of the found bpms were above or below the maxBpm/minBpm
@@ -201,11 +201,11 @@ void BpmHistogram::createTicks(Real bpm) { //const vector<Real>& bpms) {
   }
   // TODO: what peaks should be taken for finding each frame's bpm?
   // prominent_peaks yield to worse alignment of sinusoids...
-  //const vector<vector<Real> >& peaks = _pool.value<vector<vector<Real> > >("prominent_peaks_positions");
-  const vector<vector<Real> >& peaks = _pool.value<vector<vector<Real> > >("peaks_positions");
-  const vector<vector<Real> >& ph= _pool.value<vector<vector<Real> > >("phases");
+  //const ::essentia::VectorEx<::essentia::VectorEx<Real> >& peaks = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("prominent_peaks_positions");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& peaks = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("peaks_positions");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& ph= _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("phases");
 
-  vector<vector<Real> > phases(ph.begin(), ph.end());
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > phases(ph.begin(), ph.end());
   for (int iFrame=0; iFrame<(int)phases.size(); iFrame++){
     Real uwph = phases[iFrame][0];
     for (int ibin=1; ibin<(int)phases[iFrame].size(); ibin++){
@@ -221,7 +221,7 @@ void BpmHistogram::createTicks(Real bpm) { //const vector<Real>& bpms) {
   // maximum peak
   int nFrames = peaks.size();
   Real lastBin = -1;
-  vector<Real> sinusoid(_frameCutter->output("frame").totalProduced()*_hopSize, Real(0.0));
+  ::essentia::VectorEx<Real> sinusoid(_frameCutter->output("frame").totalProduced()*_hopSize, Real(0.0));
   for (int iFrame=0; iFrame<nFrames; iFrame+=1) {
     Real bin = -1;
     if (peaks[iFrame].empty()){ // framecutter is set to not drop silent frames!
@@ -283,7 +283,7 @@ void BpmHistogram::createTicks(Real bpm) { //const vector<Real>& bpms) {
     _pool.add("frameBpms", bin*bpmRatio);
   }
 
-  vector<Real> frameBpms = _pool.value<vector<Real> >("frameBpms");
+  ::essentia::VectorEx<Real> frameBpms = _pool.value<::essentia::VectorEx<Real> >("frameBpms");
   postProcessBpms(bpm, frameBpms);
   Real maxBpm = 1;
   for (int iFrame=0; iFrame<nFrames; iFrame++) {
@@ -309,7 +309,7 @@ void BpmHistogram::createTicks(Real bpm) { //const vector<Real>& bpms) {
   Real mavgSize = 30./maxBpm*_frameRate; //0.5*maxBpm in samples
   standard::Algorithm* mavg = standard::AlgorithmFactory::create("MovingAverage",
                                                                  "size", (int)mavgSize);
-  vector<Real> sinusoid_ma;
+  ::essentia::VectorEx<Real> sinusoid_ma;
   mavg->input("signal").set(sinusoid);
   mavg->output("signal").set(sinusoid_ma);
   mavg->compute();
@@ -324,7 +324,7 @@ void BpmHistogram::createTicks(Real bpm) { //const vector<Real>& bpms) {
                                                                       "threshold", 1e-4,
                                                                       "minPosition", 0,
                                                                       "maxPosition", (int)sinusoid.size()-1);
-  vector<Real> ticks, ticksAmp;
+  ::essentia::VectorEx<Real> ticks, ticksAmp;
   peakDetect->input("array").set(sinusoid);
   peakDetect->output("positions").set(ticks);
   peakDetect->output("amplitudes").set(ticksAmp);
@@ -349,16 +349,16 @@ void BpmHistogram::createTicks(Real bpm) { //const vector<Real>& bpms) {
     ticks[i]/=_frameRate;
   }
 
-  _tempogram.push(vecvecToArray2D(_pool.value<vector<vector<Real> > >("tempogram")));
+  _tempogram.push(vecvecToArray2D(_pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("tempogram")));
   _frameBpms.push(frameBpms);
   _ticks.push(ticks);
   _ticksMagnitude.push(ticksAmp);
   _sinusoid.push(sinusoid);
 }
 
-void BpmHistogram::createSinusoid(vector<Real>& sinusoid, Real freq, Real phase, int idx) {
+void BpmHistogram::createSinusoid(::essentia::VectorEx<Real>& sinusoid, Real freq, Real phase, int idx) {
   int size = _window.size();
-  vector<Real> sine(size);
+  ::essentia::VectorEx<Real> sine(size);
   int pos = (idx)*_hopSize;
   for (int i=0; i<size; i++) {
     if (pos+i<0) continue;
@@ -368,7 +368,7 @@ void BpmHistogram::createSinusoid(vector<Real>& sinusoid, Real freq, Real phase,
   }
 }
 
-void BpmHistogram::postProcessBpms(Real mainBpm, vector<Real>& bpms) {
+void BpmHistogram::postProcessBpms(Real mainBpm, ::essentia::VectorEx<Real>& bpms) {
   Real meanBpm = 0;
   if (_meanBpm == 0) { // no bpm induction
     int counts=0;
@@ -431,15 +431,15 @@ Real BpmHistogram::lognormal(Real x) {
 }
 #endif
 
-void BpmHistogram::computeHistogram(vector<Real>& bpmPositions,
-                                    vector<Real>& bpmMagnitudes) {
-  const vector<Real>& bpms = _pool.value<vector<Real> >("bpmCandidates");
-  const vector<vector<Real> >& tempogram = _pool.value<vector<vector<Real> > >("tempogram");
-  const vector<Real>& m = _pool.value<vector<Real> >("bpmAmplitudes");
-  vector<Real> mags(m.begin(), m.end());
+void BpmHistogram::computeHistogram(::essentia::VectorEx<Real>& bpmPositions,
+                                    ::essentia::VectorEx<Real>& bpmMagnitudes) {
+  const ::essentia::VectorEx<Real>& bpms = _pool.value<::essentia::VectorEx<Real> >("bpmCandidates");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& tempogram = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("tempogram");
+  const ::essentia::VectorEx<Real>& m = _pool.value<::essentia::VectorEx<Real> >("bpmAmplitudes");
+  ::essentia::VectorEx<Real> mags(m.begin(), m.end());
   essentia::normalize(mags);
   //Real maxBpm = *max_element(bpms.begin(), bpms.end());
-  vector<Real> bpmHist = vector<Real>(int(_maxBpm+1), Real(0));
+  ::essentia::VectorEx<Real> bpmHist = ::essentia::VectorEx<Real>(int(_maxBpm+1), Real(0));
 
   // when building the histogram each contribution to a bpm-bin will be weighted by
   // its deviation to the bin. Thus a bpm of 60 will have a weight of 1 to the bin
@@ -463,7 +463,7 @@ void BpmHistogram::computeHistogram(vector<Real>& bpmPositions,
 
   // get peaks from histogram:
   int size = bpmHist.size();
-  vector<Real> tmpBpms;
+  ::essentia::VectorEx<Real> tmpBpms;
   tmpBpms.reserve(size);
   mags.clear();
   mags.reserve(size);
@@ -533,13 +533,13 @@ AlgorithmStatus BpmHistogram::process() {
   //compute bpm histogram:
   computeBpm();
 
-  const vector<string>& descriptors = _pool.descriptorNames();
+  const ::essentia::VectorEx<string>& descriptors = _pool.descriptorNames();
   if (!contains(descriptors, "bpmCandidates") ||
-      sum(_pool.value<vector<Real> >("bpmCandidates")) == 0) {
+      sum(_pool.value<::essentia::VectorEx<Real> >("bpmCandidates")) == 0) {
 
     // silent track
-    vector<Real> zero(1,0);
-    vector<Real> empty;
+    ::essentia::VectorEx<Real> zero(1,0);
+    ::essentia::VectorEx<Real> empty;
     TNT::Array2D<Real> emptyMatrix;
     _bpm.push((Real) 0.);
     _bpmCandidates.push(empty);
@@ -555,7 +555,7 @@ AlgorithmStatus BpmHistogram::process() {
 
 
   // get peaks from histogram:
-  vector<Real> bpmPositions, bpmMagnitudes;
+  ::essentia::VectorEx<Real> bpmPositions, bpmMagnitudes;
   computeHistogram(bpmPositions, bpmMagnitudes);
 
   if (_meanBpm != 0) createTicks(_meanBpm); // bpm induction
@@ -647,28 +647,28 @@ void BpmHistogram::createInnerNetwork() {
 }
 
 void BpmHistogram::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
   Real& bpm = _bpm.get();
-  vector<Real>& bpmCandidates = _bpmCandidates.get();
-  vector<Real>& bpmMagnitudes = _bpmMagnitudes.get();
+  ::essentia::VectorEx<Real>& bpmCandidates = _bpmCandidates.get();
+  ::essentia::VectorEx<Real>& bpmMagnitudes = _bpmMagnitudes.get();
   TNT::Array2D<Real>& tempogram = _tempogram.get();
-  vector<Real>& frameBpms = _frameBpms.get();
-  vector<Real>& ticks = _ticks.get();
-  vector<Real>& ticksMagnitude = _ticksMagnitude.get();
-  vector<Real>& sinusoid = _sinusoid.get();
+  ::essentia::VectorEx<Real>& frameBpms = _frameBpms.get();
+  ::essentia::VectorEx<Real>& ticks = _ticks.get();
+  ::essentia::VectorEx<Real>& ticksMagnitude = _ticksMagnitude.get();
+  ::essentia::VectorEx<Real>& sinusoid = _sinusoid.get();
 
   bpm = _pool.value<Real>("internal.bpm");
-  bpmCandidates = _pool.value<vector<Real> >("internal.bpmCandidates");
-  bpmMagnitudes = _pool.value<vector<Real> >("internal.bpmMagnitudes");
-  tempogram = _pool.value<vector<TNT::Array2D<Real> > >("internal.tempogram")[0];
-  frameBpms = _pool.value<vector<Real> >("internal.frameBpms");
-  ticks = _pool.value<vector<Real> >("internal.ticks");
-  ticksMagnitude = _pool.value<vector<Real> >("internal.ticksMagnitude");
-  sinusoid = _pool.value<vector<Real> >("internal.sinusoid");
+  bpmCandidates = _pool.value<::essentia::VectorEx<Real> >("internal.bpmCandidates");
+  bpmMagnitudes = _pool.value<::essentia::VectorEx<Real> >("internal.bpmMagnitudes");
+  tempogram = _pool.value<::essentia::VectorEx<TNT::Array2D<Real> > >("internal.tempogram")[0];
+  frameBpms = _pool.value<::essentia::VectorEx<Real> >("internal.frameBpms");
+  ticks = _pool.value<::essentia::VectorEx<Real> >("internal.ticks");
+  ticksMagnitude = _pool.value<::essentia::VectorEx<Real> >("internal.ticksMagnitude");
+  sinusoid = _pool.value<::essentia::VectorEx<Real> >("internal.sinusoid");
 }
 
 void BpmHistogram::reset() {

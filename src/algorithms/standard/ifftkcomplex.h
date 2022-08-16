@@ -31,8 +31,8 @@ namespace standard {
 class IFFTKComplex : public Algorithm {
 
  protected:
-  Input<std::vector<std::complex<Real> > > _fft;
-  Output<std::vector<std::complex<Real> > > _signal;
+  Input<::essentia::VectorEx<std::complex<Real> > > _fft;
+  Output<::essentia::VectorEx<std::complex<Real> > > _signal;
 
  public:
   IFFTKComplex() : _input(0), _output(0), _fftCfg(0) {
@@ -76,8 +76,8 @@ namespace streaming {
 class IFFTKComplex : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::complex<Real> > > _fft;
-  Source<std::vector<std::complex<Real> > > _signal;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _fft;
+  Source<::essentia::VectorEx<std::complex<Real> > > _signal;
 
  public:
   IFFTKComplex() {

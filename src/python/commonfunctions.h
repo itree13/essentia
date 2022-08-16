@@ -84,7 +84,7 @@ std::string generateDocString(T& algo, const std::string& description) {
   docStr << algo.name() << "\n";
 
   // inputs
-  vector<string> inputNames = algo.inputNames();
+  ::essentia::VectorEx<string> inputNames = algo.inputNames();
 
   if (!inputNames.empty()) {
     docStr << "\n\nInputs:\n";
@@ -110,7 +110,7 @@ std::string generateDocString(T& algo, const std::string& description) {
   }
 
   // outputs
-  vector<string> outputNames = algo.outputNames();
+  ::essentia::VectorEx<string> outputNames = algo.outputNames();
 
   if (!outputNames.empty()) {
     docStr << "\n\nOutputs:\n";
@@ -172,7 +172,7 @@ PyObject* generateDocStruct(T& algo, const AlgorithmInfo<T>& inf) {
 
   // inputs
   PyObject* inputs = PyList_New(0);
-  vector<string> inputNames = algo.inputNames();
+  ::essentia::VectorEx<string> inputNames = algo.inputNames();
 
   for (int i=0; i<(int)inputNames.size(); i++) {
     PyObject* input = PyDict_New();
@@ -188,7 +188,7 @@ PyObject* generateDocStruct(T& algo, const AlgorithmInfo<T>& inf) {
 
   // outputs
   PyObject* outputs = PyList_New(0);
-  vector<string> outputNames = algo.outputNames();
+  ::essentia::VectorEx<string> outputNames = algo.outputNames();
 
   for (int i=0; i<(int)outputNames.size(); i++) {
     PyObject* output = PyDict_New();

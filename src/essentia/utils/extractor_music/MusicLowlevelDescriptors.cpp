@@ -51,7 +51,7 @@ void MusicLowlevelDescriptors::createNetworkNeqLoud(SourceBase& source, Pool& po
 
   // Silence Rate
   Real thresholds_dB[] = { -20, -30, -60 };
-  vector<Real> thresholds(ARRAY_SIZE(thresholds_dB));
+  ::essentia::VectorEx<Real> thresholds(ARRAY_SIZE(thresholds_dB));
   for (uint i=0; i<thresholds.size(); i++) {
     thresholds[i] = db2lin(thresholds_dB[i]/2.0);
   }
@@ -368,14 +368,14 @@ void MusicLowlevelDescriptors::computeAverageLoudness(Pool& pool){ // after comp
 // check if we processed enough audio to get an estimation for the loudness 
   // (2 seconds required)
   try {
-    pool.value<vector<Real> >(nameSpace + "loudness")[0];
+    pool.value<::essentia::VectorEx<Real> >(nameSpace + "loudness")[0];
   }
   catch (EssentiaException&) {
     throw EssentiaException("File is too short for loudness estimation... Aborting...");
     //exit(6);
   }
 
-  vector<Real> levelArray = pool.value<vector<Real> >(nameSpace + "loudness");
+  ::essentia::VectorEx<Real> levelArray = pool.value<::essentia::VectorEx<Real> >(nameSpace + "loudness");
   pool.remove(nameSpace + "loudness");
 
   // Maximum dynamic

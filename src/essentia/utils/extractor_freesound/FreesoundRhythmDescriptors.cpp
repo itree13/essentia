@@ -81,7 +81,7 @@ void FreesoundRhythmDescriptors::createNetworkBeatsLoudness(SourceBase& source, 
   Real sampleRate = options.value<Real>("analysisSampleRate");
 
   AlgorithmFactory& factory = AlgorithmFactory::instance();
-  vector<Real> ticks = pool.value<vector<Real> >(nameSpace + "beats_position");
+  ::essentia::VectorEx<Real> ticks = pool.value<::essentia::VectorEx<Real> >(nameSpace + "beats_position");
   
   // assume there is only one beat centered at zero if there were not beats detected
   if (ticks.size()==0) {

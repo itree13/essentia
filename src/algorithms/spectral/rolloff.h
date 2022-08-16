@@ -28,7 +28,7 @@ namespace standard {
 class RollOff : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _spectrum;
   Output<Real> _rolloff;
 
  public:
@@ -59,7 +59,7 @@ namespace streaming {
 class RollOff : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _rolloff;
 
  public:

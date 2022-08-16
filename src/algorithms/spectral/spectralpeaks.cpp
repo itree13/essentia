@@ -57,9 +57,9 @@ void SpectralPeaks::configure() {
 
 void SpectralPeaks::compute() {
 
-  const std::vector<Real>& spectrum = _spectrum.get();
-  std::vector<Real>& peakMagnitude = _magnitudes.get();
-  std::vector<Real>& peakFrequency = _frequencies.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
+  ::essentia::VectorEx<Real>& peakMagnitude = _magnitudes.get();
+  ::essentia::VectorEx<Real>& peakFrequency = _frequencies.get();
 
   _peakDetect->input("array").set(spectrum);
   _peakDetect->output("positions").set(peakFrequency);

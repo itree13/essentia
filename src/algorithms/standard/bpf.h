@@ -42,7 +42,7 @@ class BPF : public Algorithm {
   ~BPF() {}
 
   void declareParameters() {
-    std::vector<Real> defaultPoints(2);
+    ::essentia::VectorEx<Real> defaultPoints(2);
     defaultPoints[0] = 0;
     defaultPoints[1] = 1;
     declareParameter("xPoints", "the x-coordinates of the points forming the break-point function (the points must be arranged in ascending order and cannot contain duplicates)", "", defaultPoints);

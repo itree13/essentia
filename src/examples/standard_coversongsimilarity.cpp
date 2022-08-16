@@ -100,14 +100,14 @@ int main(int argc, char* argv[]) {
   /////////// CONNECTING THE ALGORITHMS ////////////////
   cout << "-------- connecting algos for hpcp, csm and local-alignment extraction ---------" << endl;
 
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
 
   // audio -> FrameCutter
   audio->output("audio").set(audioBuffer);
   fc->input("signal").set(audioBuffer);
 
   // FrameCutter -> Windowing -> Spectrum
-  vector<Real> frame, windowedFrame;
+  ::essentia::VectorEx<Real> frame, windowedFrame;
 
   fc->output("frame").set(frame);
   w->input("frame").set(frame);
@@ -115,28 +115,28 @@ int main(int argc, char* argv[]) {
   w->output("frame").set(windowedFrame);
   spec->input("frame").set(windowedFrame);
 
-  vector<Real> spect;
+  ::essentia::VectorEx<Real> spect;
   spec->output("spectrum").set(spect);
 
   // Spectrum -> SpectralPeaks -> SpectralWhitening
-  vector<Real> peakFrequencies, peakMagnitudes;
+  ::essentia::VectorEx<Real> peakFrequencies, peakMagnitudes;
   peak->input("spectrum").set(spect);
   peak->output("frequencies").set(peakFrequencies);
   peak->output("magnitudes").set(peakMagnitudes);
 
-  vector<Real> wPeakMagnitudes;
+  ::essentia::VectorEx<Real> wPeakMagnitudes;
   white->input("spectrum").set(spect);
   white->input("frequencies").set(peakFrequencies);
   white->input("magnitudes").set(peakMagnitudes);
   white->output("magnitudes").set(wPeakMagnitudes);
 
   // SpectralWhitening > HPCP
-  vector<Real> hpcpOut;
+  ::essentia::VectorEx<Real> hpcpOut;
   hpcp->input("frequencies").set(peakFrequencies);
   hpcp->input("magnitudes").set(wPeakMagnitudes);
   hpcp->output("hpcp").set(hpcpOut);
 
-  // TODO: replace with std::vector<vector<Real> > when essentia pool has 2D vector support
+  // TODO: replace with ::essentia::VectorEx<::essentia::VectorEx<Real> > when essentia pool has 2D vector support
   // TNT::Array2D<Real> hpcpOutPool;
 
   /////////// STARTING THE ALGORITHMS //////////////////
@@ -197,20 +197,20 @@ int main(int argc, char* argv[]) {
 
   }
 
-  const vector<vector<Real> > queryHpcp = pool.value<vector<vector<Real> > >("queryHPCP");
-  const vector<vector<Real> > referenceHpcp = pool.value<vector<vector<Real> > >("referenceHPCP");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> > queryHpcp = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("queryHPCP");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> > referenceHpcp = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("referenceHPCP");
   cout << "Query HPCP frames: " << queryHpcp.size() << "\nReference HPCP frames: " << referenceHpcp.size() << endl; 
 
   /////////// CONNECTING THE ALGORITHMS FOR COVER SONG SIMILARITY ////////////////
   cout << "\n-------- computing cover song similarity ---------" << endl;
 
-  vector<vector<Real> > simMatrix;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > simMatrix;
   Real distance;
   csm->input("queryFeature").set(queryHpcp);
   csm->input("referenceFeature").set(referenceHpcp);
   csm->output("csm").set(simMatrix);
 
-  vector<vector<Real> > scoreMatrix;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > scoreMatrix;
   coversim->input("inputArray").set(simMatrix);
   coversim->output("scoreMatrix").set(scoreMatrix);
   coversim->output("distance").set(distance);
@@ -220,7 +220,7 @@ int main(int argc, char* argv[]) {
 
   cout << " .... computing smith-waterman local alignment" << endl;
   coversim->compute();
-  // TODO: replace with std::vector<vector<Real> > when essentia pool has 2D vector support
+  // TODO: replace with ::essentia::VectorEx<::essentia::VectorEx<Real> > when essentia pool has 2D vector support
   cout << "Cover song similarity distance: " << distance << endl;
   pool.add("distance", distance);
   pool.add("scoreMatrix", vecvecToArray2D(scoreMatrix));

@@ -135,7 +135,7 @@ void SuperFluxExtractor::configure() {
 void SuperFluxExtractor::createInnerNetwork() {
   _SuperFluxExtractor = streaming::AlgorithmFactory::create("SuperFluxExtractor");
   _vectorInput = new streaming::VectorInput<Real>();
-  _vectorOut = new streaming::VectorOutput<std::vector<Real> >();
+  _vectorOut = new streaming::VectorOutput<::essentia::VectorEx<Real> >();
   
   *_vectorInput >> _SuperFluxExtractor->input("signal");
   _SuperFluxExtractor->output("onsets") >> _vectorOut->input("data"); //PC(_pool, "onsets.times");
@@ -144,10 +144,10 @@ void SuperFluxExtractor::createInnerNetwork() {
 
 
  void SuperFluxExtractor::compute() {
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& onsets = _onsets.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& onsets = _onsets.get();
 
-  vector<vector<Real> > ll;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > ll;
   _vectorInput->setVector(&signal);
   _vectorOut->setVector(&ll);
   _network->run(); 

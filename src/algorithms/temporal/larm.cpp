@@ -47,10 +47,10 @@ void Larm::configure() {
 
 void Larm::compute() {
 
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& larm = _larm.get();
 
-  vector<Real> envelope;
+  ::essentia::VectorEx<Real> envelope;
   Real powerMean;
 
   _envelope->input("signal").set(signal);

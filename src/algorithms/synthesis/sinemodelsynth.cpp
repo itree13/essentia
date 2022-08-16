@@ -31,23 +31,23 @@ const char* SineModelSynth::description = DOC("This algorithm computes the sine 
 
 void SineModelSynth::compute() {
 
-  const std::vector<Real>& magnitudes = _magnitudes.get();
-  const std::vector<Real>& frequencies = _frequencies.get();
-  const std::vector<Real>& phases = _phases.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& phases = _phases.get();
 
-  std::vector<std::complex<Real> >& outfft = _outfft.get();
+  ::essentia::VectorEx<std::complex<Real> >& outfft = _outfft.get();
 
   int outSize = (int)floor(_fftSize/2.0) + 1;
   initializeFFT(outfft, outSize);
   int i = 0;
 
   // convert frequencies to peak locations
-  std::vector<Real> locs(frequencies.size());
+  ::essentia::VectorEx<Real> locs(frequencies.size());
   for (i=0; i < int(frequencies.size()); ++i){
     locs[i] = _fftSize*frequencies[i]/float(_sampleRate);
   }
   // init synth phase vector
-  std::vector<Real> ytphase(frequencies.size());
+  ::essentia::VectorEx<Real> ytphase(frequencies.size());
   std::fill(ytphase.begin(), ytphase.end(), 0.);
 
   // initialize last phase and frequency vectors

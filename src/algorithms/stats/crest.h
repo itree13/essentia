@@ -28,7 +28,7 @@ namespace standard {
 class Crest : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _crest;
 
  public:
@@ -58,7 +58,7 @@ namespace streaming {
 class Crest : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _crest;
 
  public:

@@ -53,17 +53,17 @@ class PyStreamingAlgorithm {
   static PyObject* push(PyStreamingAlgorithm* self, PyObject* obj);
 
   static PyObject* inputNames(PyStreamingAlgorithm* self) {
-    vector<string> names = self->algo->inputNames();
+    ::essentia::VectorEx<string> names = self->algo->inputNames();
     return toPython((void*)&names, VECTOR_STRING);
   }
 
   static PyObject* outputNames(PyStreamingAlgorithm* self) {
-    vector<string> names = self->algo->outputNames();
+    ::essentia::VectorEx<string> names = self->algo->outputNames();
     return toPython((void*)&names, VECTOR_STRING);
   }
 
   static PyObject* parameterNames(PyStreamingAlgorithm* self) {
-    vector<string> names = self->algo->defaultParameters().keys();
+    ::essentia::VectorEx<string> names = self->algo->defaultParameters().keys();
     return toPython((void*)&names, VECTOR_STRING);
   }
 
@@ -189,7 +189,7 @@ PyObject* PyStreamingAlgorithm::hasSource(PyStreamingAlgorithm* self, PyObject* 
 
 
 PyObject* PyStreamingAlgorithm::push(PyStreamingAlgorithm* self, PyObject* args) {
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
   if (argsV.size() != 2) {
     PyErr_SetString(PyExc_ValueError, "Algorithm.push requires 2 arguments");
     return NULL;
@@ -228,12 +228,12 @@ PyObject* PyStreamingAlgorithm::push(PyStreamingAlgorithm* self, PyObject* args)
     case REAL:                PUSH_COPY(PyReal, Real);
     case STRING:              PUSH_COPY(String, string);
     case STEREOSAMPLE:        PUSH_COPY(PyStereoSample, StereoSample);
-    case VECTOR_STRING:       PUSH_COPY(VectorString, vector<string>);
-    case VECTOR_STEREOSAMPLE: PUSH_COPY(VectorStereoSample, vector<StereoSample>);
+    case VECTOR_STRING:       PUSH_COPY(VectorString, ::essentia::VectorEx<string>);
+    case VECTOR_STEREOSAMPLE: PUSH_COPY(VectorStereoSample, ::essentia::VectorEx<StereoSample>);
 
     case VECTOR_REAL: {
       RogueVector<Real>* val = (RogueVector<Real>*)VectorReal::fromPythonRef(argsV[1]);
-      src.push(*(vector<Real>*)val);
+      src.push(*(::essentia::VectorEx<Real>*)val);
       delete val;
       break;
     }

@@ -38,8 +38,8 @@ namespace standard {
 class NoiseAdder : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _noise;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _noise;
 
 #ifdef CPP_11
   std::mt19937 _mtrand;

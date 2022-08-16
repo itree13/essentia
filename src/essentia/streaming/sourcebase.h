@@ -51,7 +51,7 @@ void detach(SourceBase& innerSource, SourceProxyBase& proxy);
  */
 class SourceBase : public Connector {
  protected:
-  std::vector<SinkBase*> _sinks;
+  ::essentia::VectorEx<SinkBase*> _sinks;
 
   // we only allow for 1 proxy to be connected at the moment
   // (although multiple ones would be theoretically correct, too)
@@ -72,12 +72,12 @@ class SourceBase : public Connector {
 
   virtual int totalProduced() const = 0;
 
-  const std::vector<SinkBase*>& sinks() const { return _sinks; }
+  const ::essentia::VectorEx<SinkBase*>& sinks() const { return _sinks; }
 
   // TODO: remove me to avoid people doing stuff like src.sinks().clear()
-  std::vector<SinkBase*>& sinks() { return _sinks; }
+  ::essentia::VectorEx<SinkBase*>& sinks() { return _sinks; }
 
-  // should return a vector<TokenType>*
+  // should return a ::essentia::VectorEx<TokenType>*
   virtual void* getTokens() = 0;
 
   // should return a TokenType*
@@ -89,7 +89,7 @@ class SourceBase : public Connector {
    * Return the list of sinks that are connected through a proxy.
    * Make sure to call isProxied() before.
    */
-  const std::vector<SinkBase*>& proxiedSinks() const;
+  const ::essentia::VectorEx<SinkBase*>& proxiedSinks() const;
 
   template <typename TokenType>
   void push(const TokenType& value) {

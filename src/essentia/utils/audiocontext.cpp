@@ -214,7 +214,7 @@ void AudioContext::close() {
 }
 
 
-void AudioContext::write(const vector<StereoSample>& stereoData) {
+void AudioContext::write(const ::essentia::VectorEx<StereoSample>& stereoData) {
   if (_codecCtx->channels != 2) {
     throw EssentiaException("Trying to write stereo audio data to an audio file with ", _codecCtx->channels, " channels");
   }
@@ -239,7 +239,7 @@ void AudioContext::write(const vector<StereoSample>& stereoData) {
 }
 
 
-void AudioContext::write(const vector<AudioSample>& monoData) {
+void AudioContext::write(const ::essentia::VectorEx<AudioSample>& monoData) {
   if (_codecCtx->channels != 1) {
     throw EssentiaException("Trying to write mono audio data to an audio file with ", _codecCtx->channels, " channels");
   }

@@ -158,7 +158,7 @@ void AudioWriter::compute() {
     throw EssentiaException("AudioWriter: Trying to call compute() on an AudioWriter algo which hasn't been correctly configured...");
   }
 
-  const vector<StereoSample>& audio = _audio.get();
+  const ::essentia::VectorEx<StereoSample>& audio = _audio.get();
 
   _audiogen->setVector(&audio);
 

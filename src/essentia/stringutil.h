@@ -20,7 +20,7 @@
 #ifndef ESSENTIA_STRINGUTIL_H
 #define ESSENTIA_STRINGUTIL_H
 
-#include <vector>
+#include "types.h"
 #include <string>
 #include <sstream>
 
@@ -40,7 +40,7 @@ std::string toUpper(const std::string& str);
  * Return a string split whenever there is a char contained in the given
  * @c delimiters argument.
  */
-std::vector<std::string> tokenize(const std::string& str, const std::string& delimiters, bool trimEmpty = false);
+::essentia::VectorEx<std::string> tokenize(const std::string& str, const std::string& delimiters, bool trimEmpty = false);
 
 /**
  * Strip the given string of its leading and trailing whitespace characters.

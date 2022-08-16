@@ -57,9 +57,9 @@ AlgorithmStatus StereoMuxer::process() {
     return process();
   }
 
-  const vector<AudioSample>& left = _left.tokens();
-  const vector<AudioSample>& right = _right.tokens();
-  vector<StereoSample>& audio = _audio.tokens();
+  const ::essentia::VectorEx<AudioSample>& left = _left.tokens();
+  const ::essentia::VectorEx<AudioSample>& right = _right.tokens();
+  ::essentia::VectorEx<StereoSample>& audio = _audio.tokens();
 
   for (int i=0; i<(int)left.size(); i++) {
     // TODO make sure left.size() always match right.size()
@@ -88,9 +88,9 @@ const char* StereoMuxer::description = DOC("This algorithm outputs a stereo sign
 
 
 void StereoMuxer::compute() {
-  const vector<AudioSample>& left = _left.get();
-  const vector<AudioSample>& right = _right.get();
-  vector<StereoSample>& audio = _audio.get();
+  const ::essentia::VectorEx<AudioSample>& left = _left.get();
+  const ::essentia::VectorEx<AudioSample>& right = _right.get();
+  ::essentia::VectorEx<StereoSample>& audio = _audio.get();
 
   if (left.size() != right.size()) {
     throw EssentiaException("StereoMuxer: \"left\" and \"right\" inputs should contain equal number of audiosamples");

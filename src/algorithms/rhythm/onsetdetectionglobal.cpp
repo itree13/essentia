@@ -127,9 +127,9 @@ void OnsetDetectionGlobal::configure() {
 }
 
 void OnsetDetectionGlobal::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   if (signal.empty()) {
-    vector<Real>& onsetDetections = _onsetDetections.get();
+    ::essentia::VectorEx<Real>& onsetDetections = _onsetDetections.get();
     onsetDetections.clear();
     return;
   }
@@ -149,13 +149,13 @@ void OnsetDetectionGlobal::compute() {
 }
 
 void OnsetDetectionGlobal::computeInfoGain() {
-  vector<Real>& onsetDetections = _onsetDetections.get();
+  ::essentia::VectorEx<Real>& onsetDetections = _onsetDetections.get();
 
-  vector<vector<Real> > buffer(_bufferSize, vector<Real> (_numberFFTBins, 0));
-  vector<Real> histogramOld(_numberFFTBins, 0);
-  vector<Real> histogramNew(_numberFFTBins, 0);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > buffer(_bufferSize, ::essentia::VectorEx<Real> (_numberFFTBins, 0));
+  ::essentia::VectorEx<Real> histogramOld(_numberFFTBins, 0);
+  ::essentia::VectorEx<Real> histogramNew(_numberFFTBins, 0);
 
-  vector<Real> spectrum;
+  ::essentia::VectorEx<Real> spectrum;
   _spectrum->input("frame").set(_frameWindowed);
   _spectrum->output("spectrum").set(spectrum);
 
@@ -171,7 +171,7 @@ void OnsetDetectionGlobal::computeInfoGain() {
 
     // update buffer; take only bins we are interested in
     buffer.erase(buffer.begin());
-    buffer.push_back(vector<Real>(spectrum.begin() + _minFrequencyBin,
+    buffer.push_back(::essentia::VectorEx<Real>(spectrum.begin() + _minFrequencyBin,
                         spectrum.begin() + _maxFrequencyBin));
 
     // compute weighted sum of magnitudes for each bin
@@ -220,15 +220,15 @@ void OnsetDetectionGlobal::computeInfoGain() {
 
 
 void OnsetDetectionGlobal::computeBeatEmphasis() {
-  vector<Real>& onsetDetections = _onsetDetections.get();
+  ::essentia::VectorEx<Real>& onsetDetections = _onsetDetections.get();
   onsetDetections.clear();
 
-  vector<complex<Real> > frameFFT;
+  ::essentia::VectorEx<complex<Real> > frameFFT;
   _fft->input("frame").set(_frameWindowed);
   _fft->output("fft").set(frameFFT);
 
-  vector<Real> spectrum;
-  vector<Real> phase;
+  ::essentia::VectorEx<Real> spectrum;
+  ::essentia::VectorEx<Real> phase;
   _cartesian2polar->input("complex").set(frameFFT);
   _cartesian2polar->output("magnitude").set(spectrum);
   _cartesian2polar->output("phase").set(phase);
@@ -238,9 +238,9 @@ void OnsetDetectionGlobal::computeBeatEmphasis() {
   fill(_phase_2.begin(), _phase_2.end(), Real(0.0));
   fill(_spectrum_1.begin(), _spectrum_1.end(), Real(0.0));
 
-  vector<vector<Real> > onsetERB(_numberERBBands);
-  vector<Real> tempFFT (_numberFFTBins, 0.);  // detection function in FFT bins
-  vector<Real> tempERB (_numberERBBands, 0.); // detection function in ERP bands
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > onsetERB(_numberERBBands);
+  ::essentia::VectorEx<Real> tempFFT (_numberFFTBins, 0.);  // detection function in FFT bins
+  ::essentia::VectorEx<Real> tempERB (_numberERBBands, 0.); // detection function in ERP bands
 
   // NB: a hack to make use of ERBBands algorithm and not reimplement the
   // computation of gammatone filterbank weights again. As long as ERBBands
@@ -332,11 +332,11 @@ void OnsetDetectionGlobal::computeBeatEmphasis() {
 
   // Compute weights for ODFs for ERB bands
 
-  vector<Real> smoothed;
-  vector<Real> tempACF;
-  vector<vector <Real> > bandsACF;
+  ::essentia::VectorEx<Real> smoothed;
+  ::essentia::VectorEx<Real> tempACF;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > bandsACF;
   bandsACF.resize(_numberERBBands);
-  vector <Real> weightsERB;
+  ::essentia::VectorEx<Real> weightsERB;
   weightsERB.resize(_numberERBBands);
 
   for (int b=0; b<_numberERBBands; ++b) {
@@ -372,7 +372,7 @@ void OnsetDetectionGlobal::computeBeatEmphasis() {
     tempACF.resize(_maxPeriodODF);
 
     // Weighten by tempo preference curve
-    vector<Real> tempACFWeighted;
+    ::essentia::VectorEx<Real> tempACFWeighted;
     tempACFWeighted.resize(_maxPeriodODF);
 
     // Apply comb-filtering to reflect periodicities on different metric levels
@@ -408,7 +408,7 @@ void OnsetDetectionGlobal::computeBeatEmphasis() {
   normalize(weightsERB);
 
   // Matlab M.Davies: take top 40% of weights, zero the rest (not in the paper!)
-  vector<Real> sorted;
+  ::essentia::VectorEx<Real> sorted;
   sorted.reserve(_numberERBBands);
   copy(weightsERB.begin(), weightsERB.end(), sorted.begin());
   sort(sorted.begin(), sorted.end());
@@ -489,10 +489,10 @@ void OnsetDetectionGlobal::reset() {
 AlgorithmStatus OnsetDetectionGlobal::process() {
   if (!shouldStop()) return PASS;
 
-  vector<Real> detections;
-  //const vector<Real>& signal = _pool.value<vector<Real> >("internal.signal");
+  ::essentia::VectorEx<Real> detections;
+  //const ::essentia::VectorEx<Real>& signal = _pool.value<::essentia::VectorEx<Real> >("internal.signal");
 
-  _onsetDetectionGlobal->input("signal").set(_pool.value<vector<Real> >("internal.signal"));
+  _onsetDetectionGlobal->input("signal").set(_pool.value<::essentia::VectorEx<Real> >("internal.signal"));
   _onsetDetectionGlobal->output("onsetDetections").set(detections);
   _onsetDetectionGlobal->compute();
 

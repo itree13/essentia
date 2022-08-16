@@ -66,7 +66,7 @@ void FreesoundTonalDescriptors ::createNetwork(SourceBase& source, Pool& pool) {
   // TODO: Tuning frequency is currently provided but not used for HPCP 
   // computation, not clear if it would make an improvement for freesound sounds
   Real tuningFreq = 440;
-  //Real tuningFreq = pool.value<vector<Real> >(nameSpace + "tuning_frequency").back();
+  //Real tuningFreq = pool.value<::essentia::VectorEx<Real> >(nameSpace + "tuning_frequency").back();
 
   Algorithm* hpcp_peaks = factory.create("SpectralPeaks",
                                          "maxPeaks", 60,

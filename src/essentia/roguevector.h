@@ -27,19 +27,19 @@ namespace essentia {
 
 
 template <typename T>
-class RogueVector : public std::vector<T> {
+class RogueVector : public ::essentia::VectorEx<T> {
  protected:
   bool _ownsMemory;
 
  public:
-  RogueVector(T* tab = 0, size_t size = 0) : std::vector<T>(), _ownsMemory(false) {
+  RogueVector(T* tab = 0, size_t size = 0) : ::essentia::VectorEx<T>(), _ownsMemory(false) {
     setData(tab);
     setSize(size);
   }
 
-  RogueVector(uint size, T value) : std::vector<T>(size, value), _ownsMemory(true) {}
+  RogueVector(uint size, T value) : ::essentia::VectorEx<T>(size, value), _ownsMemory(true) {}
 
-  RogueVector(const RogueVector<T>& v) : std::vector<T>(), _ownsMemory(false) {
+  RogueVector(const RogueVector<T>& v) : ::essentia::VectorEx<T>(), _ownsMemory(false) {
     setData(const_cast<T*>(v.data()));
     setSize(v.size());
   }
@@ -60,7 +60,7 @@ class RogueVector : public std::vector<T> {
 // #if defined(__clang__) || defined(__EMSCRIPTEN__)
 
 // // TODO: this is a big hack that relies on clang/libcpp not changing the memory
-// //       layout of the std::vector (very dangerous, but works for now...)
+// //       layout of the ::essentia::VectorEx (very dangerous, but works for now...)
 
 // template <typename T>
 // void RogueVector<T>::setData(T* data) { *reinterpret_cast<T**>(this) = data; }

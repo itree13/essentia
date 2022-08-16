@@ -34,14 +34,14 @@ class BpmHistogram : public AlgorithmComposite {
   SinkProxy<Real> _signal;
 
   Source<Real> _bpm;
-  Source<std::vector<Real> > _bpmCandidates;
-  Source<std::vector<Real> > _bpmMagnitudes;
-  // it has to be a TNT::Array cause Pool doesn't support vector<vector<type> >
+  Source<::essentia::VectorEx<Real> > _bpmCandidates;
+  Source<::essentia::VectorEx<Real> > _bpmMagnitudes;
+  // it has to be a TNT::Array cause Pool doesn't support ::essentia::VectorEx<::essentia::VectorEx<type> >
   Source<TNT::Array2D<Real> > _tempogram;
-  Source<std::vector<Real> > _frameBpms;
-  Source<std::vector<Real> > _ticks;
-  Source<std::vector<Real> > _ticksMagnitude;
-  Source<std::vector<Real> > _sinusoid;
+  Source<::essentia::VectorEx<Real> > _frameBpms;
+  Source<::essentia::VectorEx<Real> > _ticks;
+  Source<::essentia::VectorEx<Real> > _ticksMagnitude;
+  Source<::essentia::VectorEx<Real> > _sinusoid;
 
   // inner algos
   Algorithm* _frameCutter;
@@ -66,17 +66,17 @@ class BpmHistogram : public AlgorithmComposite {
 
 
   Pool _pool;
-  std::vector<Real> _window;
+  ::essentia::VectorEx<Real> _window;
 
   void computeBpm();
 
   // functions for computing ticks:
   void createWindow(int size);
   void createTicks(Real bpm);
-  void createSinusoid(std::vector<Real>& sinusoid, Real freq, Real phase, int idx);
+  void createSinusoid(::essentia::VectorEx<Real>& sinusoid, Real freq, Real phase, int idx);
   void unwrapPhase(Real& ph, const Real& uwph);
-  void postProcessBpms(Real mainBpm, std::vector<Real>& bpms);
-  void computeHistogram(std::vector<Real>& bpmPositions, std::vector<Real>& bpmMagnitudes);
+  void postProcessBpms(Real mainBpm, ::essentia::VectorEx<Real>& bpms);
+  void computeHistogram(::essentia::VectorEx<Real>& bpmPositions, ::essentia::VectorEx<Real>& bpmMagnitudes);
   Real deviationWeight(Real x, Real mu, Real sigma);
 
 
@@ -122,15 +122,15 @@ namespace standard {
 
 class BpmHistogram : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _bpm;
-  Output<std::vector<Real> > _bpmCandidates;
-  Output<std::vector<Real> > _bpmMagnitudes;
+  Output<::essentia::VectorEx<Real> > _bpmCandidates;
+  Output<::essentia::VectorEx<Real> > _bpmMagnitudes;
   Output<TNT::Array2D<Real> > _tempogram;
-  Output<std::vector<Real> > _frameBpms;
-  Output<std::vector<Real> > _ticks;
-  Output<std::vector<Real> > _ticksMagnitude;
-  Output<std::vector<Real> > _sinusoid;
+  Output<::essentia::VectorEx<Real> > _frameBpms;
+  Output<::essentia::VectorEx<Real> > _ticks;
+  Output<::essentia::VectorEx<Real> > _ticksMagnitude;
+  Output<::essentia::VectorEx<Real> > _sinusoid;
 
   bool _configured;
 

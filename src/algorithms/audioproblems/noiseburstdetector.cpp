@@ -43,15 +43,15 @@ void NoiseBurstDetector::configure() {
 
 
 void NoiseBurstDetector::compute() {
-  const std::vector<Real> frame = _frame.get();
-  std::vector<Real> &indexes = _indexes.get();
+  const ::essentia::VectorEx<Real> frame = _frame.get();
+  ::essentia::VectorEx<Real> &indexes = _indexes.get();
 
   if (instantPower(frame) <_silenceThreshold) {
     return;
   }
 
   // Get the second derivative of the frame.
-  vector<Real> ddFrame = derivative(derivative(frame));
+  ::essentia::VectorEx<Real> ddFrame = derivative(derivative(frame));
 
   // Update the threshold using Exponential
   // Moving Average.
@@ -68,13 +68,13 @@ void NoiseBurstDetector::compute() {
 // The version of RMS smashes the signal according to
 // the median in order to reduce the weight of outliers
 // samples in the RMS estimation.
-Real NoiseBurstDetector::robustRMS(std::vector<Real> x, Real k) {
+Real NoiseBurstDetector::robustRMS(::essentia::VectorEx<Real> x, Real k) {
     for (size_t i = 0; i < x.size(); i++) {
       x[i] *= x[i];
     }
 
     // Smash the signal to k times the meadian.
-    std::vector<Real> robustX;  
+    ::essentia::VectorEx<Real> robustX;  
     
     _Clipper->configure("max", median(x) * k);
     _Clipper->input("signal").set(x);

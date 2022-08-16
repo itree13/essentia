@@ -47,8 +47,8 @@ class UnaryOperatorStream : public Algorithm {
 
   OpType typeFromString(const std::string& name) const;
 
-  Input<std::vector<Real> > _input;
-  Output<std::vector<Real> > _output;
+  Input<::essentia::VectorEx<Real> > _input;
+  Output<::essentia::VectorEx<Real> > _output;
 
   OpType _type;
   Real _scale;

@@ -67,10 +67,10 @@ void DiscontinuityDetector::configure() {
 
 
 void DiscontinuityDetector::compute() {
-  const std::vector<Real> frame = _frame.get();
-  std::vector<Real> &discontinuityLocations = _discontinuityLocations.get();
-  std::vector<Real> &discontinuityAmplitues = _discontinuityAmplitues.get();
-  std::vector<Real> frameAux = frame;
+  const ::essentia::VectorEx<Real> frame = _frame.get();
+  ::essentia::VectorEx<Real> &discontinuityLocations = _discontinuityLocations.get();
+  ::essentia::VectorEx<Real> &discontinuityAmplitues = _discontinuityAmplitues.get();
+  ::essentia::VectorEx<Real> frameAux = frame;
 
   if (instantPower(frameAux) < _silenceThld) return;
 
@@ -107,15 +107,15 @@ void DiscontinuityDetector::compute() {
 
   int analysisSize = end - start;
 
-  std::vector<Real> frameProc(_frameSize);
+  ::essentia::VectorEx<Real> frameProc(_frameSize);
   _windowing->input("frame").set(frameAux);
   _windowing->output("frame").set(frameProc);
   _windowing->compute();
 
   normalizeAbs(frameProc);
 
-  std::vector<Real> lpc_coeff;
-  std::vector<Real> reflection_coeff;
+  ::essentia::VectorEx<Real> lpc_coeff;
+  ::essentia::VectorEx<Real> reflection_coeff;
 
   _LPC->input("frame").set(frameProc);
   _LPC->output("lpc").set(lpc_coeff);
@@ -124,8 +124,8 @@ void DiscontinuityDetector::compute() {
 
   lpc_coeff.erase(lpc_coeff.begin(), lpc_coeff.begin() + 1);
 
-  std::vector<Real> error(analysisSize, 0.f);
-  std::vector<Real> predAux(_order, 0.f);
+  ::essentia::VectorEx<Real> error(analysisSize, 0.f);
+  ::essentia::VectorEx<Real> predAux(_order, 0.f);
   Real prediction;
   int idx = 0;
 
@@ -138,22 +138,22 @@ void DiscontinuityDetector::compute() {
   }
 
   // A median filter cleans up the error signal to focus on the narrow peaks.
-  std::vector<Real> medianFilter;
+  ::essentia::VectorEx<Real> medianFilter;
 
   _medianFilter->input("array").set(error);
   _medianFilter->output("filteredArray").set(medianFilter);
   _medianFilter->compute();
 
-  std::vector<Real> filteredError(analysisSize, 0.f);
+  ::essentia::VectorEx<Real> filteredError(analysisSize, 0.f);
 
   for (int i = 0; i < analysisSize; i++)
     filteredError[i] = abs(error[i] - medianFilter[i]);
 
   // Use only the non-silent subframes for the threshold computation.
   // Otherwise they can lower it too much.
-  std::vector<Real> subFrame(_subFrameSize, 0.f);
-  std::vector<Real> masked;
-  std::vector<Real>::const_iterator inputIt = frame.begin() + start;
+  ::essentia::VectorEx<Real> subFrame(_subFrameSize, 0.f);
+  ::essentia::VectorEx<Real> masked;
+  ::essentia::VectorEx<Real>::const_iterator inputIt = frame.begin() + start;
 
   for (int i = 0; i <= analysisSize - _subFrameSize; i += _subFrameSize) {
     subFrame.assign(inputIt + i, inputIt + i + _subFrameSize);

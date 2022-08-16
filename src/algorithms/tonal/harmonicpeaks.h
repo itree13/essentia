@@ -28,11 +28,11 @@ namespace standard {
 class HarmonicPeaks : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _magnitudes;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
   Input<Real> _pitch;
-  Output<std::vector<Real> > _harmonicFrequencies;
-  Output<std::vector<Real> > _harmonicMagnitudes;
+  Output<::essentia::VectorEx<Real> > _harmonicFrequencies;
+  Output<::essentia::VectorEx<Real> > _harmonicMagnitudes;
 
   int _maxHarmonics;
   Real _ratioTolerance;
@@ -72,11 +72,11 @@ namespace streaming {
 class HarmonicPeaks : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _magnitudes;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
   Sink<Real> _pitch;
-  Source<std::vector<Real> > _harmonicFrequencies;
-  Source<std::vector<Real> > _harmonicMagnitudes;
+  Source<::essentia::VectorEx<Real> > _harmonicFrequencies;
+  Source<::essentia::VectorEx<Real> > _harmonicMagnitudes;
 
  public:
   HarmonicPeaks() {

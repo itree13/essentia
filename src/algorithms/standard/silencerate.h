@@ -29,10 +29,10 @@ namespace standard {
 class SilenceRate : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _frame;
-  std::vector<Output<Real>*> _outputs;
+  Input<::essentia::VectorEx<Real> > _frame;
+  ::essentia::VectorEx<Output<Real>*> _outputs;
 
-  std::vector<Real> _thresholds;
+  ::essentia::VectorEx<Real> _thresholds;
 
  public:
   SilenceRate() {
@@ -42,7 +42,7 @@ class SilenceRate : public Algorithm {
   ~SilenceRate() {}
 
   void declareParameters() {
-    declareParameter("thresholds", "the threshold values", "", std::vector<Real>());
+    declareParameter("thresholds", "the threshold values", "", ::essentia::VectorEx<Real>());
   }
 
   void configure();
@@ -70,10 +70,10 @@ namespace streaming {
  */
 class SilenceRate : public Algorithm {
  protected:
-  Sink<std::vector<Real> > _frame;
-  std::vector<Source<Real>*> _outputs;
+  Sink<::essentia::VectorEx<Real> > _frame;
+  ::essentia::VectorEx<Source<Real>*> _outputs;
 
-  std::vector<Real> _thresholds;
+  ::essentia::VectorEx<Real> _thresholds;
 
   void clearOutputs();
 
@@ -88,7 +88,7 @@ class SilenceRate : public Algorithm {
   }
 
   void declareParameters() {
-    declareParameter("thresholds", "the threshold values", "", std::vector<Real>());
+    declareParameter("thresholds", "the threshold values", "", ::essentia::VectorEx<Real>());
   }
 
   void configure();

@@ -70,16 +70,16 @@ void HprModelAnal::configure() {
 void HprModelAnal::compute() {
 
   // inputs and outputs
-  const std::vector<Real>& frame = _frame.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
   const Real & pitch = _pitch.get();
   
-  std::vector<Real>& peakMagnitude = _magnitudes.get();
-  std::vector<Real>& peakFrequency = _frequencies.get();
-  std::vector<Real>& peakPhase = _phases.get();
-  std::vector<Real>& res = _res.get();
+  ::essentia::VectorEx<Real>& peakMagnitude = _magnitudes.get();
+  ::essentia::VectorEx<Real>& peakFrequency = _frequencies.get();
+  ::essentia::VectorEx<Real>& peakPhase = _phases.get();
+  ::essentia::VectorEx<Real>& res = _res.get();
 
-  std::vector<Real> wframe;
-  std::vector<std::complex<Real> > fftin;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<std::complex<Real> > fftin;
   
   _window->input("frame").set(frame);
   _window->output("frame").set(wframe);

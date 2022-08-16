@@ -173,8 +173,8 @@ void Key::configure() {
   }
 
   // Compute the other vectors getting into account chords:
-  vector<Real> M_chords(12, (Real)0.0);
-  vector<Real> m_chords(12, (Real)0.0);
+  ::essentia::VectorEx<Real> M_chords(12, (Real)0.0);
+  ::essentia::VectorEx<Real> m_chords(12, (Real)0.0);
 
   /* Under test: Purwins et al.
   for (int n=0; n<12; n++) {
@@ -282,7 +282,7 @@ void Key::configure() {
 
 void Key::compute() {
 
-  const vector<Real>& pcp = _pcp.get();
+  const ::essentia::VectorEx<Real>& pcp = _pcp.get();
 
   int pcpsize = (int)pcp.size();
   int n = pcpsize/12;
@@ -501,7 +501,7 @@ void Key::resize(int pcpsize) {
 // correlation coefficient with 'shift'
 // on of the vectors is shifted in time, and then the correlation is calculated,
 // just like a cross-correlation
-Real Key::correlation(const vector<Real>& v1, const Real mean1, const Real std1, const vector<Real>& v2, const Real mean2, const Real std2, const int shift) const
+Real Key::correlation(const ::essentia::VectorEx<Real>& v1, const Real mean1, const Real std1, const ::essentia::VectorEx<Real>& v2, const Real mean2, const Real std2, const int shift) const
 {
   if (std1 == static_cast<Real>(0.0) || std2 == static_cast<Real>(0.0))
   {
@@ -535,7 +535,7 @@ Real Key::correlation(const vector<Real>& v1, const Real mean1, const Real std1,
   ..
   The contribution is weighted depending of the slope
 */
-void Key::addContributionHarmonics(const int pitchclass, const Real contribution, vector<Real>& M_chords) const
+void Key::addContributionHarmonics(const int pitchclass, const Real contribution, ::essentia::VectorEx<Real>& M_chords) const
 {
   Real weight = contribution;
 
@@ -571,7 +571,7 @@ void Key::addContributionHarmonics(const int pitchclass, const Real contribution
   @see http://www.songtrellis.com/directory/1146/chordTypes/majorChordTypes/majorTriad
   The three notes of the chord have the same weight
 */
-void Key::addMajorTriad(const int root, const Real contribution, vector<Real>& M_chords) const
+void Key::addMajorTriad(const int root, const Real contribution, ::essentia::VectorEx<Real>& M_chords) const
 {
   // Root
   addContributionHarmonics(root, contribution, M_chords);
@@ -595,7 +595,7 @@ void Key::addMajorTriad(const int root, const Real contribution, vector<Real>& M
   @see http://www.songtrellis.com/directory/1146/chordTypes/minorChordTypes/minorTriadMi
   The three notes of the chord have the same weight
 */
-void Key::addMinorTriad(int root, Real contribution, vector<Real>& M_chords) const
+void Key::addMinorTriad(int root, Real contribution, ::essentia::VectorEx<Real>& M_chords) const
 {
   // Root
   addContributionHarmonics(root, contribution, M_chords);
@@ -629,7 +629,7 @@ const char* Key::description = standard::Key::description;
 Key::Key() : AlgorithmComposite() {
 
   _keyAlgo = standard::AlgorithmFactory::create("Key");
-  _poolStorage = new PoolStorage<std::vector<Real> >(&_pool, "internal.hpcp");
+  _poolStorage = new PoolStorage<::essentia::VectorEx<Real> >(&_pool, "internal.hpcp");
 
   declareInput(_poolStorage->input("data"), 1, "pcp", "the input pitch class profile");
   declareOutput(_key, 0, "key", "the estimated key, from A to G");
@@ -658,8 +658,8 @@ void Key::configure() {
 AlgorithmStatus Key::process() {
   if (!shouldStop()) return PASS;
 
-  const vector<vector<Real> >& hpcpKey = _pool.value<vector<vector<Real> > >("internal.hpcp");
-  vector<Real> hpcpAverage = meanFrames(hpcpKey);
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& hpcpKey = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.hpcp");
+  ::essentia::VectorEx<Real> hpcpAverage = meanFrames(hpcpKey);
 
   if (_pcpThreshold > 0.f) {
     normalizePcpPeak(hpcpAverage);
@@ -695,16 +695,16 @@ void Key::reset() {
 }
 
 
-void Key::normalizePcpPeak(vector<Real>& pcp) {
+void Key::normalizePcpPeak(::essentia::VectorEx<Real>& pcp) {
   normalize(pcp);
 };
 
-void Key::pcpGate(vector<Real>& pcp, Real threshold) {
+void Key::pcpGate(::essentia::VectorEx<Real>& pcp, Real threshold) {
   for (int i = 0; i < (int)pcp.size(); i++)
     if (pcp[i] < threshold) pcp[i] = 0.f;
 };
 
-void Key::shiftPcp(vector<Real>& pcp) {
+void Key::shiftPcp(::essentia::VectorEx<Real>& pcp) {
   int tuningResolution = pcp.size() / 12;
 
   normalize(pcp);
@@ -712,7 +712,7 @@ void Key::shiftPcp(vector<Real>& pcp) {
   int maxValIndex = argmax(pcp);
   maxValIndex %= tuningResolution;
 
-  vector<Real>::iterator newBegin;
+  ::essentia::VectorEx<Real>::iterator newBegin;
   if (maxValIndex > (tuningResolution / 2)) {
     newBegin = pcp.end() + maxValIndex - tuningResolution;
   }

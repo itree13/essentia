@@ -68,9 +68,9 @@ void Welch::initBuffers() {
   
   _powerSpectrum->output("powerSpectrum").set(_powerSpectrumFrame);
 
-  _psdBuffer.assign(_averagingFrames, vector<Real>(_spectSize, 0.f));
+  _psdBuffer.assign(_averagingFrames, ::essentia::VectorEx<Real>(_spectSize, 0.f));
 
-  vector<Real> ones( _fftSize, 1.f);
+  ::essentia::VectorEx<Real> ones( _fftSize, 1.f);
   _window->input("frame").set(ones);
   _window->compute();
 
@@ -82,8 +82,8 @@ void Welch::initBuffers() {
 };
 
 void Welch::compute() {
-  const vector<Real>& frame = _frame.get();
-  std::vector<Real>& psd = _psd.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
+  ::essentia::VectorEx<Real>& psd = _psd.get();
   psd.assign(_spectSize, 0.f);
 
   if (frame.size() != _frameSize) {

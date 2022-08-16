@@ -62,12 +62,12 @@ class ESSENTIA_API Algorithm : public Configurable {
   /**
    * Return the names of all the inputs that have been defined for this object.
    */
-  std::vector<std::string> inputNames() const { return _inputs.keys(); }
+  ::essentia::VectorEx<std::string> inputNames() const { return _inputs.keys(); }
 
   /**
    * Return the names of all the outputs that have been defined for this object.
    */
-  std::vector<std::string> outputNames() const { return _outputs.keys(); }
+  ::essentia::VectorEx<std::string> outputNames() const { return _outputs.keys(); }
 
   /**
    * Do the actual computation once that everything is set and configured.
@@ -89,8 +89,8 @@ class ESSENTIA_API Algorithm : public Configurable {
 
 
   // methods for having access to the types of the inputs/outputs
-  std::vector<const std::type_info*> inputTypes() const;
-  std::vector<const std::type_info*> outputTypes() const;
+  ::essentia::VectorEx<const std::type_info*> inputTypes() const;
+  ::essentia::VectorEx<const std::type_info*> outputTypes() const;
 
 
  protected:

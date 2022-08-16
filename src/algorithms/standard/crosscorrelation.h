@@ -28,9 +28,9 @@ namespace standard {
 class CrossCorrelation : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal_x;
-  Input<std::vector<Real> > _signal_y;
-  Output<std::vector<Real> > _correlation;
+  Input<::essentia::VectorEx<Real> > _signal_x;
+  Input<::essentia::VectorEx<Real> > _signal_y;
+  Output<::essentia::VectorEx<Real> > _correlation;
 
  public:
   CrossCorrelation() {
@@ -64,9 +64,9 @@ namespace streaming {
 class CrossCorrelation : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal_y;
-  Sink<std::vector<Real> > _signal_x;
-  Source<std::vector<Real> > _correlation;
+  Sink<::essentia::VectorEx<Real> > _signal_y;
+  Sink<::essentia::VectorEx<Real> > _signal_x;
+  Source<::essentia::VectorEx<Real> > _correlation;
 
  public:
   CrossCorrelation() {

@@ -26,8 +26,8 @@ namespace standard {
 
  class CoverSongSimilarity : public Algorithm {
   protected:
-   Input<std::vector<std::vector<Real> > > _inputArray;
-   Output<std::vector<std::vector<Real> > > _scoreMatrix;
+   Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _inputArray;
+   Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _scoreMatrix;
    Output<Real> _distance;
    Real disOnset;
    Real disExtension;
@@ -74,7 +74,7 @@ namespace streaming {
 
 class CoverSongSimilarity : public Algorithm {
   protected:
-   Sink<std::vector<Real> > _inputArray;
+   Sink<::essentia::VectorEx<Real> > _inputArray;
    Source<TNT::Array2D<Real> > _scoreMatrix;
    Source<Real> _distance;
    
@@ -95,8 +95,8 @@ class CoverSongSimilarity : public Algorithm {
    Real _c3;
    size_t _xFrames;
    size_t _yFrames;
-   std::vector<std::vector<Real> > _perFrameScoreMatrix;
-   std::vector<std::vector<Real> > _mainScoreMatrix;
+   ::essentia::VectorEx<::essentia::VectorEx<Real> > _perFrameScoreMatrix;
+   ::essentia::VectorEx<::essentia::VectorEx<Real> > _mainScoreMatrix;
 
   public:
    CoverSongSimilarity() : Algorithm() {
@@ -116,7 +116,7 @@ class CoverSongSimilarity : public Algorithm {
 
   void configure();
 
-  void subFrameQmax(std::vector<std::vector<Real> >& inputFrames);
+  void subFrameQmax(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputFrames);
 
   static const char* name;
   static const char* category;

@@ -27,7 +27,7 @@ using namespace essentia::streaming;
 
 
 TEST(VectorInput, NotConnected) {
-  vector<int> output;
+  ::essentia::VectorEx<int> output;
   int array[] = {1, 2, 3, 4};
   VectorInput<int>* gen = new VectorInput<int>(array);
   //gen->output("data")  >>  output;

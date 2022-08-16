@@ -29,7 +29,7 @@ namespace standard {
 class SuperFluxNovelty : public Algorithm {
 
  private:
-  Input<std::vector< std::vector<Real> >  > _bands;
+  Input<::essentia::VectorEx< ::essentia::VectorEx<Real> >  > _bands;
   Output<Real> _diffs;
 
  	int _binWidth;
@@ -74,7 +74,7 @@ namespace streaming {
 class SuperFluxNovelty : public Algorithm {
 
  protected:
-  Sink< vector<Real> > _bands;
+  Sink< ::essentia::VectorEx<Real> > _bands;
   Source<Real  > _diffs;
 
   essentia::standard::Algorithm* _algo;

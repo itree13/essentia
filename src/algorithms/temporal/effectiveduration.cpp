@@ -37,7 +37,7 @@ const Real EffectiveDuration::noiseFloor = db2amp(-90); // -90db is silence (see
 
 void EffectiveDuration::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& effectiveDuration = _effectiveDuration.get();
 
   // calculate max amplitude

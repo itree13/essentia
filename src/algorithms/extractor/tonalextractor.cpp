@@ -220,33 +220,33 @@ void TonalExtractor::createInnerNetwork() {
 }
 
 void TonalExtractor::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
-  vector<Real> &            chordsHistogram   = _chordsHistogram.get();
+  ::essentia::VectorEx<Real> &            chordsHistogram   = _chordsHistogram.get();
   Real &                    chordsChangesRate = _chordsChangesRate.get();
   string &                  chordsKey         = _chordsKey.get();
   Real &                    chordsNumberRate  = _chordsNumberRate.get();
-  vector<string> &          chords            = _chords.get();
+  ::essentia::VectorEx<string> &          chords            = _chords.get();
   string &                  chordsScale       = _chordsScale.get();
-  vector<Real> &            chordsStrength    = _chordsStrength.get();
-  vector<vector<Real> > &   hpcp              = _hpcp.get();
-  vector<vector<Real> > &   hpcpHighRes       = _hpcpHighRes.get();
+  ::essentia::VectorEx<Real> &            chordsStrength    = _chordsStrength.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > &   hpcp              = _hpcp.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > &   hpcpHighRes       = _hpcpHighRes.get();
   string &                  key               = _key.get();
   string &                  scale             = _scale.get();
   Real &                    keyStrength       = _keyStrength.get();
 
-  chordsHistogram   = _pool.value<vector<Real> > ("chordsHistogram");
+  chordsHistogram   = _pool.value<::essentia::VectorEx<Real> > ("chordsHistogram");
   chordsChangesRate = _pool.value<Real> ("chordsChangesRate");
   chordsKey         = _pool.value<string> ("chordsKey");
   chordsNumberRate  = _pool.value<Real> ("chordsNumberRate");
-  chords            = _pool.value<vector<string> > ("chords");
+  chords            = _pool.value<::essentia::VectorEx<string> > ("chords");
   chordsScale       = _pool.value<string> ("chordsScale");
-  chordsStrength    = _pool.value<vector<Real> > ("chordsStrength");
-  hpcp              = _pool.value<vector<vector<Real> > > ("hpcp");
-  hpcpHighRes       = _pool.value<vector<vector<Real> > > ("hpcpHighRes");
+  chordsStrength    = _pool.value<::essentia::VectorEx<Real> > ("chordsStrength");
+  hpcp              = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > > ("hpcp");
+  hpcpHighRes       = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > > ("hpcpHighRes");
   key               = _pool.value<string> ("key");
   scale             = _pool.value<string> ("scale");
   keyStrength       = _pool.value<Real> ("keyStrength");

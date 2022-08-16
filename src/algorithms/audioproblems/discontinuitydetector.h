@@ -30,9 +30,9 @@ namespace standard {
 class DiscontinuityDetector : public Algorithm {
 
  private:
-  Input<std::vector<Real>> _frame;
-  Output<std::vector<Real>> _discontinuityLocations;
-  Output<std::vector<Real>> _discontinuityAmplitues;
+  Input<::essentia::VectorEx<Real>> _frame;
+  Output<::essentia::VectorEx<Real>> _discontinuityLocations;
+  Output<::essentia::VectorEx<Real>> _discontinuityAmplitues;
 
   int _order;
   int _hopSize;
@@ -94,9 +94,9 @@ namespace streaming {
 class DiscontinuityDetector : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real>> _frame;
-  Source<std::vector<Real>> _discontinuityLocations;
-  Source<std::vector<Real>> _discontinuityAmplitues;
+  Sink<::essentia::VectorEx<Real>> _frame;
+  Source<::essentia::VectorEx<Real>> _discontinuityLocations;
+  Source<::essentia::VectorEx<Real>> _discontinuityAmplitues;
 
  public:
   DiscontinuityDetector() {

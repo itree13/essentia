@@ -51,8 +51,8 @@ OutputBase& Algorithm::output(const string& name) {
 }
 
 
-vector<const type_info*> Algorithm::inputTypes() const {
-  vector<const type_info*> types;
+::essentia::VectorEx<const type_info*> Algorithm::inputTypes() const {
+  ::essentia::VectorEx<const type_info*> types;
   types.reserve(_inputs.size());
   for (InputMap::const_iterator it = _inputs.begin(); it != _inputs.end(); ++it) {
     types.push_back(&it->second->typeInfo());
@@ -60,8 +60,8 @@ vector<const type_info*> Algorithm::inputTypes() const {
   return types;
 }
 
-vector<const type_info*> Algorithm::outputTypes() const {
-  vector<const type_info*> types;
+::essentia::VectorEx<const type_info*> Algorithm::outputTypes() const {
+  ::essentia::VectorEx<const type_info*> types;
   types.reserve(_outputs.size());
   for (OutputMap::const_iterator it = _outputs.begin(); it != _outputs.end(); ++it) {
     types.push_back(&it->second->typeInfo());

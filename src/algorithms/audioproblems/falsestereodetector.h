@@ -30,7 +30,7 @@ namespace standard {
 class FalseStereoDetector : public Algorithm {
 
  private:
-  Input<std::vector<StereoSample> > _frame;
+  Input<::essentia::VectorEx<StereoSample> > _frame;
   Output<int> _isFalseStereo;
   Output<Real> _correlation;
 

@@ -28,8 +28,8 @@ namespace standard {
 class TempoTapMaxAgreement : public Algorithm {
 
  protected:
-  Input<std::vector<std::vector<Real> > > _tickCandidates;
-  Output<std::vector<Real> > _ticks;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _tickCandidates;
+  Output<::essentia::VectorEx<Real> > _ticks;
   Output<Real> _confidence;
 
  public:
@@ -59,22 +59,22 @@ class TempoTapMaxAgreement : public Algorithm {
                                      // corresponds to Log2(40) = 5.32 maximum
                                      // confidence value
 
-  std::vector<Real> _histogramBins;
-  std::vector<Real> _binValues;
+  ::essentia::VectorEx<Real> _histogramBins;
+  ::essentia::VectorEx<Real> _binValues;
 
   // parameters for the continuity-based method
   Real _phaseThreshold;  // size of tolerance window for beat phase
   Real _periodThreshold; // size of tolerance window for beat period
 
-  Real computeBeatInfogain(std::vector<Real>& ticks1, std::vector<Real>& ticks2);
+  Real computeBeatInfogain(::essentia::VectorEx<Real>& ticks1, ::essentia::VectorEx<Real>& ticks2);
 
-  void removeFirstSeconds(std::vector<Real>& ticks);
-  void FindBeatError(const std::vector<Real>& ticks1,
-                     const std::vector<Real>& ticks2,
-                     std::vector<Real>& beatError);
-  Real FindEntropy(std::vector<Real>& beatError);
-  size_t closestTick(const std::vector<Real>& ticks, Real x);
-  void histogram(const std::vector<Real>& array, std::vector<Real>& counter);
+  void removeFirstSeconds(::essentia::VectorEx<Real>& ticks);
+  void FindBeatError(const ::essentia::VectorEx<Real>& ticks1,
+                     const ::essentia::VectorEx<Real>& ticks2,
+                     ::essentia::VectorEx<Real>& beatError);
+  Real FindEntropy(::essentia::VectorEx<Real>& beatError);
+  size_t closestTick(const ::essentia::VectorEx<Real>& ticks, Real x);
+  void histogram(const ::essentia::VectorEx<Real>& array, ::essentia::VectorEx<Real>& counter);
 
 }; // class TempoTapMaxAgreement
 
@@ -89,8 +89,8 @@ namespace streaming {
 class TempoTapMaxAgreement : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::vector<Real> > > _tickCandidates;
-  Source<std::vector<Real> > _ticks;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _tickCandidates;
+  Source<::essentia::VectorEx<Real> > _ticks;
   Source<Real> _confidence;
 
  public:

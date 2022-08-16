@@ -37,14 +37,14 @@ const char* GeometricMean::description = DOC("This algorithm computes the geomet
 
 void GeometricMean::compute() {
 
-  const std::vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
   Real& geometricMean = _geometricMean.get();
 
   if (array.empty()) {
     throw EssentiaException("GeometricMean: input array empty, cannot compute the geometric mean of an empty array");
   }
 
-  for (std::vector<Real>::size_type i=0; i<array.size(); i++) {
+  for (::essentia::VectorEx<Real>::size_type i=0; i<array.size(); i++) {
     if (array[i] < 0) {
       throw EssentiaException("GeometricMean: input array contains negative numbers");
     }
@@ -53,7 +53,7 @@ void GeometricMean::compute() {
 
   geometricMean = 0.0;
 
-  for (std::vector<Real>::size_type i=0; i<array.size(); i++) {
+  for (::essentia::VectorEx<Real>::size_type i=0; i<array.size(); i++) {
     if (array[i] == 0.0) {
       geometricMean = 0.0;
       return;

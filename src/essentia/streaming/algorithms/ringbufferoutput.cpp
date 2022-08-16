@@ -56,7 +56,7 @@ AlgorithmStatus RingBufferOutput::process() {
   AlgorithmStatus status = acquireData();
   if (status != OK) return status;
 
-  vector<AudioSample>& inputSignal = *((vector<AudioSample>*)input("signal").getTokens());
+  ::essentia::VectorEx<AudioSample>& inputSignal = *((::essentia::VectorEx<AudioSample>*)input("signal").getTokens());
   AudioSample* inputData = &(inputSignal[0]);
   int inputSize = inputSignal.size();
 

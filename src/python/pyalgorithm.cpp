@@ -57,17 +57,17 @@ class PyAlgorithm {
   }
 
   static PyObject* inputNames(PyAlgorithm* self) {
-    vector<string> names = self->algo->inputNames();
+    ::essentia::VectorEx<string> names = self->algo->inputNames();
     return VectorString::toPythonCopy(&names);
   }
 
   static PyObject* outputNames(PyAlgorithm* self) {
-    vector<string> names = self->algo->outputNames();
+    ::essentia::VectorEx<string> names = self->algo->outputNames();
     return VectorString::toPythonCopy(&names);
   }
 
   static PyObject* parameterNames(PyAlgorithm* self) {
-    vector<string> names = self->algo->defaultParameters().keys();
+    ::essentia::VectorEx<string> names = self->algo->defaultParameters().keys();
     return VectorString::toPythonCopy(&names);
   }
 
@@ -152,7 +152,7 @@ PyObject* PyAlgorithm::configure(PyAlgorithm* self, PyObject* args, PyObject* ke
 }
 
 
-void deallocate_inputs(vector<void*> inputs, vector<Edt> inputTypes) {
+void deallocate_inputs(::essentia::VectorEx<void*> inputs, ::essentia::VectorEx<Edt> inputTypes) {
   if (inputs.size() != inputTypes.size()) {
     throw EssentiaException("PyAlgorithm: deallocate_outputs requires vector arguments of equal length");
   }
@@ -164,7 +164,7 @@ void deallocate_inputs(vector<void*> inputs, vector<Edt> inputTypes) {
 }
 
 
-void deallocate_outputs(vector<void*> outputs, vector<Edt> outputTypes) {
+void deallocate_outputs(::essentia::VectorEx<void*> outputs, ::essentia::VectorEx<Edt> outputTypes) {
   if (outputs.size() != outputTypes.size()) {
     throw EssentiaException("PyAlgorithm: deallocate_outputs requires vector arguments of equal length");
   }
@@ -184,11 +184,11 @@ PyObject* PyAlgorithm::compute(PyAlgorithm* self, PyObject* args) {
   E_DEBUG(EPyBindings, PY_ALGONAME << "::compute()");
 
   // parse the arguments into separate python objects
-  vector<PyObject*> arg_list = unpack(args);
+  ::essentia::VectorEx<PyObject*> arg_list = unpack(args);
 
   int nInputs = self->algo->inputs().size();
-  vector<string> inputNames = self->algo->inputNames();
-  vector<const type_info*> inputTypes = self->algo->inputTypes();
+  ::essentia::VectorEx<string> inputNames = self->algo->inputNames();
+  ::essentia::VectorEx<const type_info*> inputTypes = self->algo->inputTypes();
 
   // check the correct number of arguments has been given to the function call
   if (int(arg_list.size()) != nInputs) {
@@ -205,8 +205,8 @@ PyObject* PyAlgorithm::compute(PyAlgorithm* self, PyObject* args) {
   E_DEBUG_NONL(EPyBindings, PY_ALGONAME << ": binding inputs...");
 
   // parse each python obj to a Cpp pointer and set appropriate input
-  vector<void*> givenInputs(nInputs);
-  vector<Edt> givenInputTypes(nInputs);
+  ::essentia::VectorEx<void*> givenInputs(nInputs);
+  ::essentia::VectorEx<Edt> givenInputTypes(nInputs);
 
   for (int i=0; i<nInputs; ++i) {
     InputBase& port = self->algo->input(inputNames[i]);
@@ -226,21 +226,21 @@ PyObject* PyAlgorithm::compute(PyAlgorithm* self, PyObject* args) {
     try {
       switch (tp) {
         case REAL:                 SET_PORT_COPY(PyReal, Real);
-        case VECTOR_STRING:        SET_PORT_COPY(VectorString, vector<string>);
+        case VECTOR_STRING:        SET_PORT_COPY(VectorString, ::essentia::VectorEx<string>);
         case STRING:               SET_PORT_COPY(String, string);
         case BOOL:                 SET_PORT_COPY(Boolean, bool);
         case INTEGER:              SET_PORT_COPY(Integer, int);
-        case VECTOR_VECTOR_REAL:   SET_PORT_COPY(VectorVectorReal, vector<vector<Real> >);
-        case VECTOR_VECTOR_COMPLEX:SET_PORT_COPY(VectorVectorComplex, vector<vector<complex<Real> > >);
-        case VECTOR_VECTOR_STRING: SET_PORT_COPY(VectorVectorString, vector<vector<string> >);
-        case VECTOR_STEREOSAMPLE:  SET_PORT_COPY(VectorStereoSample, vector<StereoSample>);
+        case VECTOR_VECTOR_REAL:   SET_PORT_COPY(VectorVectorReal, ::essentia::VectorEx<::essentia::VectorEx<Real> >);
+        case VECTOR_VECTOR_COMPLEX:SET_PORT_COPY(VectorVectorComplex, ::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >);
+        case VECTOR_VECTOR_STRING: SET_PORT_COPY(VectorVectorString, ::essentia::VectorEx<::essentia::VectorEx<string> >);
+        case VECTOR_STEREOSAMPLE:  SET_PORT_COPY(VectorStereoSample, ::essentia::VectorEx<StereoSample>);
         case MATRIX_REAL:          SET_PORT_COPY(MatrixReal, TNT::Array2D<Real>);
         case TENSOR_REAL:          SET_PORT_COPY(TensorReal, Tensor<Real>);
 
         case POOL:                 SET_PORT_REF(PyPool, Pool);
-        case VECTOR_REAL:          SET_PORT_REF(VectorReal, vector<Real>);
-        case VECTOR_INTEGER:       SET_PORT_REF(VectorInteger, vector<int>);
-        case VECTOR_COMPLEX:       SET_PORT_REF(VectorComplex, vector<complex<Real> >);
+        case VECTOR_REAL:          SET_PORT_REF(VectorReal, ::essentia::VectorEx<Real>);
+        case VECTOR_INTEGER:       SET_PORT_REF(VectorInteger, ::essentia::VectorEx<int>);
+        case VECTOR_COMPLEX:       SET_PORT_REF(VectorComplex, ::essentia::VectorEx<complex<Real> >);
 
         default:
           ostringstream msg;
@@ -267,10 +267,10 @@ PyObject* PyAlgorithm::compute(PyAlgorithm* self, PyObject* args) {
   E_DEBUG_NONL(EPyBindings, PY_ALGONAME << ": binding outputs...");
 
   int nOutputs = self->algo->outputs().size();
-  vector<const type_info*> outputTypeInfos = self->algo->outputTypes();
-  vector<string> outputNames = self->algo->outputNames();
-  vector<void*> outputs(nOutputs, (void*)NULL);
-  vector<Edt> outputTypes(nOutputs);
+  ::essentia::VectorEx<const type_info*> outputTypeInfos = self->algo->outputTypes();
+  ::essentia::VectorEx<string> outputNames = self->algo->outputNames();
+  ::essentia::VectorEx<void*> outputs(nOutputs, (void*)NULL);
+  ::essentia::VectorEx<Edt> outputTypes(nOutputs);
 
   for (int i=0; i<nOutputs; i++) {
     OutputBase& port = self->algo->output(outputNames[i]);
@@ -289,27 +289,27 @@ PyObject* PyAlgorithm::compute(PyAlgorithm* self, PyObject* args) {
       case STEREOSAMPLE: SET_PORT(StereoSample);
       case VECTOR_REAL:
         outputs[i] = (void*)new RogueVector<Real>((uint)10, 0.);
-        reinterpret_cast<vector<Real>*>(outputs[i])->clear();
-        port.set(*(vector<Real>*)outputs[i]);
+        reinterpret_cast<::essentia::VectorEx<Real>*>(outputs[i])->clear();
+        port.set(*(::essentia::VectorEx<Real>*)outputs[i]);
         break;
-        //SET_PORT(vector<Real>);
+        //SET_PORT(::essentia::VectorEx<Real>);
       case VECTOR_INTEGER:
         outputs[i] = (void*)new RogueVector<int>((uint)10, 3);
-        reinterpret_cast<vector<Real>*>(outputs[i])->clear();
-        port.set(*(vector<Real>*)outputs[i]);
+        reinterpret_cast<::essentia::VectorEx<Real>*>(outputs[i])->clear();
+        port.set(*(::essentia::VectorEx<Real>*)outputs[i]);
         break;
-        //SET_PORT(vector<int>);
+        //SET_PORT(::essentia::VectorEx<int>);
       case VECTOR_COMPLEX:
         outputs[i] = (void*)new RogueVector<complex<Real> >((uint)10, 3);
-        reinterpret_cast<vector<complex<Real> >*>(outputs[i])->clear();
-        port.set(*(vector<complex<Real> >*)outputs[i]);
+        reinterpret_cast<::essentia::VectorEx<complex<Real> >*>(outputs[i])->clear();
+        port.set(*(::essentia::VectorEx<complex<Real> >*)outputs[i]);
         break;
-        //SET_PORT(vector<complex<Real> >);
-      case VECTOR_STRING: SET_PORT(vector<string>);
-      case VECTOR_STEREOSAMPLE: SET_PORT(vector<StereoSample>);
-      case VECTOR_VECTOR_REAL: SET_PORT(vector<vector<Real> >);
-      case VECTOR_VECTOR_COMPLEX: SET_PORT(vector<vector<complex<Real> > >);
-      case VECTOR_VECTOR_STRING: SET_PORT(vector<vector<string> >);
+        //SET_PORT(::essentia::VectorEx<complex<Real> >);
+      case VECTOR_STRING: SET_PORT(::essentia::VectorEx<string>);
+      case VECTOR_STEREOSAMPLE: SET_PORT(::essentia::VectorEx<StereoSample>);
+      case VECTOR_VECTOR_REAL: SET_PORT(::essentia::VectorEx<::essentia::VectorEx<Real> >);
+      case VECTOR_VECTOR_COMPLEX: SET_PORT(::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >);
+      case VECTOR_VECTOR_STRING: SET_PORT(::essentia::VectorEx<::essentia::VectorEx<string> >);
       case TENSOR_REAL:
         outputs[i] = (void*)new Tensor<Real>();
         port.set(*(Tensor<Real>*)outputs[i]);
@@ -363,7 +363,7 @@ PyObject* PyAlgorithm::compute(PyAlgorithm* self, PyObject* args) {
 
   // now that the processing is done, convert the results back to python
   // variables and return them to the interpreter
-  vector<PyObject*> result(nOutputs);
+  ::essentia::VectorEx<PyObject*> result(nOutputs);
 
   for (int i=0; i<nOutputs; i++) {
     try {

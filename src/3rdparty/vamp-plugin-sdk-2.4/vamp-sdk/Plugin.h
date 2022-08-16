@@ -250,7 +250,7 @@ public:
 	 * The (human-readable) names of each of the bins, if
 	 * appropriate.  This is always optional.
 	 */
-	std::vector<std::string> binNames;
+	::essentia::VectorEx<std::string> binNames;
 
 	/**
 	 * True if the results in each output bin fall within a fixed
@@ -324,7 +324,7 @@ public:
             sampleType(OneSamplePerStep), hasDuration(false) { }
     };
 
-    typedef std::vector<OutputDescriptor> OutputList;
+    typedef ::essentia::VectorEx<OutputDescriptor> OutputList;
 
     /**
      * Get the outputs of this plugin.  An output's index in this list
@@ -371,7 +371,7 @@ public:
 	 * hasFixedBinCount, there must be the same number of values
 	 * as the output's binCount count.
 	 */
-	std::vector<float> values;
+	::essentia::VectorEx<float> values;
 
 	/**
 	 * Label for the sample of this feature.
@@ -382,7 +382,7 @@ public:
             hasTimestamp(false), hasDuration(false) { }
     };
 
-    typedef std::vector<Feature> FeatureList;
+    typedef ::essentia::VectorEx<Feature> FeatureList;
 
     typedef std::map<int, FeatureList> FeatureSet; // key is output no
 

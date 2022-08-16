@@ -77,16 +77,16 @@ void HpsModelAnal::configure() {
 void HpsModelAnal::compute() {
 
   // inputs and outputs
-  const std::vector<Real>& frame = _frame.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
   const Real & pitch = _pitch.get();
 
-  std::vector<Real>& peakMagnitude = _magnitudes.get();
-  std::vector<Real>& peakFrequency = _frequencies.get();
-  std::vector<Real>& peakPhase = _phases.get();
-  std::vector<Real>& stocEnv = _stocenv.get();
+  ::essentia::VectorEx<Real>& peakMagnitude = _magnitudes.get();
+  ::essentia::VectorEx<Real>& peakFrequency = _frequencies.get();
+  ::essentia::VectorEx<Real>& peakPhase = _phases.get();
+  ::essentia::VectorEx<Real>& stocEnv = _stocenv.get();
 
-  std::vector<Real> wframe;
-  std::vector<std::complex<Real> > fftin;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<std::complex<Real> > fftin;
 
 
 
@@ -108,7 +108,7 @@ void HpsModelAnal::compute() {
 
 
 
-  std::vector<Real> subtrFrameOut;
+  ::essentia::VectorEx<Real> subtrFrameOut;
 
 // this needs to take into account overlap-add issues, introducing delay
  _sineSubtraction->input("frame").set(frame); // size is iput _fftSize
@@ -132,7 +132,7 @@ void HpsModelAnal::compute() {
 // additional methods
 
  // shift and copy frame for stochastic model analysis
-void HpsModelAnal::updateStocInFrame(const std::vector<Real> frameIn, std::vector<Real> &frameAccumulator)
+void HpsModelAnal::updateStocInFrame(const ::essentia::VectorEx<Real> frameIn, ::essentia::VectorEx<Real> &frameAccumulator)
 {
   for (int i =0; i < (int) frameIn.size(); ++i){
     if (i+ (int) frameIn.size() < (int) frameAccumulator.size()){

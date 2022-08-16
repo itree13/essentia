@@ -99,7 +99,7 @@ void TensorflowPredictEffnetDiscogs::configure() {
   }
 
 
-  vector<int> inputShape({batchSize, 1, patchSize, _numberBands});
+  ::essentia::VectorEx<int> inputShape({batchSize, 1, patchSize, _numberBands});
 
   _frameCutter->configure("frameSize", _frameSize, "hopSize", _hopSize);
 
@@ -122,8 +122,8 @@ void TensorflowPredictEffnetDiscogs::configure() {
 
   _tensorflowPredict->configure("graphFilename", graphFilename,
                                 "savedModel", savedModel,
-                                "inputs", vector<string>({input}),
-                                "outputs", vector<string>({output}));
+                                "inputs", ::essentia::VectorEx<string>({input}),
+                                "outputs", ::essentia::VectorEx<string>({output}));
 }
 
 } // namespace streaming
@@ -204,14 +204,14 @@ void TensorflowPredictEffnetDiscogs::configure() {
 
 
 void TensorflowPredictEffnetDiscogs::compute() {
-  const vector<Real>* signal = &_signal.get();
-  vector<vector<Real> >& predictions = _predictions.get();
+  const ::essentia::VectorEx<Real>* signal = &_signal.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& predictions = _predictions.get();
 
   if (!signal->size()) {
     throw EssentiaException("TensorflowPredictEffnetDiscogs: empty input signal");
   }
 
-  vector<Real> paddedSignal;
+  ::essentia::VectorEx<Real> paddedSignal;
   int paddingPatches;
   if (_batchSize > 0) {
     if (_lastBatchMode == "zeros" || _lastBatchMode == "same") {
@@ -227,7 +227,7 @@ void TensorflowPredictEffnetDiscogs::compute() {
   _network->run();
 
   try {
-    predictions = _pool.value<vector<vector<Real> > >("predictions");
+    predictions = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("predictions");
     if (_lastBatchMode == "same") {
       predictions.erase(predictions.end() - paddingPatches, predictions.end());
     }
@@ -245,7 +245,7 @@ void TensorflowPredictEffnetDiscogs::reset() {
   _pool.remove("predictions");
 }
 
-int TensorflowPredictEffnetDiscogs::padSignal(const std::vector<Real> &signal, std::vector<Real> &paddedSignal) {
+int TensorflowPredictEffnetDiscogs::padSignal(const ::essentia::VectorEx<Real> &signal, ::essentia::VectorEx<Real> &paddedSignal) {
   int nSamples = signal.size();
 
   // FrameCutter zero-pads the signal so that the first frame is zero-centered.
@@ -282,7 +282,7 @@ int TensorflowPredictEffnetDiscogs::padSignal(const std::vector<Real> &signal, s
 
     paddedSignal = signal;
 
-    vector<Real> padding(missingSamples, 0.0);
+    ::essentia::VectorEx<Real> padding(missingSamples, 0.0);
     paddedSignal.insert(paddedSignal.end(), padding.begin(), padding.end());
   }
 

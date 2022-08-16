@@ -52,11 +52,11 @@ void LogSpectrum::configure() {
 
 
 void LogSpectrum::compute() {
-  const vector<Real>& const_spectrum = _spectrum.get();
-  vector<Real> spectrum = const_spectrum;
-  vector<Real>& logFreqSpectrum = _logFreqSpectrum.get();
+  const ::essentia::VectorEx<Real>& const_spectrum = _spectrum.get();
+  ::essentia::VectorEx<Real> spectrum = const_spectrum;
+  ::essentia::VectorEx<Real>& logFreqSpectrum = _logFreqSpectrum.get();
   Real& localTuning = _localTuning.get();
-  vector<Real>& meanTuning = _meanTuning.get();
+  ::essentia::VectorEx<Real>& meanTuning = _meanTuning.get();
 
   if (spectrum.size() <= 1)
     throw EssentiaException("LogSpectrum: input vector is empty");
@@ -106,7 +106,7 @@ void LogSpectrum::compute() {
   logFreqSpectrum.assign(_nNote, 0.f);
 
   int binCount = 0;
-  for (vector<Real>::iterator it = _kernelValue.begin();
+  for (::essentia::VectorEx<Real>::iterator it = _kernelValue.begin();
        it != _kernelValue.end(); ++it) {
     logFreqSpectrum[_kernelNoteIndex[binCount]] +=
         spectrum[_kernelFftIndex[binCount]] * _kernelValue[binCount];
@@ -147,7 +147,7 @@ void LogSpectrum::compute() {
   stupid, really. The main purpose of the function is to change the values in
   the "matrix" pointed to by outmatrix.
  */
-bool LogSpectrum::logFreqMatrix(Real fs, int frameSize, int maxOctave, vector<Real> &outmatrix) {
+bool LogSpectrum::logFreqMatrix(Real fs, int frameSize, int maxOctave, ::essentia::VectorEx<Real> &outmatrix) {
   // TODO: rewrite so that everyone understands what is done here.
   // TODO: make this more general, such that it works with all minoctave,
   // maxoctave and whatever _nBPS (or check if it already does)
@@ -157,7 +157,7 @@ bool LogSpectrum::logFreqMatrix(Real fs, int frameSize, int maxOctave, vector<Re
   int oversampling = 80;
 
   // Linear frequency vector.
-  vector<Real> fft_f;
+  ::essentia::VectorEx<Real> fft_f;
   for (int i = 0; i < frameSize; ++i) {
     fft_f.push_back(i * (fs * 1.0 / ((frameSize - 1.f) * 2.f)));
   }
@@ -165,7 +165,7 @@ bool LogSpectrum::logFreqMatrix(Real fs, int frameSize, int maxOctave, vector<Re
   Real fft_width = fs / (frameSize - 1.f);
 
   // Linear oversampled frequency vector.
-  vector<Real> oversampled_f;
+  ::essentia::VectorEx<Real> oversampled_f;
   for (int i = 0; i < oversampling * frameSize; ++i) {
     oversampled_f.push_back(
         i * ((fs * 1.0 / ((frameSize - 1.f) * 2.f)) / oversampling));
@@ -175,7 +175,7 @@ bool LogSpectrum::logFreqMatrix(Real fs, int frameSize, int maxOctave, vector<Re
   int minMIDI =
       21 + minoctave * 12 - 1;        // this includes one additional semitone!
   int maxMIDI = 21 + maxOctave * 12;  // this includes one additional semitone!
-  vector<Real> cq_f;
+  ::essentia::VectorEx<Real> cq_f;
   Real oob = 1.0 / binspersemitone;  // one over binspersemitone
   for (int i = minMIDI; i < maxMIDI; ++i) {
     for (int k = 0; k < binspersemitone; ++k) {
@@ -186,7 +186,7 @@ bool LogSpectrum::logFreqMatrix(Real fs, int frameSize, int maxOctave, vector<Re
 
   int nFFT = fft_f.size();
 
-  vector<Real> fft_activation;
+  ::essentia::VectorEx<Real> fft_activation;
   for (int iOS = 0; iOS < 2 * oversampling; ++iOS) {
     Real cosp = cospuls(oversampled_f[iOS], fft_f[1], fft_width);
     fft_activation.push_back(cosp);
@@ -265,7 +265,7 @@ void LogSpectrum::initialize() {
   int tempn = _nNote * _frameSize;
 
   // Real *tempkernel;
-  vector<Real> tempkernel(tempn);
+  ::essentia::VectorEx<Real> tempkernel(tempn);
 
   logFreqMatrix(_sampleRate, _frameSize, _nOctave, tempkernel);
   _kernelValue.clear();

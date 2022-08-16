@@ -43,12 +43,12 @@ namespace essentia {
 
 
 /**
- * Utility function that converts a C-style array into a C++ std::vector.
+ * Utility function that converts a C-style array into a C++ ::essentia::VectorEx.
  */
 template <typename T, typename Array>
-std::vector<T> arrayToVector(const Array& array) {
+::essentia::VectorEx<T> arrayToVector(const Array& array) {
   int size = ARRAY_SIZE(array);
-  std::vector<T> result(size);
+  ::essentia::VectorEx<T> result(size);
   for (int i=0; i<size; i++) {
     result[i] = array[i];
   }
@@ -62,7 +62,7 @@ std::vector<T> arrayToVector(const Array& array) {
  * found in @c v, return -1.
  */
 template <typename T>
-int indexOf(const std::vector<T>& v, const T& elem) {
+int indexOf(const ::essentia::VectorEx<T>& v, const T& elem) {
   const int size = (int)v.size();
   for (int i=0; i<size; i++) {
     if (v[i] == elem) return i;
@@ -78,11 +78,11 @@ int indexOf(const std::vector<T>& v, const T& elem) {
  * own types if you overload this operator.
  */
 template <typename T>
-bool contains(const std::vector<T>& v, const T& elem) {
+bool contains(const ::essentia::VectorEx<T>& v, const T& elem) {
   return (indexOf(v, elem) != -1);
 }
 
-inline bool contains(const std::vector<std::string>& v, const char* str) {
+inline bool contains(const ::essentia::VectorEx<std::string>& v, const char* str) {
   return contains(v, std::string(str));
 }
 
@@ -134,15 +134,15 @@ inline bool isValid(const std::string& s) {
 }
 
 template <typename T>
-inline bool isValid(const std::vector<T>& v) {
-  typename std::vector<T>::const_iterator it = v.begin();
+inline bool isValid(const ::essentia::VectorEx<T>& v) {
+  typename ::essentia::VectorEx<T>::const_iterator it = v.begin();
   while (it != v.end() && isValid(*it)) ++it;
   return it == v.end();
 }
 
 template <typename T>
-inline bool isValid(const std::vector<std::vector<T> >& mat) {
-  typename std::vector<std::vector<T> >::const_iterator it = mat.begin();
+inline bool isValid(const ::essentia::VectorEx<::essentia::VectorEx<T> >& mat) {
+  typename ::essentia::VectorEx<::essentia::VectorEx<T> >::const_iterator it = mat.begin();
   while (it != mat.end() && isValid(*it)) ++it;
   return it == mat.end();
 }
@@ -199,14 +199,14 @@ inline void fastcopy<int>(int* dest, const int* src, int n) {
 }
 
 // overload for iterators, which allow us to fastcopy(dest.begin(), src.begin(), 0) and not crash
-inline void fastcopy(std::vector<Real>::iterator dest, std::vector<Real>::const_iterator src, int n) {
+inline void fastcopy(::essentia::VectorEx<Real>::iterator dest, ::essentia::VectorEx<Real>::const_iterator src, int n) {
   // need to test this because otherwise it is not legal to dereference the iterator
   if (n > 0) {
     fastcopy(&*dest, &*src, n);
   }
 }
 
-inline void fastcopy(std::vector<StereoSample>::iterator dest, std::vector<StereoSample>::const_iterator src, int n) {
+inline void fastcopy(::essentia::VectorEx<StereoSample>::iterator dest, ::essentia::VectorEx<StereoSample>::const_iterator src, int n) {
   if (n > 0) {
     fastcopy(&*dest, &*src, n);
   }

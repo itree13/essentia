@@ -43,14 +43,14 @@ void HarmonicBpm::configure() {
 }
 
 
-vector<Real> HarmonicBpm::findHarmonicBpms(const vector<Real>& bpms) {
+::essentia::VectorEx<Real> HarmonicBpm::findHarmonicBpms(const ::essentia::VectorEx<Real>& bpms) {
   // Accept only BPM values >= 1 for consistency with the `bpm` parameter.
   for(int i=0; i<int(bpms.size()); i++) {
     if (bpms[i] < 1)
       throw(EssentiaException("HarmonicBpm: bpm values below 1 are not allowed"));
   }
 
-  vector<Real> harmonicBpms, harmonicRatios;
+  ::essentia::VectorEx<Real> harmonicBpms, harmonicRatios;
   harmonicBpms.reserve(bpms.size());
   harmonicRatios.reserve(bpms.size());
 
@@ -68,7 +68,7 @@ vector<Real> HarmonicBpm::findHarmonicBpms(const vector<Real>& bpms) {
   // Sort candidate BPMs in ascending order
   sort(harmonicBpms.begin(), harmonicBpms.end());
 
-  vector<Real> bestHarmonicBpms;
+  ::essentia::VectorEx<Real> bestHarmonicBpms;
   int i=0;
   Real prevBestBpm = -1;
 
@@ -113,8 +113,8 @@ vector<Real> HarmonicBpm::findHarmonicBpms(const vector<Real>& bpms) {
 
 
 void HarmonicBpm::compute() {
-  const vector<Real>& bpms = _bpmCandidates.get();
-  vector<Real>& harmonicBpms = _harmonicBpms.get();
+  const ::essentia::VectorEx<Real>& bpms = _bpmCandidates.get();
+  ::essentia::VectorEx<Real>& harmonicBpms = _harmonicBpms.get();
   harmonicBpms = findHarmonicBpms(bpms);
 }
 

@@ -127,8 +127,8 @@ void setDefaultOptions(Pool& pool) {
   // stats
   const char* statsArray[] = { "mean", "var", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2" };
   const char* mfccStatsArray[] = { "mean", "cov", "icov" };
-  vector<string> stats = arrayToVector<string>(statsArray);
-  vector<string> mfccStats = arrayToVector<string>(mfccStatsArray);
+  ::essentia::VectorEx<string> stats = arrayToVector<string>(statsArray);
+  ::essentia::VectorEx<string> mfccStats = arrayToVector<string>(mfccStatsArray);
   for (int i=0; i<(int)stats.size(); i++) {
     pool.add("lowlevel.stats", stats[i]);
     pool.add("tonal.stats", stats[i]);
@@ -149,7 +149,7 @@ void setOptions(Pool& options, const std::string& filename) {
   yaml->compute();
   delete yaml;
   options.merge(opts, "replace");
-  //const vector<string>& descriptorNames = options.descriptorNames();
+  //const ::essentia::VectorEx<string>& descriptorNames = options.descriptorNames();
   //for (int i=0; i<(int)descriptorNames.size(); i++) {
   //  cout << descriptorNames[i] << endl;
   //}
@@ -220,21 +220,21 @@ void mergeOptionsAndResults(Pool& results, const Pool& options) {
   results.set("configuration.panning.silentFrames", options.value<string>("panning.silentFrames"));
 
   // stats
-  vector<string> lowlevelStats = options.value<vector<string> >("lowlevel.stats");
+  ::essentia::VectorEx<string> lowlevelStats = options.value<::essentia::VectorEx<string> >("lowlevel.stats");
   for (int i=0; i<(int)lowlevelStats.size(); i++) results.add("configuration.lowlevel.stats", lowlevelStats[i]);
 
-  vector<string> tonalStats = options.value<vector<string> >("tonal.stats");
+  ::essentia::VectorEx<string> tonalStats = options.value<::essentia::VectorEx<string> >("tonal.stats");
   for (int i=0; i<(int)tonalStats.size(); i++) results.add("configuration.tonal.stats", tonalStats[i]);
 
-  vector<string> rhythmStats = options.value<vector<string> >("rhythm.stats");
+  ::essentia::VectorEx<string> rhythmStats = options.value<::essentia::VectorEx<string> >("rhythm.stats");
   for (int i=0; i<(int)rhythmStats.size(); i++) results.add("configuration.rhythm.stats", rhythmStats[i]);
 
-  vector<string> sfxStats = options.value<vector<string> >("sfx.stats");
+  ::essentia::VectorEx<string> sfxStats = options.value<::essentia::VectorEx<string> >("sfx.stats");
   for (int i=0; i<(int)sfxStats.size(); i++) results.add("configuration.sfx.stats", sfxStats[i]);
 
-  vector<string> mfccStats = options.value<vector<string> >("lowlevel.mfccStats");
+  ::essentia::VectorEx<string> mfccStats = options.value<::essentia::VectorEx<string> >("lowlevel.mfccStats");
   for (int i=0; i<(int)mfccStats.size(); i++) results.add("configuration.lowlevel.mfccStats", mfccStats[i]);
 
-  vector<string> panningStats = options.value<vector<string> >("panning.stats");
+  ::essentia::VectorEx<string> panningStats = options.value<::essentia::VectorEx<string> >("panning.stats");
   for (int i=0; i<(int)panningStats.size(); i++) results.add("configuration.panning.stats", panningStats[i]);
 }

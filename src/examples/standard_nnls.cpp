@@ -79,13 +79,13 @@ int main(int argc, char* argv[]) {
   cout << "-------- connecting algos ---------" << endl;
 
   // Audio -> FrameCutter
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
 
   audio->output("audio").set(audioBuffer);
   fc->input("signal").set(audioBuffer);
 
   // FrameCutter -> Windowing -> Spectrum
-  vector<Real> frame, windowedFrame;
+  ::essentia::VectorEx<Real> frame, windowedFrame;
 
   fc->output("frame").set(frame);
   w->input("frame").set(frame);
@@ -95,8 +95,8 @@ int main(int argc, char* argv[]) {
 
   // Spectrum -> LogSpectrum -> NNLSChroma
   Real tuninig;
-  vector<Real> spectrum, logFreqSpectrum, tuningFrames, meanTuning;
-  vector<vector<Real> > logSpectrumFrames, tunedLogFreqSpectrum, semitoneSpectrum, bassChromagram, chromagram;
+  ::essentia::VectorEx<Real> spectrum, logFreqSpectrum, tuningFrames, meanTuning;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > logSpectrumFrames, tunedLogFreqSpectrum, semitoneSpectrum, bassChromagram, chromagram;
 
   spec->output("spectrum").set(spectrum);
   logfreqspectrum->input("spectrum").set(spectrum);

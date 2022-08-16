@@ -35,7 +35,7 @@ void SpectralCentroidTime::configure() {
 
 void SpectralCentroidTime::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& centroid = _centroid.get();
   double a, b, aPowerSum = 0, bPowerSum = 0;
 

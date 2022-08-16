@@ -96,7 +96,7 @@ void TonicIndianArtMusic::configure() {
 
 void TonicIndianArtMusic::compute() {
   
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   // Prevent segmentation fault
   if (signal.size() == 0) { 
     throw EssentiaException("TonicIndianArtMusic: Empty Audio passed"); 
@@ -105,40 +105,40 @@ void TonicIndianArtMusic::compute() {
   Real& tonic = _tonic.get();
 
   // Pre-processing
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   _frameCutter->input("signal").set(signal);
   _frameCutter->output("frame").set(frame);
 
-  vector<Real> frameWindowed;
+  ::essentia::VectorEx<Real> frameWindowed;
   _windowing->input("frame").set(frame);
   _windowing->output("frame").set(frameWindowed);
 
   // Spectral peaks
-  vector<Real> frameSpectrum;
+  ::essentia::VectorEx<Real> frameSpectrum;
   _spectrum->input("frame").set(frameWindowed);
   _spectrum->output("spectrum").set(frameSpectrum);
 
-  vector<Real> frameFrequencies;
-  vector<Real> frameMagnitudes;
+  ::essentia::VectorEx<Real> frameFrequencies;
+  ::essentia::VectorEx<Real> frameMagnitudes;
   _spectralPeaks->input("spectrum").set(frameSpectrum);
   _spectralPeaks->output("frequencies").set(frameFrequencies);
   _spectralPeaks->output("magnitudes").set(frameMagnitudes);
 
 
   // Pitch salience contours
-  vector<Real> frameSalience;
+  ::essentia::VectorEx<Real> frameSalience;
   _pitchSalienceFunction->input("frequencies").set(frameFrequencies);
   _pitchSalienceFunction->input("magnitudes").set(frameMagnitudes);
   _pitchSalienceFunction->output("salienceFunction").set(frameSalience);
 
-  vector<Real> frameSalienceBins;
-  vector<Real> frameSalienceValues;
+  ::essentia::VectorEx<Real> frameSalienceBins;
+  ::essentia::VectorEx<Real> frameSalienceValues;
   _pitchSalienceFunctionPeaks->input("salienceFunction").set(frameSalience);
   _pitchSalienceFunctionPeaks->output("salienceBins").set(frameSalienceBins);
   _pitchSalienceFunctionPeaks->output("salienceValues").set(frameSalienceValues);
 
   // histogram computation
-  vector<Real> histogram;
+  ::essentia::VectorEx<Real> histogram;
   histogram.resize(_numberBins);
 
   while (true) {
@@ -172,8 +172,8 @@ void TonicIndianArtMusic::compute() {
   }
 
   // computing the peaks of the histogram function
-  vector <Real> peak_locs;
-  vector <Real> peak_amps;
+  ::essentia::VectorEx<Real> peak_locs;
+  ::essentia::VectorEx<Real> peak_amps;
   Real tonic_loc;
   Real binsInOctave = 1200.0 / _binResolution;
   

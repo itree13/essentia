@@ -32,7 +32,7 @@ const char* MinToTotal::description = DOC("This algorithm computes the ratio bet
 
 void MinToTotal::compute() {
 
-  const vector<Real>& envelope = _envelope.get();
+  const ::essentia::VectorEx<Real>& envelope = _envelope.get();
   Real& minToTotal = _minToTotal.get();
 
   if (envelope.empty()) {
@@ -55,7 +55,7 @@ const char* MinToTotal::description = essentia::standard::MinToTotal::descriptio
 
 
 void MinToTotal::consume() {
-  const vector<Real>& envelope = *((const vector<Real>*)_envelope.getTokens());
+  const ::essentia::VectorEx<Real>& envelope = *((const ::essentia::VectorEx<Real>*)_envelope.getTokens());
 
   int minIdx = argmin(envelope);
   if (envelope[minIdx] < _min) {

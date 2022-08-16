@@ -32,7 +32,7 @@ class TensorTranspose : public Algorithm {
   Input<Tensor<Real> > _input;
   Output<Tensor<Real> > _output;
 
-  std::vector<int> _permutation;
+  ::essentia::VectorEx<int> _permutation;
 
  public:
   TensorTranspose() {

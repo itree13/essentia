@@ -28,9 +28,9 @@ namespace standard {
 class PitchYinProbabilitiesHMM : public Algorithm {
 
  private:
-  Input<std::vector<std::vector<Real> > > _pitchCandidates;
-  Input<std::vector<std::vector<Real> > > _probabilities;
-  Output<std::vector<Real> > _pitch;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _pitchCandidates;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _probabilities;
+  Output<::essentia::VectorEx<Real> > _pitch;
 
   Algorithm* _viterbi;
 
@@ -40,14 +40,14 @@ class PitchYinProbabilitiesHMM : public Algorithm {
   Real _yinTrust;
   int _nPitch;
   int _transitionWidth;
-  std::vector<Real> _freqs;
+  ::essentia::VectorEx<Real> _freqs;
 
-  std::vector<Real> _init;
-  std::vector<int> _from;
-  std::vector<int> _to;
-  std::vector<Real> _transProb;
+  ::essentia::VectorEx<Real> _init;
+  ::essentia::VectorEx<int> _from;
+  ::essentia::VectorEx<int> _to;
+  ::essentia::VectorEx<Real> _transProb;
 
-  std::vector<Real> _tempPitch;
+  ::essentia::VectorEx<Real> _tempPitch;
 
  public:
   PitchYinProbabilitiesHMM() {
@@ -73,7 +73,7 @@ class PitchYinProbabilitiesHMM : public Algorithm {
   static const char* description;
 
  protected:
-  const std::vector<Real> calculateObsProb(const std::vector<Real> pitchCandidates, const std::vector<Real> probabilities);
+  const ::essentia::VectorEx<Real> calculateObsProb(const ::essentia::VectorEx<Real> pitchCandidates, const ::essentia::VectorEx<Real> probabilities);
 }; // class PitchYin
 
 } // namespace standard
@@ -88,9 +88,9 @@ namespace streaming {
 class PitchYinProbabilitiesHMM : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::vector<Real> > > _pitchCandidates;
-  Sink<std::vector<std::vector<Real> > > _probabilities;
-  Source<std::vector<Real> > _pitch;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _pitchCandidates;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _probabilities;
+  Source<::essentia::VectorEx<Real> > _pitch;
 
  public:
   PitchYinProbabilitiesHMM() {

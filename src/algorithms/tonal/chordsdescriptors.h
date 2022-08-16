@@ -28,11 +28,11 @@ namespace standard {
 class ChordsDescriptors : public Algorithm {
 
  protected:
-  Input<std::vector<std::string> > _chords;
+  Input<::essentia::VectorEx<std::string> > _chords;
   Input<std::string> _key;
   Input<std::string> _scale;
 
-  Output<std::vector<Real> > _chordsHistogram;
+  Output<::essentia::VectorEx<Real> > _chordsHistogram;
   Output<Real> _chordsNumberRate;
   Output<Real> _chordsChangesRate;
   Output<std::string> _chordsKey;
@@ -41,7 +41,7 @@ class ChordsDescriptors : public Algorithm {
   static const char* circleOfFifth[];
   static const char* circleOfFifthAlternativeNames[];
   int chordIndex(const std::string& chord);
-  std::map<int, Real> chordsHistogram(const std::vector<std::string>& chords);
+  std::map<int, Real> chordsHistogram(const ::essentia::VectorEx<std::string>& chords);
   std::map<int, Real> chordsHistogramNorm(std::map<int, Real>& histogram,
                                                   const std::string& key);
 
@@ -84,13 +84,13 @@ class ChordsDescriptors : public Algorithm {
   Sink<std::string> _key;
   Sink<std::string> _scale;
 
-  Source<std::vector<Real> > _chordsHistogram;
+  Source<::essentia::VectorEx<Real> > _chordsHistogram;
   Source<Real> _chordsNumberRate;
   Source<Real> _chordsChangesRate;
   Source<std::string> _chordsKey;
   Source<std::string> _chordsScale;
 
-  std::vector<std::string> _accu;
+  ::essentia::VectorEx<std::string> _accu;
 
   standard::Algorithm* _chordsAlgo;
 

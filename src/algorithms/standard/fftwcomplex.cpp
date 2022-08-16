@@ -53,8 +53,8 @@ FFTWComplex::~FFTWComplex() {
 
 void FFTWComplex::compute() {
 
-  const std::vector<std::complex<Real> >& signal = _signal.get();
-  std::vector<std::complex<Real> >& fft = _fft.get();
+  const ::essentia::VectorEx<std::complex<Real> >& signal = _signal.get();
+  ::essentia::VectorEx<std::complex<Real> >& fft = _fft.get();
 
   // check if input is OK
   int size = int(signal.size());

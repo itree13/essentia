@@ -28,8 +28,8 @@ namespace standard {
 class StereoTrimmer : public Algorithm {
 
  private:
-  Input<std::vector<StereoSample> > _input;
-  Output<std::vector<StereoSample> > _output;
+  Input<::essentia::VectorEx<StereoSample> > _input;
+  Output<::essentia::VectorEx<StereoSample> > _output;
 
   long long _startIndex;
   long long _endIndex;

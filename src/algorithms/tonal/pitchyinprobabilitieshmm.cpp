@@ -48,7 +48,7 @@ void PitchYinProbabilitiesHMM::configure() {
 
   _transitionWidth = 5 * (_numberBinsPerSemitone / 2) + 1;
   _nPitch = 69 * _numberBinsPerSemitone;
-  _freqs = vector<Real>( 2 * _nPitch);
+  _freqs = ::essentia::VectorEx<Real>( 2 * _nPitch);
   for (int iPitch = 0; iPitch < _nPitch; ++iPitch) {
       _freqs[iPitch] = _minFrequency * pow(2, iPitch * 1.0 / (12 * _numberBinsPerSemitone));
       _freqs[iPitch + _nPitch] = -_freqs[iPitch];
@@ -60,7 +60,7 @@ void PitchYinProbabilitiesHMM::configure() {
   _transProb.clear();
 
   // INITIAL VECTOR
-  _init = vector<Real>(2 * _nPitch, 1.0 / 2 * _nPitch);
+  _init = ::essentia::VectorEx<Real>(2 * _nPitch, 1.0 / 2 * _nPitch);
   
   // TRANSITIONS
   for (int iPitch = 0; iPitch < _nPitch; ++iPitch)
@@ -71,7 +71,7 @@ void PitchYinProbabilitiesHMM::configure() {
     
     // WEIGHT VECTOR
     Real weightSum = 0;
-    vector<Real> weights;
+    ::essentia::VectorEx<Real> weights;
     for (int i = minNextPitch; i <= maxNextPitch; ++i)
     {
       if (i <= iPitch)
@@ -105,9 +105,9 @@ void PitchYinProbabilitiesHMM::configure() {
   }
 }
 
-const vector<Real> PitchYinProbabilitiesHMM::calculateObsProb(const vector<Real> pitchCandidates, const vector<Real> probabilities) {
+const ::essentia::VectorEx<Real> PitchYinProbabilitiesHMM::calculateObsProb(const ::essentia::VectorEx<Real> pitchCandidates, const ::essentia::VectorEx<Real> probabilities) {
   
-  vector<Real> out = vector<Real>(2 * _nPitch + 1);
+  ::essentia::VectorEx<Real> out = ::essentia::VectorEx<Real>(2 * _nPitch + 1);
   Real probYinPitched = 0;
   // BIN THE PITCHES
   for (int iPair = 0; iPair < (int)pitchCandidates.size(); ++iPair) {
@@ -138,21 +138,21 @@ const vector<Real> PitchYinProbabilitiesHMM::calculateObsProb(const vector<Real>
 }
 
 void PitchYinProbabilitiesHMM::compute() {
-  const vector<vector<Real> >& pitchCandidates = _pitchCandidates.get();
-  const vector<vector<Real> >& probabilities = _probabilities.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& pitchCandidates = _pitchCandidates.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& probabilities = _probabilities.get();
 
   if (pitchCandidates.empty() || probabilities.empty()) {
     throw EssentiaException("PitchYin: Cannot compute pitch detection on empty inputs.");
   }
 
-  vector<Real>& pitch = _pitch.get();
+  ::essentia::VectorEx<Real>& pitch = _pitch.get();
   
-  vector<vector<Real> > obsProb(pitchCandidates.size());
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > obsProb(pitchCandidates.size());
   for (int iFrame = 0; iFrame < (int)pitchCandidates.size(); ++iFrame) {
       obsProb[iFrame] = calculateObsProb(pitchCandidates[iFrame], probabilities[iFrame]);
   }
 
-  vector<int> path;
+  ::essentia::VectorEx<int> path;
   _viterbi->input("observationProbabilities").set(obsProb);
   _viterbi->input("initialization").set(_init);
   _viterbi->input("fromIndex").set(_from);

@@ -135,7 +135,7 @@ Set::Set(const string& srange) {
     throw EssentiaException("Invalid set, mustn't be empty");
   }
 
-  vector<string> elems = tokenize(s, ",");
+  ::essentia::VectorEx<string> elems = tokenize(s, ",");
   _elements = set<string>(elems.begin(), elems.end());
 }
 

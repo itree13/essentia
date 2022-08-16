@@ -88,8 +88,8 @@ Real consonance(Real f1, Real f2) {
 
 
 
-Real calcDissonance(const vector<Real>& frequencies, const vector<Real>& magnitudes) {
-  vector<Real> loudness = magnitudes;
+Real calcDissonance(const ::essentia::VectorEx<Real>& frequencies, const ::essentia::VectorEx<Real>& magnitudes) {
+  ::essentia::VectorEx<Real> loudness = magnitudes;
   Real totalLoudness = 0;
   int size = frequencies.size();
 
@@ -109,7 +109,7 @@ Real calcDissonance(const vector<Real>& frequencies, const vector<Real>& magnitu
     return 0.0;
   }
 
-  //vector<Real> loudness(size);
+  //::essentia::VectorEx<Real> loudness(size);
   //for (int i=0; i<size; i++) partialLoudness = loudness[i]/totalLoudness;
 
   Real totalDissonance = 0;
@@ -142,8 +142,8 @@ Real calcDissonance(const vector<Real>& frequencies, const vector<Real>& magnitu
 
 void Dissonance::compute() {
 
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
   Real& dissonance = _dissonance.get();
 
   if (magnitudes.size() != frequencies.size()) {

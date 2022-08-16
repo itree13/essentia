@@ -28,14 +28,14 @@ namespace standard {
 class MFCC : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrum;
-  Output<std::vector<Real> > _bands;
-  Output<std::vector<Real> > _mfcc;
+  Input<::essentia::VectorEx<Real> > _spectrum;
+  Output<::essentia::VectorEx<Real> > _bands;
+  Output<::essentia::VectorEx<Real> > _mfcc;
 
   Algorithm* _melFilter;
   Algorithm* _dct;
 
-  std::vector<Real> _logbands;
+  ::essentia::VectorEx<Real> _logbands;
   std::string _logType;
   Real _silenceThreshold;
   Real _dbSilenceThreshold;
@@ -93,9 +93,9 @@ namespace streaming {
 class MFCC : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
-  Source<std::vector<Real> > _bands;
-  Source<std::vector<Real> > _mfcc;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
+  Source<::essentia::VectorEx<Real> > _bands;
+  Source<::essentia::VectorEx<Real> > _mfcc;
 
  public:
   MFCC() {

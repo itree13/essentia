@@ -36,8 +36,8 @@ class PitchYinProbabilistic : public AlgorithmComposite {
   standard::Algorithm* _yinProbabilitiesHMM;
 
   SinkProxy<Real> _signal;
-  Source<std::vector<Real> > _pitch;
-  Source<std::vector<Real> > _voicedProbabilities;
+  Source<::essentia::VectorEx<Real> > _pitch;
+  Source<::essentia::VectorEx<Real> > _voicedProbabilities;
 
   Pool _pool;
 
@@ -88,9 +88,9 @@ namespace standard {
 
 class PitchYinProbabilistic : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _pitch;
-  Output<std::vector<Real> > _voicedProbabilities;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _pitch;
+  Output<::essentia::VectorEx<Real> > _voicedProbabilities;
 
   streaming::Algorithm* _PitchYinProbabilistic;
   streaming::VectorInput<Real>* _vectorInput;

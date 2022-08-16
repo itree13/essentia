@@ -29,8 +29,8 @@ namespace standard {
 class MultiPitchMelodia : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<std::vector<Real> > > _pitch;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _pitch;
 
   // Pre-processing
   Algorithm* _frameCutter;
@@ -138,7 +138,7 @@ class MultiPitchMelodia : public AlgorithmComposite {
   standard::Algorithm* _pitchContoursMelody;
 
   SinkProxy<Real> _signal;
-  Source<std::vector<std::vector<Real> > > _pitch;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _pitch;
 
   Pool _pool;
   Algorithm* _poolStorageBins;

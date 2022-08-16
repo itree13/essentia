@@ -50,7 +50,7 @@ TEST(TreeTraversal, DepthFirstMap) {
 
   Network network(loader);
 
-  vector<string> names = depthFirstMap(network.visibleNetworkRoot(), getName);
+  ::essentia::VectorEx<string> names = depthFirstMap(network.visibleNetworkRoot(), getName);
 
   const char* expected[] = { "MonoLoader", "LowPass", "DevNull" };
 
@@ -70,7 +70,7 @@ TEST(TreeTraversal, DepthFirstSearch) {
 
   Network network(loader);
 
-  vector<NetworkNode*> dfs = depthFirstSearch(network.visibleNetworkRoot());
+  ::essentia::VectorEx<NetworkNode*> dfs = depthFirstSearch(network.visibleNetworkRoot());
 
   const char* expected[] = { "MonoLoader", "LowPass", "DevNull" };
   int size = ARRAY_SIZE(expected);

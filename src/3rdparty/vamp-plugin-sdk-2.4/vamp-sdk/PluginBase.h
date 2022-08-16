@@ -190,13 +190,13 @@ public:
          * never see the actual numeric values unless they are also
          * encoded in the names.
          */
-        std::vector<std::string> valueNames;
+        ::essentia::VectorEx<std::string> valueNames;
 
         ParameterDescriptor() : // the defaults are invalid: you must set them
             minValue(0), maxValue(0), defaultValue(0), isQuantized(false) { }
     };
 
-    typedef std::vector<ParameterDescriptor> ParameterList;
+    typedef ::essentia::VectorEx<ParameterDescriptor> ParameterList;
 
     /**
      * Get the controllable parameters of this plugin.
@@ -218,7 +218,7 @@ public:
     virtual void setParameter(std::string, float) { }
 
 
-    typedef std::vector<std::string> ProgramList;
+    typedef ::essentia::VectorEx<std::string> ProgramList;
 
     /**
      * Get the program settings available in this plugin.  A program

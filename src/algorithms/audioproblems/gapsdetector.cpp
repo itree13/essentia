@@ -71,9 +71,9 @@ void GapsDetector::configure() {
 
 
 void GapsDetector::compute() {
-  const std::vector<Real> frame = _frame.get();
-  std::vector<Real> &gapsStarts = _gapsStarts.get();
-  std::vector<Real> &gapsEnds = _gapsEnds.get();
+  const ::essentia::VectorEx<Real> frame = _frame.get();
+  ::essentia::VectorEx<Real> &gapsStarts = _gapsStarts.get();
+  ::essentia::VectorEx<Real> &gapsEnds = _gapsEnds.get();
 
   // If the frameSize is not properly set we throw an exception instead of  
   // resizing as probably the hop size is mismatching too.
@@ -99,7 +99,7 @@ void GapsDetector::compute() {
   }
 
   // Finish the gaps when the right buffer is filled.
-  std::vector<uint> removeIndexes;
+  ::essentia::VectorEx<uint> removeIndexes;
   for (uint i = 0; i < _gaps.size(); i++) {
     if (_gaps[i].finished) {
       removeIndexes.push_back(i);
@@ -119,13 +119,13 @@ void GapsDetector::compute() {
     _gaps.erase(_gaps.begin() + removeIndexes[i]);
 
   // Here the current frame processing starts.
-  std::vector<Real> x1, x3;
+  ::essentia::VectorEx<Real> x1, x3;
 
   _envelope->input("signal").set(frame);
   _envelope->output("signal").set(x1);
   _envelope->compute();
 
-  std::vector<Real> x2(x1.size(), 0.f);
+  ::essentia::VectorEx<Real> x2(x1.size(), 0.f);
   for (uint i = 0; i < _frameSize; i++)
     x1[i] > _silenceThreshold ? x2[i] = 1.f : x2[i] = 0.f;
 
@@ -148,7 +148,7 @@ void GapsDetector::compute() {
   // The gaps limits are detected as rising (u) and falling (d)
   // flanks over the energy mask.
   int diff;
-  std::vector<uint> uFlanks, dFlanks;
+  ::essentia::VectorEx<uint> uFlanks, dFlanks;
   for (uint i = startProc; i < endProc; i++) {
     diff = x3[i] - x3[i - 1];
     if (diff == 1) uFlanks.push_back(i);
@@ -157,7 +157,7 @@ void GapsDetector::compute() {
 
   // Initialize gap candidates for all the falling flanks.
   if (dFlanks.size() > 0) {
-    std::vector<Real> lBuffer(_prepowerSamples, 0.f);
+    ::essentia::VectorEx<Real> lBuffer(_prepowerSamples, 0.f);
     Real offset = _frameCount * _hopSize;
     for (uint i = 0; i < dFlanks.size(); i++) {
       int pastValues = dFlanks[i] - _prepowerSamples;
@@ -181,7 +181,7 @@ void GapsDetector::compute() {
             0,
             true,
             false,
-            std::vector<Real>(0),
+            ::essentia::VectorEx<Real>(0),
         });
       }
     }
@@ -199,7 +199,7 @@ void GapsDetector::compute() {
           _gaps[j].end = (Real)((offset + uFlanks[i]) / _sampleRate);
           _gaps[j].remaining = remaining;
           uint last = std::min(_frameSize, uFlanks[i] + _postpowerSamples);
-          std::vector<Real> rBuffer(last - uFlanks[i], 0.f);
+          ::essentia::VectorEx<Real> rBuffer(last - uFlanks[i], 0.f);
           uint l = 0;
           _gaps[j].rBuffer.resize(_frameSize - uFlanks[i]);
           for (uint k = uFlanks[i]; k < _frameSize; k++, l++)

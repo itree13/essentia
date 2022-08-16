@@ -28,8 +28,8 @@ namespace standard {
 class Windowing : public Algorithm {
 
  protected:
-  Output<std::vector<Real> > _windowedFrame;
-  Input<std::vector<Real> > _frame;
+  Output<::essentia::VectorEx<Real> > _windowedFrame;
+  Input<::essentia::VectorEx<Real> > _frame;
 
  public:
   Windowing() {
@@ -71,7 +71,7 @@ protected:
 
   void makeZeroPhase();
 
-  std::vector<Real> _window;
+  ::essentia::VectorEx<Real> _window;
   int _zeroPadding;
   bool _zeroPhase;
   bool _normalized;
@@ -88,8 +88,8 @@ namespace streaming {
 class Windowing : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frame;
-  Source<std::vector<Real> > _windowedFrame;
+  Sink<::essentia::VectorEx<Real> > _frame;
+  Source<::essentia::VectorEx<Real> > _windowedFrame;
 
  public:
   Windowing() {

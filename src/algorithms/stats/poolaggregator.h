@@ -41,10 +41,10 @@ class PoolAggregator : public Algorithm {
   void aggregateSingleStringPool(const Pool& input, Pool& output);
   void aggregateStringPool(const Pool& input, Pool& output);
   void aggregateVectorStringPool(const Pool& input, Pool& output);
-  const std::vector<std::string>& getStats(const std::string& key) const;
+  const ::essentia::VectorEx<std::string>& getStats(const std::string& key) const;
 
-  std::vector<std::string> _defaultStats;
-  std::map<std::string, std::vector<std::string> > _exceptions;
+  ::essentia::VectorEx<std::string> _defaultStats;
+  std::map<std::string, ::essentia::VectorEx<std::string> > _exceptions;
   static const std::set<std::string> _supportedStats;
 
  public:
@@ -55,10 +55,10 @@ class PoolAggregator : public Algorithm {
 
   void declareParameters() {
     const char* defaultStatsC[] = { "mean", "stdev", "min", "max", "median" };
-    std::vector<std::string> defaultStats = arrayToVector<std::string>(defaultStatsC);
+    ::essentia::VectorEx<std::string> defaultStats = arrayToVector<std::string>(defaultStatsC);
 
     declareParameter("defaultStats", "the default statistics to be computed for each descriptor in the input pool", "", defaultStats);
-    declareParameter("exceptions", "a mapping between descriptor names (no duplicates) and the types of statistics to be computed for those descriptors (e.g. { lowlevel.bpm : [min, max], lowlevel.gain : [var, min, dmean] })", "", std::map<std::string, std::vector<std::string> >());
+    declareParameter("exceptions", "a mapping between descriptor names (no duplicates) and the types of statistics to be computed for those descriptors (e.g. { lowlevel.bpm : [min, max], lowlevel.gain : [var, min, dmean] })", "", std::map<std::string, ::essentia::VectorEx<std::string> >());
   }
 
   void compute();

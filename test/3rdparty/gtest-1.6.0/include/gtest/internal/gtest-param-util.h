@@ -280,7 +280,7 @@ class ValuesInIteratorRangeGenerator : public ParamGeneratorInterface<T> {
   }
 
  private:
-  typedef typename ::std::vector<T> ContainerType;
+  typedef typename ::essentia::VectorEx<T> ContainerType;
 
   class Iterator : public ParamIteratorInterface<T> {
    public:
@@ -534,10 +534,10 @@ class ParameterizedTestCaseInfo : public ParameterizedTestCaseInfoBase {
     const string test_base_name;
     const scoped_ptr<TestMetaFactoryBase<ParamType> > test_meta_factory;
   };
-  typedef ::std::vector<linked_ptr<TestInfo> > TestInfoContainer;
+  typedef ::essentia::VectorEx<linked_ptr<TestInfo> > TestInfoContainer;
   // Keeps pairs of <Instantiation name, Sequence generator creation function>
   // received from INSTANTIATE_TEST_CASE_P macros.
-  typedef ::std::vector<std::pair<string, GeneratorCreationFunc*> >
+  typedef ::essentia::VectorEx<std::pair<string, GeneratorCreationFunc*> >
       InstantiationContainer;
 
   const string test_case_name_;
@@ -604,7 +604,7 @@ class ParameterizedTestCaseRegistry {
   }
 
  private:
-  typedef ::std::vector<ParameterizedTestCaseInfoBase*> TestCaseInfoContainer;
+  typedef ::essentia::VectorEx<ParameterizedTestCaseInfoBase*> TestCaseInfoContainer;
 
   TestCaseInfoContainer test_case_infos_;
 

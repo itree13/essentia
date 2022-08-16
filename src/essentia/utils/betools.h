@@ -59,7 +59,7 @@ void bewrite(std::ofstream& out, const std::string& str) {
 }
 
 template <>
-void bewrite(std::ofstream& out, const std::vector<std::string>& v) {
+void bewrite(std::ofstream& out, const ::essentia::VectorEx<std::string>& v) {
   sint32 size = (sint32)v.size();
   bewrite(out, size);
   for (int i=0; i<size; i++) bewrite(out, v[i]);
@@ -82,7 +82,7 @@ void beread(std::ifstream& in, std::string& str) {
 }
 
 template <>
-void beread(std::ifstream& in, std::vector<std::string>& v) {
+void beread(std::ifstream& in, ::essentia::VectorEx<std::string>& v) {
   sint32 size;
   beread(in, size);
   v.resize(size);

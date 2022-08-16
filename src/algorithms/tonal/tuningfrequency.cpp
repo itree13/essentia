@@ -45,8 +45,8 @@ void TuningFrequency::configure() {
 
 void TuningFrequency::reset() {
   int size = (int)(100.0/_resolution);
-  _histogram = vector<Real>(size, 0.0);
-  _globalHistogram = vector<Real>(size, 0.0);
+  _histogram = ::essentia::VectorEx<Real>(size, 0.0);
+  _globalHistogram = ::essentia::VectorEx<Real>(size, 0.0);
 }
 
 Real TuningFrequency::currentTuningCents() const {
@@ -84,8 +84,8 @@ Real TuningFrequency::tuningFrequencyFromCents(Real cents) const {
 
 
 void TuningFrequency::compute() {
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
 
   if (magnitudes.size() != frequencies.size()) {
     throw EssentiaException("TuningFrequency: Frequency and magnitude vector have different size");
@@ -128,7 +128,7 @@ void TuningFrequency::compute() {
   frame_energy = energy(magnitudes);
 
   // Compute 'frame' maximum histogram value as the tuning of the frame
-  vector<Real>::iterator frameMaxElement = max_element(_histogram.begin(), _histogram.end());
+  ::essentia::VectorEx<Real>::iterator frameMaxElement = max_element(_histogram.begin(), _histogram.end());
   int frameIndex = frameMaxElement - _histogram.begin();
   Real frameTuning = _resolution*frameIndex - 50.0;
 

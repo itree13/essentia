@@ -50,9 +50,9 @@ BinaryOperatorStream::OpType BinaryOperatorStream::typeFromString(const std::str
 
 void BinaryOperatorStream::compute() {
 
-  const std::vector<Real>& input1 = _input1.get();
-  const std::vector<Real>& input2 = _input2.get();
-  std::vector<Real>& output = _output.get();
+  const ::essentia::VectorEx<Real>& input1 = _input1.get();
+  const ::essentia::VectorEx<Real>& input2 = _input2.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
   
   if (input1.size() != input2.size()) {
     throw EssentiaException("BinaryOperatorStream: input vectors are not of equal size");

@@ -90,8 +90,8 @@ int main(int argc, char* argv[]) {
   
   if (argc == 4 && atoi(argv[3])) {
     // printing to stdout:
-    const vector<Real>& vibratoExtend = pool.value<vector<Real> >("tonal.vibrato extend");
-    const vector<Real>& vibratoFrequency = pool.value<vector<Real> >("tonal.vibrato frequency");
+    const ::essentia::VectorEx<Real>& vibratoExtend = pool.value<::essentia::VectorEx<Real> >("tonal.vibrato extend");
+    const ::essentia::VectorEx<Real>& vibratoFrequency = pool.value<::essentia::VectorEx<Real> >("tonal.vibrato frequency");
     cout << "number of frames: " << vibratoExtend.size() << endl;
     for (int i=0; i<(int)vibratoExtend.size(); i++){
         cout << vibratoFrequency[i] << "   " << vibratoExtend[i]<< endl;

@@ -28,7 +28,7 @@ namespace standard {
 class Energy : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _energy;
 
  public:
@@ -57,7 +57,7 @@ namespace streaming {
 class Energy : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _energy;
 
  public:

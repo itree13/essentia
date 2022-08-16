@@ -39,14 +39,14 @@ int bpmTolerance = 3;
 Real maxBpm = 560; // leave it high unless you are sure about it
 Real minBpm = 30;
 
-//TODO: get rid of TNT::Array2D once you have vector<vector< > >
+//TODO: get rid of TNT::Array2D once you have ::essentia::VectorEx<::essentia::VectorEx< > >
 //available in the pool or when you switch to eigen
 
-bool computeBeats(const vector<Real>& noveltyCurve, Pool& pool, Real frameRate,
+bool computeBeats(const ::essentia::VectorEx<Real>& noveltyCurve, Pool& pool, Real frameRate,
                   Real tempoFrameSize, int tempoOverlap, Real bpm=0);
-void mergeBpms(vector<Real>& bpmPositions, vector<Real>& bpmAmplitudes, Real tolerance);
+void mergeBpms(::essentia::VectorEx<Real>& bpmPositions, ::essentia::VectorEx<Real>& bpmAmplitudes, Real tolerance);
 
-void normalizeToMax(vector<Real>& array) {
+void normalizeToMax(::essentia::VectorEx<Real>& array) {
   Real maxValue = -1.0*std::numeric_limits<int>::max();
   for (int i=0; i<int(array.size()); i++) {
     if (fabs(array[i]) > maxValue) maxValue = fabs(array[i]);
@@ -55,7 +55,7 @@ void normalizeToMax(vector<Real>& array) {
 }
 
 
-vector<Real> computeNoveltyCurve(Pool& pool, const string& audioFilename,
+::essentia::VectorEx<Real> computeNoveltyCurve(Pool& pool, const string& audioFilename,
                                  int frameSize, int hopSize,
                                  Real startTime=0., Real endTime=2000.) {
 
@@ -101,8 +101,8 @@ vector<Real> computeNoveltyCurve(Pool& pool, const string& audioFilename,
                                                                          "normalize", false,
                                                                          "weightCurveType",
                                                                          "flat");
-  vector<Real> novelty;
-  noveltyCurve->input("frequencyBands").set(pool.value<vector<vector<Real> > >("frequencyBands"));
+  ::essentia::VectorEx<Real> novelty;
+  noveltyCurve->input("frequencyBands").set(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("frequencyBands"));
   noveltyCurve->output("novelty").set(novelty);
   noveltyCurve->compute();
   delete noveltyCurve;
@@ -113,8 +113,8 @@ vector<Real> computeNoveltyCurve(Pool& pool, const string& audioFilename,
   // smoothing and derivative of hfc
   standard::Algorithm* mAvg = standard::AlgorithmFactory::create("MovingAverage",
                                                                  "size", int(0.1*frameRate));
-  vector<Real> smoothHfc;
-  mAvg->input("signal").set(pool.value<vector<Real> >("hfc"));
+  ::essentia::VectorEx<Real> smoothHfc;
+  mAvg->input("signal").set(pool.value<::essentia::VectorEx<Real> >("hfc"));
   mAvg->output("signal").set(smoothHfc);
   mAvg->compute();
   delete mAvg;
@@ -133,12 +133,12 @@ vector<Real> computeNoveltyCurve(Pool& pool, const string& audioFilename,
   //standard::Algorithm* envelope = standard::AlgorithmFactory::create("Envelope",
   //                                                                   "attackTime", 0.001*frameRate,
   //                                                                   "releaseTime",0.001*frameRate);
-  //vector<Real> envNovelty;
+  //::essentia::VectorEx<Real> envNovelty;
   //envelope->input("signal").set(novelty);
   //envelope->output("signal").set(envNovelty);
   //envelope->compute();
   //delete envelope;
-  vector<Real> envNovelty = novelty;
+  ::essentia::VectorEx<Real> envNovelty = novelty;
 
   // median filter
   int length=int(60./maxBpm*frameRate); // size of the window is max bpm (560)
@@ -148,7 +148,7 @@ vector<Real> computeNoveltyCurve(Pool& pool, const string& audioFilename,
     int start = max(0, i-length);
     int end = min(start+2*length, size);
     if (end == size) start = end-2*length;
-    vector<Real> window(envNovelty.begin()+start, envNovelty.begin()+end);
+    ::essentia::VectorEx<Real> window(envNovelty.begin()+start, envNovelty.begin()+end);
     Real m = essentia::median(window);
     novelty[i] = envNovelty[i] - m;
     if (novelty[i] < 0) novelty[i] = 0;
@@ -156,8 +156,8 @@ vector<Real> computeNoveltyCurve(Pool& pool, const string& audioFilename,
   return novelty;
 }
 
-void fixedTempoEstimation(const vector<Real>& novelty, Real sampleRate,
-                          Real hopSize, vector<Real>& bpms, vector<Real>& amplitudes) {
+void fixedTempoEstimation(const ::essentia::VectorEx<Real>& novelty, Real sampleRate,
+                          Real hopSize, ::essentia::VectorEx<Real>& bpms, ::essentia::VectorEx<Real>& amplitudes) {
   standard::Algorithm* fixedTempoAlgo =
     standard::AlgorithmFactory::create("NoveltyCurveFixedBpmEstimator",
                                        "sampleRate", sampleRate,
@@ -172,10 +172,10 @@ void fixedTempoEstimation(const vector<Real>& novelty, Real sampleRate,
   delete fixedTempoAlgo;
 }
 
-void mergeBpms(vector<Real>& bpmPositions, vector<Real>& bpmAmplitudes, Real tolerance) {
-  vector<Real>::iterator posIter = bpmPositions.begin();
-  vector<Real>::iterator ampsIter = bpmAmplitudes.begin();
-  vector<Real>::iterator it1, it2;
+void mergeBpms(::essentia::VectorEx<Real>& bpmPositions, ::essentia::VectorEx<Real>& bpmAmplitudes, Real tolerance) {
+  ::essentia::VectorEx<Real>::iterator posIter = bpmPositions.begin();
+  ::essentia::VectorEx<Real>::iterator ampsIter = bpmAmplitudes.begin();
+  ::essentia::VectorEx<Real>::iterator it1, it2;
   for (;posIter!=bpmPositions.end(); ++posIter, ++ampsIter) {
    it1 = posIter; it2=ampsIter;
    ++it1; ++it2;
@@ -200,10 +200,10 @@ void mergeBpms(vector<Real>& bpmPositions, vector<Real>& bpmAmplitudes, Real tol
   }
 }
 
-void computeEnergyTracks(const vector<vector<Real> >& tempogram,
-                         const vector<Real>& bpms,
-                         vector<Real>& resultBpms,
-                         vector<Real>& resultAmps, Real tol) {
+void computeEnergyTracks(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& tempogram,
+                         const ::essentia::VectorEx<Real>& bpms,
+                         ::essentia::VectorEx<Real>& resultBpms,
+                         ::essentia::VectorEx<Real>& resultAmps, Real tol) {
   resultBpms = bpms;
   resultAmps.resize(bpms.size(), 0);
   Real totalEnergy=0;
@@ -231,10 +231,10 @@ void computeEnergyTracks(const vector<vector<Real> >& tempogram,
   sortpair<Real, Real, greater<Real> >(resultAmps, resultBpms);
 }
 
-bool computeTempogram(const vector<Real>& noveltyCurve, Pool& pool,
+bool computeTempogram(const ::essentia::VectorEx<Real>& noveltyCurve, Pool& pool,
                       Real frameRate, Real tempoFrameSize, Real tempoOverlap,
                       int zeroPadding, Real inferredBpm=0) {
-  VectorInput<Real>* gen = new VectorInput<Real>(&noveltyCurve); //&pool.value<vector<Real> >("noveltyCurve"));
+  VectorInput<Real>* gen = new VectorInput<Real>(&noveltyCurve); //&pool.value<::essentia::VectorEx<Real> >("noveltyCurve"));
   bool constantTempo = false;
   if (inferredBpm!=0) constantTempo = true;
   Algorithm* bpmHist = AlgorithmFactory::create("BpmHistogram",
@@ -250,7 +250,7 @@ bool computeTempogram(const vector<Real>& noveltyCurve, Pool& pool,
                                                 "constantTempo", constantTempo,
                                                 "bpm", inferredBpm,
                                                 "weightByMagnitude", true);
-  //vector<vector<vector<Real> > > tempogramStorage;
+  //::essentia::VectorEx<::essentia::VectorEx<::essentia::VectorEx<Real> > > tempogramStorage;
   connect(*gen, bpmHist->input("novelty"));
 
   connect(bpmHist->output("bpm"), pool, "bpm");
@@ -271,15 +271,15 @@ bool computeTempogram(const vector<Real>& noveltyCurve, Pool& pool,
   return bpm != 0;
 }
 
-Real computeMeanBpm(const vector<Real>& ticks) {
+Real computeMeanBpm(const ::essentia::VectorEx<Real>& ticks) {
   int nticks = ticks.size();
-  std::vector<Real> dticks(nticks-1);
+  ::essentia::VectorEx<Real> dticks(nticks-1);
 
   for (int i=0; i<nticks-1; i++) dticks[i] = ticks[i+1] - ticks[i];
 
   const int nbins = 100;
-  std::vector<int> dist(nbins);
-  std::vector<Real> distx(nbins);
+  ::essentia::VectorEx<int> dist(nbins);
+  ::essentia::VectorEx<Real> distx(nbins);
 
   hist(&dticks[0], nticks-1, &dist[0], &distx[0], nbins);
 
@@ -288,25 +288,25 @@ Real computeMeanBpm(const vector<Real>& ticks) {
   return 60./period;
 }
 
-bool computeBeats(const vector<Real>& noveltyCurve, Pool& pool, Real frameRate,
+bool computeBeats(const ::essentia::VectorEx<Real>& noveltyCurve, Pool& pool, Real frameRate,
                   Real tempoFrameSize, int tempoOverlap, int zeroPadding, Real bpm) {
   // compute the tempogram until the bpm and ticks stabilize...
   int count = 0;
   Real tol= 5;
-  vector<Real> novelty = noveltyCurve;
-  vector<vector<Real> > tempogram;
+  ::essentia::VectorEx<Real> novelty = noveltyCurve;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > tempogram;
   while (tol < 20) {
     bool ok = computeTempogram(novelty, pool, frameRate, tempoFrameSize,
                                tempoOverlap, zeroPadding, bpm);
     if (!ok) return false; // no beats found
-    Real meanBpm = computeMeanBpm(pool.value<vector<Real> >("ticks"));
+    Real meanBpm = computeMeanBpm(pool.value<::essentia::VectorEx<Real> >("ticks"));
     Real bpm = pool.value<Real>("bpm");
     if (count == 0) { // first time we keep the original bpms
-      pool.add("first_tempogram", pool.value<vector<TNT::Array2D<Real> > >("tempogram")[0]);
+      pool.add("first_tempogram", pool.value<::essentia::VectorEx<TNT::Array2D<Real> > >("tempogram")[0]);
     }
     if (areEqual(bpm, meanBpm, tol)) return true; // ticks and bpm stabilized. so quit!
     novelty.clear();
-    novelty = pool.value<vector<Real> >("sinusoid");
+    novelty = pool.value<::essentia::VectorEx<Real> >("sinusoid");
     pool.remove("bpm");
     pool.remove("bpmCandidates");
     pool.remove("bpmMagnitudes");
@@ -323,14 +323,14 @@ bool computeBeats(const vector<Real>& noveltyCurve, Pool& pool, Real frameRate,
   return false;
 }
 
-vector<Real> getAnnotations(const string& audioFilename) {
+::essentia::VectorEx<Real> getAnnotations(const string& audioFilename) {
   string annotationFilename = audioFilename;
   string::size_type pos = annotationFilename.find("wav");
   while (pos != string::npos) {
     annotationFilename = annotationFilename.replace(pos, 3, "bpm");
     pos = annotationFilename.find("wav");
   }
-  vector<Real> annotatedBpms;
+  ::essentia::VectorEx<Real> annotatedBpms;
   try {
     ifstream* fstream = new ifstream(annotationFilename.c_str());
     string line;
@@ -351,7 +351,7 @@ Real computeBeatsLoudness(const string& audioFilename, Pool& pool, Real sampleRa
                     920.0, 1080.0, 1270.0, 1480.0, 1720.0, 2000.0, 2320.0, 2700.0,
                     3150.0, 3700.0, 4400.0, 5300.0, 6400.0, 7700.0, 9500.0,
                     12000.0, 15500.0, 20500.0, 27000.0 };
-  const vector<Real>& ticks = pool.value<vector<Real> >("ticks");
+  const ::essentia::VectorEx<Real>& ticks = pool.value<::essentia::VectorEx<Real> >("ticks");
   AlgorithmFactory& factory = AlgorithmFactory::instance();
   Algorithm* audio = factory.create("EasyLoader",
                                     "filename",   audioFilename,
@@ -368,9 +368,9 @@ Real computeBeatsLoudness(const string& audioFilename, Pool& pool, Real sampleRa
   connect(beatsLoudness->output("loudnessBandRatio"), pool, "loudnessBandRatio");
   Network network(audio);
   network.run();
-  const vector<Real>& loudness = pool.value<vector<Real> >("loudness");
-  const vector<vector<Real> >& loudnessRatio = pool.value<vector<vector<Real> > >("loudnessBandRatio");
-  vector<Real> loudnessBand(ARRAY_SIZE(bands), 0);
+  const ::essentia::VectorEx<Real>& loudness = pool.value<::essentia::VectorEx<Real> >("loudness");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& loudnessRatio = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("loudnessBandRatio");
+  ::essentia::VectorEx<Real> loudnessBand(ARRAY_SIZE(bands), 0);
   Real energy = 0;
   int n=0;
   for (int i=0; i<int(loudness.size()); i++) {
@@ -391,13 +391,13 @@ Real computeBeatsLoudness(const string& audioFilename, Pool& pool, Real sampleRa
 }
 
 void computeBeatogram(Pool& pool) {
-  const vector<Real>& loudness = pool.value<vector<Real> >("loudness");
-  vector<vector<Real> > loudnessBand = pool.value<vector<vector<Real> > >("loudnessBandRatio");
+  const ::essentia::VectorEx<Real>& loudness = pool.value<::essentia::VectorEx<Real> >("loudness");
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > loudnessBand = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("loudnessBandRatio");
 
   standard::AlgorithmFactory& factory = standard::AlgorithmFactory::instance();
 
   standard::Algorithm* beatogramAlgo=factory.create("Beatogram", "size", 16);
-  vector<vector<Real> > beatogram;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > beatogram;
   beatogramAlgo->input("loudness").set(loudness);
   beatogramAlgo->input("loudnessBandRatio").set(loudnessBand);
   beatogramAlgo->output("beatogram").set(beatogram);
@@ -413,7 +413,7 @@ void computeBeatogram(Pool& pool) {
   cout << "Time signature: " << timeSig << endl;
 }
 
-vector<Real> getClosestMatch(const vector<Real>& bpms1, const vector<Real>& bpms2) {
+::essentia::VectorEx<Real> getClosestMatch(const ::essentia::VectorEx<Real>& bpms1, const ::essentia::VectorEx<Real>& bpms2) {
   // finds the closest matches between bpms2 and bpm1 giving priority to bpms1
   // but keeping the values from bpms2.
   // Why? In principle bpms1 should be the bpms found by fixedTempoEstimator and
@@ -422,9 +422,9 @@ vector<Real> getClosestMatch(const vector<Real>& bpms1, const vector<Real>& bpms
   // however the bpms from bpmHistogram tend to be more exact.
   int n = 2;
   Real tolerance = 5; // be a bit more permissive at this point
-  vector<Real> minDist(n, numeric_limits<int>::max());
-  vector<Real> bestMatch(n,-1);
-  vector<int> minIdx(n,bpms1.size());
+  ::essentia::VectorEx<Real> minDist(n, numeric_limits<int>::max());
+  ::essentia::VectorEx<Real> bestMatch(n,-1);
+  ::essentia::VectorEx<int> minIdx(n,bpms1.size());
   for (int i=0; i<(int)bpms1.size(); i++) {
     for (int j=0; j<(int)bpms2.size(); j++) {
       if (areEqual(bpms1[i],bpms2[j],tolerance)) {
@@ -452,7 +452,7 @@ vector<Real> getClosestMatch(const vector<Real>& bpms1, const vector<Real>& bpms
       }
     }
   }
-  vector<Real>::iterator iter = bestMatch.begin();
+  ::essentia::VectorEx<Real>::iterator iter = bestMatch.begin();
   while (iter != bestMatch.end() ) {
     if (*iter == -1)  iter = bestMatch.erase(iter);
     else ++iter;
@@ -460,8 +460,8 @@ vector<Real> getClosestMatch(const vector<Real>& bpms1, const vector<Real>& bpms
   return bestMatch;
 }
 
-void filterBpms(vector<Real>& bestBpms, vector<Real>& amplitudes,
-                const vector<Real>& candidates, Real ceiling) {
+void filterBpms(::essentia::VectorEx<Real>& bestBpms, ::essentia::VectorEx<Real>& amplitudes,
+                const ::essentia::VectorEx<Real>& candidates, Real ceiling) {
   // this function tries to filter out the following issues from bestBpms:
   // 1. get rid of bpms > ceiling, by searching bpm/2 in candidates
   for (int i=0; i<(int)bestBpms.size(); i++) {
@@ -486,8 +486,8 @@ void filterBpms(vector<Real>& bestBpms, vector<Real>& amplitudes,
   }
 }
 
-void evaluateResults(const vector<Real>& bpms,
-                     const vector<Real>& annotatedBpms) {
+void evaluateResults(const ::essentia::VectorEx<Real>& bpms,
+                     const ::essentia::VectorEx<Real>& annotatedBpms) {
   // this function is only useful if you have a file with annotated bpms for a
   // specific song
   if (annotatedBpms.empty()) return;
@@ -496,7 +496,7 @@ void evaluateResults(const vector<Real>& bpms,
     cout << "FAIL\n";
     return;
   }
-  vector<Real> error, ratio;
+  ::essentia::VectorEx<Real> error, ratio;
   for (int i=0; i<(int)bpms.size(); i++) {
     for (int j=0; j<(int)annotatedBpms.size(); j++) {
       Real e=0, r=0;
@@ -505,7 +505,7 @@ void evaluateResults(const vector<Real>& bpms,
     }
   }
   int octaveArray [] = {1,2,3,4,5,6,7,8,9,10,11,12};
-  vector<int> octaves = arrayToVector<int>(octaveArray);
+  ::essentia::VectorEx<int> octaves = arrayToVector<int>(octaveArray);
 
   // check whether we got the same octave and an error < 3:
   for (int j=0; j<(int)octaves.size(); j++) {
@@ -532,18 +532,18 @@ void alignTicks(const string& audioFilename, Pool& pool, Real windowLength) {
                                                "startTime",  0,
                                                "endTime",    2000,
                                                "sampleRate", sampleRate);
-  vector<Real> audio;
+  ::essentia::VectorEx<Real> audio;
   loader->output("audio").set(audio);
   loader->compute();
   delete loader;
   Real audioLength = audio.size()/sampleRate;
-  const vector<Real>& ticks = pool.value<vector<Real> >("ticks");
+  const ::essentia::VectorEx<Real>& ticks = pool.value<::essentia::VectorEx<Real> >("ticks");
   int nticks = ticks.size();
-  vector<Real> newTicks;
+  ::essentia::VectorEx<Real> newTicks;
   newTicks.reserve(nticks);
   standard::Algorithm* trimmer = factory.create("Trimmer",
                                                 "sampleRate", sampleRate);
-  vector<Real> trimmedAudio;
+  ::essentia::VectorEx<Real> trimmedAudio;
   trimmer->input("signal").set(audio);
   trimmer->output("signal").set(trimmedAudio);
   int frameSize = 1024;
@@ -555,7 +555,7 @@ void alignTicks(const string& audioFilename, Pool& pool, Real windowLength) {
   standard::Algorithm* w = factory.create("Windowing");
   standard::Algorithm* spec = factory.create("Spectrum");
   standard::Algorithm* flux = factory.create("Flux");
-  vector<Real> frame, windowedFrame, spectrum;
+  ::essentia::VectorEx<Real> frame, windowedFrame, spectrum;
   Real fluxValue;
   fc->input("signal").set(trimmedAudio);
   fc->output("frame").set(frame);
@@ -571,7 +571,7 @@ void alignTicks(const string& audioFilename, Pool& pool, Real windowLength) {
     Real endTime = min(startTime+2*windowLength, audioLength);
     trimmer->configure("startTime", startTime, "endTime", endTime);
     trimmer->compute();
-    vector<Real> fluxValues;
+    ::essentia::VectorEx<Real> fluxValues;
     fluxValues.reserve(trimmedAudio.size()/hopSize);
     while (true) {
       fc->compute();
@@ -584,7 +584,7 @@ void alignTicks(const string& audioFilename, Pool& pool, Real windowLength) {
     fc->reset();
     int fluxSize = fluxValues.size();
     if (fluxSize<1) break;
-    vector<Real> dfluxValues(fluxSize-1,0);
+    ::essentia::VectorEx<Real> dfluxValues(fluxSize-1,0);
     for (int j=0; j<(int)fluxSize-1; j++) {
       Real delta = fluxValues[j+1]-fluxValues[j];
       if (delta>0) dfluxValues[j] = delta;
@@ -619,7 +619,7 @@ int main(int argc, char* argv[]) {
   string audioFilename = argv[1];
   string outputFilename = argv[2];
 
-  vector<Real> annotatedBpms = getAnnotations(audioFilename);
+  ::essentia::VectorEx<Real> annotatedBpms = getAnnotations(audioFilename);
   //if (annotatedBpms.empty()) return 0;
 
   cout << "**************************************************************\n";
@@ -647,28 +647,28 @@ int main(int argc, char* argv[]) {
   Real startTime = 0;
   Real endTime = 2000;
 
-  vector<Real> novelty = computeNoveltyCurve(pool, audioFilename,
+  ::essentia::VectorEx<Real> novelty = computeNoveltyCurve(pool, audioFilename,
                                              frameSize, hopSize,
                                              startTime, endTime);
   bool ok = false;
   Real bpm = 0;
 
-  vector<Real> corrBpms, corrAmps;
+  ::essentia::VectorEx<Real> corrBpms, corrAmps;
   fixedTempoEstimation(novelty, sampleRate, hopSize, corrBpms, corrAmps);
   ok = computeBeats(novelty, pool, frameRate, tempoFrameSize, tempoOverlap, zeroPadding, bpm);
   if (ok) {
-    vector<Real> bpms = pool.value<vector<Real> >("bpmCandidates");
-    vector<Real> bpmAmplitudes = pool.value<vector<Real> >("bpmMagnitudes");
+    ::essentia::VectorEx<Real> bpms = pool.value<::essentia::VectorEx<Real> >("bpmCandidates");
+    ::essentia::VectorEx<Real> bpmAmplitudes = pool.value<::essentia::VectorEx<Real> >("bpmMagnitudes");
     mergeBpms(bpms, bpmAmplitudes, bpmTolerance);
-    const TNT::Array2D<Real>& matrix = pool.value<vector<TNT::Array2D<Real> > >("first_tempogram")[0];
-    vector<vector<Real> > tempogram = array2DToVecvec(matrix);
+    const TNT::Array2D<Real>& matrix = pool.value<::essentia::VectorEx<TNT::Array2D<Real> > >("first_tempogram")[0];
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > tempogram = array2DToVecvec(matrix);
       //array2DToVecvec(pool.value<TNT::Array2D<Real> >("first_tempogram"));
 
     sortpair<Real,Real, greater<Real> > (bpmAmplitudes, bpms);
     //cout << "fft bpms: " <<bpms << "\t" << bpmAmplitudes << endl;
     //cout << "autocorrelation bpms: " << corrBpms << "\t" << corrAmps << endl;
 
-    vector<Real> finalBpms, ticksMagnitude;
+    ::essentia::VectorEx<Real> finalBpms, ticksMagnitude;
     computeEnergyTracks(tempogram, bpms, finalBpms, ticksMagnitude, 3);
     Real confidenceRef = ticksMagnitude[0];
     normalize(ticksMagnitude);
@@ -691,7 +691,7 @@ int main(int argc, char* argv[]) {
 
     // write ticks to output file:
     //alignTicks(audioFilename, pool, 0.05);
-    const vector<Real>& ticks = pool.value<vector<Real> > ("ticks");
+    const ::essentia::VectorEx<Real>& ticks = pool.value<::essentia::VectorEx<Real> > ("ticks");
     ostream* fileStream = new ofstream(outputFilename.c_str());
     for (int i=0; i<int(ticks.size()); i++) {
       *fileStream << ticks[i] << "\n";
@@ -703,7 +703,7 @@ int main(int argc, char* argv[]) {
     string beatFilename = audioFilename.substr(0, audioFilename.rfind('.')) + "_beat.wav";
 
     Algorithm* onsetsMarker = factory.create("AudioOnsetsMarker",
-                                             "onsets", pool.value<vector<Real> > ("ticks"));
+                                             "onsets", pool.value<::essentia::VectorEx<Real> > ("ticks"));
     Algorithm* writer = factory.create("MonoWriter", "filename", beatFilename);
 
     connect(loader->output("audio"), onsetsMarker->input("signal"));

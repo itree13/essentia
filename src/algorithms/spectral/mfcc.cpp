@@ -108,9 +108,9 @@ void MFCC::configure() {
 void MFCC::compute() {
 
   // get the inputs and outputs
-  const vector<Real>& spectrum = _spectrum.get();
-  vector<Real>& mfcc = _mfcc.get();
-  vector<Real>& bands = _bands.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
+  ::essentia::VectorEx<Real>& mfcc = _mfcc.get();
+  ::essentia::VectorEx<Real>& bands = _bands.get();
 
   // filter the spectrum using a mel-scaled filterbank
   _melFilter->input("spectrum").set(spectrum);

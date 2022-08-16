@@ -29,10 +29,10 @@ namespace standard {
 class SpectralWhitening : public Algorithm {
 
  protected:
-  Input< std::vector<Real> > _spectrum;
-  Input< std::vector<Real> > _frequencies;
-  Input< std::vector<Real> > _magnitudes;
-  Output< std::vector<Real> > _magnitudesWhite;
+  Input< ::essentia::VectorEx<Real> > _spectrum;
+  Input< ::essentia::VectorEx<Real> > _frequencies;
+  Input< ::essentia::VectorEx<Real> > _magnitudes;
+  Output< ::essentia::VectorEx<Real> > _magnitudesWhite;
 
   Real _maxFreq;
   Real _spectralRange;
@@ -76,10 +76,10 @@ namespace streaming {
 class SpectralWhitening : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _magnitudesWhite;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _magnitudesWhite;
 
  public:
   SpectralWhitening() {

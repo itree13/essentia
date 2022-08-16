@@ -66,7 +66,7 @@ void TriangularBarkBands::calculateFilterCoefficients() {
     
     float step_barks = nyqbark/(nfilts-1);
     
-    std::vector<Real> binbarks;
+    ::essentia::VectorEx<Real> binbarks;
     
     float srOverNFFT = (float)sr/nfft;
     
@@ -111,8 +111,8 @@ void TriangularBarkBands::calculateFilterCoefficients() {
 
 
 void TriangularBarkBands::compute() {
-  const std::vector<Real>& spectrum = _spectrumInput.get();
-  std::vector<Real>& bands = _bandsOutput.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrumInput.get();
+  ::essentia::VectorEx<Real>& bands = _bandsOutput.get();
     
     if (spectrum.size() <= 1) {
         throw EssentiaException("TriangularBands: the size of the input spectrum is not greater than one");

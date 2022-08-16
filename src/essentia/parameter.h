@@ -67,7 +67,7 @@ class ESSENTIA_API Parameter {
   std::string _str;
   Real _real;
   bool _boolean;
-  std::vector<Parameter*> _vec;
+  ::essentia::VectorEx<Parameter*> _vec;
   std::map<std::string, Parameter*> _map;
   StereoSample _ssamp;
   bool _configured;
@@ -93,7 +93,7 @@ class ESSENTIA_API Parameter {
 
   // Constructor for vector parameters
   #define SPECIALIZE_VECTOR_CTOR(valueType, paramType)                         \
-  Parameter(const std::vector<valueType>& v) : _type(paramType), _configured(true) {\
+  Parameter(const ::essentia::VectorEx<valueType>& v) : _type(paramType), _configured(true) {\
     _vec.resize(v.size());                                                     \
     for (int i=0; i<int(v.size()); ++i) { _vec[i] = new Parameter(v[i]); }     \
   }
@@ -103,9 +103,9 @@ class ESSENTIA_API Parameter {
   SPECIALIZE_VECTOR_CTOR(bool,                      VECTOR_BOOL);
   SPECIALIZE_VECTOR_CTOR(int,                       VECTOR_INT);
   SPECIALIZE_VECTOR_CTOR(StereoSample,              VECTOR_STEREOSAMPLE);
-  SPECIALIZE_VECTOR_CTOR(std::vector<Real>,         VECTOR_VECTOR_REAL);
-  SPECIALIZE_VECTOR_CTOR(std::vector<std::string>,  VECTOR_VECTOR_STRING);
-  SPECIALIZE_VECTOR_CTOR(std::vector<StereoSample>, VECTOR_VECTOR_STEREOSAMPLE);
+  SPECIALIZE_VECTOR_CTOR(::essentia::VectorEx<Real>,         VECTOR_VECTOR_REAL);
+  SPECIALIZE_VECTOR_CTOR(::essentia::VectorEx<std::string>,  VECTOR_VECTOR_STRING);
+  SPECIALIZE_VECTOR_CTOR(::essentia::VectorEx<StereoSample>, VECTOR_VECTOR_STEREOSAMPLE);
   SPECIALIZE_VECTOR_CTOR(TNT::Array2D<Real>,        VECTOR_MATRIX_REAL);
 
   // Constructor for map parameters
@@ -116,9 +116,9 @@ class ESSENTIA_API Parameter {
          ++i) { _map[(*i).first] = new Parameter((*i).second); }               \
   }
 
-  SPECIALIZE_MAP_CTOR(std::vector<std::string>, MAP_VECTOR_STRING);
-  SPECIALIZE_MAP_CTOR(std::vector<Real>, MAP_VECTOR_REAL);
-  SPECIALIZE_MAP_CTOR(std::vector<int>, MAP_VECTOR_INT);
+  SPECIALIZE_MAP_CTOR(::essentia::VectorEx<std::string>, MAP_VECTOR_STRING);
+  SPECIALIZE_MAP_CTOR(::essentia::VectorEx<Real>, MAP_VECTOR_REAL);
+  SPECIALIZE_MAP_CTOR(::essentia::VectorEx<int>, MAP_VECTOR_INT);
   SPECIALIZE_MAP_CTOR(Real, MAP_REAL);
 
   // Constructor for TNT::Array2D aka MATRIX parameters
@@ -193,13 +193,13 @@ class ESSENTIA_API Parameter {
   }
 
   #define TOVECTOR(fname, valueType, paramType)                               \
-  std::vector<valueType > toVector##fname() const {                           \
+  ::essentia::VectorEx<valueType > toVector##fname() const {                           \
     if (!_configured)                                                         \
       throw EssentiaException("Parameter: parameter has not been configured yet (ParamType=", _type, ")"); \
     if (_type != paramType)                                                   \
       throw EssentiaException("Parameter: parameter is not of type: ", paramType); \
                                                                               \
-    std::vector<valueType > result(_vec.size());                              \
+    ::essentia::VectorEx<valueType > result(_vec.size());                              \
     for (int i=0; i<(int)_vec.size(); ++i) {                                  \
       result[i] = _vec[i]->to##fname();                                       \
     }                                                                         \
@@ -211,9 +211,9 @@ class ESSENTIA_API Parameter {
   TOVECTOR(Int, int, VECTOR_INT)
   TOVECTOR(Bool, bool, VECTOR_BOOL)
   TOVECTOR(StereoSample, StereoSample, VECTOR_STEREOSAMPLE)
-  TOVECTOR(VectorReal, std::vector<Real>, VECTOR_VECTOR_REAL)
-  TOVECTOR(VectorString, std::vector<std::string>, VECTOR_VECTOR_STRING)
-  TOVECTOR(VectorStereoSample, std::vector<StereoSample>, VECTOR_VECTOR_STEREOSAMPLE)
+  TOVECTOR(VectorReal, ::essentia::VectorEx<Real>, VECTOR_VECTOR_REAL)
+  TOVECTOR(VectorString, ::essentia::VectorEx<std::string>, VECTOR_VECTOR_STRING)
+  TOVECTOR(VectorStereoSample, ::essentia::VectorEx<StereoSample>, VECTOR_VECTOR_STEREOSAMPLE)
   TOVECTOR(MatrixReal, TNT::Array2D<Real>, VECTOR_MATRIX_REAL)
 //  TOVECTOR(MatrixInt, TNT::Array2D<int>, VECTOR_MATRIX_INT)
 
@@ -235,9 +235,9 @@ class ESSENTIA_API Parameter {
     return result;                                                             \
   }
 
-  TOMAP(VectorReal, std::vector<Real>, MAP_VECTOR_REAL)
-  TOMAP(VectorString, std::vector<std::string>, MAP_VECTOR_STRING)
-  TOMAP(VectorInt, std::vector<int>, MAP_VECTOR_INT)
+  TOMAP(VectorReal, ::essentia::VectorEx<Real>, MAP_VECTOR_REAL)
+  TOMAP(VectorString, ::essentia::VectorEx<std::string>, MAP_VECTOR_STRING)
+  TOMAP(VectorInt, ::essentia::VectorEx<int>, MAP_VECTOR_INT)
   TOMAP(Real, Real, MAP_REAL)
 //  TOMAP(String, std::string, MAP_STRING)
 //  TOMAP(Int, int, MAP_INT)

@@ -34,7 +34,7 @@ const char* Energy::description = DOC("This algorithm computes the energy of an 
 "  http://en.wikipedia.org/wiki/Energy_%28signal_processing%29");
 
 void Energy::compute() {
-  const std::vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
 
   if (array.empty()) {
     throw EssentiaException("Energy: the input array size is zero");

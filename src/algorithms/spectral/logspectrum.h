@@ -29,9 +29,9 @@ class LogSpectrum : public Algorithm {
  public:
 
  protected:
-  Input<std::vector<Real> > _spectrum;
-  Output<std::vector<Real> > _logFreqSpectrum;
-  Output<std::vector<Real> > _meanTuning;
+  Input<::essentia::VectorEx<Real> > _spectrum;
+  Output<::essentia::VectorEx<Real> > _logFreqSpectrum;
+  Output<::essentia::VectorEx<Real> > _meanTuning;
   Output<Real> _localTuning;
 
  public:
@@ -67,15 +67,15 @@ class LogSpectrum : public Algorithm {
   size_t _frameSize;
   Real _sampleRate;
   Real _rollon;
-  std::vector<int> _kernelFftIndex;
-  std::vector<int> _kernelNoteIndex;
-  std::vector<Real> _meanTunings;
-  std::vector<Real> _localTunings;
-  std::vector<Real> _kernelValue;
-  std::vector<Real> _sinvalues;
-  std::vector<Real> _cosvalues;
+  ::essentia::VectorEx<int> _kernelFftIndex;
+  ::essentia::VectorEx<int> _kernelNoteIndex;
+  ::essentia::VectorEx<Real> _meanTunings;
+  ::essentia::VectorEx<Real> _localTunings;
+  ::essentia::VectorEx<Real> _kernelValue;
+  ::essentia::VectorEx<Real> _sinvalues;
+  ::essentia::VectorEx<Real> _cosvalues;
 
-  bool logFreqMatrix(Real fs, int frameSize, int maxOctave, std::vector<Real> &outmatrix);
+  bool logFreqMatrix(Real fs, int frameSize, int maxOctave, ::essentia::VectorEx<Real> &outmatrix);
   Real cospuls(Real x, Real centre, Real width);
   Real pitchCospuls(Real x, Real centre, int binsperoctave);
   void initialize();
@@ -92,9 +92,9 @@ namespace streaming {
 class LogSpectrum : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
-  Source<std::vector<Real> > _logFreqSpectrum;
-  Source<std::vector<Real> > _meanTuning;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
+  Source<::essentia::VectorEx<Real> > _logFreqSpectrum;
+  Source<::essentia::VectorEx<Real> > _meanTuning;
   Source<Real> _localTuning;
 
  public:

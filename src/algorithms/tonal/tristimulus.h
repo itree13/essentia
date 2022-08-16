@@ -28,9 +28,9 @@ namespace standard {
 class Tristimulus : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _tristimulus;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _tristimulus;
 
  public:
   Tristimulus() {
@@ -60,9 +60,9 @@ namespace streaming {
 class Tristimulus : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _tristimulus;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _tristimulus;
 
  public:
   Tristimulus() {

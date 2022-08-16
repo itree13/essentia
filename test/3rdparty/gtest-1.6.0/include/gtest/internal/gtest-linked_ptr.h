@@ -45,7 +45,7 @@
 //   will happen (double deletion).
 //
 // A good use of this class is storing object references in STL containers.
-// You can safely put linked_ptr<> in a vector<>.
+// You can safely put linked_ptr<> in a ::essentia::VectorEx<>.
 // Other uses may not be as good.
 //
 // Note: If you use an incomplete type with linked_ptr<>, the class

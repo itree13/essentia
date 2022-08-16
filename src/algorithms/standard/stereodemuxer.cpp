@@ -56,9 +56,9 @@ AlgorithmStatus StereoDemuxer::process() {
     return process();
   }
 
-  const vector<StereoSample>& audio = _audio.tokens();
-  vector<AudioSample>& left = _left.tokens();
-  vector<AudioSample>& right = _right.tokens();
+  const ::essentia::VectorEx<StereoSample>& audio = _audio.tokens();
+  ::essentia::VectorEx<AudioSample>& left = _left.tokens();
+  ::essentia::VectorEx<AudioSample>& right = _right.tokens();
 
   for (int i=0; i<(int)audio.size(); i++) {
     left[i] = audio[i].left();
@@ -100,9 +100,9 @@ void StereoDemuxer::createInnerNetwork() {
 }
 
 void StereoDemuxer::compute() {
-  const vector<StereoSample>& audio = _audio.get();
-  vector<AudioSample>& left = _left.get();
-  vector<AudioSample>& right = _right.get();
+  const ::essentia::VectorEx<StereoSample>& audio = _audio.get();
+  ::essentia::VectorEx<AudioSample>& left = _left.get();
+  ::essentia::VectorEx<AudioSample>& right = _right.get();
 
   _audiogen->setVector(&audio);
   _leftStorage->setVector(&left);

@@ -28,8 +28,8 @@ namespace standard {
 class HarmonicBpm : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _bpmCandidates;
-  Output<std::vector<Real> > _harmonicBpms;
+  Input<::essentia::VectorEx<Real> > _bpmCandidates;
+  Output<::essentia::VectorEx<Real> > _harmonicBpms;
 
   Real _threshold;
   Real _bpm;
@@ -57,7 +57,7 @@ class HarmonicBpm : public Algorithm {
   static const char* description;
 
  private:
-  std::vector<Real> findHarmonicBpms(const std::vector<Real>& bpms);
+  ::essentia::VectorEx<Real> findHarmonicBpms(const ::essentia::VectorEx<Real>& bpms);
 };
 
 } // namespace standard
@@ -71,8 +71,8 @@ namespace streaming {
 class HarmonicBpm : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _bpmCandidates;
-  Source<std::vector<Real> > _harmonicBpms;
+  Sink<::essentia::VectorEx<Real> > _bpmCandidates;
+  Source<::essentia::VectorEx<Real> > _harmonicBpms;
 
  public:
   HarmonicBpm() {

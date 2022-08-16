@@ -30,34 +30,34 @@ namespace standard {
 
 class SNR : public Algorithm {
  protected:
-  Input<std::vector<Real> > _frame;
-  Output<std::vector<Real> > _SNRprior;
+  Input<::essentia::VectorEx<Real> > _frame;
+  Output<::essentia::VectorEx<Real> > _SNRprior;
   Output<Real> _SNRAverage;
   Output<Real> _SNRAverageEMA;
 
-  void SNRPriorEst(Real alpha, std::vector<Real> &snrPrior,
-                   std::vector<Real> mmse,
-                   std::vector<Real> noisePsd,
-                   std::vector<Real> snrInst);
+  void SNRPriorEst(Real alpha, ::essentia::VectorEx<Real> &snrPrior,
+                   ::essentia::VectorEx<Real> mmse,
+                   ::essentia::VectorEx<Real> noisePsd,
+                   ::essentia::VectorEx<Real> snrInst);
 
-  void SNRPostEst(std::vector<Real> &snrPost, 
-                  std::vector<Real> noisePsd,
-                  std::vector<Real> Y);
+  void SNRPostEst(::essentia::VectorEx<Real> &snrPost, 
+                  ::essentia::VectorEx<Real> noisePsd,
+                  ::essentia::VectorEx<Real> Y);
 
-  void SNRInstEst(std::vector<Real> &snrInst,
-                  std::vector<Real> snrPost);
+  void SNRInstEst(::essentia::VectorEx<Real> &snrInst,
+                  ::essentia::VectorEx<Real> snrPost);
 
-  void V(std::vector<Real> &v,
-         std::vector<Real> snrPrior,
-         std::vector<Real> snrPost);
+  void V(::essentia::VectorEx<Real> &v,
+         ::essentia::VectorEx<Real> snrPrior,
+         ::essentia::VectorEx<Real> snrPost);
 
-  void MMSE(std::vector<Real> &mmse,
-            std::vector<Real> v,
-            std::vector<Real> snrPost,
-            std::vector<Real> Y);
+  void MMSE(::essentia::VectorEx<Real> &mmse,
+            ::essentia::VectorEx<Real> v,
+            ::essentia::VectorEx<Real> snrPost,
+            ::essentia::VectorEx<Real> Y);
 
-  void UpdateNoisePSD(std::vector<Real> &noisePsd,
-                      std::vector<Real> noise,
+  void UpdateNoisePSD(::essentia::VectorEx<Real> &noisePsd,
+                      ::essentia::VectorEx<Real> noise,
                       Real alpha);
 
   void UpdateEMA(Real alpha, Real &ema, Real y);
@@ -75,20 +75,20 @@ class SNR : public Algorithm {
   uint _specSize;
   uint _counter;
 
-  std::vector<Real> _Y;
-  std::vector<Real> _noisePsd;
-  std::vector<Real> _snrPrior;
-  std::vector<Real> _snrInst;
-  std::vector<Real> _snrPost;
-  std::vector<Real> _XPsdEst;
+  ::essentia::VectorEx<Real> _Y;
+  ::essentia::VectorEx<Real> _noisePsd;
+  ::essentia::VectorEx<Real> _snrPrior;
+  ::essentia::VectorEx<Real> _snrInst;
+  ::essentia::VectorEx<Real> _snrPost;
+  ::essentia::VectorEx<Real> _XPsdEst;
 
-  std::vector<Real> _prevY;
-  std::vector<Real> _prevNoisePsd;
-  std::vector<Real> _prevSnrPrior;
-  std::vector<Real> _prevSnrInst;
-  std::vector<Real> _prevSnrPost;
-  std::vector<Real> _v;
-  std::vector<Real> _prevMmse;
+  ::essentia::VectorEx<Real> _prevY;
+  ::essentia::VectorEx<Real> _prevNoisePsd;
+  ::essentia::VectorEx<Real> _prevSnrPrior;
+  ::essentia::VectorEx<Real> _prevSnrInst;
+  ::essentia::VectorEx<Real> _prevSnrPost;
+  ::essentia::VectorEx<Real> _v;
+  ::essentia::VectorEx<Real> _prevMmse;
 
   Real _snrAverage;
   Real _snrAverageEma;
@@ -144,8 +144,8 @@ namespace streaming {
 
 class SNR : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<Real> > _frame;
-  Source<std::vector<Real> > _SNRprior;
+  Sink<::essentia::VectorEx<Real> > _frame;
+  Source<::essentia::VectorEx<Real> > _SNRprior;
   Source<Real> _SNRAverage;
   Source<Real> _SNRAverageEMA;
 

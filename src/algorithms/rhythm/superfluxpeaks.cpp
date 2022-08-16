@@ -62,8 +62,8 @@ void SuperFluxPeaks::configure() {
 
 void SuperFluxPeaks::compute() {
   
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& peaks = _peaks.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& peaks = _peaks.get();
   if (signal.empty()) {
     peaks.resize(0);
     return;
@@ -71,12 +71,12 @@ void SuperFluxPeaks::compute() {
   
   int size = signal.size();
   
-  vector<Real> avg(size);
+  ::essentia::VectorEx<Real> avg(size);
   _movAvg->input("signal").set(signal);
   _movAvg->output("signal").set(avg);
   _movAvg->compute();
   
-  vector<Real> maxs(size);
+  ::essentia::VectorEx<Real> maxs(size);
   _maxf->input("signal").set(signal);
   _maxf->output("signal").set(maxs);
   _maxf->compute();
@@ -121,7 +121,7 @@ const char* SuperFluxPeaks::description = standard::SuperFluxPeaks::description;
 void SuperFluxPeaks::consume() {
 
   int _aquireSize = _signal.acquireSize();
-  std::vector<Real> out = std::vector<Real>(_aquireSize);
+  ::essentia::VectorEx<Real> out = ::essentia::VectorEx<Real>(_aquireSize);
 
   _algo->input("novelty").set(_signal.tokens());
   _algo->output("peaks").set(out);
@@ -144,7 +144,7 @@ void SuperFluxPeaks::consume() {
 
 
 void SuperFluxPeaks::finalProduce() {
-  _peaks.push((std::vector<Real>) onsetTimes);
+  _peaks.push((::essentia::VectorEx<Real>) onsetTimes);
   current_t = 0;
   reset();
 }

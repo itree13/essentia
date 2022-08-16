@@ -27,11 +27,11 @@
 namespace essentia{
 
 
-void scaleAudioVector(std::vector<Real> &buffer, const Real scale);
-//void mixAudioVectors(const std::vector<Real> ina, const std::vector<Real> inb, const Real gaina, const Real gainb, std::vector<Real> &out);
-void cleaningSineTracks(std::vector< std::vector<Real> >&freqsTotal, const int minFrames);
-void genSpecSines(std::vector<Real> iploc, std::vector<Real> ipmag, std::vector<Real> ipphase, std::vector<std::complex<Real> > &outfft, const int fftSize);
-void initializeFFT(std::vector<std::complex<Real> >&fft, int sizeFFT);
+void scaleAudioVector(::essentia::VectorEx<Real> &buffer, const Real scale);
+//void mixAudioVectors(const ::essentia::VectorEx<Real> ina, const ::essentia::VectorEx<Real> inb, const Real gaina, const Real gainb, ::essentia::VectorEx<Real> &out);
+void cleaningSineTracks(::essentia::VectorEx< ::essentia::VectorEx<Real> >&freqsTotal, const int minFrames);
+void genSpecSines(::essentia::VectorEx<Real> iploc, ::essentia::VectorEx<Real> ipmag, ::essentia::VectorEx<Real> ipphase, ::essentia::VectorEx<std::complex<Real> > &outfft, const int fftSize);
+void initializeFFT(::essentia::VectorEx<std::complex<Real> >&fft, int sizeFFT);
 
 } // namespace essentia
 

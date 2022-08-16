@@ -55,9 +55,9 @@ void ChordsDetection::configure() {
 }
 
 void ChordsDetection::compute() {
-  const vector<vector<Real> >& hpcp = _pcp.get();
-  vector<string>& chords= _chords.get();
-  vector<Real>& strength= _strength.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& hpcp = _pcp.get();
+  ::essentia::VectorEx<string>& chords= _chords.get();
+  ::essentia::VectorEx<Real>& strength= _strength.get();
 
   string key;
   string scale;
@@ -72,7 +72,7 @@ void ChordsDetection::compute() {
     int indexStart = max(0, i - _numFramesWindow/2);
     int indexEnd = min(i + _numFramesWindow/2, (int)hpcp.size());
 
-    vector<Real> hpcpAverage = meanFrames(hpcp, indexStart, indexEnd);
+    ::essentia::VectorEx<Real> hpcpAverage = meanFrames(hpcp, indexStart, indexEnd);
     normalize(hpcpAverage);
 
     _chordsAlgo->input("pcp").set(hpcpAverage);
@@ -114,7 +114,7 @@ ChordsDetection::ChordsDetection() : AlgorithmComposite() {
 
   _chordsAlgo = standard::AlgorithmFactory::create("Key");
   _chordsAlgo->configure("profileType", "tonictriad", "usePolyphony", false);
-  _poolStorage = new PoolStorage<vector<Real> >(&_pool, "internal.hpcp");
+  _poolStorage = new PoolStorage<::essentia::VectorEx<Real> >(&_pool, "internal.hpcp");
 
   // FIXME: this is just a temporary hack...
   //        the correct way to do this is to have the algorithm output the chords
@@ -145,7 +145,7 @@ void ChordsDetection::configure() {
 AlgorithmStatus ChordsDetection::process() {
   if (!shouldStop()) return PASS;
 
-  const vector<vector<Real> >& hpcp = _pool.value<vector<vector<Real> > >("internal.hpcp");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& hpcp = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.hpcp");
   string key;
   string scale;
   Real strength;
@@ -162,7 +162,7 @@ AlgorithmStatus ChordsDetection::process() {
     int indexStart = max(0, i - _numFramesWindow/2);
     int indexEnd = min(i + _numFramesWindow/2, (int)hpcp.size());
 
-    vector<Real> hpcpAverage = meanFrames(hpcp, indexStart, indexEnd);
+    ::essentia::VectorEx<Real> hpcpAverage = meanFrames(hpcp, indexStart, indexEnd);
     normalize(hpcpAverage);
 
     _chordsAlgo->input("pcp").set(hpcpAverage);

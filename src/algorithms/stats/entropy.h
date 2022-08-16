@@ -28,7 +28,7 @@ namespace standard {
 class Entropy : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _entropy;
 
  public:
@@ -58,7 +58,7 @@ namespace streaming {
 class Entropy : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _entropy;
 
  public:

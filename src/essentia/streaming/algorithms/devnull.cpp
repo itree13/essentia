@@ -34,9 +34,9 @@ void connect(SourceBase& source, DevNullConnector dummy) {
   Algorithm* devnull = 0;
   CREATE_DEVNULL(int);
   CREATE_DEVNULL(Real);
-  CREATE_DEVNULL(vector<Real>);
+  CREATE_DEVNULL(::essentia::VectorEx<Real>);
   CREATE_DEVNULL(string);
-  CREATE_DEVNULL(vector<string>);
+  CREATE_DEVNULL(::essentia::VectorEx<string>);
   CREATE_DEVNULL(TNT::Array2D<Real>);
   CREATE_DEVNULL(Tensor<Real>);
   CREATE_DEVNULL(StereoSample);

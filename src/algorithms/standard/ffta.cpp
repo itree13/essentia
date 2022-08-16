@@ -58,8 +58,8 @@ FFTA::~FFTA() {
 
 void FFTA::compute() {
     
-  const std::vector<Real>& signal = _signal.get();
-  std::vector<std::complex<Real> >& fft = _fft.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<std::complex<Real> >& fft = _fft.get();
 
   // check if input is OK
   int size = int(signal.size());

@@ -78,14 +78,14 @@ gaia2::Point* poolToPoint(const Pool& pool, const gaia2::PointLayout& layout) {
       Real value = pool.value<Real>(dname);
       result->setValue(d, gaia2::RealDescriptor(value));
     }
-    else if (pool.contains<vector<Real> >(dname)) {
+    else if (pool.contains<::essentia::VectorEx<Real> >(dname)) {
       // descriptor is a vector of reals
-      const vector<Real>& value = pool.value<vector<Real> >(dname);
+      const ::essentia::VectorEx<Real>& value = pool.value<::essentia::VectorEx<Real> >(dname);
       result->setValue(d, gaia2::RealDescriptor(value));
     }
-    else if (pool.contains<vector<vector<Real> > >(dname)) {
+    else if (pool.contains<::essentia::VectorEx<::essentia::VectorEx<Real> > >(dname)) {
       // descriptor is a matrix
-      const vector<vector<Real> >& value = pool.value<vector<vector<Real> > >(d.mid(1).toStdString());
+      const ::essentia::VectorEx<::essentia::VectorEx<Real> >& value = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(d.mid(1).toStdString());
 
       // copy it in a single vector (flatten), such as what gaia uses
       int rows = value.size();
@@ -122,9 +122,9 @@ gaia2::Point* poolToPoint(const Pool& pool, const gaia2::PointLayout& layout) {
       string label = pool.value<string>(dname);
       result->setLabel(d, gaia2::StringDescriptor(QString::fromStdString(label)));
     }
-    else if (pool.contains<vector<string> >(dname)) {
+    else if (pool.contains<::essentia::VectorEx<string> >(dname)) {
       // descriptor is a list of strings
-      vector<string> label = pool.value<vector<string> >(dname);
+      ::essentia::VectorEx<string> label = pool.value<::essentia::VectorEx<string> >(dname);
       result->setLabel(d, gaia2::convert::VectorString_to_StringDescriptor(label));
     }
     else {
@@ -146,7 +146,7 @@ void checkNotIn(const string& desc, const set<string>& alldescs) {
  */
 void pointToPool(const gaia2::Point* p, Pool& pool, const Pool& origPool) {
   const gaia2::PointLayout& layout = p->layout();
-  vector<string> alldescsv = pool.descriptorNames();
+  ::essentia::VectorEx<string> alldescsv = pool.descriptorNames();
   set<string> alldescs(alldescsv.begin(), alldescsv.end());
 
   foreach (const QString& d, layout.descriptorNames(gaia2::RealType)) {
@@ -156,8 +156,8 @@ void pointToPool(const gaia2::Point* p, Pool& pool, const Pool& origPool) {
     gaia2::RealDescriptor desc = p->value(d);
 
     if (desc.size() == 1)    pool.set(pooldesc, desc[0]);
-    else if (desc.isEmpty()) pool.set(pooldesc, vector<Real>());
-    else                     pool.set(pooldesc, vector<Real>(&desc[0],
+    else if (desc.isEmpty()) pool.set(pooldesc, ::essentia::VectorEx<Real>());
+    else                     pool.set(pooldesc, ::essentia::VectorEx<Real>(&desc[0],
                                                              &desc[0]+desc.size()));
 
     // in fact, if desc.size == 1 and we're not in the single pool, we'd better
@@ -169,9 +169,9 @@ void pointToPool(const gaia2::Point* p, Pool& pool, const Pool& origPool) {
       for (int i=0; i<desc.size(); i++) pool.add(pooldesc, desc[i]);
     }
 
-    // if desc was a vector<vector<Real> >, it will have been converted to a single
-    // vector<Real>, where the first 2 values are the dimensions. Construct this matrix back.
-    const PoolOf(std::vector<Real>)& vrpool = origPool.getVectorRealPool();
+    // if desc was a ::essentia::VectorEx<::essentia::VectorEx<Real> >, it will have been converted to a single
+    // ::essentia::VectorEx<Real>, where the first 2 values are the dimensions. Construct this matrix back.
+    const PoolOf(::essentia::VectorEx<Real>)& vrpool = origPool.getVectorRealPool();
 
     if (vrpool.find(pooldesc) != vrpool.end()) {
       int rows = int(desc[0]);
@@ -185,7 +185,7 @@ void pointToPool(const gaia2::Point* p, Pool& pool, const Pool& origPool) {
       pool.remove(pooldesc);
 
       for (int i=0; i<rows; i++) {
-        pool.add(pooldesc, vector<Real>(&desc[2+ i*cols],
+        pool.add(pooldesc, ::essentia::VectorEx<Real>(&desc[2+ i*cols],
                                         &desc[2+ i*cols] + cols));
       }
     }
@@ -254,7 +254,7 @@ void GaiaTransform::compute() {
     QStringList classList = params.value("classMapping").toStringList();
     string className = params.value("className").toString().toStdString();
     string cls = outputPool.value<string>(className);
-    vector<Real> probs = outputPool.value<vector<Real> >(className + "Probability");
+    ::essentia::VectorEx<Real> probs = outputPool.value<::essentia::VectorEx<Real> >(className + "Probability");
     Q_ASSERT(classList.size() == (int)probs.size());
 
     outputPool.remove(className);

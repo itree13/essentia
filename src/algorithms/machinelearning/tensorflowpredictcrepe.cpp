@@ -90,7 +90,7 @@ void TensorflowPredictCREPE::configure() {
   int batchSize = parameter("batchSize").toInt();
 
   int hopSizeFrames = int(_sampleRate * hopSize / 1000.0);
-  vector<int> inputShape({batchSize, 1, 1, _frameSize});
+  ::essentia::VectorEx<int> inputShape({batchSize, 1, 1, _frameSize});
 
   // Configure the frameCutter to discard the last frame if it
   // is uncompleted to mimic CREPE's behavior. The main goal is
@@ -123,8 +123,8 @@ void TensorflowPredictCREPE::configure() {
 
   _tensorflowPredict->configure("graphFilename", graphFilename,
                                 "savedModel", savedModel,
-                                "inputs", vector<string>({input}),
-                                "outputs", vector<string>({output}));
+                                "inputs", ::essentia::VectorEx<string>({input}),
+                                "outputs", ::essentia::VectorEx<string>({output}));
 }
 
 } // namespace streaming
@@ -203,8 +203,8 @@ void TensorflowPredictCREPE::configure() {
 
 
 void TensorflowPredictCREPE::compute() {
-  const vector<Real>& signal = _signal.get();
-  vector<vector<Real> >& predictions = _predictions.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& predictions = _predictions.get();
 
   if (!signal.size()) {
     throw EssentiaException("TensorflowPredictCREPE: empty input signal");
@@ -215,7 +215,7 @@ void TensorflowPredictCREPE::compute() {
   _network->run();
 
   try {
-    predictions = _pool.value<vector<vector<Real> > >("predictions");
+    predictions = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("predictions");
   }
   catch (EssentiaException&) {
     predictions.clear();

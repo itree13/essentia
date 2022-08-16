@@ -66,8 +66,8 @@ namespace standard {
 
 class TuningFrequencyExtractor : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _tuningFrequency;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _tuningFrequency;
 
   bool _configured;
 

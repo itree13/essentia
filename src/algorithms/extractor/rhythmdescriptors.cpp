@@ -110,12 +110,12 @@ AlgorithmStatus RhythmDescriptors::process() {
   if (!shouldStop()) return PASS;
 
   _bpm.push(_pool.value<Real>("internal.bpm"));
-  _ticks.push(_pool.value<vector<Real> >("internal.ticks"));
+  _ticks.push(_pool.value<::essentia::VectorEx<Real> >("internal.ticks"));
   _confidence.push(_pool.value<Real>("internal.confidence")); 
-  _estimates.push(_pool.value<vector<Real> >("internal.estimates"));
-  _bpmIntervals.push(_pool.value<vector<Real> >("internal.bpmIntervals"));
-  //_rubatoStart.push(_pool.value<vector<Real> >("internal.rubatoStart"));
-  //_rubatoStop.push(_pool.value<vector<Real> >("internal.rubatoStop"));
+  _estimates.push(_pool.value<::essentia::VectorEx<Real> >("internal.estimates"));
+  _bpmIntervals.push(_pool.value<::essentia::VectorEx<Real> >("internal.bpmIntervals"));
+  //_rubatoStart.push(_pool.value<::essentia::VectorEx<Real> >("internal.rubatoStart"));
+  //_rubatoStop.push(_pool.value<::essentia::VectorEx<Real> >("internal.rubatoStop"));
   //_rubatoNumber.push((int) _pool.value<Real>("internal.rubatoStop"));
 
   return FINISHED;
@@ -203,33 +203,33 @@ void RhythmDescriptors::createInnerNetwork() {
 }
 
 void RhythmDescriptors::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
   _bpm.get()          = _pool.value<Real>("bpm");
-  _ticks.get()        = _pool.value<vector<Real> >("beats_position");
+  _ticks.get()        = _pool.value<::essentia::VectorEx<Real> >("beats_position");
   _confidence.get()   = _pool.value<Real>("confidence");
-  _estimates.get()    = _pool.value<vector<Real> >("bpm_estimates");
-  //_bpmIntervals.get() = _pool.value<vector<Real> >("bpm_intervals");
+  _estimates.get()    = _pool.value<::essentia::VectorEx<Real> >("bpm_estimates");
+  //_bpmIntervals.get() = _pool.value<::essentia::VectorEx<Real> >("bpm_intervals");
   //_rubatoNumber.get() = (int) _pool.value<Real>("rubato_number");
   //try {
-  //_rubatoStart.get()  = _pool.value<vector<Real> >("rubato_start");
-  //_rubatoStop.get()   = _pool.value<vector<Real> >("rubato_stop");
+  //_rubatoStart.get()  = _pool.value<::essentia::VectorEx<Real> >("rubato_start");
+  //_rubatoStop.get()   = _pool.value<::essentia::VectorEx<Real> >("rubato_stop");
   //}
   //catch (EssentiaException &) { // no rubato regions found
-  //  _rubatoStart.get() = vector<Real>();
-  //  _rubatoStop.get() = vector<Real>();
+  //  _rubatoStart.get() = ::essentia::VectorEx<Real>();
+  //  _rubatoStop.get() = ::essentia::VectorEx<Real>();
   //}
 
-  _firstPeakBPM.get()     = _pool.value<vector<Real> >("first_peak_bpm")[0];
-  _firstPeakSpread.get()  = _pool.value<vector<Real> >("first_peak_spread")[0];
-  _firstPeakWeight.get()  = _pool.value<vector<Real> >("first_peak_weight")[0];
-  _secondPeakBPM.get()    = _pool.value<vector<Real> >("second_peak_bpm")[0];
-  _secondPeakSpread.get() = _pool.value<vector<Real> >("second_peak_spread")[0];
-  _secondPeakWeight.get() = _pool.value<vector<Real> >("second_peak_weight")[0];
-  _histogram.get()        = _pool.value<vector<vector<Real> > > ("histogram")[0];
+  _firstPeakBPM.get()     = _pool.value<::essentia::VectorEx<Real> >("first_peak_bpm")[0];
+  _firstPeakSpread.get()  = _pool.value<::essentia::VectorEx<Real> >("first_peak_spread")[0];
+  _firstPeakWeight.get()  = _pool.value<::essentia::VectorEx<Real> >("first_peak_weight")[0];
+  _secondPeakBPM.get()    = _pool.value<::essentia::VectorEx<Real> >("second_peak_bpm")[0];
+  _secondPeakSpread.get() = _pool.value<::essentia::VectorEx<Real> >("second_peak_spread")[0];
+  _secondPeakWeight.get() = _pool.value<::essentia::VectorEx<Real> >("second_peak_weight")[0];
+  _histogram.get()        = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > > ("histogram")[0];
 }
 
 } // namespace standard

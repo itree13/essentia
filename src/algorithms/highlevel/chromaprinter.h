@@ -30,7 +30,7 @@ namespace standard {
 class Chromaprinter : public Algorithm {
 
  protected:
-  Input<std::vector<Real> >  _signal;
+  Input<::essentia::VectorEx<Real> >  _signal;
   Output<std::string> _fingerprint;
 
   Real _sampleRate;
@@ -91,7 +91,7 @@ class Chromaprinter : public Algorithm {
   Real _sampleRate;
   Real _analysisTime;
 
-  std::vector<int16_t> _buffer;
+  ::essentia::VectorEx<int16_t> _buffer;
 
   unsigned  _chromaprintSize;
   unsigned _count;

@@ -67,7 +67,7 @@ void StartStopCut::configure() {
 
 
 void StartStopCut::compute() {
-  const vector<Real>& audio = _audio.get();
+  const ::essentia::VectorEx<Real>& audio = _audio.get();
   int& startCut = _startCut.get();
   int& stopCut = _stopCut.get();
 
@@ -87,7 +87,7 @@ void StartStopCut::compute() {
   findNonSilentFrame(audio, startCut, _maximumStartSamples / _hopSize);
   
   // Gets a reversed version of the last _maximumStopTime ms of audio.
-  std::vector<Real> reversedAudio(audio.end() - _maximumStopSamples, audio.end());
+  ::essentia::VectorEx<Real> reversedAudio(audio.end() - _maximumStopSamples, audio.end());
   std::reverse(reversedAudio.begin(), reversedAudio.end());
 
   // Looks for the last non-silent frame.
@@ -95,9 +95,9 @@ void StartStopCut::compute() {
 }
 
 
-void StartStopCut::findNonSilentFrame(std::vector<Real> audio,
+void StartStopCut::findNonSilentFrame(::essentia::VectorEx<Real> audio,
                                       int& nonSilentFrame, uint lastFrame) {
-  std::vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   uint nFrame = 0;
 
   _frameCutter->input("signal").set(audio);

@@ -25,6 +25,7 @@
 #include <algorithm> // for std::max
 #include <climits> // for INT_MAX
 #include "config.h"
+#include "types.h"
 #include "streamutil.h"
 #include "stringutil.h"
 
@@ -82,7 +83,7 @@ void saveDebugLevels();
 void restoreDebugLevels();
 
 typedef int DebuggingSchedule[][3];
-typedef std::vector<std::pair<std::pair<int, int>, int> > DebuggingScheduleVector;
+typedef ::essentia::VectorEx<std::pair<std::pair<int, int>, int> > DebuggingScheduleVector;
 
 /**
  * the given schedule variable is a vector of pair of ints representing the

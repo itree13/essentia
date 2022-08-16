@@ -33,9 +33,9 @@ namespace standard {
 class CartesianToPolar : public Algorithm {
 
  private:
-  Input<std::vector<std::complex<Real> > > _complex;
-  Output<std::vector<Real> > _magnitude;
-  Output<std::vector<Real> > _phase;
+  Input<::essentia::VectorEx<std::complex<Real> > > _complex;
+  Output<::essentia::VectorEx<Real> > _magnitude;
+  Output<::essentia::VectorEx<Real> > _phase;
 
  public:
   CartesianToPolar() {
@@ -61,9 +61,9 @@ namespace streaming {
 class CartesianToPolar : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::complex<Real> > > _complex;
-  Source<std::vector<Real> > _magnitude;
-  Source<std::vector<Real> > _phase;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _complex;
+  Source<::essentia::VectorEx<Real> > _magnitude;
+  Source<::essentia::VectorEx<Real> > _phase;
 
  public:
   CartesianToPolar() {

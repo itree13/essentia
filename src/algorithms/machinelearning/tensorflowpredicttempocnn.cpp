@@ -103,11 +103,11 @@ void TensorflowPredictTempoCNN::configure() {
   int hopSize = 512;
   int patchSize = 256;
   int numberBands = 40;
-  vector<int> inputShape({batchSize, 1, patchSize, numberBands});
+  ::essentia::VectorEx<int> inputShape({batchSize, 1, patchSize, numberBands});
   string scaler = "standard";
 
   // Hendrik's models expect data shaped as {Batch, Mels, Time, Channel}.
-  vector<int> permutation({0, 3, 2, 1});
+  ::essentia::VectorEx<int> permutation({0, 3, 2, 1});
 
   _frameCutter->configure("frameSize", frameSize, "hopSize", hopSize);
 
@@ -134,8 +134,8 @@ void TensorflowPredictTempoCNN::configure() {
   _tensorflowPredict->configure("graphFilename", graphFilename,
                                 "savedModel", savedModel,
                                 "squeeze", false,
-                                "inputs", vector<string>({input}),
-                                "outputs", vector<string>({output}));
+                                "inputs", ::essentia::VectorEx<string>({input}),
+                                "outputs", ::essentia::VectorEx<string>({output}));
 }
 
 } // namespace streaming
@@ -216,8 +216,8 @@ void TensorflowPredictTempoCNN::configure() {
 
 
 void TensorflowPredictTempoCNN::compute() {
-  const vector<Real>& signal = _signal.get();
-  vector<vector<Real> >& predictions = _predictions.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& predictions = _predictions.get();
 
   if (!signal.size()) {
     throw EssentiaException("TensorflowPredictTempoCNN: empty input signal");
@@ -228,7 +228,7 @@ void TensorflowPredictTempoCNN::compute() {
   _network->run();
 
   try {
-    predictions = _pool.value<vector<vector<Real> > >("predictions");
+    predictions = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("predictions");
   }
   catch (EssentiaException&) {
     predictions.clear();

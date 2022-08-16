@@ -28,7 +28,7 @@ namespace standard {
 class SpectralCentroidTime : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _centroid;
 
   Real _sampleRate; /** sampling rate of the audio signal */
@@ -63,7 +63,7 @@ namespace streaming {
 class SpectralCentroidTime : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _centroid;
 
  public:

@@ -27,7 +27,7 @@
 
 using namespace essentia;
 
-Real maxElementArray(std::vector<std::vector<Real> >& inputMatrix);
+Real maxElementArray(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputMatrix);
 Real gammaState(Real value, const Real disOnset, const Real disExtension);
 
 namespace essentia {
@@ -60,8 +60,8 @@ void CoverSongSimilarity::configure() {
 
 void CoverSongSimilarity::compute() {
   // get input and output
-  const std::vector<std::vector<Real> > simMatrix = _inputArray.get();
-  std::vector<std::vector<Real> >& scoreMatrix = _scoreMatrix.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> > simMatrix = _inputArray.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& scoreMatrix = _scoreMatrix.get();
   Real& distance = _distance.get();
 
   if (simMatrix.empty())
@@ -70,7 +70,7 @@ void CoverSongSimilarity::compute() {
   size_t xFrames = simMatrix.size();
   size_t yFrames = simMatrix[0].size();
   // assign the output scoreMatrix with zeros
-  scoreMatrix.assign(xFrames, std::vector<Real>(yFrames, 0));
+  scoreMatrix.assign(xFrames, ::essentia::VectorEx<Real>(yFrames, 0));
   Real c1 = 0;
   Real c2 = 0;
   Real c3 = 0;
@@ -173,9 +173,9 @@ void CoverSongSimilarity::configure() {
 
 AlgorithmStatus CoverSongSimilarity::process() {
 
-  const std::vector<std::vector<Real> >& inputFrames = _inputArray.tokens();
-  std::vector<TNT::Array2D<Real> >& scoreMatrix = _scoreMatrix.tokens();
-  std::vector<Real>& distance = _distance.tokens();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& inputFrames = _inputArray.tokens();
+  ::essentia::VectorEx<TNT::Array2D<Real> >& scoreMatrix = _scoreMatrix.tokens();
+  ::essentia::VectorEx<Real>& distance = _distance.tokens();
 
   EXEC_DEBUG("process()");
   AlgorithmStatus status = acquireData();
@@ -197,7 +197,7 @@ AlgorithmStatus CoverSongSimilarity::process() {
     return process();
   }
 
-  std::vector<std::vector<Real> > inputFramesCopy = inputFrames; 
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > inputFramesCopy = inputFrames; 
   /* if we have less input frame streams than the required '_minFrameSize' in the last stream, 
    we append the already acquired frames of the current stream until it satisfies the condition */
   if (input("inputArray").acquireSize() < _minFrameAcquireSize) {
@@ -210,10 +210,10 @@ AlgorithmStatus CoverSongSimilarity::process() {
   _yFrames = inputFramesCopy[0].size();
 
   if (_iterIdx == 0) {
-    _mainScoreMatrix.assign(_xFrames, std::vector<Real>(_yFrames, 0));
+    _mainScoreMatrix.assign(_xFrames, ::essentia::VectorEx<Real>(_yFrames, 0));
   }
   else {
-    _mainScoreMatrix.push_back(std::vector<Real>(_yFrames, 0));
+    _mainScoreMatrix.push_back(::essentia::VectorEx<Real>(_yFrames, 0));
   }
 
   // compute qmax alignment score matrix for each 3 sub frames of input stream 
@@ -236,7 +236,7 @@ AlgorithmStatus CoverSongSimilarity::process() {
 }
 
 // compute smith-waterman alignment based on [2] for each 3 frames streams of array input
-void CoverSongSimilarity::subFrameQmax(std::vector<std::vector<Real> >& inputFrames) {
+void CoverSongSimilarity::subFrameQmax(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputFrames) {
   
   if (int(_xFrames) != _minFrameAcquireSize) throw EssentiaException("CoverSongSimilarity: Wrong input frame size!");
   int i = 2;
@@ -276,7 +276,7 @@ Real gammaState(Real value, const Real disOnset, const Real disExtension) {
 
 
 // returns the maximum element in the given 2D vector
-Real maxElementArray(std::vector<std::vector<Real> >& inputMatrix) {
+Real maxElementArray(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputMatrix) {
 
   Real maxElement = INT_MIN;
   for (size_t i=0; i<inputMatrix.size(); i++) {

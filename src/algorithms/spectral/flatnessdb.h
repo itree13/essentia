@@ -28,7 +28,7 @@ namespace standard {
 class FlatnessDB : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _flatnessDB;
 
   Algorithm* _flatness;
@@ -66,7 +66,7 @@ namespace streaming {
 class FlatnessDB : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _flatnessDB;
 
  public:

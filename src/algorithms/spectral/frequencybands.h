@@ -29,8 +29,8 @@ namespace standard {
 class FrequencyBands : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrumInput;
-  Output<std::vector<Real> > _bandsOutput;
+  Input<::essentia::VectorEx<Real> > _spectrumInput;
+  Output<::essentia::VectorEx<Real> > _bandsOutput;
 
  public:
   FrequencyBands() {
@@ -56,7 +56,7 @@ class FrequencyBands : public Algorithm {
   static const char* description;
 
  protected:
-  std::vector<Real> _bandFrequencies;
+  ::essentia::VectorEx<Real> _bandFrequencies;
   Real _sampleRate;
 };
 
@@ -71,8 +71,8 @@ namespace streaming {
 class FrequencyBands : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrumInput;
-  Source<std::vector<Real> > _bandsOutput;
+  Sink<::essentia::VectorEx<Real> > _spectrumInput;
+  Source<::essentia::VectorEx<Real> > _bandsOutput;
 
  public:
   FrequencyBands() {

@@ -58,8 +58,8 @@ class AudioContext {
              int nChannels, int sampleRate, int bitrate);
   void open();
   bool isOpen() const { return _isOpen; }
-  void write(const std::vector<AudioSample>& monoData);
-  void write(const std::vector<StereoSample>& stereoData);
+  void write(const ::essentia::VectorEx<AudioSample>& monoData);
+  void write(const ::essentia::VectorEx<StereoSample>& stereoData);
   void close();
 
  protected:

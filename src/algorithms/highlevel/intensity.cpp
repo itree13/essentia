@@ -48,17 +48,17 @@ void Intensity::configure() {
 
 void Intensity::compute() {
   // prepare computation
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
 
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   _frameCutter->input("signal").set(signal);
   _frameCutter->output("frame").set(frame);
 
-  vector<Real> windowedFrame;
+  ::essentia::VectorEx<Real> windowedFrame;
   _windowing->input("frame").set(frame);
   _windowing->output("frame").set(windowedFrame);
 
-  vector<Real> spectrum;
+  ::essentia::VectorEx<Real> spectrum;
   _spectrum->input("frame").set(windowedFrame);
   _spectrum->output("spectrum").set(spectrum);
 
@@ -66,7 +66,7 @@ void Intensity::compute() {
   _spectralComplexity->input("spectrum").set(spectrum);
   _spectralComplexity->output("spectralComplexity").set(spectralComplexity);
 
-  vector<Real> spectralCentralMoments;
+  ::essentia::VectorEx<Real> spectralCentralMoments;
   _centralMoments->input("array").set(spectrum);
   _centralMoments->output("centralMoments").set(spectralCentralMoments);
 
@@ -80,7 +80,7 @@ void Intensity::compute() {
   _rollOff->input("spectrum").set(spectrum);
   _rollOff->output("rollOff").set(spectralRollOff);
 
-  vector<Real> spectralPeakMags, spectralPeakFreqs;
+  ::essentia::VectorEx<Real> spectralPeakMags, spectralPeakFreqs;
   _spectralPeaks->input("spectrum").set(spectrum);
   _spectralPeaks->output("magnitudes").set(spectralPeakMags);
   _spectralPeaks->output("frequencies").set(spectralPeakFreqs);

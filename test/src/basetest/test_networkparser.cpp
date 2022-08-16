@@ -31,7 +31,7 @@ TEST(NetworkParser, SimpleBox) {
     "+------+"
   };
 
-  vector<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
+  ::essentia::VectorEx<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
 
   ASSERT_EQ((size_t)1, boxes.size());
   EXPECT_EQ("Abcd", boxes[0].title);
@@ -49,7 +49,7 @@ TEST(NetworkParser, BrokenBox) {
     "+------+"
   };
 
-  vector<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
+  ::essentia::VectorEx<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
 
   ASSERT_EQ((size_t)0, boxes.size());
 }
@@ -62,7 +62,7 @@ TEST(NetworkParser, BrokenBox2) {
     " ------+"
   };
 
-  vector<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
+  ::essentia::VectorEx<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
 
   ASSERT_EQ((size_t)0, boxes.size());
 }
@@ -84,7 +84,7 @@ TEST(NetworkParser, MultiBoxes) {
     "                           "
   };
 
-  vector<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
+  ::essentia::VectorEx<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
 
   ASSERT_EQ((size_t)3, boxes.size());
 
@@ -123,7 +123,7 @@ TEST(NetworkParser, MultiBoxesWithNoise) {
     "                           "
   };
 
-  vector<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
+  ::essentia::VectorEx<AsciiBox> boxes = AsciiBox::findBoxes(AsciiCanvas(network));
 
   ASSERT_EQ((size_t)4, boxes.size());
 
@@ -165,7 +165,7 @@ TEST(NetworkParser, Connections) {
   const char* algos[] = { "AudioLoader", "MFCC", "Spectrum" }; // alphabetically sorted
   EXPECT_VEC_EQ(arrayToVector<string>(algos), np.nodes());
 
-  const vector<pair<string, string> >& c = np.namedEdges();
+  const ::essentia::VectorEx<pair<string, string> >& c = np.namedEdges();
   ASSERT_EQ((size_t)2, c.size());
   EXPECT_EQ(STRPAIR("AudioLoader", "Spectrum"), c[0]);
   EXPECT_EQ(STRPAIR("Spectrum", "MFCC"),        c[1]);
@@ -183,7 +183,7 @@ TEST(NetworkParser, ConnectionsAndInstantiation) {
   const char* algos[] = { "FrameCutter", "MFCC", "MonoLoader", "Spectrum" }; // alphabetically sorted
   EXPECT_VEC_EQ(arrayToVector<string>(algos), np.algorithms());
 
-  const vector<pair<string, string> >& c = np.namedConnections();
+  const ::essentia::VectorEx<pair<string, string> >& c = np.namedConnections();
   ASSERT_EQ((size_t)3, c.size());
   EXPECT_EQ(STRPAIR("FrameCutter", "Spectrum"),   c[0]);
   EXPECT_EQ(STRPAIR("MonoLoader", "FrameCutter"), c[1]);
@@ -212,7 +212,7 @@ TEST(NetworkParser, FunkyConnections) {
   const char* algos[] = { "AudioLoader", "MFCC", "Spectrum" }; // alphabetically sorted
   EXPECT_VEC_EQ(arrayToVector<string>(algos), np.nodes());
 
-  const vector<pair<string, string> >& c = np.namedEdges();
+  const ::essentia::VectorEx<pair<string, string> >& c = np.namedEdges();
   ASSERT_EQ((size_t)2, c.size());
   EXPECT_EQ(STRPAIR("AudioLoader", "Spectrum"), c[0]);
   EXPECT_EQ(STRPAIR("Spectrum", "MFCC"),        c[1]);
@@ -248,7 +248,7 @@ TEST(NetworkParser, MultipleConnections) {
   const char* algos[] = { "AudioLoader", "HPCP", "Key", "MFCC", "Mode", "SpectralCentroid", "Spectrum" };
   EXPECT_VEC_EQ(arrayToVector<string>(algos), np.nodes());
 
-  const vector<pair<string, string> >& c = np.namedEdges();
+  const ::essentia::VectorEx<pair<string, string> >& c = np.namedEdges();
   ASSERT_EQ((size_t)6, c.size());
   EXPECT_EQ(STRPAIR("AudioLoader", "Spectrum"), c[0]);
   EXPECT_EQ(STRPAIR("HPCP", "Key"),  c[1]);
@@ -270,7 +270,7 @@ TEST(NetworkParser, InfiniteSplit) {
   const char* algos[] = { "AudioLoader", "Spectrum" };
   EXPECT_VEC_EQ(arrayToVector<string>(algos), np.nodes());
 
-  const vector<pair<string, string> >& c = np.namedEdges();
+  const ::essentia::VectorEx<pair<string, string> >& c = np.namedEdges();
   ASSERT_EQ((size_t)1, c.size());
   EXPECT_EQ(STRPAIR("AudioLoader", "Spectrum"), c[0]);
 }

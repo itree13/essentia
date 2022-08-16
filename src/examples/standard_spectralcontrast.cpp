@@ -75,11 +75,11 @@ int main(int argc, char* argv[]) {
 
   /********** SETUP CONNECTIONS **********/
 
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
   audio->output("audio").set(audioBuffer);
   fcutter->input("signal").set(audioBuffer);
 
-  vector<Real> frame, windowedFrame;
+  ::essentia::VectorEx<Real> frame, windowedFrame;
 
   fcutter->output("frame").set(frame);
   window->input("frame").set(frame);
@@ -87,13 +87,13 @@ int main(int argc, char* argv[]) {
   window->output("frame").set(windowedFrame);
   fft->input("frame").set(windowedFrame);
 
-  vector<Real> spectrum;
+  ::essentia::VectorEx<Real> spectrum;
 
   fft->output("spectrum").set(spectrum);
   sc->input("spectrum").set(spectrum);
 
-  vector<Real> sccoeffs;
-  vector<Real> scvalleys;
+  ::essentia::VectorEx<Real> sccoeffs;
+  ::essentia::VectorEx<Real> scvalleys;
 
   sc->output("spectralContrast").set(sccoeffs);
   sc->output("spectralValley").set(scvalleys);
@@ -127,10 +127,10 @@ int main(int argc, char* argv[]) {
     poolSc.add("contrast_valleys", scvalleys);
   }
 
-  poolOut.add("contrast_coeffs.means", meanFrames(poolSc.value<vector<vector<Real> > >("contrast_coeffs")));
-  poolOut.add("contrast_coeffs.vars" , varianceFrames(poolSc.value<vector<vector<Real> > >("contrast_coeffs")));
-  poolOut.add("contrast_valleys.means", meanFrames(poolSc.value<vector<vector<Real> > >("contrast_valleys")));
-  poolOut.add("contrast_valleys.vars" , varianceFrames(poolSc.value<vector<vector<Real> > >("contrast_valleys")));
+  poolOut.add("contrast_coeffs.means", meanFrames(poolSc.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("contrast_coeffs")));
+  poolOut.add("contrast_coeffs.vars" , varianceFrames(poolSc.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("contrast_coeffs")));
+  poolOut.add("contrast_valleys.means", meanFrames(poolSc.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("contrast_valleys")));
+  poolOut.add("contrast_valleys.vars" , varianceFrames(poolSc.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("contrast_valleys")));
 
   // write yaml file
   Algorithm* output = AlgorithmFactory::create("YamlOutput", "filename", outputFilename);

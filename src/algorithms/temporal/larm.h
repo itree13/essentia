@@ -28,7 +28,7 @@ namespace standard {
 class Larm : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _larm;
   Algorithm* _envelope;
   Algorithm* _powerMean;
@@ -78,7 +78,7 @@ namespace streaming {
 class Larm : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _larm;
 
  public:

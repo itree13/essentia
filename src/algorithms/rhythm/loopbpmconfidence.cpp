@@ -52,7 +52,7 @@ void LoopBpmConfidence::compute() {
     // if estimated bpm is 0, we already know that the confidence will be 0
     confidence = 0.0;
   } else {
-    const vector<Real>& signal = _signal.get();
+    const ::essentia::VectorEx<Real>& signal = _signal.get();
 
     // Get original duration.
     int duration_samples = signal.size();
@@ -60,7 +60,7 @@ void LoopBpmConfidence::compute() {
     // Check first that the signal is non-empty
     if (duration_samples!=0){
       // Compute envelope
-      vector<Real> envelope;
+      ::essentia::VectorEx<Real> envelope;
       _envelope->input("signal").set(signal);
       _envelope->output("signal").set(envelope);
       _envelope->compute();
@@ -87,7 +87,7 @@ void LoopBpmConfidence::compute() {
       }
 
       // Build vector with all durations to check
-      std::vector<int> durations_to_check;
+      ::essentia::VectorEx<int> durations_to_check;
       durations_to_check.resize(4);
       durations_to_check[0] = duration_samples;
       durations_to_check[1] = duration_samples - start_position;
@@ -95,7 +95,7 @@ void LoopBpmConfidence::compute() {
       durations_to_check[3] = end_position - start_position;
 
       // Check all durations
-      std::vector<Real> confidences;
+      ::essentia::VectorEx<Real> confidences;
       confidences.resize(4);
       Real beatDuration = (60.0 * parameter("sampleRate").toReal()) / bpmEstimate;
       Real lambdaThreshold = beatDuration * 0.5;

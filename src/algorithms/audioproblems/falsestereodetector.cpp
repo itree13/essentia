@@ -39,15 +39,15 @@ void FalseStereoDetector::configure() {
 
 
 void FalseStereoDetector::compute() {
-  const vector<StereoSample> frame = _frame.get();
+  const ::essentia::VectorEx<StereoSample> frame = _frame.get();
   int &isFalseStereo = _isFalseStereo.get();
   Real &correlation = _correlation.get();
 
   isFalseStereo = 0;
   correlation = 0.f;
 
-  vector<Real> left;
-  vector<Real> right;
+  ::essentia::VectorEx<Real> left;
+  ::essentia::VectorEx<Real> right;
 
   _demuxer->input("audio").set(frame);
   _demuxer->output("left").set(left);
@@ -122,9 +122,9 @@ AlgorithmStatus FalseStereoDetector::process() {
     return process();
   }
 
-  const vector<StereoSample>& audio = _audio.tokens();
-  vector<int>& isFalseStereo = _isFalseStereo.tokens();
-  vector<Real>& correlation = _correlation.tokens();
+  const ::essentia::VectorEx<StereoSample>& audio = _audio.tokens();
+  ::essentia::VectorEx<int>& isFalseStereo = _isFalseStereo.tokens();
+  ::essentia::VectorEx<Real>& correlation = _correlation.tokens();
 
   _FalseStereoDetectorAlgo->input("frame").set(audio);
   _FalseStereoDetectorAlgo->output("isFalseStereo").set(isFalseStereo[0]);

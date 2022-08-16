@@ -28,14 +28,14 @@ namespace standard {
 class BFCC : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrum;
-  Output<std::vector<Real> > _bands;
-  Output<std::vector<Real> > _bfcc;
+  Input<::essentia::VectorEx<Real> > _spectrum;
+  Output<::essentia::VectorEx<Real> > _bands;
+  Output<::essentia::VectorEx<Real> > _bfcc;
 
   Algorithm* _triangularBarkFilter;
   Algorithm* _dct;
 
-  std::vector<Real> _logbands;
+  ::essentia::VectorEx<Real> _logbands;
 
   typedef  Real (*funcPointer)(Real);
   funcPointer _compressor;
@@ -93,9 +93,9 @@ namespace streaming {
 class BFCC : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
-  Source<std::vector<Real> > _bands;
-  Source<std::vector<Real> > _bfcc;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
+  Source<::essentia::VectorEx<Real> > _bands;
+  Source<::essentia::VectorEx<Real> > _bfcc;
 
  public:
   BFCC() {

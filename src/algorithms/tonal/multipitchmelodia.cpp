@@ -127,48 +127,48 @@ void MultiPitchMelodia::configure() {
 }
 
 void MultiPitchMelodia::compute() {
-  const vector<Real>& signal = _signal.get();
-  vector<vector<Real> >& pitch = _pitch.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& pitch = _pitch.get();
   if (signal.empty()) {
     pitch.clear();
     return;
   }
 
   // Pre-processing
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   _frameCutter->input("signal").set(signal);
   _frameCutter->output("frame").set(frame);
 
-  vector<Real> frameWindowed;
+  ::essentia::VectorEx<Real> frameWindowed;
   _windowing->input("frame").set(frame);
   _windowing->output("frame").set(frameWindowed);
 
   // Spectral peaks
-  vector<Real> frameSpectrum;
+  ::essentia::VectorEx<Real> frameSpectrum;
   _spectrum->input("frame").set(frameWindowed);
   _spectrum->output("spectrum").set(frameSpectrum);
 
-  vector<Real> frameFrequencies;
-  vector<Real> frameMagnitudes;
+  ::essentia::VectorEx<Real> frameFrequencies;
+  ::essentia::VectorEx<Real> frameMagnitudes;
   _spectralPeaks->input("spectrum").set(frameSpectrum);
   _spectralPeaks->output("frequencies").set(frameFrequencies);
   _spectralPeaks->output("magnitudes").set(frameMagnitudes);
 
   // Pitch salience contours
-  vector<Real> frameSalience;
+  ::essentia::VectorEx<Real> frameSalience;
   _pitchSalienceFunction->input("frequencies").set(frameFrequencies);
   _pitchSalienceFunction->input("magnitudes").set(frameMagnitudes);
   _pitchSalienceFunction->output("salienceFunction").set(frameSalience);
 
-  vector<Real> frameSalienceBins;
-  vector<Real> frameSalienceValues;
+  ::essentia::VectorEx<Real> frameSalienceBins;
+  ::essentia::VectorEx<Real> frameSalienceValues;
   _pitchSalienceFunctionPeaks->input("salienceFunction").set(frameSalience);
   _pitchSalienceFunctionPeaks->output("salienceBins").set(frameSalienceBins);
   _pitchSalienceFunctionPeaks->output("salienceValues").set(frameSalienceValues);
 
 
-  vector<vector<Real> > peakBins;
-  vector<vector<Real> > peakSaliences;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > peakBins;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > peakSaliences;
 
   while (true) {
     // get a frame
@@ -197,9 +197,9 @@ void MultiPitchMelodia::compute() {
   }
 
   // calculate pitch contours
-  vector<vector<Real> > contoursBins;
-  vector<vector<Real> > contoursSaliences;
-  vector<Real> contoursStartTimes;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > contoursBins;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > contoursSaliences;
+  ::essentia::VectorEx<Real> contoursStartTimes;
   Real duration;
 
   _pitchContours->input("peakBins").set(peakBins);
@@ -262,8 +262,8 @@ MultiPitchMelodia::MultiPitchMelodia() : AlgorithmComposite() {
   _pitchContoursMelody = standard::AlgorithmFactory::create("PitchContoursMelody");
 
   // TODO delete
-  //_poolStorageBins = new PoolStorage<vector<vector<Real> > >(&_pool, "internal.saliencebins");
-  //_poolStorageValues = new PoolStorage<vector<vector<Real> > >(&_pool, "internal.saliencevalues");
+  //_poolStorageBins = new PoolStorage<::essentia::VectorEx<::essentia::VectorEx<Real> > >(&_pool, "internal.saliencebins");
+  //_poolStorageValues = new PoolStorage<::essentia::VectorEx<::essentia::VectorEx<Real> > >(&_pool, "internal.saliencevalues");
 
   declareInput(_signal, "signal", "the input audio signal");
   declareOutput(_pitch, "pitch", "the estimated pitch values per frames [Hz]");
@@ -392,13 +392,13 @@ void MultiPitchMelodia::configure() {
 AlgorithmStatus MultiPitchMelodia::process() {
   if (!shouldStop()) return PASS;
 
-  const vector<vector<Real> >& salienceBins = _pool.value<vector<vector<Real> > >("internal.saliencebins");
-  const vector<vector<Real> >& salienceValues = _pool.value<vector<vector<Real> > >("internal.saliencevalues");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& salienceBins = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.saliencebins");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& salienceValues = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.saliencevalues");
 
   // compute pitch contours
-  vector<vector<Real> > contoursBins;
-  vector<vector<Real> > contoursSaliences;
-  vector<Real> contoursStartTimes;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > contoursBins;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > contoursSaliences;
+  ::essentia::VectorEx<Real> contoursStartTimes;
   Real duration;
 
   _pitchContours->input("peakBins").set(salienceBins);
@@ -410,7 +410,7 @@ AlgorithmStatus MultiPitchMelodia::process() {
   _pitchContours->compute();
 
   // compute melody
-  vector<vector<Real> > pitch;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > pitch;
   _pitchContoursMelody->input("contoursBins").set(contoursBins);
   _pitchContoursMelody->input("contoursSaliences").set(contoursSaliences);
   _pitchContoursMelody->input("contoursStartTimes").set(contoursStartTimes);

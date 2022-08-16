@@ -106,7 +106,7 @@ void SourceBase::attachProxy(SourceProxyBase* sproxy) {
   _sproxy = sproxy;
 
   E_DEBUG(EConnectors, "  SourceBase::attachProxy: " << fullName() << "::connectAllSinks");
-  const vector<SinkBase*>& sinks = sproxy->sinks();
+  const ::essentia::VectorEx<SinkBase*>& sinks = sproxy->sinks();
   for (int i=0; i<(int)sinks.size(); i++) {
     connect(*sinks[i]);
   }
@@ -128,7 +128,7 @@ void SourceBase::detachProxy(SourceProxyBase* sproxy) {
   _sproxy = 0;
 }
 
-const vector<SinkBase*>& SourceBase::proxiedSinks() const {
+const ::essentia::VectorEx<SinkBase*>& SourceBase::proxiedSinks() const {
   return _sproxy->sinks();
 }
 

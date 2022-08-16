@@ -34,7 +34,7 @@ const char* InstantPower::description = DOC("This algorithm computes the instant
 "  http://en.wikipedia.org/wiki/Energy_%28signal_processing%29");
 
 void InstantPower::compute() {
-  const std::vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
   if (array.empty()) {
     throw EssentiaException("InstantPower: cannot compute the instant power of an empty array");
   }

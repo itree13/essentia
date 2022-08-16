@@ -69,12 +69,12 @@ void PitchContoursMultiMelody::configure() {
 
 void PitchContoursMultiMelody::compute() {
 
-  const vector<vector<Real> >& contoursBins = _contoursBins.get();
-  const vector<vector<Real> >& contoursSaliences = _contoursSaliences.get();
-  const vector<Real>& contoursStartTimes = _contoursStartTimes.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins = _contoursBins.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursSaliences = _contoursSaliences.get();
+  const ::essentia::VectorEx<Real>& contoursStartTimes = _contoursStartTimes.get();
   const Real& duration = _duration.get();
 
-  vector<vector<Real> >& pitch = _pitch.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& pitch = _pitch.get();
     
   _numberFrames = (size_t) round(duration / _frameDuration);
   _numberContours = contoursBins.size();
@@ -161,7 +161,7 @@ void PitchContoursMultiMelody::compute() {
   Real centBin=0, hertz;
 
   for (size_t i=0; i<_numberFrames; i++) {
-      vector<Real> pitchLocal;
+      ::essentia::VectorEx<Real> pitchLocal;
       for (size_t j=0; j<_contoursSelected.size(); j++) {
           size_t jj = _contoursSelected[j];
           if (_contoursStartIndices[jj] <= i && _contoursEndIndices[jj] >= i) {
@@ -183,7 +183,7 @@ void PitchContoursMultiMelody::compute() {
 }
 
 
-void PitchContoursMultiMelody::computeMelodyPitchMean(const vector<vector<Real> >& contoursBins) {
+void PitchContoursMultiMelody::computeMelodyPitchMean(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins) {
 
   /*
     Additional suggestion by Justin Salamon: implement a soft bias against the lowest frequencies:
@@ -192,7 +192,7 @@ void PitchContoursMultiMelody::computeMelodyPitchMean(const vector<vector<Real> 
     80Hz for the minimum frequency allowed for salience peaks. Therefore the bias is not implemented.
   */
 
-  vector<Real> melodyPitchMeanSmoothed;
+  ::essentia::VectorEx<Real> melodyPitchMeanSmoothed;
   Real sumSalience;
 
   // compute melody pitch mean (weighted mean for all present contours) for each frame
@@ -240,10 +240,10 @@ void PitchContoursMultiMelody::computeMelodyPitchMean(const vector<vector<Real> 
   _melodyPitchMean.resize(_numberFrames + _averagerShift, _melodyPitchMean.back());
   _melodyPitchMean.insert(_melodyPitchMean.begin(), _averagerShift, _melodyPitchMean.front());
   _movingAverage->compute();
-  _melodyPitchMean = vector<Real>(melodyPitchMeanSmoothed.begin() + 2*_averagerShift, melodyPitchMeanSmoothed.end());
+  _melodyPitchMean = ::essentia::VectorEx<Real>(melodyPitchMeanSmoothed.begin() + 2*_averagerShift, melodyPitchMeanSmoothed.end());
 }
 
-void PitchContoursMultiMelody::detectContourDuplicates(const vector<vector<Real> >& contoursBins) {
+void PitchContoursMultiMelody::detectContourDuplicates(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins) {
   /*
     To compare contour trajectories we compute the distance between their pitch values on a per-frame basis for the
     region in which they overlap, and compute the mean over this region. If the mean distance is within 1200+-50 cents,
@@ -346,7 +346,7 @@ void PitchContoursMultiMelody::removePitchOutliers() {
   // compute average melody pitch mean on the intervals corresponding to all contour
   // remove pitch outliers by deleting contours at a distance more that one octave from melody pitch mean
 
-  for (std::vector<size_t>::iterator iter = _contoursSelected.begin(); iter != _contoursSelected.end();) {
+  for (::essentia::VectorEx<size_t>::iterator iter = _contoursSelected.begin(); iter != _contoursSelected.end();) {
     size_t ii = *iter;
     Real contourMelodyPitchMean = accumulate(_melodyPitchMean.begin() + _contoursStartIndices[ii], _melodyPitchMean.begin() + _contoursEndIndices[ii] + 1, 0.0);
     contourMelodyPitchMean /= (_contoursEndIndices[ii] - _contoursStartIndices[ii] + 1);

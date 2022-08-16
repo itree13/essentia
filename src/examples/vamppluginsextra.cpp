@@ -113,7 +113,7 @@ public:
   }
 
   void setParameter(string id, float value) {
-    const vector<ParameterDescriptor>& params = getParameterDescriptors();
+    const ::essentia::VectorEx<ParameterDescriptor>& params = getParameterDescriptors();
     ParameterMap parameterMap;
     float interpolate_value;
     for (int i=0; i < (int)params.size(); i++) {
@@ -151,7 +151,7 @@ public:
 
 class DistributionShape : public VampWrapper  {
   standard::Algorithm* _cmoments;
-  vector<float> _moments;
+  ::essentia::VectorEx<float> _moments;
 public:
 
   DistributionShape(float sr) :
@@ -215,7 +215,7 @@ public:
 
 class BarkShape : public VampWrapper  {
   standard::Algorithm* _cmoments;
-  vector<float> _moments;
+  ::essentia::VectorEx<float> _moments;
 public:
 
   BarkShape(float sr) :
@@ -317,7 +317,7 @@ public:
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computeSpectrum(inputBuffers);
 
-    vector<float> contrast, valleys;
+    ::essentia::VectorEx<float> contrast, valleys;
 
     _algo->input("spectrum").set(_spectrum);
     _algo->output("spectralContrast").set(contrast);
@@ -564,19 +564,19 @@ public:
   FeatureSet getRemainingFeatures() {
     // Time onsets
     TNT::Array2D<Real> detections;
-    vector<Real> hfc = _pool.value<vector<Real> >("hfc_detection");
-    vector<Real> complexdomain = _pool.value<vector<Real> >("complex_detection");
+    ::essentia::VectorEx<Real> hfc = _pool.value<::essentia::VectorEx<Real> >("hfc_detection");
+    ::essentia::VectorEx<Real> complexdomain = _pool.value<::essentia::VectorEx<Real> >("complex_detection");
     detections = TNT::Array2D<Real>(2, hfc.size());
 
     for (int i=0; i<int(hfc.size()); ++i) {
       detections[0][i] = hfc[i];
       detections[1][i] = complexdomain[i];
     }
-    vector<Real> weights(2);
+    ::essentia::VectorEx<Real> weights(2);
     weights[0] = 1.0;
     weights[1] = 1.0;
 
-    vector<Real> onsetTimes;
+    ::essentia::VectorEx<Real> onsetTimes;
 
     standard::Algorithm * onsets = standard::AlgorithmFactory::create("Onsets");
     onsets->input("detections").set(detections);
@@ -588,7 +588,7 @@ public:
     delete onsets;
 
     FeatureSet result;
-    vector<Real>::const_iterator it = onsetTimes.begin();
+    ::essentia::VectorEx<Real>::const_iterator it = onsetTimes.begin();
     while (it != onsetTimes.end()) {
       Feature onset;
       onset.hasTimestamp = true;
@@ -640,7 +640,7 @@ public:
 
     computeSpectrum(inputBuffers);
 
-    vector<Real> melBands;
+    ::essentia::VectorEx<Real> melBands;
     _algo->input("spectrum").set(_spectrum);
     _algo->output("bands").set(melBands);
     _algo->compute();
@@ -655,10 +655,10 @@ public:
   FeatureSet getRemainingFeatures() {
     standard::Algorithm * rhythmTransform = standard::AlgorithmFactory::create("RhythmTransform");
 
-    vector<vector<Real> > rhythm;
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > rhythm;
     FeatureSet result;
 
-    rhythmTransform->input("melBands").set(_pool.value<vector<vector<Real> > >("melbands"));
+    rhythmTransform->input("melBands").set(_pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("melbands"));
     rhythmTransform->output("rhythm").set(rhythm);
     rhythmTransform->compute();
     _pool.remove("melbands");
@@ -765,7 +765,7 @@ public:
         value = getParameter("numberCoefficients") + 1;
       }
     }
-    const vector<ParameterDescriptor>& params = getParameterDescriptors();
+    const ::essentia::VectorEx<ParameterDescriptor>& params = getParameterDescriptors();
     ParameterMap parameterMap;
     for (int i=0; i < (int)params.size(); i++) {
       if (params[i].identifier == id) parameterMap.add(id, value);
@@ -778,7 +778,7 @@ public:
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computeSpectrum(inputBuffers);
 
-    vector<float> bands, mfcc;
+    ::essentia::VectorEx<float> bands, mfcc;
 
     _algo->input("spectrum").set(_spectrum);
     _algo->output("bands").set(bands);
@@ -888,7 +888,7 @@ public:
         value = getParameter("numberCoefficients") + 1;
       }
     }
-    const vector<ParameterDescriptor>& params = getParameterDescriptors();
+    const ::essentia::VectorEx<ParameterDescriptor>& params = getParameterDescriptors();
     ParameterMap parameterMap;
     for (int i=0; i < (int)params.size(); i++) {
       if (params[i].identifier == id) parameterMap.add(id, value);
@@ -901,7 +901,7 @@ public:
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computeSpectrum(inputBuffers);
 
-    vector<float> bands, mfcc;
+    ::essentia::VectorEx<float> bands, mfcc;
 
     _algo->input("spectrum").set(_spectrum);
     _algo->output("bands").set(bands);
@@ -955,7 +955,7 @@ public:
 
     computeSpectrum(inputBuffers);
 
-    vector<float> bands, mfcc;
+    ::essentia::VectorEx<float> bands, mfcc;
 
     _algo->input("spectrum").set(_spectrum);
     _algo->output("bands").set(bands); // not used at all
@@ -976,8 +976,8 @@ public:
 
     FeatureSet result;
 
-    TNT::Array2D<Real> mfcc(transpose(vecvecToArray2D(_pool.value<vector<vector<Real> > >("mfcc"))));
-    vector<Real> segments;
+    TNT::Array2D<Real> mfcc(transpose(vecvecToArray2D(_pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("mfcc"))));
+    ::essentia::VectorEx<Real> segments;
 
     SBic->input("features").set(mfcc);
     SBic->output("segmentation").set(segments);
@@ -1062,9 +1062,9 @@ public:
 
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     RogueVector<float> inputr(const_cast<float*>(inputBuffers[0]), _blockSize);
-    vector<float>& input = static_cast<vector<float>&>(inputr);
+    ::essentia::VectorEx<float>& input = static_cast<::essentia::VectorEx<float>&>(inputr);
 
-    vector<float> LPC, LPCR;
+    ::essentia::VectorEx<float> LPC, LPCR;
 
     _algo->input("frame").set(input);
     _algo->output("lpc").set(LPC);
@@ -1101,7 +1101,7 @@ public:
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computePeaks(inputBuffers);
 
-    vector<float> value(3);
+    ::essentia::VectorEx<float> value(3);
 
     _algo->input("magnitudes").set(_peakmags);
     _algo->input("frequencies").set(_peakfreqs);
@@ -1150,7 +1150,7 @@ public:
     mem.pop_front();
     mem.push_back(salience);
 
-    vector<float> v(mem.begin(), mem.end());
+    ::essentia::VectorEx<float> v(mem.begin(), mem.end());
     float m = mean(v);
     float std = stddev(v, m);
 
@@ -1182,7 +1182,7 @@ public:
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computeSpectrum(inputBuffers);
 
-    vector<float> contrast, valleys;
+    ::essentia::VectorEx<float> contrast, valleys;
 
     _algo->input("spectrum").set(_spectrum);
     _algo->output("spectralContrast").set(contrast);
@@ -1209,7 +1209,7 @@ public:
 
     float decrease = ss_xy / ss_xx;
 
-    vector<float> pclys(2);
+    ::essentia::VectorEx<float> pclys(2);
 
     pclys[0] = m;
     pclys[1] = decrease;
@@ -1249,7 +1249,7 @@ public:
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computePeaks(inputBuffers);
 
-    vector<float> hpcp;
+    ::essentia::VectorEx<float> hpcp;
 
     _algo->input("frequencies").set(_peakfreqs);
     _algo->input("magnitudes").set(_peakmags);
@@ -1295,7 +1295,7 @@ public:
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computePeaks(inputBuffers);
 
-    vector<float> mags;
+    ::essentia::VectorEx<float> mags;
 
     _algo->input("spectrum").set(_spectrum);
     _algo->input("frequencies").set(_peakfreqs);
@@ -1429,7 +1429,7 @@ public:
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computePeaks(inputBuffers);
 
-    vector<float> mags, freqs;
+    ::essentia::VectorEx<float> mags, freqs;
 
     _algo->input("spectrum").set(_spectrum);
     _algo->output("frequencies").set(freqs);
@@ -1562,7 +1562,7 @@ public:
                                      920.0, 1080.0, 1270.0, 1480.0, 1720.0, 2000.0, 2320.0, 2700.0,
                                      3150.0, 3700.0, 4400.0, 5300.0, 6400.0, 7700.0, 9500.0, 12000.0,
                                      15500.0, 20500.0, 27000.0 };
-      std::vector<Real> freqBands;
+      ::essentia::VectorEx<Real> freqBands;
 
       // if 0: by default frequencyBands is configured with bark bands
       switch(int(value))  {
@@ -1589,7 +1589,7 @@ public:
 
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computeSpectrum(inputBuffers);
-    vector<float> bands;
+    ::essentia::VectorEx<float> bands;
     _algo->input("spectrum").set(_spectrum);
     _algo->output("bands").set(bands);
     _algo->compute();
@@ -1599,10 +1599,10 @@ public:
 
   FeatureSet getRemainingFeatures() {
     FeatureSet result;
-    vector<Real> novelty;
+    ::essentia::VectorEx<Real> novelty;
     _noveltyCurve->configure("frameRate", float(_sampleRate)/float(_stepSize),
                              "weightCurveType", _weightCurve);
-    _noveltyCurve->input("frequencyBands").set(_pool.value<vector<vector<Real> > >("bands"));
+    _noveltyCurve->input("frequencyBands").set(_pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("bands"));
     _noveltyCurve->output("novelty").set(novelty);
     _noveltyCurve->compute();
     _pool.remove("bands");
@@ -1763,7 +1763,7 @@ public:
                                      920.0, 1080.0, 1270.0, 1480.0, 1720.0, 2000.0, 2320.0, 2700.0,
                                      3150.0, 3700.0, 4400.0, 5300.0, 6400.0, 7700.0, 9500.0, 12000.0,
                                      15500.0, 20500.0, 27000.0 };
-      std::vector<Real> freqBands;
+      ::essentia::VectorEx<Real> freqBands;
 
       // if 0: by default frequencyBands is configured with bark bands
       switch(int(value))  {
@@ -1790,7 +1790,7 @@ public:
 
   FeatureSet process(const float *const *inputBuffers, Vamp::RealTime) {
     computeSpectrum(inputBuffers);
-    vector<float> bands;
+    ::essentia::VectorEx<float> bands;
     _algo->input("spectrum").set(_spectrum);
     _algo->output("bands").set(bands);
     _algo->compute();
@@ -1801,10 +1801,10 @@ public:
   FeatureSet getRemainingFeatures() {
 
     FeatureSet result;
-    vector<Real> novelty;
+    ::essentia::VectorEx<Real> novelty;
     _noveltyCurve->configure("frameRate", float(_sampleRate)/float(_stepSize),
                              "weightCurveType", _weightCurve);
-    _noveltyCurve->input("frequencyBands").set(_pool.value<vector<vector<Real> > >("bands"));
+    _noveltyCurve->input("frequencyBands").set(_pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("bands"));
     _noveltyCurve->output("novelty").set(novelty);
     _noveltyCurve->compute();
     _pool.remove("bands");
@@ -1836,10 +1836,10 @@ public:
     _pool.remove("ticksMagnitude");
 
     Real stepTime = Real(_stepSize)/Real(_sampleRate);
-    const vector<Real> & sinusoid = _pool.value<vector<Real> >("sinusoid");
-    const vector<Real> & ticks = _pool.value<vector<Real> > ("ticks");
-    const TNT::Array2D<Real>& tempogramMatrix = _pool.value<vector<TNT::Array2D<Real> > >("tempogram")[0];
-    const vector<vector<Real> > tempogram = array2DToVecvec(tempogramMatrix);
+    const ::essentia::VectorEx<Real> & sinusoid = _pool.value<::essentia::VectorEx<Real> >("sinusoid");
+    const ::essentia::VectorEx<Real> & ticks = _pool.value<::essentia::VectorEx<Real> > ("ticks");
+    const TNT::Array2D<Real>& tempogramMatrix = _pool.value<::essentia::VectorEx<TNT::Array2D<Real> > >("tempogram")[0];
+    const ::essentia::VectorEx<::essentia::VectorEx<Real> > tempogram = array2DToVecvec(tempogramMatrix);
     int tempogramSize = tempogram.size();
 
     for (int i=0; i<(int)sinusoid.size(); i++) {
@@ -1851,7 +1851,7 @@ public:
       if (i>=tempogramSize) continue;
       result[1].push_back(makeFeature(tempogram[i]));
     }
-    vector<Real>::const_iterator it = ticks.begin();
+    ::essentia::VectorEx<Real>::const_iterator it = ticks.begin();
     while (it != ticks.end()) {
       Feature f;
       f.hasTimestamp=true;

@@ -35,7 +35,7 @@ class MinMax : public Algorithm {
 
   OpType typeFromString(const std::string& name) const;
 
-  Input<std::vector<Real> > _input;
+  Input<::essentia::VectorEx<Real> > _input;
   Output<Real> _value;
   Output<int> _index;
 
@@ -75,7 +75,7 @@ namespace streaming {
 class MinMax : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _input;
+  Sink<::essentia::VectorEx<Real> > _input;
   Source<Real> _value;
   Source<int> _index;
 

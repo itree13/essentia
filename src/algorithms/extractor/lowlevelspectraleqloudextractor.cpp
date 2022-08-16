@@ -176,26 +176,26 @@ void LowLevelSpectralEqloudExtractor::createInnerNetwork() {
 }
 
 void LowLevelSpectralEqloudExtractor::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
-  vector<Real> & dissonance = _dissonance.get();
-  vector<vector<Real> > & sccoeffs = _sccoeffs.get();
-  vector<vector<Real> > & scvalleys = _scvalleys.get();
-  vector<Real> & centroid = _centroid.get();
-  vector<Real> & kurtosis = _kurtosis.get();
-  vector<Real> & skewness = _skewness.get();
-  vector<Real> & spread = _spread.get();
+  ::essentia::VectorEx<Real> & dissonance = _dissonance.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > & sccoeffs = _sccoeffs.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > & scvalleys = _scvalleys.get();
+  ::essentia::VectorEx<Real> & centroid = _centroid.get();
+  ::essentia::VectorEx<Real> & kurtosis = _kurtosis.get();
+  ::essentia::VectorEx<Real> & skewness = _skewness.get();
+  ::essentia::VectorEx<Real> & spread = _spread.get();
 
-  dissonance = _pool.value<vector<Real> >("internal.dissonance");
-  sccoeffs   = _pool.value<vector<vector<Real> > >("internal.sccoeffs");
-  scvalleys  = _pool.value<vector<vector<Real> > >("internal.scvalleys");
-  centroid   = _pool.value<vector<Real> >("internal.centroid");
-  kurtosis   = _pool.value<vector<Real> >("internal.kurtosis");
-  skewness   = _pool.value<vector<Real> >("internal.skewness");
-  spread     = _pool.value<vector<Real> >("internal.spread");
+  dissonance = _pool.value<::essentia::VectorEx<Real> >("internal.dissonance");
+  sccoeffs   = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.sccoeffs");
+  scvalleys  = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.scvalleys");
+  centroid   = _pool.value<::essentia::VectorEx<Real> >("internal.centroid");
+  kurtosis   = _pool.value<::essentia::VectorEx<Real> >("internal.kurtosis");
+  skewness   = _pool.value<::essentia::VectorEx<Real> >("internal.skewness");
+  spread     = _pool.value<::essentia::VectorEx<Real> >("internal.spread");
 }
 
 } // namespace standard

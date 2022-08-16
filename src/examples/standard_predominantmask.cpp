@@ -26,7 +26,7 @@ using namespace essentia;
 using namespace standard;
 
 
-void scaleAudioVector(vector<Real> &buffer, const Real scale)
+void scaleAudioVector(::essentia::VectorEx<Real> &buffer, const Real scale)
 {
 for (int i=0; i < int(buffer.size()); ++i){
     buffer[i] = scale * buffer[i];
@@ -120,16 +120,16 @@ int main(int argc, char* argv[]) {
 
 
 
-  vector<Real> pitchIn;
-  vector<Real> pitchConf;
-  vector<Real> audio;
-  vector<Real> eqaudio;
-  vector<Real> frame;
-  vector<Real> wframe;
-  vector<complex<Real> > fftframe;
-  vector<complex<Real> > fftmaskframe;
-  vector<Real> ifftframe;
-  vector<Real> alladuio; // concatenated audio file output
+  ::essentia::VectorEx<Real> pitchIn;
+  ::essentia::VectorEx<Real> pitchConf;
+  ::essentia::VectorEx<Real> audio;
+  ::essentia::VectorEx<Real> eqaudio;
+  ::essentia::VectorEx<Real> frame;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<complex<Real> > fftframe;
+  ::essentia::VectorEx<complex<Real> > fftmaskframe;
+  ::essentia::VectorEx<Real> ifftframe;
+  ::essentia::VectorEx<Real> alladuio; // concatenated audio file output
  // Real confidence;
 
   // analysis
@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
   window->output("frame").set(wframe);
 
   // set spectrum:
-  vector<Real> spec;
+  ::essentia::VectorEx<Real> spec;
   spectrum->input("frame").set(wframe);
   spectrum->output("spectrum").set(spec);
 
@@ -173,7 +173,7 @@ int main(int argc, char* argv[]) {
   ifft->output("frame").set(ifftframe);
 
 
-  vector<Real> audioOutput;
+  ::essentia::VectorEx<Real> audioOutput;
 
   overlapAdd->input("signal").set(ifftframe); // or frame ?
   overlapAdd->output("signal").set(audioOutput);

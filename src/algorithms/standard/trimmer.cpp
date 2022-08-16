@@ -41,8 +41,8 @@ void Trimmer::configure() {
 }
 
 void Trimmer::compute() {
-  const vector<Real>& input = _input.get();
-  vector<Real>& output = _output.get();
+  const ::essentia::VectorEx<Real>& input = _input.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
   int size = input.size();
 
   if (_startIndex < 0) _startIndex = 0; // should never happen
@@ -131,8 +131,8 @@ AlgorithmStatus Trimmer::process() {
 
 
   // get the audio input and copy it to the output
-  const vector<Real>& input = _input.tokens();
-  vector<Real>& output = _output.tokens();
+  const ::essentia::VectorEx<Real>& input = _input.tokens();
+  ::essentia::VectorEx<Real>& output = _output.tokens();
 
 
   if (_consumed >= _startIndex && _consumed < _endIndex) {

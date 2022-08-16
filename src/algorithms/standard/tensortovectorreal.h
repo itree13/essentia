@@ -30,7 +30,7 @@ namespace streaming {
 class TensorToVectorReal : public Algorithm {
  protected:
   Sink<Tensor<Real> > _tensor;
-  Source<std::vector<Real> > _frame;
+  Source<::essentia::VectorEx<Real> > _frame;
 
   int _timeAxis;
   int _batchSize;

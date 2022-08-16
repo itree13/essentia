@@ -28,9 +28,9 @@ namespace standard {
 class Vibrato : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _pitch;
-  Output<std::vector<Real> > _vibratoFrequency;
-  Output<std::vector<Real> > _vibratoExtend;
+  Input<::essentia::VectorEx<Real> > _pitch;
+  Output<::essentia::VectorEx<Real> > _vibratoFrequency;
+  Output<::essentia::VectorEx<Real> > _vibratoExtend;
     
   Algorithm* frameCutter;
   Algorithm* window;
@@ -90,9 +90,9 @@ namespace streaming {
 class Vibrato : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _pitch;
-  Source<std::vector<Real> > _vibratoFrequency;
-  Source<std::vector<Real> > _vibratoExtend;
+  Sink<::essentia::VectorEx<Real> > _pitch;
+  Source<::essentia::VectorEx<Real> > _vibratoFrequency;
+  Source<::essentia::VectorEx<Real> > _vibratoExtend;
 
  public:
   Vibrato() {

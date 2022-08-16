@@ -28,9 +28,9 @@ namespace standard {
 class Beatogram : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _loudness;
-  Input<std::vector<std::vector<Real> > > _loudnessBandRatio;
-  Output<std::vector<std::vector<Real> > > _beatogram;
+  Input<::essentia::VectorEx<Real> > _loudness;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _loudnessBandRatio;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _beatogram;
 
   int _windowSize;
 
@@ -68,9 +68,9 @@ class Beatogram : public StreamingAlgorithmWrapper {
   // TODO: it should be implemented apropriately for a pure streaming algo
 
  protected:
-  Sink<std::vector<Real> > _loudness;
-  Sink<std::vector<std::vector<Real> > > _loudnessBandRatio;
-  Source<std::vector<std::vector<Real> > > _beatogram;
+  Sink<::essentia::VectorEx<Real> > _loudness;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _loudnessBandRatio;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _beatogram;
 
  public:
   Beatogram() {

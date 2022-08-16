@@ -28,8 +28,8 @@ namespace standard {
 class Envelope : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _envelope;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _envelope;
 
  public:
   Envelope() {

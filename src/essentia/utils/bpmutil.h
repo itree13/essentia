@@ -37,7 +37,7 @@ Real bpmToLag(Real bpm, Real sampleRate, Real hopSize) {
 }
 
 inline
-int longestChain(const std::vector<Real>& dticks, int startpos, Real period, Real tolerance) {
+int longestChain(const ::essentia::VectorEx<Real>& dticks, int startpos, Real period, Real tolerance) {
   int pos = startpos;
   Real ubound = period*(1+tolerance);
   Real lbound = period*(1-tolerance);
@@ -111,10 +111,10 @@ Real greatestCommonDivisor(Real x, Real y, Real epsilon) {
 
 
 inline
-std::vector<Real> roundBpms(const std::vector<Real>& bpms) {
+::essentia::VectorEx<Real> roundBpms(const ::essentia::VectorEx<Real>& bpms) {
   Real epsilon = 3; // 3%
   Real mainBpm=bpms[0];
-  std::vector<Real> harmonicBpms;
+  ::essentia::VectorEx<Real> harmonicBpms;
   harmonicBpms.reserve(bpms.size());
   for (int i=0; i<int(bpms.size()); i++) {
     Real ratio=bpms[0]/mainBpm;
@@ -137,12 +137,12 @@ std::vector<Real> roundBpms(const std::vector<Real>& bpms) {
 
 // original postprocessticks from essentia 1.0
 inline
-std::vector<Real> postProcessTicks(const std::vector<Real>& origticks) {
+::essentia::VectorEx<Real> postProcessTicks(const ::essentia::VectorEx<Real>& origticks) {
   if (origticks.size() < 3) return origticks;
 
   // find the most likely beat period
   const int nticks = origticks.size();
-  std::vector<Real> dticks(nticks-1);
+  ::essentia::VectorEx<Real> dticks(nticks-1);
 
   for (int i=0; i<nticks-1; i++) dticks[i] = origticks[i+1] - origticks[i];
 
@@ -156,8 +156,8 @@ std::vector<Real> postProcessTicks(const std::vector<Real>& origticks) {
   }
 
   const int nbins = 100;
-  std::vector<int> dist(nbins);
-  std::vector<Real> distx(nbins);
+  ::essentia::VectorEx<int> dist(nbins);
+  ::essentia::VectorEx<Real> distx(nbins);
 
   hist(&dticks[0], nticks-1, &dist[0], &distx[0], nbins);
 
@@ -249,20 +249,20 @@ std::vector<Real> postProcessTicks(const std::vector<Real>& origticks) {
   }
 
 
-  return std::vector<Real>(ticks.begin(), ticks.end());
+  return ::essentia::VectorEx<Real>(ticks.begin(), ticks.end());
 }
 
   // modified version of the postprocessticks from tempotapticks, so it does not
 // tend to favour fast bpms
 inline
-std::vector<Real> postProcessTicks(const std::vector<Real>& origticks,
-                                   const std::vector<Real>& ticksAmplitudes,
+::essentia::VectorEx<Real> postProcessTicks(const ::essentia::VectorEx<Real>& origticks,
+                                   const ::essentia::VectorEx<Real>& ticksAmplitudes,
                                    const Real& preferredPeriod) {
   if (origticks.size() < 3) return origticks;
 
   // find the most likely beat period
   const int nticks = origticks.size();
-  std::vector<Real> dticks(nticks-1);
+  ::essentia::VectorEx<Real> dticks(nticks-1);
 
   for (int i=0; i<nticks-1; i++) dticks[i] = origticks[i+1] - origticks[i];
 
@@ -276,8 +276,8 @@ std::vector<Real> postProcessTicks(const std::vector<Real>& origticks,
   }
 
   const int nbins = 100;
-  std::vector<int> dist(nbins);
-  std::vector<Real> distx(nbins);
+  ::essentia::VectorEx<int> dist(nbins);
+  ::essentia::VectorEx<Real> distx(nbins);
 
   hist(&dticks[0], dticks.size(), &dist[0], &distx[0], nbins);
 
@@ -312,7 +312,7 @@ std::vector<Real> postProcessTicks(const std::vector<Real>& origticks,
   // if the targetPeriod is differs too much from the preferred period we
   // search for the tick with max amplitude and take that as the reference tick
   if (targetPeriod < 0.95*preferredPeriod || targetPeriod > 1.05*preferredPeriod) {
-    idx = idx + argmax(std::vector<Real>(ticksAmplitudes.begin()+idx, ticksAmplitudes.begin()+idx+maxl+1));
+    idx = idx + argmax(::essentia::VectorEx<Real>(ticksAmplitudes.begin()+idx, ticksAmplitudes.begin()+idx+maxl+1));
     maxl = 0;
     targetPeriod = preferredPeriod;
     //std::cout << "Targets differ too much!. New target period will be the preferred one " << targetPeriod << std::endl;
@@ -403,7 +403,7 @@ std::vector<Real> postProcessTicks(const std::vector<Real>& origticks,
     }
   }
 
-  return std::vector<Real>(ticks.begin(), ticks.end());
+  return ::essentia::VectorEx<Real>(ticks.begin(), ticks.end());
 }
 } // namespace essentia
 

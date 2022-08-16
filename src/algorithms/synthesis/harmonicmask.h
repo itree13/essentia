@@ -28,9 +28,9 @@ namespace standard {
 class HarmonicMask : public Algorithm {
 
  private:
-    Input<std::vector<std::complex<Real> > > _fft;
+    Input<::essentia::VectorEx<std::complex<Real> > > _fft;
     Input<Real> _pitch;
-    Output<std::vector<std::complex<Real> > > _outfft;
+    Output<::essentia::VectorEx<std::complex<Real> > > _outfft;
 
 
   int _sampleRate;
@@ -85,9 +85,9 @@ class HarmonicMask : public StreamingAlgorithmWrapper {
   Real _attenuationLin;
 
 
-  Sink<std::vector<std::complex<Real> > > _fft; // input
+  Sink<::essentia::VectorEx<std::complex<Real> > > _fft; // input
   Sink<Real> _pitch; // input  for YinFFT
-  Source<std::vector<std::complex<Real> > > _outfft;
+  Source<::essentia::VectorEx<std::complex<Real> > > _outfft;
 
 
  public:

@@ -41,9 +41,9 @@ class BinaryOperatorStream : public Algorithm {
 
   OpType typeFromString(const std::string& name) const;
 
-  Input<std::vector<Real> > _input1;
-  Input<std::vector<Real> > _input2;
-  Output<std::vector<Real> > _output;
+  Input<::essentia::VectorEx<Real> > _input1;
+  Input<::essentia::VectorEx<Real> > _input2;
+  Output<::essentia::VectorEx<Real> > _output;
 
   OpType _type;
 

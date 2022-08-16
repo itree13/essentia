@@ -35,8 +35,8 @@ const char* MovingAverage::description = DOC("This algorithm implements a FIR Mo
 void MovingAverage::configure() {
   int delay = parameter("size").toInt();
 
-  vector<Real> b(delay, 1.0/delay);
-  vector<Real> a(1, 1.0);
+  ::essentia::VectorEx<Real> b(delay, 1.0/delay);
+  ::essentia::VectorEx<Real> a(1, 1.0);
 
   _filter->configure("numerator", b, "denominator", a);
 }

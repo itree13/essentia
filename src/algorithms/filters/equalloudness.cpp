@@ -46,10 +46,10 @@ void EqualLoudness::configure() {
     throw EssentiaException("EqualLoudness: the sample rate is neither 44100, 48000, 32000, 16000 nor 8000 Hz, it must be one of these values");
   }
 
-  vector<Real> By(11, 0.0);
-  vector<Real> Ay(11, 0.0);
-  vector<Real> Bb(3, 0.0);
-  vector<Real> Ab(3, 0.0);
+  ::essentia::VectorEx<Real> By(11, 0.0);
+  ::essentia::VectorEx<Real> Ay(11, 0.0);
+  ::essentia::VectorEx<Real> Bb(3, 0.0);
+  ::essentia::VectorEx<Real> Ab(3, 0.0);
 
   if (fs == 44100.0) {
 

@@ -30,7 +30,7 @@ const char* MaxMagFreq::description = DOC("This algorithm computes the frequency
 
 void MaxMagFreq::compute() {
 
-  const std::vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   Real& maxMagFreq = _maxMagFreq.get();
 
   if (spectrum.size() < 2) {

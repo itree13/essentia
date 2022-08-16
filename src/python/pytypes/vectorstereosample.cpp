@@ -24,7 +24,7 @@ using namespace essentia;
 DEFINE_PYTHON_TYPE(VectorStereoSample);
 
 // converts a vector of size n to a numpy array of dimension n x 2
-PyObject* VectorStereoSample::toPythonCopy(const vector<StereoSample>* v) {
+PyObject* VectorStereoSample::toPythonCopy(const ::essentia::VectorEx<StereoSample>* v) {
   npy_intp dims[2] = {0, 0};
   dims[0] = v->size();
   dims[1] = 2;
@@ -61,7 +61,7 @@ void* VectorStereoSample::fromPythonCopy(PyObject* obj) {
 
   Py_ssize_t total = PyArray_DIM(obj, 0);
   PyArrayObject* arr = (PyArrayObject*)obj;
-  vector<StereoSample>* result = new vector<StereoSample>(total);
+  ::essentia::VectorEx<StereoSample>* result = new ::essentia::VectorEx<StereoSample>(total);
 
   for (int i=0; i<int(total); ++i) {
     Real* left = (Real*)(arr->data + i*arr->strides[0]);

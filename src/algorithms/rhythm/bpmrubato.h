@@ -29,11 +29,11 @@ class BpmRubato : public Algorithm {
 
  private:
   // input array of features
-  Input<std::vector<Real> > _beats;
+  Input<::essentia::VectorEx<Real> > _beats;
   // output vector for start timestamps
-  Output<std::vector<Real> > _rubatoStart;
+  Output<::essentia::VectorEx<Real> > _rubatoStart;
   // output vector for stop timestamps
-  Output<std::vector<Real> > _rubatoStop;
+  Output<::essentia::VectorEx<Real> > _rubatoStop;
   Output<int> _rubatoNumber;
   Real _tolerance; // variation in % of the current bpm
   Real _shortestRegion;
@@ -76,9 +76,9 @@ namespace streaming {
 class BpmRubato : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _beats;
-  Source<std::vector<Real> > _rubatoStart;
-  Source<std::vector<Real> > _rubatoStop;
+  Sink<::essentia::VectorEx<Real> > _beats;
+  Source<::essentia::VectorEx<Real> > _rubatoStart;
+  Source<::essentia::VectorEx<Real> > _rubatoStop;
   Source<int> _rubatoNumber;
 
  public:

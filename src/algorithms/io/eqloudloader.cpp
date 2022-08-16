@@ -114,7 +114,7 @@ void EqloudLoader::configure() {
 }
 
 void EqloudLoader::compute() {
-  vector<AudioSample>& audio = _audio.get();
+  ::essentia::VectorEx<AudioSample>& audio = _audio.get();
 
   // _audio.reserve(sth_meaningful);
 

@@ -28,9 +28,9 @@ namespace standard {
 class PitchSalienceFunctionPeaks : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _salienceFunction;
-  Output<std::vector<Real> > _salienceBins;
-  Output<std::vector<Real> > _salienceValues;
+  Input<::essentia::VectorEx<Real> > _salienceFunction;
+  Output<::essentia::VectorEx<Real> > _salienceBins;
+  Output<::essentia::VectorEx<Real> > _salienceValues;
 
   Algorithm* _peakDetection;
 
@@ -75,9 +75,9 @@ namespace streaming {
 class PitchSalienceFunctionPeaks : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _salienceFunction;
-  Source<std::vector<Real> > _salienceBins;
-  Source<std::vector<Real> > _salienceValues;
+  Sink<::essentia::VectorEx<Real> > _salienceFunction;
+  Source<::essentia::VectorEx<Real> > _salienceBins;
+  Source<::essentia::VectorEx<Real> > _salienceValues;
 
  public:
   PitchSalienceFunctionPeaks() {

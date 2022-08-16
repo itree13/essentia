@@ -46,7 +46,7 @@ void ZeroCrossingRate::configure() {
 
 void ZeroCrossingRate::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& zeroCrossingRate = _zeroCrossingRate.get();
 
   if (signal.empty()) throw EssentiaException("ZeroCrossingRate: the input signal is empty");

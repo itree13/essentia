@@ -25,19 +25,19 @@ using namespace essentia;
 using namespace std;
 
 #define INIT_TYPE(CppType, initMethod) { \
-  vector<CppType>* data = reinterpret_cast<vector<CppType>*>(initMethod(input)); \
+  ::essentia::VectorEx<CppType>* data = reinterpret_cast<::essentia::VectorEx<CppType>*>(initMethod(input)); \
   self->algo = reinterpret_cast<streaming::Algorithm*>(new streaming::VectorInput<CppType>(data)); \
   return 0; \
 }
 
 #define INIT_TYPE_OWNDATA(CppType, initMethod) { \
-  vector<CppType>* data = reinterpret_cast<vector<CppType>*>(initMethod(input)); \
+  ::essentia::VectorEx<CppType>* data = reinterpret_cast<::essentia::VectorEx<CppType>*>(initMethod(input)); \
   self->algo = reinterpret_cast<streaming::Algorithm*>(new streaming::VectorInput<CppType>(data, true)); \
   return 0; \
 }
 
 static int vectorinput_init(PyStreamingAlgorithm* self, PyObject *args, PyObject *kwds) {
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
   if (argsV.size() != 2) {
     PyErr_SetString(PyExc_ValueError, "VectorInput.__init__ requires 2 data arguments (value, type)");
     return -1;
@@ -65,12 +65,12 @@ static int vectorinput_init(PyStreamingAlgorithm* self, PyObject *args, PyObject
     case VECTOR_STEREOSAMPLE:   INIT_TYPE_OWNDATA(StereoSample,            VectorStereoSample::fromPythonCopy);
     case VECTOR_MATRIX_REAL:    INIT_TYPE_OWNDATA(TNT::Array2D<Real>,      VectorMatrixReal::fromPythonCopy);
     case VECTOR_TENSOR_REAL:    INIT_TYPE_OWNDATA(Tensor<Real>,            VectorTensorReal::fromPythonCopy);
-    case VECTOR_VECTOR_REAL:    INIT_TYPE_OWNDATA(vector<Real>,            VectorVectorReal::fromPythonCopy);
-    case VECTOR_VECTOR_COMPLEX: INIT_TYPE_OWNDATA(vector<complex< Real> >, VectorVectorComplex::fromPythonCopy);
+    case VECTOR_VECTOR_REAL:    INIT_TYPE_OWNDATA(::essentia::VectorEx<Real>,            VectorVectorReal::fromPythonCopy);
+    case VECTOR_VECTOR_COMPLEX: INIT_TYPE_OWNDATA(::essentia::VectorEx<complex< Real> >, VectorVectorComplex::fromPythonCopy);
 
     case MATRIX_REAL: {
         TNT::Array2D<Real>* data = reinterpret_cast<TNT::Array2D<Real>*>(MatrixReal::fromPythonCopy(input));
-        self->algo = reinterpret_cast<streaming::Algorithm*>(new streaming::VectorInput<vector<Real> >(*data));
+        self->algo = reinterpret_cast<streaming::Algorithm*>(new streaming::VectorInput<::essentia::VectorEx<Real> >(*data));
         // VectorInput ctor with TNT::Array2D makes a copy of the data, so we need to delete it here
         delete data;
         return 0;

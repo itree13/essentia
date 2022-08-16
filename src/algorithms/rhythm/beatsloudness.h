@@ -30,7 +30,7 @@ class BeatsLoudness : public AlgorithmComposite {
  protected:
   SinkProxy<Real> _signal;
   SourceProxy<Real> _loudness;
-  SourceProxy<std::vector<Real> > _loudnessBandRatio;
+  SourceProxy<::essentia::VectorEx<Real> > _loudnessBandRatio;
 
   Algorithm* _slicer, *_beatLoud;
 
@@ -46,7 +46,7 @@ class BeatsLoudness : public AlgorithmComposite {
     Real defaultBands[] = { 0.0, 200.0, 400.0, 800.0, 1600.0, 3200.0, 22000.0 };
     declareParameter("sampleRate", "the audio sampling rate [Hz]",
                      "(0,inf)", 44100.);
-    declareParameter("beats", "the list of beat positions (each position is in seconds)", "", std::vector<Real>());
+    declareParameter("beats", "the list of beat positions (each position is in seconds)", "", ::essentia::VectorEx<Real>());
     declareParameter("beatWindowDuration", "window size for the beats' onset detection (the windows are centered around the positions in 'beats') [s]", "(0,inf)", 0.1);
     // 50ms default value estimation after checking some drums' kicks duration on Freesound
     declareParameter("beatDuration", "window size for the beats' energy computation (the windows start at the onset)[s]", "(0,inf)", 0.05);
@@ -79,9 +79,9 @@ namespace standard {
 class BeatsLoudness : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _loudness;
-  Output<std::vector<std::vector<Real> > > _loudnessBand;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _loudness;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _loudnessBand;
 
   streaming::Algorithm* _beatLoud;
   streaming::VectorInput<Real>* _vectorInput;
@@ -101,7 +101,7 @@ class BeatsLoudness : public Algorithm {
   void declareParameters() {
     Real defaultBands[] = { 20.0, 150.0, 400.0, 3200.0, 7000.0, 22000.0};
     declareParameter("sampleRate", "the audio sampling rate [Hz]", "(0,inf)", 44100.);
-    declareParameter("beats", "the list of beat positions (each position is in seconds)", "", std::vector<Real>());
+    declareParameter("beats", "the list of beat positions (each position is in seconds)", "", ::essentia::VectorEx<Real>());
     declareParameter("beatWindowDuration", "the duration of the window in which to look for the beginning of the beat (centered around the positions in 'beats') [s]", "(0,inf)", 0.1);
     // 50ms default value estimation after checking some drums' kicks duration
     // on Freesound

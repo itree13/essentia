@@ -26,8 +26,8 @@ typedef essentia::Parameter Param;
 
 class Parameter : public ::testing::Test {
  protected:
-  vector<Real> _vr1, _vr2, _vr3;
-  vector<string> _vs1, _vs2, _vs3;
+  ::essentia::VectorEx<Real> _vr1, _vr2, _vr3;
+  ::essentia::VectorEx<string> _vs1, _vs2, _vs3;
 
   virtual void SetUp() {
     // _vr1 and _vr2 must be equal
@@ -127,11 +127,11 @@ TEST_F(Parameter, EqualityMapReal) {
 }
 
 TEST_F(Parameter, EqualityMapVectorReal) {
-  map<string, vector<Real> > m1;
+  map<string, ::essentia::VectorEx<Real> > m1;
   m1["foo"] = _vr1;
   m1["bar"] = _vr3;
 
-  map<string, vector<Real> > m2;
+  map<string, ::essentia::VectorEx<Real> > m2;
   m2["foo"] = _vr2; // should be equivalent to m1["foo"]
   m2["bar"] = _vr3;
 
@@ -139,17 +139,17 @@ TEST_F(Parameter, EqualityMapVectorReal) {
 }
 
 TEST_F(Parameter, MapVectorIntToString) {
-  vector<int> v1(3);
+  ::essentia::VectorEx<int> v1(3);
   v1[0] = 69;
   v1[1] = -69;
   v1[2] = 101;
 
-  vector<int> v2(3);
+  ::essentia::VectorEx<int> v2(3);
   v2[0] = 123;
   v2[1] = 456;
   v2[2] = -789;
 
-  map<string, vector<int> > m1;
+  map<string, ::essentia::VectorEx<int> > m1;
   m1["foo"] = v1;
   m1["bar"] = v2;
 
@@ -208,7 +208,7 @@ TEST_F(Parameter, ParamToStream) {
   Param intP(100);
   Param realP(10.02);
   Param boolP(true);
-  vector<Real> v(10, 1.0);
+  ::essentia::VectorEx<Real> v(10, 1.0);
   Param vecP(v);
   map<string, Real> m;
   m["foo"] = 1.0;

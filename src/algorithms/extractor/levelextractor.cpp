@@ -103,14 +103,14 @@ void LevelExtractor::createInnerNetwork() {
 
 
  void LevelExtractor::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
-  vector<Real>& loudness = _loudness.get();
+  ::essentia::VectorEx<Real>& loudness = _loudness.get();
 
-  loudness = _pool.value<vector<Real> >("internal.loudness");
+  loudness = _pool.value<::essentia::VectorEx<Real> >("internal.loudness");
 }
 
 } // namespace standard

@@ -49,7 +49,7 @@ void printHelp(string fileName) {
     creditLibAV();
 }
 
-vector<string> flags({"-h", "--help",
+::essentia::VectorEx<string> flags({"-h", "--help",
                       "-l", "--list-nodes",
                       "-p", "--patchwise",
                       "-o", "--output-node"});

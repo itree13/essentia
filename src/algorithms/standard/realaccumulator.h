@@ -29,8 +29,8 @@ namespace streaming {
 class RealAccumulator : public AlgorithmComposite {
  protected:
   SinkProxy<Real> _value;
-  Source<std::vector<Real> > _array;
-  std::vector<Real> _accu;
+  Source<::essentia::VectorEx<Real> > _array;
+  ::essentia::VectorEx<Real> _accu;
   Algorithm* _vectorOutput;
 
  public:

@@ -52,7 +52,7 @@ void ReplayGain::reset() {
 }
 
 void ReplayGain::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& gain = _gain.get();
 
   // we do not have enough input data to construct a single frame...
@@ -62,14 +62,14 @@ void ReplayGain::compute() {
   }
 
   // 1. Equal loudness filter
-  vector<Real> eqloudSignal;
+  ::essentia::VectorEx<Real> eqloudSignal;
   _eqloudFilter->input("signal").set(signal);
   _eqloudFilter->output("signal").set(eqloudSignal);
   _eqloudFilter->compute();
 
   // 2. RMS Energy calculation
   int nFrames = (int)eqloudSignal.size() / _rmsWindowSize;
-  vector<Real> rms(nFrames, 0.0);
+  ::essentia::VectorEx<Real> rms(nFrames, 0.0);
 
   for (int i = 0; i < nFrames; i++) {
     Real vrms = 0.0;
@@ -172,7 +172,7 @@ AlgorithmStatus ReplayGain::process() {
   if (!shouldStop()) return PASS;
 
   // it's our pool, so it doesn't matter that we change the order of the values inside
-  vector<Real>& powerValues = const_cast<vector<Real>&>(_pool.value<vector<Real> >("internal.power"));
+  ::essentia::VectorEx<Real>& powerValues = const_cast<::essentia::VectorEx<Real>&>(_pool.value<::essentia::VectorEx<Real> >("internal.power"));
 
   // 3. Statistical processing
   sort(powerValues.begin(), powerValues.end());

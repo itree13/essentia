@@ -35,14 +35,14 @@ class TensorflowPredict : public Algorithm {
   Output<Pool> _poolOut;
 
   std::string _graphFilename;
-  std::vector<std::string> _inputNames;
-  std::vector<std::string> _outputNames;
+  ::essentia::VectorEx<std::string> _inputNames;
+  ::essentia::VectorEx<std::string> _outputNames;
 
-  std::vector<TF_Tensor*> _inputTensors;
-  std::vector<TF_Tensor*> _outputTensors;
+  ::essentia::VectorEx<TF_Tensor*> _inputTensors;
+  ::essentia::VectorEx<TF_Tensor*> _outputTensors;
 
-  std::vector<TF_Output> _inputNodes;
-  std::vector<TF_Output> _outputNodes;
+  ::essentia::VectorEx<TF_Output> _inputNodes;
+  ::essentia::VectorEx<TF_Output> _outputNodes;
 
   size_t _nInputs;
   size_t _nOutputs;
@@ -54,7 +54,7 @@ class TensorflowPredict : public Algorithm {
   TF_Session* _session;
 
   std::string _savedModel;
-  std::vector<std::string> _tags;
+  ::essentia::VectorEx<std::string> _tags;
   TF_Buffer* _runOptions;
 
   bool _isTraining;
@@ -69,12 +69,12 @@ class TensorflowPredict : public Algorithm {
   TF_Tensor* TensorToTF(const Tensor<Real>& tensorIn);
   const Tensor<Real> TFToTensor(const TF_Tensor* tensor, TF_Output node);
   TF_Output graphOperationByName(const std::string nodeName);
-  std::vector<std::string> nodeNames();
+  ::essentia::VectorEx<std::string> nodeNames();
 
   inline std::string availableNodesInfo() {
-    std::vector<std::string> nodes = nodeNames();
+    ::essentia::VectorEx<std::string> nodes = nodeNames();
     std::string info = "TensorflowPredict: Available node names are:\n";
-    for (std::vector<std::string>::const_iterator i = nodes.begin(); i != nodes.end() - 1; ++i) info += *i + ", ";
+    for (::essentia::VectorEx<std::string>::const_iterator i = nodes.begin(); i != nodes.end() - 1; ++i) info += *i + ", ";
     return info + nodes.back() + ".\n\nReconfigure this algorithm with valid node names as inputs and outputs before starting the processing.";
   }
 
@@ -99,7 +99,7 @@ class TensorflowPredict : public Algorithm {
 
   void declareParameters() {
     const char* defaultTagsC[] = { "serve" };
-    std::vector<std::string> defaultTags = arrayToVector<std::string>(defaultTagsC);
+    ::essentia::VectorEx<std::string> defaultTags = arrayToVector<std::string>(defaultTagsC);
 
     declareParameter("graphFilename", "the name of the file from which to load the TensorFlow graph", "", "");
     declareParameter("savedModel", "the name of the TensorFlow SavedModel. Overrides parameter `graphFilename`", "", "");

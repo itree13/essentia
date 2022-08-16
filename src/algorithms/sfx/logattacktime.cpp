@@ -42,7 +42,7 @@ void LogAttackTime::configure() {
 
 void LogAttackTime::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& logAttackTime = _logAttackTime.get();
   Real& attackStart = _attackStart.get();
   Real& attackStop = _attackStop.get();

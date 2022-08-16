@@ -41,7 +41,7 @@ class SourceBase;
 namespace essentia {
 namespace scheduler {
 
-typedef std::vector<streaming::Algorithm*> AlgoVector;
+typedef ::essentia::VectorEx<streaming::Algorithm*> AlgoVector;
 typedef std::set<streaming::Algorithm*> AlgoSet;
 
 
@@ -57,24 +57,24 @@ class NetworkNode {
  public:
   NetworkNode(streaming::Algorithm* algo) : _algo(algo) {}
 
-  const std::vector<NetworkNode*>& children() const { return _children; }
-  void setChildren(const std::vector<NetworkNode*>& children) { _children = children; }
+  const ::essentia::VectorEx<NetworkNode*>& children() const { return _children; }
+  void setChildren(const ::essentia::VectorEx<NetworkNode*>& children) { _children = children; }
   void addChild(NetworkNode* child) { if (!contains(_children, child)) _children.push_back(child); }
 
   const streaming::Algorithm* algorithm() const { return _algo; }
         streaming::Algorithm* algorithm()       { return _algo; }
 
-  std::vector<NetworkNode*> addVisibleDependencies(std::map<streaming::Algorithm*, NetworkNode*>& algoNodeMap);
+  ::essentia::VectorEx<NetworkNode*> addVisibleDependencies(std::map<streaming::Algorithm*, NetworkNode*>& algoNodeMap);
 
  protected:
   /**
    * Algorithm that this node represents in the network.
    */
   streaming::Algorithm* _algo;
-  std::vector<NetworkNode*> _children;
+  ::essentia::VectorEx<NetworkNode*> _children;
 };
 
-typedef std::vector<NetworkNode*> NodeVector;
+typedef ::essentia::VectorEx<NetworkNode*> NodeVector;
 typedef std::set<NetworkNode*> NodeSet;
 typedef std::stack<NetworkNode*> NodeStack;
 
@@ -180,7 +180,7 @@ class Network {
    * Return a list of algorithms which have been topologically sorted.
    * You can assume that each node in there will have either 1 or 0 children.
    */
-  const std::vector<streaming::Algorithm*>& linearExecutionOrder() const { return _toposortedNetwork; }
+  const ::essentia::VectorEx<streaming::Algorithm*>& linearExecutionOrder() const { return _toposortedNetwork; }
 
 
   /**
@@ -189,7 +189,7 @@ class Network {
    * encompassing AlgorithmComposite (ie: all returned algorithms are inside
    * the composite).
    */
-  static std::vector<streaming::Algorithm*> innerVisibleAlgorithms(streaming::Algorithm* algo);
+  static ::essentia::VectorEx<streaming::Algorithm*> innerVisibleAlgorithms(streaming::Algorithm* algo);
 
   /**
    * Prints the fill state of all the buffers in the network.
@@ -207,7 +207,7 @@ class Network {
   streaming::Algorithm* _generator;
   NetworkNode* _visibleNetworkRoot;
   NetworkNode* _executionNetworkRoot;
-  std::vector<streaming::Algorithm*> _toposortedNetwork;
+  ::essentia::VectorEx<streaming::Algorithm*> _toposortedNetwork;
 
   /**
    * Build the network of visibly connected algorithms (ie: do not enter composite

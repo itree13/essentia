@@ -28,27 +28,27 @@ namespace standard {
 class PitchFilter : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _pitchConfidence;
-  Input<std::vector<Real> > _pitch;
-  Output<std::vector<Real> > _pitchFiltered;
+  Input<::essentia::VectorEx<Real> > _pitchConfidence;
+  Input<::essentia::VectorEx<Real> > _pitch;
+  Output<::essentia::VectorEx<Real> > _pitchFiltered;
 
   bool _useAbsolutePitchConfidence;
   long long _minChunkSize;
   int _confidenceThreshold;
 
   bool areClose(Real num1, Real num2);
-  void splitToChunks(const std::vector <Real>& pitch,
-    std::vector <std::vector <Real> >& chunks,
-    std::vector <long long>& chunksIndexes,
-    std::vector <long long>& chunksSize);
-  void joinChunks(const std::vector <std::vector <Real> >& chunks, std::vector <Real>& result);
-  Real confidenceOfChunk(const std::vector <Real>& pitchConfidence, long long chunkIndex, long long chunkSize);
-  void correctOctaveErrorsByChunks(std::vector <Real>& pitch);
-  void removeExtremeValues(std::vector <Real>& pitch);
-  void correctJumps(std::vector <Real>& pitch);
-  void filterNoiseRegions(std::vector <Real>& pitch);
-  void correctOctaveErrors(std::vector <Real>& pitch);
-  void filterChunksByPitchConfidence(std::vector <Real>& pitch, const std::vector <Real>& pitchConfidence);
+  void splitToChunks(const ::essentia::VectorEx <Real>& pitch,
+    ::essentia::VectorEx <::essentia::VectorEx <Real> >& chunks,
+    ::essentia::VectorEx <long long>& chunksIndexes,
+    ::essentia::VectorEx <long long>& chunksSize);
+  void joinChunks(const ::essentia::VectorEx <::essentia::VectorEx <Real> >& chunks, ::essentia::VectorEx <Real>& result);
+  Real confidenceOfChunk(const ::essentia::VectorEx <Real>& pitchConfidence, long long chunkIndex, long long chunkSize);
+  void correctOctaveErrorsByChunks(::essentia::VectorEx <Real>& pitch);
+  void removeExtremeValues(::essentia::VectorEx <Real>& pitch);
+  void correctJumps(::essentia::VectorEx <Real>& pitch);
+  void filterNoiseRegions(::essentia::VectorEx <Real>& pitch);
+  void correctOctaveErrors(::essentia::VectorEx <Real>& pitch);
+  void filterChunksByPitchConfidence(::essentia::VectorEx <Real>& pitch, const ::essentia::VectorEx <Real>& pitchConfidence);
 
  public:
   PitchFilter() {
@@ -87,9 +87,9 @@ namespace streaming {
 class PitchFilter : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _pitchConfidence;
-  Sink<std::vector<Real> > _pitch;
-  Source<std::vector<Real> > _pitchFiltered;
+  Sink<::essentia::VectorEx<Real> > _pitchConfidence;
+  Sink<::essentia::VectorEx<Real> > _pitch;
+  Source<::essentia::VectorEx<Real> > _pitchFiltered;
 
  public:
   PitchFilter() {

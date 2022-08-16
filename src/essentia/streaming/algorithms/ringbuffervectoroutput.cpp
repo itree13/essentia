@@ -59,7 +59,7 @@ AlgorithmStatus RingBufferVectorOutput::process() {
   AlgorithmStatus status = acquireData();
   if (status != OK) return status;
 
-  const vector<AudioSample>& inputSignal = _input.firstToken();
+  const ::essentia::VectorEx<AudioSample>& inputSignal = _input.firstToken();
   const AudioSample* inputData = &(inputSignal[0]);
   int inputSize = inputSignal.size();
 

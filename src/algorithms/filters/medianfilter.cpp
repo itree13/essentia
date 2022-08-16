@@ -41,8 +41,8 @@ void MedianFilter::configure() {
 }
 
 void MedianFilter::compute() {
-  const std::vector<Real> &input = _array.get();
-  std::vector<Real> &output = _filteredArray.get();
+  const ::essentia::VectorEx<Real> &input = _array.get();
+  ::essentia::VectorEx<Real> &output = _filteredArray.get();
 
   int inputSize = input.size();
   int paddingSize = _kernelSize / 2;
@@ -53,12 +53,12 @@ void MedianFilter::compute() {
   output.resize(inputSize);
 
   // add padding at the beginning and end so the ouput fits the input size.
-  std::vector<Real> paddedArray = input;
+  ::essentia::VectorEx<Real> paddedArray = input;
   paddedArray.insert(paddedArray.begin(), paddingSize, input[0]);
   paddedArray.insert(paddedArray.end(), paddingSize, input.back());
 
-  std::vector<Real>::const_iterator first = paddedArray.begin();
-  std::vector<Real> window;
+  ::essentia::VectorEx<Real>::const_iterator first = paddedArray.begin();
+  ::essentia::VectorEx<Real> window;
   for (int i = 0; i < inputSize; i++) {
     window.assign(first + i, first + i + _kernelSize);
     output[i] = median(window);

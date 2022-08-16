@@ -203,28 +203,28 @@ void BeatTrackerMultiFeature::configure() {
 AlgorithmStatus BeatTrackerMultiFeature::process() {
   if (!shouldStop()) return PASS;
 
-  vector<vector<Real> > tickCandidates;
-  vector<Real> ticks;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > tickCandidates;
+  ::essentia::VectorEx<Real> ticks;
   Real confidence;
 
   tickCandidates.resize(5);
 
   // ticks candidates might be empty for very short signals, but
   // it is ok to feed empty tick vetors to TempoTapMaxAgreement
-  if (_pool.contains<vector<Real> >("internal.ticksComplex")) {
-    tickCandidates[0] = _pool.value<vector<Real> >("internal.ticksComplex");
+  if (_pool.contains<::essentia::VectorEx<Real> >("internal.ticksComplex")) {
+    tickCandidates[0] = _pool.value<::essentia::VectorEx<Real> >("internal.ticksComplex");
   }
-  if (_pool.contains<vector<Real> >("internal.ticksRms")) {
-    tickCandidates[1] = _pool.value<vector<Real> >("internal.ticksRms");
+  if (_pool.contains<::essentia::VectorEx<Real> >("internal.ticksRms")) {
+    tickCandidates[1] = _pool.value<::essentia::VectorEx<Real> >("internal.ticksRms");
   }
-  if (_pool.contains<vector<Real> >("internal.ticksMelFlux")) {
-    tickCandidates[2] = _pool.value<vector<Real> >("internal.ticksMelFlux");
+  if (_pool.contains<::essentia::VectorEx<Real> >("internal.ticksMelFlux")) {
+    tickCandidates[2] = _pool.value<::essentia::VectorEx<Real> >("internal.ticksMelFlux");
   }
-  if (_pool.contains<vector<Real> >("internal.ticksBeatEmphasis")) {
-    tickCandidates[3] = _pool.value<vector<Real> >("internal.ticksBeatEmphasis");
+  if (_pool.contains<::essentia::VectorEx<Real> >("internal.ticksBeatEmphasis")) {
+    tickCandidates[3] = _pool.value<::essentia::VectorEx<Real> >("internal.ticksBeatEmphasis");
   }
-  if (_pool.contains<vector<Real> >("internal.ticksInfogain")) {
-    tickCandidates[4] = _pool.value<vector<Real> >("internal.ticksInfogain");
+  if (_pool.contains<::essentia::VectorEx<Real> >("internal.ticksInfogain")) {
+    tickCandidates[4] = _pool.value<::essentia::VectorEx<Real> >("internal.ticksInfogain");
   }
 
   _tempoTapMaxAgreement->input("tickCandidates").set(tickCandidates);
@@ -313,14 +313,14 @@ void BeatTrackerMultiFeature::createInnerNetwork() {
 void BeatTrackerMultiFeature::compute() {
   // TODO: running this algorithm on consequent inputs always requires reset(),
   // which could be fixed by manually reseting here after computations are done
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& ticks = _ticks.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& ticks = _ticks.get();
   Real& confidence = _confidence.get();
 
   _vectorInput->setVector(&signal);
   _network->run();
   try {
-    ticks = _pool.value<vector<Real> >("internal.ticks");
+    ticks = _pool.value<::essentia::VectorEx<Real> >("internal.ticks");
     confidence = _pool.value<Real> ("internal.confidence");
   }
   catch (EssentiaException&) {

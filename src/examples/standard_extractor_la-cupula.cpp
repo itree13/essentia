@@ -126,7 +126,7 @@ int essentia_main(string audioFilename, string outputFilename) {
     int ch, br;
     std::string md5, cod;
 
-    vector<StereoSample> audioBuffer;
+    ::essentia::VectorEx<StereoSample> audioBuffer;
     audioStereo->output("audio").set(audioBuffer);
     audioStereo->output("sampleRate").set(fs);
     audioStereo->output("numberChannels").set(ch);
@@ -135,7 +135,7 @@ int essentia_main(string audioFilename, string outputFilename) {
     audioStereo->output("codec").set(cod);
 
 
-    vector<Real> momentaryLoudness, shortTermLoudness;
+    ::essentia::VectorEx<Real> momentaryLoudness, shortTermLoudness;
     Real integratedLoudness, loudnessRange;
     loudnessEBUR128->input("signal").set(audioBuffer);
     loudnessEBUR128->output("momentaryLoudness").set(momentaryLoudness);
@@ -151,7 +151,7 @@ int essentia_main(string audioFilename, string outputFilename) {
     falseStereoDetector->output("correlation").set(correlation);   
 
 
-    vector<Real> audio;
+    ::essentia::VectorEx<Real> audio;
     monoMixer->input("audio").set(audioBuffer);
     monoMixer->input("numberChannels").set(2);
     monoMixer->output("audio").set(audio);
@@ -164,7 +164,7 @@ int essentia_main(string audioFilename, string outputFilename) {
 
 
     TNT::Array2D<Real> r;
-    vector<Real> humFrequencies, humSaliences, humStarts, humEnds;
+    ::essentia::VectorEx<Real> humFrequencies, humSaliences, humStarts, humEnds;
     humDetector->input("signal").set(audio);
     humDetector->output("r").set(r);
     humDetector->output("frequencies").set(humFrequencies);
@@ -173,37 +173,37 @@ int essentia_main(string audioFilename, string outputFilename) {
     humDetector->output("ends").set(humEnds);
 
 
-    std::vector<Real> peakLocations, truePeakDetectorOutput;
+    ::essentia::VectorEx<Real> peakLocations, truePeakDetectorOutput;
     truePeakDetector->input("signal").set(audio);
     truePeakDetector->output("peakLocations").set(peakLocations);
     truePeakDetector->output("output") .set(truePeakDetectorOutput);
 
 
-    std::vector<Real> frame;
+    ::essentia::VectorEx<Real> frame;
     frameCutter->input("signal").set(audio);
     frameCutter->output("frame").set(frame);
 
 
     // Time domain algorithms do not require Windowing.
-    std::vector<Real> discontinuityLocations, discontinuityAmplitudes;
+    ::essentia::VectorEx<Real> discontinuityLocations, discontinuityAmplitudes;
     discontinuityDetector->input("frame").set(frame);
     discontinuityDetector->output("discontinuityLocations").set(discontinuityLocations);
     discontinuityDetector->output("discontinuityAmplitudes").set(discontinuityAmplitudes);
 
 
-    std::vector<Real> gapsDetectorStarts, gapsDetectorEnds;
+    ::essentia::VectorEx<Real> gapsDetectorStarts, gapsDetectorEnds;
     gapsDetector->input("frame").set(frame);
     gapsDetector->output("starts").set(gapsDetectorStarts);
     gapsDetector->output("ends").set(gapsDetectorEnds);
 
 
-    std::vector<Real> saturationDetectorStarts, saturationDetectorEnds;
+    ::essentia::VectorEx<Real> saturationDetectorStarts, saturationDetectorEnds;
     saturationDetector->input("frame").set(frame);
     saturationDetector->output("starts").set(saturationDetectorStarts);
     saturationDetector->output("ends").set(saturationDetectorEnds);
 
 
-    std::vector<Real> clickDetectorStarts, clickDetectorEnds;
+    ::essentia::VectorEx<Real> clickDetectorStarts, clickDetectorEnds;
     clickDetector->input("frame").set(frame);
     clickDetector->output("starts").set(clickDetectorStarts);
     clickDetector->output("ends").set(clickDetectorEnds);
@@ -214,17 +214,17 @@ int essentia_main(string audioFilename, string outputFilename) {
     startStopSilence->output("startFrame").set(startFrame);
     startStopSilence->output("stopFrame").set(stopFrame);
 
-    vector<Real> noiseBurstIndexes;
+    ::essentia::VectorEx<Real> noiseBurstIndexes;
     noiseBurstDetector->input("frame").set(frame);
     noiseBurstDetector->output("indexes").set(noiseBurstIndexes);
 
-    std::vector<Real> windowedFrame;
+    ::essentia::VectorEx<Real> windowedFrame;
     windowing->input("frame").set(frame);
     windowing->output("frame").set(windowedFrame);
 
 
     Real averagedSNR, instantSNR;
-    std::vector<Real> spectralSNR;
+    ::essentia::VectorEx<Real> spectralSNR;
     snr->input("frame").set(windowedFrame);
     snr->output("instantSNR").set(instantSNR);
     snr->output("averagedSNR").set(averagedSNR);
@@ -273,7 +273,7 @@ int essentia_main(string audioFilename, string outputFilename) {
       pool.set("truePeakDetector.present", false);
     }
 
-    vector<Real> noiseBursts;
+    ::essentia::VectorEx<Real> noiseBursts;
 
     size_t idx = 0;
     while (true) {

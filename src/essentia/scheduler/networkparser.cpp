@@ -29,8 +29,8 @@ namespace essentia {
 namespace scheduler {
 
 void NetworkParser::createNetwork(bool createConnections) {
-  const vector<string>& nodes = _graph.nodes();
-  const vector<pair<int, int> >& edges = _graph.edges();
+  const ::essentia::VectorEx<string>& nodes = _graph.nodes();
+  const ::essentia::VectorEx<pair<int, int> >& edges = _graph.edges();
 
   // create all algorithms corresponding to the nodes
   for (int i=0; i<(int)nodes.size(); i++) {

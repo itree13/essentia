@@ -111,7 +111,7 @@ void MonoLoader::configure() {
 }
 
 void MonoLoader::compute() {
-  vector<AudioSample>& audio = _audio.get();
+  ::essentia::VectorEx<AudioSample>& audio = _audio.get();
 
   // TODO: _audio.reserve(sth_meaningful);
 

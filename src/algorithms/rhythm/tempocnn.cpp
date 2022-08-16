@@ -80,10 +80,10 @@ void TempoCNN::configure() {
 
 
 void TempoCNN::compute() {
-  const vector<Real>& audio = _audio.get();
+  const ::essentia::VectorEx<Real>& audio = _audio.get();
   Real& globalTempo = _globalTempo.get();
-  vector<Real>& localTempo = _localTempo.get();
-  vector<Real>& localTempoProbs = _localTempoProbs.get();
+  ::essentia::VectorEx<Real>& localTempo = _localTempo.get();
+  ::essentia::VectorEx<Real>& localTempoProbs = _localTempoProbs.get();
 
   _tensorflowPredictTempoCNN->input("signal").set(audio);
   _tensorflowPredictTempoCNN->output("predictions").set(_predictions);
@@ -109,7 +109,7 @@ void TempoCNN::compute() {
     int mostVotedCandidate = localTempo[0], secondCandidate = localTempo[0];
     int mostVotedVotes = 0, secondVotes = 0;
     int candidate, votes;
-    vector<int> checked;
+    ::essentia::VectorEx<int> checked;
 
     for (int i = 0; i < (int)_predictions.size(); i++) {
       candidate = (int)localTempo[i];

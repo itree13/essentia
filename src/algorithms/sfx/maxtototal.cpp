@@ -32,7 +32,7 @@ const char* MaxToTotal::description = DOC("This algorithm computes the ratio bet
 
 void MaxToTotal::compute() {
 
-  const vector<Real>& envelope = _envelope.get();
+  const ::essentia::VectorEx<Real>& envelope = _envelope.get();
   Real& maxToTotal = _maxToTotal.get();
 
   if (envelope.empty()) {
@@ -55,7 +55,7 @@ const char* MaxToTotal::description = essentia::standard::MaxToTotal::descriptio
 
 
 void MaxToTotal::consume() {
-  const vector<Real>& envelope = *((const vector<Real>*)_envelope.getTokens());
+  const ::essentia::VectorEx<Real>& envelope = *((const ::essentia::VectorEx<Real>*)_envelope.getTokens());
 
   int maxIdx = argmax(envelope);
   if (envelope[maxIdx] > _max) {

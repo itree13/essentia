@@ -67,7 +67,7 @@ void IDCT::createIDctTableII(int inputSize, int outputSize) {
     throw EssentiaException("IDCT: 'outputSize' is smaller than 'inputSize'. You can only compute the IDCT with an output size greater or equal than the input size");
   }
 
-  _idctTable = vector<vector<Real> >(outputSize, vector<Real>(inputSize));
+  _idctTable = ::essentia::VectorEx<::essentia::VectorEx<Real> >(outputSize, ::essentia::VectorEx<Real>(inputSize));
 
   // scale for index = 0
   Real scale0 = 1.0 / sqrt(Real(outputSize));
@@ -93,7 +93,7 @@ void IDCT::createIDctTableIII(int inputSize, int outputSize) {
     throw EssentiaException("IDCT: 'outputSize' is smaller than 'inputSize'. You can only compute the IDCT with an output size greater or equal than the input size");
   }
 
-  _idctTable = vector<vector<Real> >(outputSize, vector<Real>(inputSize));
+  _idctTable = ::essentia::VectorEx<::essentia::VectorEx<Real> >(outputSize, ::essentia::VectorEx<Real>(inputSize));
   // This implementation is used instead of the referenced in order to match the behaviour of the HTK
   // http://speech.ee.ntu.edu.tw/homework/DSP_HW2-1/htkbook.pdf
 
@@ -112,10 +112,10 @@ void IDCT::createIDctTableIII(int inputSize, int outputSize) {
 
 void IDCT::compute() {
 
-  const vector<Real>& input = _dct.get();
-  vector<Real>& idct = _idct.get();
+  const ::essentia::VectorEx<Real>& input = _dct.get();
+  ::essentia::VectorEx<Real>& idct = _idct.get();
 
-  vector<Real> dct = input;
+  ::essentia::VectorEx<Real> dct = input;
 
   int inputSize = int(input.size());
 

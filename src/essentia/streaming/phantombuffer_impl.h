@@ -26,7 +26,7 @@ namespace essentia {
 namespace streaming {
 
 template <typename T>
-const std::vector<T>& PhantomBuffer<T>::readView(ReaderID id) const {
+const ::essentia::VectorEx<T>& PhantomBuffer<T>::readView(ReaderID id) const {
   return _readView[id];
 }
 

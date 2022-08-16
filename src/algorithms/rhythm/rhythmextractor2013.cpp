@@ -115,12 +115,12 @@ AlgorithmStatus RhythmExtractor2013::process() {
     _confidence.push((Real) 0.);
   }
   
-  vector<Real> bpmIntervals;
-  vector<Real> bpmEstimateList;
+  ::essentia::VectorEx<Real> bpmIntervals;
+  ::essentia::VectorEx<Real> bpmEstimateList;
 
   // push ticks if any, otherwise push an empty vector 
-  if (_pool.contains<vector<Real> >("internal.ticks")) {
-    const vector<Real>& ticks = _pool.value<vector<Real> >("internal.ticks");
+  if (_pool.contains<::essentia::VectorEx<Real> >("internal.ticks")) {
+    const ::essentia::VectorEx<Real>& ticks = _pool.value<::essentia::VectorEx<Real> >("internal.ticks");
     _ticks.push(ticks);
 
     if (ticks.size() > 1) {
@@ -133,7 +133,7 @@ AlgorithmStatus RhythmExtractor2013::process() {
       }
 
       // computing rubato regions
-      //vector<Real> rubatoStart, rubatoStop;
+      //::essentia::VectorEx<Real> rubatoStart, rubatoStop;
       //int rubatoNumber;
       //_bpmRubato->input("beats").set(ticks);
       //_bpmRubato->output("rubatoStart").set(rubatoStart);
@@ -147,17 +147,17 @@ AlgorithmStatus RhythmExtractor2013::process() {
     }
   }
   else {
-    _ticks.push(vector<Real>());
+    _ticks.push(::essentia::VectorEx<Real>());
   }
 
   _bpmIntervals.push(bpmIntervals);
 
   // estimate bpm. TODO why is _periodTolerance necessary? MAGIC NUMBER?
-  vector<Real> estimates;
+  ::essentia::VectorEx<Real> estimates;
   Real bpm;
   if (bpmEstimateList.size() > 0) {
     Real closestBpm = 0;
-    vector<Real> countedBins;
+    ::essentia::VectorEx<Real> countedBins;
     for (size_t i=0; i < bpmEstimateList.size(); ++i) {
       bpmEstimateList[i] /= 2.;
     }
@@ -252,29 +252,29 @@ void RhythmExtractor2013::createInnerNetwork() {
 }
 
 void RhythmExtractor2013::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
   Real& bpm = _bpm.get();
-  vector<Real>& ticks = _ticks.get();
+  ::essentia::VectorEx<Real>& ticks = _ticks.get();
   Real& confidence = _confidence.get();
-  vector<Real>& estimates = _estimates.get();
-  //vector<Real>& rubatoStart = _rubatoStart.get();
-  //vector<Real>& rubatoStop = _rubatoStop.get();
+  ::essentia::VectorEx<Real>& estimates = _estimates.get();
+  //::essentia::VectorEx<Real>& rubatoStart = _rubatoStart.get();
+  //::essentia::VectorEx<Real>& rubatoStop = _rubatoStop.get();
   //int& rubatoNumber = _rubatoNumber.get();
-  vector<Real>& bpmIntervals = _bpmIntervals.get();
+  ::essentia::VectorEx<Real>& bpmIntervals = _bpmIntervals.get();
 
   bpm = _pool.value<Real>("internal.bpm");
-  ticks = _pool.value<vector<Real> >("internal.ticks");
+  ticks = _pool.value<::essentia::VectorEx<Real> >("internal.ticks");
   confidence = _pool.value<Real>("internal.confidence");
-  estimates = _pool.value<vector<Real> >("internal.estimates");
-  bpmIntervals = _pool.value<vector<Real> >("internal.bpmIntervals");
+  estimates = _pool.value<::essentia::VectorEx<Real> >("internal.estimates");
+  bpmIntervals = _pool.value<::essentia::VectorEx<Real> >("internal.bpmIntervals");
   //rubatoNumber = (int) _pool.value<Real>("internal.rubatoNumber");
   //try {
-  //    rubatoStart = _pool.value<vector<Real> >("internal.rubatoStart");
-  //    rubatoStop = _pool.value<vector<Real> >("internal.rubatoStop");
+  //    rubatoStart = _pool.value<::essentia::VectorEx<Real> >("internal.rubatoStart");
+  //    rubatoStop = _pool.value<::essentia::VectorEx<Real> >("internal.rubatoStop");
   //}
   //catch (EssentiaException&) {
   //  // no rubato regions then

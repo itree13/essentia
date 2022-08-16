@@ -28,8 +28,8 @@ namespace standard {
 class BarkBands : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _spectrumInput;
-  Output<std::vector<Real> > _bandsOutput;
+  Input<::essentia::VectorEx<Real> > _spectrumInput;
+  Output<::essentia::VectorEx<Real> > _bandsOutput;
 
   Algorithm* _freqBands;
 
@@ -69,8 +69,8 @@ namespace streaming {
 class BarkBands : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrumInput;
-  Source<std::vector<Real> > _bandsOutput;
+  Sink<::essentia::VectorEx<Real> > _spectrumInput;
+  Source<::essentia::VectorEx<Real> > _bandsOutput;
 
  public:
   BarkBands() {

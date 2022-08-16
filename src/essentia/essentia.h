@@ -90,9 +90,9 @@ class TypeMap {
     registerEssentiaType(int);
     registerEssentiaType(uint);
     registerEssentiaType(long);
-    registerEssentiaType(std::vector<std::string>);
-    registerEssentiaType(std::vector<Real>);
-    registerEssentiaType(std::vector<StereoSample>);
+    registerEssentiaType(::essentia::VectorEx<std::string>);
+    registerEssentiaType(::essentia::VectorEx<Real>);
+    registerEssentiaType(::essentia::VectorEx<StereoSample>);
 
 #undef registerEssentiaType
   }

@@ -52,8 +52,8 @@ void CubicSpline::compute() {
 
 
 void CubicSpline::configure() {
-  vector<Real> x = parameter("xPoints").toVectorReal();
-  vector<Real> y = parameter("yPoints").toVectorReal();
+  ::essentia::VectorEx<Real> x = parameter("xPoints").toVectorReal();
+  ::essentia::VectorEx<Real> y = parameter("yPoints").toVectorReal();
   if (x.size() != y.size() ) {
     throw EssentiaException("CubicSpline: parameter 'xPoints' must have the same size than parameter 'yPoints')");
   }

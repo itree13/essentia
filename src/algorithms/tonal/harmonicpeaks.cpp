@@ -51,11 +51,11 @@ void HarmonicPeaks::configure() {
 
 void HarmonicPeaks::compute() {
 
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
   const Real& f0 = _pitch.get();
-  vector<Real>& harmonicFrequencies = _harmonicFrequencies.get();
-  vector<Real>& harmonicMagnitudes = _harmonicMagnitudes.get();
+  ::essentia::VectorEx<Real>& harmonicFrequencies = _harmonicFrequencies.get();
+  ::essentia::VectorEx<Real>& harmonicMagnitudes = _harmonicMagnitudes.get();
 
   if (magnitudes.size() != frequencies.size()) {
     throw EssentiaException("HarmonicPeaks: frequency and magnitude input vectors must have the same size");
@@ -98,7 +98,7 @@ void HarmonicPeaks::compute() {
   // correspond only to one ideal harmonic
 
   // Init candidates with <-1, 0> -- ideal harmonics
-  vector<pair<int, Real> > candidates (_maxHarmonics, make_pair(-1, 0));
+  ::essentia::VectorEx<pair<int, Real> > candidates (_maxHarmonics, make_pair(-1, 0));
 
   for (int i=0; i<int(frequencies.size()); ++i) {
     Real ratio = frequencies[i] / f0;

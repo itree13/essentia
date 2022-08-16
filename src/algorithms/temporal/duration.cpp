@@ -28,7 +28,7 @@ const char* Duration::category = "Duration/silence";
 const char* Duration::description = DOC("This algorithm outputs the total duration of an audio signal.");
 
 void Duration::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& duration = _duration.get();
 
   duration = signal.size()/parameter("sampleRate").toReal();
@@ -52,7 +52,7 @@ void Duration::reset() {
 }
 
 void Duration::consume() {
-  const vector<Real>& signal = *((const vector<Real>*)_signal.getTokens());
+  const ::essentia::VectorEx<Real>& signal = *((const ::essentia::VectorEx<Real>*)_signal.getTokens());
 
   _nsamples += signal.size();
 }

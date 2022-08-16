@@ -28,11 +28,11 @@ namespace standard {
 class AudioOnsetsMarker : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _input;
-  Output<std::vector<Real> > _output;
+  Input<::essentia::VectorEx<Real> > _input;
+  Output<::essentia::VectorEx<Real> > _output;
 
   Real _sampleRate;
-  std::vector<Real> _onsets;
+  ::essentia::VectorEx<Real> _onsets;
 
   bool _beep;
 
@@ -47,7 +47,7 @@ class AudioOnsetsMarker : public Algorithm {
   void declareParameters() {
     declareParameter("sampleRate", "the sampling rate of the output signal [Hz]", "(0,inf)", 44100.);
     declareParameter("type", "the type of sound to be added on the event", "{beep,noise}", "beep");
-    declareParameter("onsets", "the list of onset locations [s]", "", std::vector<Real>());
+    declareParameter("onsets", "the list of onset locations [s]", "", ::essentia::VectorEx<Real>());
   }
 
   void configure();
@@ -75,8 +75,8 @@ class AudioOnsetsMarker : public Algorithm {
   Source<Real> _output;
 
   Real _sampleRate;
-  std::vector<Real> _burst;
-  std::vector<Real> _onsets;
+  ::essentia::VectorEx<Real> _burst;
+  ::essentia::VectorEx<Real> _onsets;
   bool _beep;
   int _onsetIdx, _burstIdx;
   int _processedSamples;
@@ -89,7 +89,7 @@ class AudioOnsetsMarker : public Algorithm {
   void declareParameters() {
     declareParameter("sampleRate", "the sampling rate of the output signal [Hz]", "(0,inf)", 44100.);
     declareParameter("type", "the type of sound to be added on the event", "{beep,noise}", "beep");
-    declareParameter("onsets", "the list of onset locations [s]", "", std::vector<Real>());
+    declareParameter("onsets", "the list of onset locations [s]", "", ::essentia::VectorEx<Real>());
   }
 
   void createInnerNetwork();

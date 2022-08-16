@@ -212,7 +212,7 @@ void LowLevelSpectralExtractor::createInnerNetwork() {
   _zcr                = factory.create("ZeroCrossingRate");
 
   Real thresholds_dB[] = { -20, -30, -60 };
-  vector<Real> thresholds(ARRAY_SIZE(thresholds_dB));
+  ::essentia::VectorEx<Real> thresholds(ARRAY_SIZE(thresholds_dB));
   for (int i=0; i<(int)thresholds.size(); i++) {
     thresholds[i] = db2lin(thresholds_dB[i]/2.0);
   }
@@ -363,70 +363,70 @@ void LowLevelSpectralExtractor::createInnerNetwork() {
 }
 
 void LowLevelSpectralExtractor::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
-  vector<vector<Real> > & barkBands = _barkBands.get();
-  vector<Real> & kurtosis = _kurtosis.get();
-  vector<Real> & skewness = _skewness.get();
-  vector<Real> & spread = _spread.get();
-  vector<Real> & hfc = _hfc.get();
-  vector<vector<Real> > & mfcc = _mfcc.get();
-  vector<Real> & pitch = _pitch.get();
-  vector<Real> & pitchConfidence = _pitchConfidence.get();
-  vector<Real> & pitchSalience = _pitchSalience.get();
-  vector<Real> & threshold_0 = _threshold_0.get();
-  vector<Real> & threshold_1 = _threshold_1.get();
-  vector<Real> & threshold_2 = _threshold_2.get();
-  vector<Real> & spectralComplexity = _spectralComplexity.get();
-  vector<Real> & crest = _crest.get();
-  vector<Real> & decrease = _decrease.get();
-  vector<Real> & energy = _energy.get();
-  vector<Real> & energyBand_0 = _energyBand_0.get();
-  vector<Real> & energyBand_1 = _energyBand_1.get();
-  vector<Real> & energyBand_2 = _energyBand_2.get();
-  vector<Real> & energyBand_3 = _energyBand_3.get();
-  vector<Real> & flatnessdb = _flatnessdb.get();
-  vector<Real> & flux = _flux.get();
-  vector<Real> & rms = _rms.get();
-  vector<Real> & rollOff = _rollOff.get();
-  vector<Real> & strongPeak = _strongPeak.get();
-  vector<Real> & zeroCrossingRate = _zeroCrossingRate.get();
-  vector<Real> & inharmonicity = _inharmonicity.get();
-  vector<vector<Real> > & tristimulus = _tristimulus.get();
-  vector<Real> & oddToEvenHarmonicEnergyRatio = _oddToEvenHarmonicEnergyRatio.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > & barkBands = _barkBands.get();
+  ::essentia::VectorEx<Real> & kurtosis = _kurtosis.get();
+  ::essentia::VectorEx<Real> & skewness = _skewness.get();
+  ::essentia::VectorEx<Real> & spread = _spread.get();
+  ::essentia::VectorEx<Real> & hfc = _hfc.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > & mfcc = _mfcc.get();
+  ::essentia::VectorEx<Real> & pitch = _pitch.get();
+  ::essentia::VectorEx<Real> & pitchConfidence = _pitchConfidence.get();
+  ::essentia::VectorEx<Real> & pitchSalience = _pitchSalience.get();
+  ::essentia::VectorEx<Real> & threshold_0 = _threshold_0.get();
+  ::essentia::VectorEx<Real> & threshold_1 = _threshold_1.get();
+  ::essentia::VectorEx<Real> & threshold_2 = _threshold_2.get();
+  ::essentia::VectorEx<Real> & spectralComplexity = _spectralComplexity.get();
+  ::essentia::VectorEx<Real> & crest = _crest.get();
+  ::essentia::VectorEx<Real> & decrease = _decrease.get();
+  ::essentia::VectorEx<Real> & energy = _energy.get();
+  ::essentia::VectorEx<Real> & energyBand_0 = _energyBand_0.get();
+  ::essentia::VectorEx<Real> & energyBand_1 = _energyBand_1.get();
+  ::essentia::VectorEx<Real> & energyBand_2 = _energyBand_2.get();
+  ::essentia::VectorEx<Real> & energyBand_3 = _energyBand_3.get();
+  ::essentia::VectorEx<Real> & flatnessdb = _flatnessdb.get();
+  ::essentia::VectorEx<Real> & flux = _flux.get();
+  ::essentia::VectorEx<Real> & rms = _rms.get();
+  ::essentia::VectorEx<Real> & rollOff = _rollOff.get();
+  ::essentia::VectorEx<Real> & strongPeak = _strongPeak.get();
+  ::essentia::VectorEx<Real> & zeroCrossingRate = _zeroCrossingRate.get();
+  ::essentia::VectorEx<Real> & inharmonicity = _inharmonicity.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > & tristimulus = _tristimulus.get();
+  ::essentia::VectorEx<Real> & oddToEvenHarmonicEnergyRatio = _oddToEvenHarmonicEnergyRatio.get();
 
-  barkBands =          _pool.value<vector<vector<Real> > >("barkbands");
-  kurtosis =           _pool.value<vector<Real> >("kurtosis");
-  skewness =           _pool.value<vector<Real> >("skewness");
-  spread =             _pool.value<vector<Real> >("spread");
-  hfc =                _pool.value<vector<Real> >("hfc");
-  mfcc =               _pool.value<vector<vector<Real> > >("mfcc");
-  pitch =              _pool.value<vector<Real> >("pitch");
-  pitchConfidence =    _pool.value<vector<Real> >("pitchConfidence");
-  pitchSalience =      _pool.value<vector<Real> >("pitchSalience");
-  threshold_0 =        _pool.value<vector<Real> >("silence_rate_20dB");
-  threshold_1 =        _pool.value<vector<Real> >("silence_rate_30dB");
-  threshold_2 =        _pool.value<vector<Real> >("silence_rate_60dB");
-  spectralComplexity = _pool.value<vector<Real> >("spectralComplexity");
-  crest =              _pool.value<vector<Real> >("crest");
-  decrease =           _pool.value<vector<Real> >("decrease");
-  energy =             _pool.value<vector<Real> >("energy");
-  energyBand_0 =       _pool.value<vector<Real> >("energyBand_0");
-  energyBand_1 =       _pool.value<vector<Real> >("energyBand_1");
-  energyBand_2 =       _pool.value<vector<Real> >("energyBand_2");
-  energyBand_3 =       _pool.value<vector<Real> >("energyBand_3");
-  flatnessdb =         _pool.value<vector<Real> >("flatnessdb");
-  flux =               _pool.value<vector<Real> >("flux");
-  rms =                _pool.value<vector<Real> >("rms");
-  rollOff =            _pool.value<vector<Real> >("rollOff");
-  strongPeak =         _pool.value<vector<Real> >("strongPeak");
-  zeroCrossingRate =   _pool.value<vector<Real> >("zeroCrossingRate");
-  inharmonicity =      _pool.value<vector<Real> >("inharmonicity");
-  tristimulus =        _pool.value<vector<vector<Real> > >("tristimulus");
-  oddToEvenHarmonicEnergyRatio = _pool.value<vector<Real> >("oddToEvenHarmonicEnergyRatio");
+  barkBands =          _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("barkbands");
+  kurtosis =           _pool.value<::essentia::VectorEx<Real> >("kurtosis");
+  skewness =           _pool.value<::essentia::VectorEx<Real> >("skewness");
+  spread =             _pool.value<::essentia::VectorEx<Real> >("spread");
+  hfc =                _pool.value<::essentia::VectorEx<Real> >("hfc");
+  mfcc =               _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("mfcc");
+  pitch =              _pool.value<::essentia::VectorEx<Real> >("pitch");
+  pitchConfidence =    _pool.value<::essentia::VectorEx<Real> >("pitchConfidence");
+  pitchSalience =      _pool.value<::essentia::VectorEx<Real> >("pitchSalience");
+  threshold_0 =        _pool.value<::essentia::VectorEx<Real> >("silence_rate_20dB");
+  threshold_1 =        _pool.value<::essentia::VectorEx<Real> >("silence_rate_30dB");
+  threshold_2 =        _pool.value<::essentia::VectorEx<Real> >("silence_rate_60dB");
+  spectralComplexity = _pool.value<::essentia::VectorEx<Real> >("spectralComplexity");
+  crest =              _pool.value<::essentia::VectorEx<Real> >("crest");
+  decrease =           _pool.value<::essentia::VectorEx<Real> >("decrease");
+  energy =             _pool.value<::essentia::VectorEx<Real> >("energy");
+  energyBand_0 =       _pool.value<::essentia::VectorEx<Real> >("energyBand_0");
+  energyBand_1 =       _pool.value<::essentia::VectorEx<Real> >("energyBand_1");
+  energyBand_2 =       _pool.value<::essentia::VectorEx<Real> >("energyBand_2");
+  energyBand_3 =       _pool.value<::essentia::VectorEx<Real> >("energyBand_3");
+  flatnessdb =         _pool.value<::essentia::VectorEx<Real> >("flatnessdb");
+  flux =               _pool.value<::essentia::VectorEx<Real> >("flux");
+  rms =                _pool.value<::essentia::VectorEx<Real> >("rms");
+  rollOff =            _pool.value<::essentia::VectorEx<Real> >("rollOff");
+  strongPeak =         _pool.value<::essentia::VectorEx<Real> >("strongPeak");
+  zeroCrossingRate =   _pool.value<::essentia::VectorEx<Real> >("zeroCrossingRate");
+  inharmonicity =      _pool.value<::essentia::VectorEx<Real> >("inharmonicity");
+  tristimulus =        _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("tristimulus");
+  oddToEvenHarmonicEnergyRatio = _pool.value<::essentia::VectorEx<Real> >("oddToEvenHarmonicEnergyRatio");
 
   reset();
 }

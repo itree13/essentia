@@ -44,12 +44,12 @@ void NoiseAdder::configure() {
 }
 
 void NoiseAdder::compute() {
-  const std::vector<Real>& signal = _signal.get();
-  std::vector<Real>& noise = _noise.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& noise = _noise.get();
 
-  std::vector<Real>::size_type size = signal.size();
+  ::essentia::VectorEx<Real>::size_type size = signal.size();
   noise.resize(size);
-  for (std::vector<Real>::size_type i=0; i<size; i++) {
+  for (::essentia::VectorEx<Real>::size_type i=0; i<size; i++) {
 #ifdef CPP_11
     noise[i] = signal[i] + _level * (Real(_mtrand())/std::mt19937::max()*2.0f - 1.0f);
 #else

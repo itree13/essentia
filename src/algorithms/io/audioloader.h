@@ -63,7 +63,7 @@ class AudioLoader : public Algorithm {
   struct SwrContext* _convertCtxAv;
 
   int _streamIdx; // index of the audio stream among all the streams contained in the file
-  std::vector<int> _streams;
+  ::essentia::VectorEx<int> _streams;
   int _selectedStream;
   bool _configured;
 
@@ -140,7 +140,7 @@ namespace standard {
 class AudioLoader : public Algorithm {
 
  protected:
-  Output<std::vector<StereoSample> > _audio;
+  Output<::essentia::VectorEx<StereoSample> > _audio;
   Output<Real> _sampleRate;
   Output<int> _channels;
   Output<std::string> _md5;

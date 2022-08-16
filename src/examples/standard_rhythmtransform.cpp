@@ -82,26 +82,26 @@ int main(int argc, char* argv[]) {
   // connect algorithms:
 
   // set audio loader:
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
   audio->output("audio").set(audioBuffer);
 
   // set frameCutter:
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   fc->input("signal").set(audioBuffer);
   fc->output("frame").set(frame);
 
   // set windowing:
-  vector<Real> windowedFrame;
+  ::essentia::VectorEx<Real> windowedFrame;
   w->input("frame").set(frame);
   w->output("frame").set(windowedFrame);
 
   // set spectrum:
-  vector<Real> spectrum;
+  ::essentia::VectorEx<Real> spectrum;
   spec->input("frame").set(windowedFrame);
   spec->output("spectrum").set(spectrum);
 
   // set melbands:
-  vector<Real> bands;
+  ::essentia::VectorEx<Real> bands;
   melBands->input("spectrum").set(spectrum);
   melBands->output("bands").set(bands);
 
@@ -134,8 +134,8 @@ int main(int argc, char* argv[]) {
 
   // compute rhythm transform:
 
-  vector<vector<Real> > rhythm;
-  rd->input("melBands").set(pool.value<vector<vector<Real> > >("spectral.mel_bands_energy"));
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > rhythm;
+  rd->input("melBands").set(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("spectral.mel_bands_energy"));
   rd->output("rhythm").set(rhythm);
   rd->compute();
 

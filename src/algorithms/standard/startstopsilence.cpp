@@ -36,7 +36,7 @@ void StartStopSilence::configure() {
 };
 
 void StartStopSilence::compute() {
-  const vector<Real>& frame = _frame.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
   int& start = _startSilenceSource.get();
   int& stop = _stopSilenceSource.get();
 
@@ -114,7 +114,7 @@ AlgorithmStatus StartStopSilence::process() {
     return FINISHED;
   }
 
-  const vector<Real>& frame = *(vector<Real>*)_frame.getFirstToken();
+  const ::essentia::VectorEx<Real>& frame = *(::essentia::VectorEx<Real>*)_frame.getFirstToken();
   bool silentFrame = instantPower(frame) < _threshold;
 
   if (silentFrame && (_stopSilence == 0)) {

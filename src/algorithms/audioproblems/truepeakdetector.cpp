@@ -70,11 +70,11 @@ void TruePeakDetector::configure() {
     Real rPole = 1 - 4 * poleFrequency / _outputSampleRate;
     Real rZero = 1 - 4 * zeroFrequncy / _outputSampleRate;
 
-    vector<Real> b(2, 0.0);
+    ::essentia::VectorEx<Real> b(2, 0.0);
     b[0] = 1.0;
     b[1] = -rZero;
 
-    vector<Real> a(2, 0.0);
+    ::essentia::VectorEx<Real> a(2, 0.0);
     a[0] = 1.0;
     a[1] = rPole;
 
@@ -88,12 +88,12 @@ void TruePeakDetector::configure() {
 
 
 void TruePeakDetector::compute() {
-  vector<Real>& output = _output.get();
-  vector<Real>& peakLocations = _peakLocations.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
+  ::essentia::VectorEx<Real>& peakLocations = _peakLocations.get();
 
-  std::vector<Real> *processed;
+  ::essentia::VectorEx<Real> *processed;
 
-  std::vector<Real> resampled;
+  ::essentia::VectorEx<Real> resampled;
   _resampler->input("signal").set(_signal.get());
   _resampler->output("signal").set(resampled);
   _resampler->compute();
@@ -101,7 +101,7 @@ void TruePeakDetector::compute() {
 
   if (_version == 2) {
     if (_emphasise) {
-      std::vector<Real> emphasised;
+      ::essentia::VectorEx<Real> emphasised;
       _emphasiser->input("signal").set(*processed);
       _emphasiser->output("signal").set(emphasised);
       _emphasiser->compute();
@@ -109,7 +109,7 @@ void TruePeakDetector::compute() {
     }
 
     if (_blockDC) {
-      std::vector<Real> dcBlocked;
+      ::essentia::VectorEx<Real> dcBlocked;
       _dcBlocker->input("signal").set(*processed);
       _dcBlocker->output("signal").set(dcBlocked);
       _dcBlocker->compute();

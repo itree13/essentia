@@ -28,8 +28,8 @@ namespace standard {
 class TempoTapDegara : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _onsetDetections;
-  Output<std::vector<Real> > _ticks;
+  Input<::essentia::VectorEx<Real> > _onsetDetections;
+  Output<::essentia::VectorEx<Real> > _ticks;
 
  public:
   TempoTapDegara() {
@@ -76,21 +76,21 @@ class TempoTapDegara : public Algorithm {
   int _periodMaxIndex;
   int _periodMaxUserIndex;
   int _periodMinUserIndex;
-  std::vector<Real> _tempoWeights;
-  std::vector<std::vector<Real> > _transitionsViterbi;  // transition matrix for Viterbi
+  ::essentia::VectorEx<Real> _tempoWeights;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _transitionsViterbi;  // transition matrix for Viterbi
   Algorithm* _autocorrelation;
   Algorithm* _movingAverage;
   Algorithm* _frameCutter;
   void createTempoPreferenceCurve();
   void createViterbiTransitionMatrix();
-  void findViterbiPath(const std::vector<Real>& prior,
-                     const std::vector<std::vector<Real> > transitionMatrix,
-                     const std::vector<std::vector<Real> >& observations,
-                     std::vector<Real>& path);
-  void computeBeatPeriodsDavies(std::vector<Real> detections,
-                                std::vector<Real>& beatPeriods,
-                                std::vector<Real>& beatEndPositions);
-  void adaptiveThreshold(std::vector<Real>& array, int smoothingHalfSize);
+  void findViterbiPath(const ::essentia::VectorEx<Real>& prior,
+                     const ::essentia::VectorEx<::essentia::VectorEx<Real> > transitionMatrix,
+                     const ::essentia::VectorEx<::essentia::VectorEx<Real> >& observations,
+                     ::essentia::VectorEx<Real>& path);
+  void computeBeatPeriodsDavies(::essentia::VectorEx<Real> detections,
+                                ::essentia::VectorEx<Real>& beatPeriods,
+                                ::essentia::VectorEx<Real>& beatEndPositions);
+  void adaptiveThreshold(::essentia::VectorEx<Real>& array, int smoothingHalfSize);
 
   // Degara's beat tracking from periods:
   Real _alpha;
@@ -98,19 +98,19 @@ class TempoTapDegara : public Algorithm {
   int _numberStates;    // number HMM states
   Real _resolutionODF;  // time resolution of ODF
   size_t _numberFrames; // number of ODF values
-  void computeBeatsDegara(std::vector <Real>& detections,
-                          const std::vector<Real>& beatPeriods,
-                          const std::vector<Real>& beatEndPositions,
-                          std::vector<Real>& ticks);
-  void computeHMMTransitionMatrix(const std::vector<Real>& ibiPDF,
-                                  std::vector<std::vector<Real> >& transitions);
-  void decodeBeats(std::map<Real, std::vector<std::vector<Real> > >& transitionMatrix,
-                   const std::vector<Real>& beatPeriods,
-                   const std::vector<Real>& beatEndPositions,
-                   const std::vector<std::vector<Real> >& biy,
-                   std::vector<int>& sequenceStates);
+  void computeBeatsDegara(::essentia::VectorEx <Real>& detections,
+                          const ::essentia::VectorEx<Real>& beatPeriods,
+                          const ::essentia::VectorEx<Real>& beatEndPositions,
+                          ::essentia::VectorEx<Real>& ticks);
+  void computeHMMTransitionMatrix(const ::essentia::VectorEx<Real>& ibiPDF,
+                                  ::essentia::VectorEx<::essentia::VectorEx<Real> >& transitions);
+  void decodeBeats(std::map<Real, ::essentia::VectorEx<::essentia::VectorEx<Real> > >& transitionMatrix,
+                   const ::essentia::VectorEx<Real>& beatPeriods,
+                   const ::essentia::VectorEx<Real>& beatEndPositions,
+                   const ::essentia::VectorEx<::essentia::VectorEx<Real> >& biy,
+                   ::essentia::VectorEx<int>& sequenceStates);
 
-  void gaussianPDF(std::vector<Real>& gaussian, Real gaussianStd, Real step, Real scale=1.);
+  void gaussianPDF(::essentia::VectorEx<Real>& gaussian, Real gaussianStd, Real step, Real scale=1.);
 }; // class TempoTapDegara
 
 } // namespace standard

@@ -135,12 +135,12 @@ PyObject* PyPool::keyType(PyPool* self, PyObject* obj) {
     return PyString_FromString( edtToString(VECTOR_STEREOSAMPLE).c_str() );
   }
 
-  // search vector<Real> sub-pool
+  // search ::essentia::VectorEx<Real> sub-pool
   if (p.getVectorRealPool().find(key) != p.getVectorRealPool().end()) {
     return PyString_FromString( edtToString(VECTOR_VECTOR_REAL).c_str() );
   }
 
-  // search vector<string> sub-pool
+  // search ::essentia::VectorEx<string> sub-pool
   if (p.getVectorStringPool().find(key) != p.getVectorStringPool().end()) {
     return PyString_FromString( edtToString(VECTOR_VECTOR_STRING).c_str() );
   }
@@ -197,7 +197,7 @@ Pool* PyPool::fromPythonRef(PyObject* obj) {
 
 
 PyObject* PyPool::add(PyPool* self, PyObject* pyArgs) {
-  vector<PyObject*> args = unpack(pyArgs);
+  ::essentia::VectorEx<PyObject*> args = unpack(pyArgs);
 
   // make sure we have three args (key, type, value)
   if (args.size() != 4) {
@@ -240,7 +240,7 @@ PyObject* PyPool::add(PyPool* self, PyObject* pyArgs) {
       case REAL:          ADD_COPY(PyReal, Real);
       case STRING:        ADD_COPY(String, string);
       case STEREOSAMPLE:  ADD_COPY(PyStereoSample, StereoSample);
-      case VECTOR_STRING: ADD_COPY(VectorString, vector<string>);
+      case VECTOR_STRING: ADD_COPY(VectorString, ::essentia::VectorEx<string>);
       case MATRIX_REAL:   ADD_COPY(MatrixReal, TNT::Array2D<Real>);
       case TENSOR_REAL:   ADD_COPY(TensorReal, Tensor<Real>);
       case VECTOR_REAL:   ADD_REF(VectorReal, RogueVector<Real>);
@@ -266,7 +266,7 @@ PyObject* PyPool::add(PyPool* self, PyObject* pyArgs) {
 }
 
 PyObject* PyPool::set(PyPool* self, PyObject* pyArgs) {
-  vector<PyObject*> args = unpack(pyArgs);
+  ::essentia::VectorEx<PyObject*> args = unpack(pyArgs);
 
   // make sure we have three args (key, type, value)
   if (args.size() != 4) {
@@ -331,7 +331,7 @@ PyObject* PyPool::set(PyPool* self, PyObject* pyArgs) {
 }
 
 PyObject* PyPool::merge(PyPool* self, PyObject* pyArgs) {
-  vector<PyObject*> args = unpack(pyArgs);
+  ::essentia::VectorEx<PyObject*> args = unpack(pyArgs);
 
   // make sure we have three args (key, type, value)
   if (args.size() < 3) {
@@ -403,12 +403,12 @@ PyObject* PyPool::merge(PyPool* self, PyObject* pyArgs) {
       // belong to single_valued_pools and not usual pools, hence they appear
       // in mergeSingle:
       case VECTOR_REAL:   MERGE_REF(VectorReal, RogueVector<Real>);
-      case VECTOR_STRING: MERGE_COPY(VectorString, vector<string>);
-      case VECTOR_STEREOSAMPLE: MERGE_COPY(VectorStereoSample, vector<StereoSample>);
-      case VECTOR_VECTOR_REAL: MERGE_COPY(VectorVectorReal, vector<vector<Real> >);
-      case VECTOR_VECTOR_STRING: MERGE_COPY(VectorVectorString, vector<vector<string> >);
-      case VECTOR_MATRIX_REAL:   MERGE_COPY(VectorMatrixReal, vector<TNT::Array2D<Real> >);
-      case VECTOR_TENSOR_REAL:   MERGE_COPY(VectorTensorReal,  vector<Tensor<Real> >);
+      case VECTOR_STRING: MERGE_COPY(VectorString, ::essentia::VectorEx<string>);
+      case VECTOR_STEREOSAMPLE: MERGE_COPY(VectorStereoSample, ::essentia::VectorEx<StereoSample>);
+      case VECTOR_VECTOR_REAL: MERGE_COPY(VectorVectorReal, ::essentia::VectorEx<::essentia::VectorEx<Real> >);
+      case VECTOR_VECTOR_STRING: MERGE_COPY(VectorVectorString, ::essentia::VectorEx<::essentia::VectorEx<string> >);
+      case VECTOR_MATRIX_REAL:   MERGE_COPY(VectorMatrixReal, ::essentia::VectorEx<TNT::Array2D<Real> >);
+      case VECTOR_TENSOR_REAL:   MERGE_COPY(VectorTensorReal,  ::essentia::VectorEx<Tensor<Real> >);
       //case POOL: p.merge(args[1].cppPool, mergeType)
 
 
@@ -433,7 +433,7 @@ PyObject* PyPool::merge(PyPool* self, PyObject* pyArgs) {
 }
 
 PyObject* PyPool::mergeSingle(PyPool* self, PyObject* pyArgs) {
-  vector<PyObject*> args = unpack(pyArgs);
+  ::essentia::VectorEx<PyObject*> args = unpack(pyArgs);
 
   // make sure we have three args (key, type, value)
   if (args.size() != 4) {
@@ -498,7 +498,7 @@ PyObject* PyPool::mergeSingle(PyPool* self, PyObject* pyArgs) {
 
 
 PyObject* PyPool::value(PyPool* self, PyObject* pyArgs) {
-  vector<PyObject*> args = unpack(pyArgs);
+  ::essentia::VectorEx<PyObject*> args = unpack(pyArgs);
 
   // make sure we have two arg and they are strings
   if (args.size() != 2 || !PyString_Check(args[0]) || !PyString_Check(args[1])) {
@@ -516,20 +516,20 @@ PyObject* PyPool::value(PyPool* self, PyObject* pyArgs) {
       case STRING: return String::toPythonCopy(&p.value<string>(key));
       case VECTOR_REAL: {
         // this is a special case, we can't create the RogueVector that wraps
-        // the Pool's underlying std::vector because it might be the case that
+        // the Pool's underlying ::essentia::VectorEx because it might be the case that
         // the Pool is deleted and the numpy.array that points to the RogueVector
         // still exists
-        const vector<Real>& v = p.value<vector<Real> >(key);
+        const ::essentia::VectorEx<Real>& v = p.value<::essentia::VectorEx<Real> >(key);
         RogueVector<Real>* r = new RogueVector<Real>(v.size(), 0.);
         for (int i=0; i<int(v.size()); ++i) { (*r)[i] = v[i]; }
         return VectorReal::toPythonRef(r);
       }
-      case VECTOR_STRING: return VectorString::toPythonCopy(&p.value<vector<string> >(key));
-      case VECTOR_STEREOSAMPLE: return VectorStereoSample::toPythonCopy(&p.value<vector<StereoSample> >(key));
-      case VECTOR_VECTOR_REAL: return VectorVectorReal::toPythonCopy(&p.value<vector<vector<Real> > >(key));
-      case VECTOR_VECTOR_STRING: return VectorVectorString::toPythonCopy(&p.value<vector<vector<string> > >(key));
-      case VECTOR_MATRIX_REAL: return VectorMatrixReal::toPythonCopy(&p.value<vector<TNT::Array2D<Real> > >(key));
-      case VECTOR_TENSOR_REAL: return VectorTensorReal::toPythonCopy(&p.value<vector<Tensor<Real> > >(key));
+      case VECTOR_STRING: return VectorString::toPythonCopy(&p.value<::essentia::VectorEx<string> >(key));
+      case VECTOR_STEREOSAMPLE: return VectorStereoSample::toPythonCopy(&p.value<::essentia::VectorEx<StereoSample> >(key));
+      case VECTOR_VECTOR_REAL: return VectorVectorReal::toPythonCopy(&p.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(key));
+      case VECTOR_VECTOR_STRING: return VectorVectorString::toPythonCopy(&p.value<::essentia::VectorEx<::essentia::VectorEx<string> > >(key));
+      case VECTOR_MATRIX_REAL: return VectorMatrixReal::toPythonCopy(&p.value<::essentia::VectorEx<TNT::Array2D<Real> > >(key));
+      case VECTOR_TENSOR_REAL: return VectorTensorReal::toPythonCopy(&p.value<::essentia::VectorEx<Tensor<Real> > >(key));
       case TENSOR_REAL:  return TensorReal::toPythonCopy(&p.value<Tensor<Real> >(key));
       default:
         ostringstream msg;
@@ -583,20 +583,20 @@ PyObject* PyPool::removeNamespace(PyPool* self, PyObject* obj) {
 
 PyObject* PyPool::descriptorNames(PyPool* self, PyObject* pyArgs) {
 
-  vector<PyObject*> args = unpack(pyArgs);
+  ::essentia::VectorEx<PyObject*> args = unpack(pyArgs);
   if (args.size() > 1) {
     PyErr_SetString(PyExc_TypeError, "expecting only one argument");
     return NULL;
   }
   if (args.size() == 0) {
-    vector<string> dNames = self->pool->descriptorNames();
+    ::essentia::VectorEx<string> dNames = self->pool->descriptorNames();
     return VectorString::toPythonCopy(&dNames);
   }
   if (!PyString_Check(args[0])) {
     PyErr_SetString(PyExc_TypeError, "expecting a string argument");
     return NULL;
   }
-  vector<string> dNames = self->pool->descriptorNames(PyString_AS_STRING(args[0]));
+  ::essentia::VectorEx<string> dNames = self->pool->descriptorNames(PyString_AS_STRING(args[0]));
 
   // convert dNames to python list
   return VectorString::toPythonCopy(&dNames);

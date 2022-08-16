@@ -100,7 +100,7 @@ void TensorflowPredictVGGish::configure() {
   int frameSize = 400;
   int hopSize = 160;
   int numberBands = 64;
-  vector<int> inputShape({batchSize, 1, patchSize, numberBands});
+  ::essentia::VectorEx<int> inputShape({batchSize, 1, patchSize, numberBands});
 
   _frameCutter->configure("frameSize", frameSize, "hopSize", hopSize);
 
@@ -123,8 +123,8 @@ void TensorflowPredictVGGish::configure() {
 
   _tensorflowPredict->configure("graphFilename", graphFilename,
                                 "savedModel", savedModel,
-                                "inputs", vector<string>({input}),
-                                "outputs", vector<string>({output}),
+                                "inputs", ::essentia::VectorEx<string>({input}),
+                                "outputs", ::essentia::VectorEx<string>({output}),
                                 "isTrainingName", isTrainingName);
 }
 
@@ -204,8 +204,8 @@ void TensorflowPredictVGGish::configure() {
 
 
 void TensorflowPredictVGGish::compute() {
-  const vector<Real>& signal = _signal.get();
-  vector<vector<Real> >& predictions = _predictions.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& predictions = _predictions.get();
 
   if (!signal.size()) {
     throw EssentiaException("TensorflowPredictVGGish: empty input signal");
@@ -216,7 +216,7 @@ void TensorflowPredictVGGish::compute() {
   _network->run();
 
   try {
-    predictions = _pool.value<vector<vector<Real> > >("predictions");
+    predictions = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("predictions");
   }
   catch (EssentiaException&) {
     predictions.clear();

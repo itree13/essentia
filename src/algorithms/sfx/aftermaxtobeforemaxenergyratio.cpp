@@ -32,11 +32,11 @@ const char* AfterMaxToBeforeMaxEnergyRatio::description = DOC("This algorithm co
 
 void AfterMaxToBeforeMaxEnergyRatio::compute() {
 
-  vector<Real> pitch = _pitch.get();
+  ::essentia::VectorEx<Real> pitch = _pitch.get();
   Real& afterMaxToBeforeMaxEnergyRatio = _afterMaxToBeforeMaxEnergyRatio.get();
 
   // Remove all 0Hz elements
-  vector<Real>::iterator i = pitch.begin();
+  ::essentia::VectorEx<Real>::iterator i = pitch.begin();
   while (i != pitch.end()) {
     if (*i <= 0.0) {
       i = pitch.erase(i);

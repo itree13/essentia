@@ -116,27 +116,27 @@ int main(int argc, char* argv[]) {
                                      "filename", outputStocFilename);
                                      
  
-  vector<Real> audio;
-  vector<Real> frame;
-  vector<Real> wframe;
-  vector<complex<Real> > fftframe;
+  ::essentia::VectorEx<Real> audio;
+  ::essentia::VectorEx<Real> frame;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<complex<Real> > fftframe;
   
-  vector<Real> magnitudes;
-  vector<Real> frequencies;
-  vector<Real> phases;
-  vector<Real> stocenv;
+  ::essentia::VectorEx<Real> magnitudes;
+  ::essentia::VectorEx<Real> frequencies;
+  ::essentia::VectorEx<Real> phases;
+  ::essentia::VectorEx<Real> stocenv;
 
 
-  vector<Real> allaudio; // concatenated audio file output
-  vector<Real> allsineaudio; // concatenated audio file output
-  vector<Real> allstocaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allsineaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allstocaudio; // concatenated audio file output
   
   
   // accumulate estimated values   for all frames for cleaning tracks before synthesis
-  vector< vector<Real> > frequenciesAllFrames;
-  vector< vector<Real> > magnitudesAllFrames;
-  vector< vector<Real> > phasesAllFrames;
-  vector< vector<Real> > stocEnvAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > frequenciesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > magnitudesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > phasesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > stocEnvAllFrames;
 
 
   // analysis
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
   fft->output("fft").set(fftframe);
   
   // configure spectrum:
-  vector<Real> spec;
+  ::essentia::VectorEx<Real> spec;
   spectrum->input("frame").set(wframe);
   spectrum->output("spectrum").set(spec);  
 
@@ -171,9 +171,9 @@ int main(int argc, char* argv[]) {
   hpsmodelanal->output("stocenv").set(stocenv);
   
 
- vector<Real> audioOutput;
-  vector<Real> audioSineOutput;
-  vector<Real> audioStocOutput;
+ ::essentia::VectorEx<Real> audioOutput;
+  ::essentia::VectorEx<Real> audioSineOutput;
+  ::essentia::VectorEx<Real> audioStocOutput;
 
   spsmodelsynth->input("magnitudes").set(magnitudes);
   spsmodelsynth->input("frequencies").set(frequencies);

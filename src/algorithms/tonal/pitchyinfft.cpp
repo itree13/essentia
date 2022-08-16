@@ -111,7 +111,7 @@ void PitchYinFFT::spectralWeights() {
 }
 
 void PitchYinFFT::compute() {
-  const vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   if (spectrum.empty()) {
     throw EssentiaException("PitchYinFFT: Cannot compute pitch detection on empty spectrum.");
   }
@@ -126,7 +126,7 @@ void PitchYinFFT::compute() {
 
   // build modified squared difference function using a weighted
   // input norm spectrum
-  vector<complex<Real> > frameFFT;
+  ::essentia::VectorEx<complex<Real> > frameFFT;
   _fft->input("frame").set(_sqrMag);
   _fft->output("fft").set(frameFFT);
 

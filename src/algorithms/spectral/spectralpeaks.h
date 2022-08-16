@@ -28,9 +28,9 @@ namespace standard {
 class SpectralPeaks : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrum;
-  Output<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _spectrum;
+  Output<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _frequencies;
   Algorithm* _peakDetect;
 
  public:
@@ -75,9 +75,9 @@ namespace streaming {
 class SpectralPeaks : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
-  Source<std::vector<Real> > _frequencies;
-  Source<std::vector<Real> > _magnitudes;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
+  Source<::essentia::VectorEx<Real> > _frequencies;
+  Source<::essentia::VectorEx<Real> > _magnitudes;
 
  public:
   SpectralPeaks() {

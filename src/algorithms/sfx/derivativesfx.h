@@ -28,7 +28,7 @@ namespace standard {
 class DerivativeSFX : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _envelope;
+  Input<::essentia::VectorEx<Real> > _envelope;
   Output<Real> _derAvAfterMax;
   Output<Real> _maxDerBeforeMax;
 
@@ -59,7 +59,7 @@ namespace streaming {
 class DerivativeSFX : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _envelope;
+  Sink<::essentia::VectorEx<Real> > _envelope;
   Source<Real> _derAvAfterMax;
   Source<Real> _maxDerBeforeMax;
 

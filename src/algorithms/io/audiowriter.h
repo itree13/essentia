@@ -69,7 +69,7 @@ namespace standard {
 // depends on it
 class AudioWriter : public Algorithm {
  protected:
-  Input<std::vector<StereoSample> > _audio;
+  Input<::essentia::VectorEx<StereoSample> > _audio;
 
   Real _duration;
   int _nChannels;

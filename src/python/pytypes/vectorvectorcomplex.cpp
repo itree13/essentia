@@ -23,7 +23,7 @@ using namespace essentia;
 
 DEFINE_PYTHON_TYPE(VectorVectorComplex);
 
-PyObject* VectorVectorComplex::toPythonCopy(const vector<vector<complex<Real> > >* v) {
+PyObject* VectorVectorComplex::toPythonCopy(const ::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >* v) {
   npy_intp dims[2] = { 0, 0 };
   dims[0] = v->size();
   if (!v->empty()) dims[1] = (*v)[0].size();
@@ -80,7 +80,7 @@ void* VectorVectorComplex::fromPythonCopy(PyObject* obj) {
   }
 
   int size = PyList_Size(obj);
-  vector<vector<complex<Real> > >* v = new vector<vector<complex<Real> > >(size, vector<complex<Real> >());
+  ::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >* v = new ::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >(size, ::essentia::VectorEx<complex<Real> >());
 
   for (int i=0; i<size; i++) {
     PyObject* row = PyList_GetItem(obj, i);
@@ -118,7 +118,7 @@ void* VectorVectorComplex::fromPythonCopy(PyObject* obj) {
 }
 /*
 Parameter* VectorVectorComplex::toParameter(PyObject* obj) {
-  vector<vector<complex<Real> > >* value = (vector<vector<complex<Real> > >*)fromPythonCopy(obj);
+  ::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >* value = (::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >*)fromPythonCopy(obj);
   Parameter* result = new Parameter(*value);
   delete value;
   return result;

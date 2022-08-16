@@ -28,8 +28,8 @@ namespace standard {
 class RhythmTransform : public Algorithm {
 
  protected:
-  Input<std::vector<std::vector<Real> > > _melBands;
-  Output<std::vector<std::vector<Real> > > _rhythmTransform;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _melBands;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _rhythmTransform;
 
   int _rtFrameSize;
   int _rtHopSize;
@@ -79,8 +79,8 @@ namespace streaming {
 class RhythmTransform : public AlgorithmComposite {
 
  protected:
-  Sink<std::vector<Real> > _melbands;
-  // it has to be a TNT::Array cause Pool doesn't support vector<vector<type> >
+  Sink<::essentia::VectorEx<Real> > _melbands;
+  // it has to be a TNT::Array cause Pool doesn't support ::essentia::VectorEx<::essentia::VectorEx<type> >
   Source<TNT::Array2D<Real> > _rhythmTransform;
 
   Pool _pool;

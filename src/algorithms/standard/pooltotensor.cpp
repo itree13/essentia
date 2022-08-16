@@ -43,8 +43,8 @@ AlgorithmStatus PoolToTensor::process() {
       return status;
   };
 
-  const vector<Pool>& pool = _pool.tokens();
-  vector<Tensor<Real> >& tensor = _tensor.tokens();
+  const ::essentia::VectorEx<Pool>& pool = _pool.tokens();
+  ::essentia::VectorEx<Tensor<Real> >& tensor = _tensor.tokens();
 
   for (size_t i = 0; i < tensor.size(); i++) {
     const Tensor<Real>& data = pool[i].value<Tensor<Real> >(_namespace);

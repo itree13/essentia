@@ -58,22 +58,22 @@ void SpsModelSynth::configure()
 
 void SpsModelSynth::compute() {
 
-  const std::vector<Real>& magnitudes = _magnitudes.get();
-  const std::vector<Real>& frequencies = _frequencies.get();
-  const std::vector<Real>& phases = _phases.get();
-  const std::vector<Real>& stocenv = _stocenv.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& phases = _phases.get();
+  const ::essentia::VectorEx<Real>& stocenv = _stocenv.get();
 
-  std::vector<Real>& outframe = _outframe.get();
-  std::vector<Real>& outsineframe = _outsineframe.get();
-  std::vector<Real>& outstocframe = _outstocframe.get();
+  ::essentia::VectorEx<Real>& outframe = _outframe.get();
+  ::essentia::VectorEx<Real>& outsineframe = _outsineframe.get();
+  ::essentia::VectorEx<Real>& outstocframe = _outstocframe.get();
 
 
   // temp vectors
-  std::vector<std::complex<Real> > fftSines;
-  std::vector<std::complex<Real> > fftStoc;
-  std::vector<Real> wsineFrame; // windowed frames
-  std::vector<Real> sineFrame;  // overlap output frame
-  std::vector<Real> stocFrame;  // output stochastic frame
+  ::essentia::VectorEx<std::complex<Real> > fftSines;
+  ::essentia::VectorEx<std::complex<Real> > fftStoc;
+  ::essentia::VectorEx<Real> wsineFrame; // windowed frames
+  ::essentia::VectorEx<Real> sineFrame;  // overlap output frame
+  ::essentia::VectorEx<Real> stocFrame;  // output stochastic frame
 
   int i = 0;
 

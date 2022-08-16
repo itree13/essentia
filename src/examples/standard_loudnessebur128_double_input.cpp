@@ -46,7 +46,7 @@ int main (int argc,char* argv[]) {
   std::string md5, cod;
 
   // Audio -> FrameCutter
-  vector<StereoSample> audioBuffer;
+  ::essentia::VectorEx<StereoSample> audioBuffer;
   audio1->output("audio").set(audioBuffer);
   audio1->output("sampleRate").set(sr);
   audio1->output("numberChannels").set(ch);
@@ -57,7 +57,7 @@ int main (int argc,char* argv[]) {
   le->input("signal").set(audioBuffer);
 
   // FrameCutter -> GapsDetector
-  vector<Real> momentaryLoudness, shortTermLoudness;
+  ::essentia::VectorEx<Real> momentaryLoudness, shortTermLoudness;
   Real integratedLoudness, loudnessRange;
 
   le->output("momentaryLoudness").set(momentaryLoudness);

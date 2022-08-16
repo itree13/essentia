@@ -29,8 +29,8 @@ namespace standard {
 class Resample : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _resampled;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _resampled;
 
  public:
   Resample() {

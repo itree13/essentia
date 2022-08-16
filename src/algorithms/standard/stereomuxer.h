@@ -68,9 +68,9 @@ namespace standard {
 
 class StereoMuxer : public Algorithm {
  protected:
-  Input<std::vector<AudioSample> > _left;
-  Input<std::vector<AudioSample> > _right;
-  Output<std::vector<StereoSample> > _audio;
+  Input<::essentia::VectorEx<AudioSample> > _left;
+  Input<::essentia::VectorEx<AudioSample> > _right;
+  Output<::essentia::VectorEx<StereoSample> > _audio;
 
  public:
   StereoMuxer() {

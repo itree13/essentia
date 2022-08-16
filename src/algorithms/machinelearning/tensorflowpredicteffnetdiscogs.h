@@ -40,7 +40,7 @@ class TensorflowPredictEffnetDiscogs : public AlgorithmComposite {
   Algorithm* _tensorToVectorReal;
 
   SinkProxy<Real> _signal;
-  SourceProxy<std::vector<Real> > _predictions;
+  SourceProxy<::essentia::VectorEx<Real> > _predictions;
 
   scheduler::Network* _network;
   bool _configured;
@@ -96,8 +96,8 @@ namespace standard {
 // depends on it
 class TensorflowPredictEffnetDiscogs : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<std::vector<Real> > > _predictions;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _predictions;
 
   streaming::Algorithm* _tensorflowPredictEffnetDiscogs;
   streaming::VectorInput<Real>* _vectorInput;
@@ -117,7 +117,7 @@ class TensorflowPredictEffnetDiscogs : public Algorithm {
   const int _sampleRate = 16000;
 
   void createInnerNetwork();
-  int padSignal(const std::vector<Real> &signal, std::vector<Real> &paddedSignal);
+  int padSignal(const ::essentia::VectorEx<Real> &signal, ::essentia::VectorEx<Real> &paddedSignal);
 
  public:
   TensorflowPredictEffnetDiscogs();

@@ -54,9 +54,9 @@ void GFCC::configure() {
 
 void GFCC::compute() {
   // get the inputs and outputs
-  const vector<Real>& spectrum = _spectrum.get();
-  vector<Real>& gfcc = _gfcc.get();
-  vector<Real>& bands = _bands.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
+  ::essentia::VectorEx<Real>& gfcc = _gfcc.get();
+  ::essentia::VectorEx<Real>& bands = _bands.get();
 
   // filter the spectrum using a gammatone filterbank
   _gtFilter->input("spectrum").set(spectrum);

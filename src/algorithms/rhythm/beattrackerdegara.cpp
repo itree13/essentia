@@ -175,13 +175,13 @@ void BeatTrackerDegara::createInnerNetwork() {
 void BeatTrackerDegara::compute() {
   // TODO: running this algorithm on consequent inputs always requires reset(),
   // which could be fixed by manually reseting here after computations are done
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& ticks = _ticks.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& ticks = _ticks.get();
 
   _vectorInput->setVector(&signal);
   _network->run();
   try {
-    ticks = _pool.value<vector<Real> >("internal.ticks");
+    ticks = _pool.value<::essentia::VectorEx<Real> >("internal.ticks");
   }
   catch (EssentiaException&) {
     // no ticks were found because audio signal was too short

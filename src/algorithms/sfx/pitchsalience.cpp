@@ -54,14 +54,14 @@ void PitchSalience::configure() {
 
 void PitchSalience::compute() {
 
-  const vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   Real& pitchSalience = _pitchSalience.get();
 
   if (spectrum.empty()) {
     throw EssentiaException("PitchSalience: spectrum is an empty vector");
   }
 
-  vector<Real> acf;
+  ::essentia::VectorEx<Real> acf;
   _autoCorrelation->input("array").set(spectrum);
   _autoCorrelation->output("autoCorrelation").set(acf);
   _autoCorrelation->compute();

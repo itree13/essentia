@@ -32,7 +32,7 @@ typedef TNT::Array2D<Real> array2d;
 void AddToPool(const array2d& a2d,
                const string& desc, // descriptor names
                Pool& pool) {
-    vector<vector<Real> > v2d =  array2DToVecvec(a2d);
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > v2d =  array2DToVecvec(a2d);
     for (size_t i = 0; i < v2d.size(); ++i)
       pool.add(desc, v2d[i]);
 }
@@ -75,11 +75,11 @@ int main(int argc, char** argv) {
   Pool pool;
 
   // set audio:
-  vector<Real> audio_mono;
+  ::essentia::VectorEx<Real> audio_mono;
   audio->output("audio").set(audio_mono);
 
   // set frameCutter:
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   frameCutter->input("signal").set(audio_mono);
   frameCutter->output("frame").set(frame);
 
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
   rms->output("rms").set(rms_value);
 
   // we need a vector to store rms values:
-  std::vector<Real> rms_vector;
+  ::essentia::VectorEx<Real> rms_vector;
 
   // load audio:
   audio->compute();
@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
   // Exemplifying how to add/retrieve values from the pool in order to output them  into stdout
   if (fade_in.dim1()) {
     AddToPool(fade_in, "high_level.fade_in", pool);
-    vector<vector<Real> > fadeIn = pool.value<vector<vector<Real> > > ("high_level.fade_in");
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > fadeIn = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > > ("high_level.fade_in");
     cout << "fade ins: ";
     for (size_t i=0; i < fadeIn.size(); ++i)
         cout << fadeIn[i] << endl;
@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
 
   if (fade_out.dim1()) {
     AddToPool(fade_out, "high_level.fade_out", pool);
-    vector<vector<Real> > fadeOut = pool.value<vector<vector<Real> > > ("high_level.fade_out");
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > fadeOut = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > > ("high_level.fade_out");
     cout << "fade outs: ";
     for (size_t i=0; i < fadeOut.size(); ++i)
         cout << fadeOut[i] << endl;

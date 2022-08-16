@@ -29,14 +29,14 @@ namespace standard {
 class TempoScaleBands : public Algorithm {
 
  private:
-  Input< std::vector<Real> > _bands;
-  Output<std::vector<Real> > _scaledBands;
+  Input< ::essentia::VectorEx<Real> > _bands;
+  Output<::essentia::VectorEx<Real> > _scaledBands;
   Output<Real> _cumulBands;
 
   Real _frameFactor;
-  std::vector<Real> _scratchBands;
-  std::vector<Real> _oldBands;
-  std::vector<Real> _bandsGain;
+  ::essentia::VectorEx<Real> _scratchBands;
+  ::essentia::VectorEx<Real> _oldBands;
+  ::essentia::VectorEx<Real> _bandsGain;
 
  public:
   TempoScaleBands() {
@@ -77,9 +77,9 @@ namespace streaming {
 class TempoScaleBands : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _bands;
+  Sink<::essentia::VectorEx<Real> > _bands;
   Source<Real> _cumulBands;
-  Source<std::vector<Real> > _scaledBands;
+  Source<::essentia::VectorEx<Real> > _scaledBands;
 
  public:
   TempoScaleBands() {

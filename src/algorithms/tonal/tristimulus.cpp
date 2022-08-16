@@ -39,9 +39,9 @@ const char* Tristimulus::description = DOC("This algorithm calculates the tristi
 
 void Tristimulus::compute() {
 
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
-  vector<Real>& tristimulus = _tristimulus.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
+  ::essentia::VectorEx<Real>& tristimulus = _tristimulus.get();
 
   if (magnitudes.size() != frequencies.size()) {
     throw EssentiaException("Tristimulus: frequency and magnitude vectors are of different size");

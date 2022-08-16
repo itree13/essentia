@@ -28,7 +28,7 @@ namespace standard {
 class ReplayGain : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _gain;
 
   Algorithm* _eqloudFilter;

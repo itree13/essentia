@@ -122,8 +122,8 @@ class PhantomBuffer : public MultiRateBuffer<T> {
    */
   ~PhantomBuffer() {}
 
-  const std::vector<T>& readView(ReaderID id) const;
-  std::vector<T>& writeView() { return _writeView; }
+  const ::essentia::VectorEx<T>& readView(ReaderID id) const;
+  ::essentia::VectorEx<T>& writeView() { return _writeView; }
 
   /**
    * This method tries to acquire the requested number of tokens. It returns true
@@ -193,14 +193,14 @@ class PhantomBuffer : public MultiRateBuffer<T> {
   SourceBase* _parent;
 
   int _bufferSize, _phantomSize; // bufferSize does not include phantomSize
-  std::vector<T> _buffer; // the buffer where data is stored
+  ::essentia::VectorEx<T> _buffer; // the buffer where data is stored
   // bufferSize must be > phantomSize in all cases
 
   Window _writeWindow;
-  std::vector<Window> _readWindow;
+  ::essentia::VectorEx<Window> _readWindow;
 
   RogueVector<T> _writeView;
-  std::vector<RogueVector<T> > _readView; // @todo CAREFUL WHEN COPYING ROGUEVECTOR...
+  ::essentia::VectorEx<RogueVector<T> > _readView; // @todo CAREFUL WHEN COPYING ROGUEVECTOR...
 
   // threading-related & locking structures
   mutable Mutex mutex; // should be locked before any modification to the object

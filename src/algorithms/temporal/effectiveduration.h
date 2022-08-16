@@ -28,7 +28,7 @@ namespace standard {
 class EffectiveDuration : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _effectiveDuration;
 
  public:
@@ -63,7 +63,7 @@ namespace streaming {
 class EffectiveDuration : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _effectiveDuration;
 
  public:

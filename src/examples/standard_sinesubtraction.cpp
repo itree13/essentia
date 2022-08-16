@@ -91,15 +91,15 @@ int main(int argc, char* argv[]) {
                                      "filename", outputFilename);
 
 
-  vector<Real> audio;
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> audio;
+  ::essentia::VectorEx<Real> frame;
 
-  vector<Real> magnitudes;
-  vector<Real> frequencies;
-  vector<Real> phases;
+  ::essentia::VectorEx<Real> magnitudes;
+  ::essentia::VectorEx<Real> frequencies;
+  ::essentia::VectorEx<Real> phases;
 
 
-  vector<Real> allaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allaudio; // concatenated audio file output
 
 
   // analysis
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
   sinemodelanal->output("phases").set(phases);
   
 
-  vector<Real> audioOutput;
+  ::essentia::VectorEx<Real> audioOutput;
 
 // this needs to take into account overlap-add issues, introducing delay
  sinesubtraction->input("frame").set(frame); // size is iput _fftSize

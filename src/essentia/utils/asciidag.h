@@ -58,14 +58,14 @@ typedef Position Direction;
  * rectangle, which is a vector of string rows where each row has the same length.
  * This will allow us to navigate in it with rect[x][y], for instance.
  */
-std::vector<std::string> makeRectangle(const std::string& network);
+::essentia::VectorEx<std::string> makeRectangle(const std::string& network);
 
 /**
  * Take an array of C strings representing the network in ASCII art form and turn it into a
  * rectangle, which is a vector of string rows where each row has the same length.
  * This will allow us to navigate in it with rect[x][y], for instance.
  */
-std::vector<std::string> makeRectangle(const char* const* network, int size);
+::essentia::VectorEx<std::string> makeRectangle(const char* const* network, int size);
 
 
 /**
@@ -73,7 +73,7 @@ std::vector<std::string> makeRectangle(const char* const* network, int size);
  * represented as a matrix of @c chars. The only restriction (guarantee?) is
  * that every row (line) has the same number of columns (same length).
  */
-class AsciiCanvas : public std::vector<std::string> {
+class AsciiCanvas : public ::essentia::VectorEx<std::string> {
  public:
   // NB: template is only used so that ARRAY_SIZE can work, we only want const char*[] here
   template <typename NetworkType>
@@ -81,7 +81,7 @@ class AsciiCanvas : public std::vector<std::string> {
     (*this) = makeRectangle(network, ARRAY_SIZE(network));
   }
 
-  AsciiCanvas& operator=(const std::vector<std::string>& other);
+  AsciiCanvas& operator=(const ::essentia::VectorEx<std::string>& other);
 
   int height() const { return (int)size(); }
   int width() const { return (height() == 0) ? 0 : at(0).size(); }
@@ -97,8 +97,8 @@ class AsciiCanvas : public std::vector<std::string> {
    */
   void fill(char c);
 
-  const std::string& at(int i) const { return std::vector<std::string>::at(i); }
-        std::string& at(int i)       { return std::vector<std::string>::at(i); }
+  const std::string& at(int i) const { return ::essentia::VectorEx<std::string>::at(i); }
+        std::string& at(int i)       { return ::essentia::VectorEx<std::string>::at(i); }
 
   char  at(const Position& pos) const { return (*this)[pos.y][pos.x]; }
   char& at(const Position& pos)       { return (*this)[pos.y][pos.x]; }
@@ -128,7 +128,7 @@ class AsciiBox {
    * This constructs a box that is supposedly anchored at pos (x, y) in the given
    * network. If that is not the case, the result is undefined.
    */
-  AsciiBox(const std::vector<std::string>& network, int x, int y);
+  AsciiBox(const ::essentia::VectorEx<std::string>& network, int x, int y);
 
   /**
    * Return whether the given position is located on the border (frame) of this box.
@@ -138,14 +138,14 @@ class AsciiBox {
   /**
    * Return whether there is a box which top-left corner is located at (x, y).
    */
-  static bool isBox(const std::vector<std::string>& network, int x, int y);
+  static bool isBox(const ::essentia::VectorEx<std::string>& network, int x, int y);
 
   /**
    * Find and return all the boxes in the given ascii network representation.
    * This function does not do any checking of any sort, so an ill-formed box will
    * simply be ignored and no exception will be thrown
    */
-  static std::vector<AsciiBox> findBoxes(const std::vector<std::string>& network);
+  static ::essentia::VectorEx<AsciiBox> findBoxes(const ::essentia::VectorEx<std::string>& network);
 
 };
 

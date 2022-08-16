@@ -53,10 +53,10 @@ void ChordsDetectionBeats::configure() {
 }
 
 void ChordsDetectionBeats::compute() {
-  const vector<vector<Real> >& hpcp = _pcp.get();
-  vector<string>& chords = _chords.get();
-  vector<Real>& strength = _strength.get();
-  const vector<Real>& ticks = _ticks.get(); 
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& hpcp = _pcp.get();
+  ::essentia::VectorEx<string>& chords = _chords.get();
+  ::essentia::VectorEx<Real>& strength = _strength.get();
+  const ::essentia::VectorEx<Real>& ticks = _ticks.get(); 
   
   string key;
   string scale;
@@ -81,7 +81,7 @@ void ChordsDetectionBeats::compute() {
       frameEnd = frameStart + 1;
 
     if (frameEnd > (int)hpcp.size()-1) break;
-    vector<Real> hpcpMedian;
+    ::essentia::VectorEx<Real> hpcpMedian;
     if (_chromaPick == "interbeat_median")
     {
       hpcpMedian = medianFrames(hpcp, frameStart, frameEnd);

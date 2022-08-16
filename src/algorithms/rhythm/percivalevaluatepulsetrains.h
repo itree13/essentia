@@ -27,11 +27,11 @@ namespace standard {
 class PercivalEvaluatePulseTrains : public Algorithm {
 
   protected:
-    Input<std::vector<Real> > _oss;
-    Input<std::vector<Real> > _peakPositions;
+    Input<::essentia::VectorEx<Real> > _oss;
+    Input<::essentia::VectorEx<Real> > _peakPositions;
     Output<Real> _lag;
 
-    void calculatePulseTrains(const std::vector<Real>& ossWindow,
+    void calculatePulseTrains(const ::essentia::VectorEx<Real>& ossWindow,
                               const int lag,
                               Real& magScore,
                               Real& varScore);
@@ -68,8 +68,8 @@ namespace streaming {
 class PercivalEvaluatePulseTrains : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _oss;
-  Sink<std::vector<Real> > _peakPositions;
+  Sink<::essentia::VectorEx<Real> > _oss;
+  Sink<::essentia::VectorEx<Real> > _peakPositions;
   Source<Real> _lag;
 
  public:

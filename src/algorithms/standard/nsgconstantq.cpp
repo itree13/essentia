@@ -68,9 +68,9 @@ void NSGConstantQ::configure() {
 
 
 void NSGConstantQ::designWindow() {
-  vector<Real> cqtbw; // bandwidths
-  vector<Real> bw;
-  vector<Real> posit;
+  ::essentia::VectorEx<Real> cqtbw; // bandwidths
+  ::essentia::VectorEx<Real> bw;
+  ::essentia::VectorEx<Real> posit;
 
   Real nf = _sr / 2;
 
@@ -174,7 +174,7 @@ void NSGConstantQ::designWindow() {
 
   // Use Windowing to create the required window filter-bank.
   for (int j = 0; j < baseFreqsSize; ++j) {
-    vector<Real> inputWindow(_winsLen[j], 1);
+    ::essentia::VectorEx<Real> inputWindow(_winsLen[j], 1);
 
     _windowing->configure("type", parameter("window").toLower(),
                           "size", _winsLen[j],
@@ -199,8 +199,8 @@ void NSGConstantQ::designWindow() {
   // Setup Tukey windows for the DC and Nyquist frequencies.
   for (int j = 0; j <= _binsNum + 1; j += _binsNum + 1) {
     if ( _winsLen[j] > _winsLen[j+1]) {
-      vector<Real> inputWindow(_winsLen[j], 1);
-      _freqWins[j] = vector<Real>(_winsLen[j], 1);
+      ::essentia::VectorEx<Real> inputWindow(_winsLen[j], 1);
+      _freqWins[j] = ::essentia::VectorEx<Real>(_winsLen[j], 1);
 
       copy(_freqWins[j+1].begin(),
            _freqWins[j+1].end(),
@@ -245,7 +245,7 @@ void NSGConstantQ::createCoefficients() {
 
 
 void NSGConstantQ::normalize() {
-  vector<Real> normalizeWeights(_binsNum + 2, 1);
+  ::essentia::VectorEx<Real> normalizeWeights(_binsNum + 2, 1);
 
   if (_normalize == "sine") {
     copy(_winsLen.begin(), _winsLen.begin() + _binsNum + 2, normalizeWeights.begin());
@@ -278,14 +278,14 @@ void NSGConstantQ::normalize() {
 
 
 void NSGConstantQ::compute() {
-  const vector<Real>& originalSignal = _signal.get();
-  vector<vector<complex<Real> > >& constantQ = _constantQ.get();
-  vector<complex<Real> >& constantQDC = _constantQDC.get();
-  vector<complex<Real> >& constantQNF = _constantQNF.get();
+  const ::essentia::VectorEx<Real>& originalSignal = _signal.get();
+  ::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >& constantQ = _constantQ.get();
+  ::essentia::VectorEx<complex<Real> >& constantQDC = _constantQDC.get();
+  ::essentia::VectorEx<complex<Real> >& constantQNF = _constantQNF.get();
 
-  vector<complex<Real> > fft;
-  vector<int> posit;
-  vector<Real> paddedSignal;
+  ::essentia::VectorEx<complex<Real> > fft;
+  ::essentia::VectorEx<int> posit;
+  ::essentia::VectorEx<Real> paddedSignal;
 
   if (originalSignal.size() <= 1) {
     throw EssentiaException("NSGConstantQ: the size of the input signal is not greater than one");
@@ -304,7 +304,7 @@ void NSGConstantQ::compute() {
     paddedSignal.push_back(originalSignal.back());
   }
 
-  const vector<Real>& signal = (originalSignal.size() % 2) ? paddedSignal : originalSignal;
+  const ::essentia::VectorEx<Real>& signal = (originalSignal.size() % 2) ? paddedSignal : originalSignal;
 
   // Check input. If different shape reconfigure the algorithm.
   if ((int)signal.size() != _inputSize) {
@@ -346,11 +346,11 @@ void NSGConstantQ::compute() {
             [&](int p){ return p - _shifts[0]; });
 
   // Add some zero padding if needed.
-  vector<Real> padding(fill,0.0);
+  ::essentia::VectorEx<Real> padding(fill,0.0);
   fft.insert(fft.end(), padding.begin(), padding.end());
 
   // Extract filter lengths.
-  vector<int> Lg(_freqWins.size(),0);
+  ::essentia::VectorEx<int> Lg(_freqWins.size(),0);
 
   for (int j = 0; j < (int)_freqWins.size(); ++j) {
     Lg[j] = _freqWins[j].size();
@@ -361,10 +361,10 @@ void NSGConstantQ::compute() {
   }
 
   // Prepare index vectors and compute the coefficients.
-  vector<int> idx;
-  vector<int> win_range;
-  vector<int> product_idx;
-  vector<complex <Real> > product;
+  ::essentia::VectorEx<int> idx;
+  ::essentia::VectorEx<int> win_range;
+  ::essentia::VectorEx<int> product_idx;
+  ::essentia::VectorEx<complex <Real> > product;
   constantQ.resize(N);
 
   // The actual Gabor transform.

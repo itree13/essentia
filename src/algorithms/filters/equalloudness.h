@@ -29,10 +29,10 @@ namespace standard {
 class EqualLoudness : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _x;
-  Output<std::vector<Real> > _y;
+  Input<::essentia::VectorEx<Real> > _x;
+  Output<::essentia::VectorEx<Real> > _y;
 
-  std::vector<Real> _z; // intermediate storage vector
+  ::essentia::VectorEx<Real> _z; // intermediate storage vector
 
   Algorithm* _yulewalkFilter;
   Algorithm* _butterworthFilter;

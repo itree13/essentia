@@ -37,15 +37,15 @@ protected:
   int _blockSize;
   int _pluginId;
   std::string _name, _description;
-  std::vector<float> _spectrum;
-  std::vector<float> _phase;
+  ::essentia::VectorEx<float> _spectrum;
+  ::essentia::VectorEx<float> _phase;
   essentia::standard::Algorithm* _peaks;
-  std::vector<float> _peakmags;
-  std::vector<float> _peakfreqs;
+  ::essentia::VectorEx<float> _peakmags;
+  ::essentia::VectorEx<float> _peakfreqs;
   essentia::standard::Algorithm* _bbands;
-  std::vector<float> _barkBands;
+  ::essentia::VectorEx<float> _barkBands;
   essentia::standard::Algorithm* _mbands;
-  std::vector<float> _melBands;
+  ::essentia::VectorEx<float> _melBands;
   essentia::Pool _pool;
 
   static int essentiaVampPluginId;
@@ -99,7 +99,7 @@ public:
                                const std::string& prefix = "") const;
 
   Feature makeFeature(float f) const;
-  Feature makeFeature(const std::vector<float>& f) const;
+  Feature makeFeature(const ::essentia::VectorEx<float>& f) const;
 
   template <typename T>
   FeatureSet returnFeature(T f) const {

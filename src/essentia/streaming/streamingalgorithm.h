@@ -126,10 +126,10 @@ enum AlgorithmStatus {
  * can have in your stream. For example, for an audio stream, the token type
  * will be Real, because a single audio sample is represented as a Real. A
  * frame cutter which outputs frames will have the Token type set to
- * vector<Real>, because you can't take smaller than that, otherwise the frame
+ * ::essentia::VectorEx<Real>, because you can't take smaller than that, otherwise the frame
  * would be incomplete. A framecutter is then a strange beast, because it has
  * a Sink<Real> (input is a stream of audio samples), but has also a
- * Source<vector<Real> >, because it outputs whole frames one by one. This
+ * Source<::essentia::VectorEx<Real> >, because it outputs whole frames one by one. This
  * might seem strange, but is not a problem at all.
  *
  * NB: of course, the input of the framecutter will consume tokens much more
@@ -176,12 +176,12 @@ class ESSENTIA_API Algorithm : public Configurable {
   /**
    * Returns the names of all the inputs that have been defined for this algorithm.
    */
-  std::vector<std::string> inputNames() const { return _inputs.keys(); }
+  ::essentia::VectorEx<std::string> inputNames() const { return _inputs.keys(); }
 
   /**
    * Returns the names of all the outputs that have been defined for this algorithm.
    */
-  std::vector<std::string> outputNames() const { return _outputs.keys(); }
+  ::essentia::VectorEx<std::string> outputNames() const { return _outputs.keys(); }
 
 
   /**

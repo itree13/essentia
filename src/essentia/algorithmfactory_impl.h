@@ -31,8 +31,8 @@ EssentiaFactory<BaseAlgorithm>& EssentiaFactory<BaseAlgorithm>::instance() {
 }
 
 template <typename BaseAlgorithm>
-std::vector<std::string> EssentiaFactory<BaseAlgorithm>::keys() {
-  std::vector<std::string> result;
+::essentia::VectorEx<std::string> EssentiaFactory<BaseAlgorithm>::keys() {
+  ::essentia::VectorEx<std::string> result;
   const CreatorMap& m = instance()._map;
   for (typename CreatorMap::const_iterator it = m.begin(); it != m.end(); ++it) {
     result.push_back(it->first);

@@ -53,7 +53,7 @@ void LowLevelSpectral(SourceBase& input, Pool& pool, const Pool& options, const 
   // Silence Rate
   Real thresholds_dB[] = { -20, -30, -60 };
 
-  vector<Real> thresholds(ARRAY_SIZE(thresholds_dB));
+  ::essentia::VectorEx<Real> thresholds(ARRAY_SIZE(thresholds_dB));
   for (uint i=0; i<thresholds.size(); i++) {
     thresholds[i] = db2lin(thresholds_dB[i]/2.0);
   }
@@ -346,7 +346,7 @@ void LevelAverage(Pool& pool, const string& nspace) {
   string llspace = "lowlevel.";
   if (!nspace.empty()) llspace = nspace + ".lowlevel.";
 
-  vector<Real> levelArray = pool.value<vector<Real> >(llspace + "loudness");
+  ::essentia::VectorEx<Real> levelArray = pool.value<::essentia::VectorEx<Real> >(llspace + "loudness");
   pool.remove(llspace + "loudness");
 
   // Maximum dynamic

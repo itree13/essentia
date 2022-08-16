@@ -35,7 +35,7 @@ const char* LoopBpmEstimator::description = DOC("This algorithm estimates the BP
 
 
 void LoopBpmEstimator::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& bpm = _bpm.get();
 
   Real bpmEstimate;

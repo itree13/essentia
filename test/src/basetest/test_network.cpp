@@ -877,7 +877,7 @@ TEST(Network, DiamondShape3) {
   Network n(A);
   n.update();
 
-  vector<Algorithm*> order = n.linearExecutionOrder();
+  ::essentia::VectorEx<Algorithm*> order = n.linearExecutionOrder();
 
   ASSERT_EQ((size_t)8, order.size());
   EXPECT_EQ("A", order[0]->name());
@@ -886,8 +886,8 @@ TEST(Network, DiamondShape3) {
   EXPECT_TRUE((order[3]->name() == "PitchYinFFT" && order[4]->name() == "SpectralPeaks") ||
               (order[3]->name() == "SpectralPeaks" && order[4]->name() == "PitchYinFFT"));
   EXPECT_EQ("HarmonicPeaks", order[5]->name());
-  EXPECT_TRUE((order[6]->name() == "PoolStorage" && order[7]->name() == "DevNull<std::vector<Real>>[0]") ||
-              (order[6]->name() == "DevNull<std::vector<Real>>[0]" && order[7]->name() == "PoolStorage"));
+  EXPECT_TRUE((order[6]->name() == "PoolStorage" && order[7]->name() == "DevNull<::essentia::VectorEx<Real>>[0]") ||
+              (order[6]->name() == "DevNull<::essentia::VectorEx<Real>>[0]" && order[7]->name() == "PoolStorage"));
 }
 
 

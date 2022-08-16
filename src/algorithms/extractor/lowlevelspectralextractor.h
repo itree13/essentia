@@ -33,12 +33,12 @@ class LowLevelSpectralExtractor : public AlgorithmComposite {
  protected:
   SinkProxy<Real> _signal;
 
-  SourceProxy<std::vector<Real> > _bbands;
+  SourceProxy<::essentia::VectorEx<Real> > _bbands;
   SourceProxy<Real> _bbandsKurtosis;
   SourceProxy<Real> _bbandsSkewness;
   SourceProxy<Real> _bbandsSpread;
   SourceProxy<Real> _hfcValue;
-  SourceProxy<std::vector<Real> > _mfccs;
+  SourceProxy<::essentia::VectorEx<Real> > _mfccs;
   SourceProxy<Real> _pitchValue;
   SourceProxy<Real> _pitchConfidence;
   SourceProxy<Real> _pitchSalienceValue;
@@ -61,7 +61,7 @@ class LowLevelSpectralExtractor : public AlgorithmComposite {
   SourceProxy<Real> _zeroCrossingRate;
 
   SourceProxy<Real> _inharmonicityValue;
-  SourceProxy<std::vector<Real> > _tristimulusValue;
+  SourceProxy<::essentia::VectorEx<Real> > _tristimulusValue;
   SourceProxy<Real> _odd2even;
 
   Algorithm *_barkBands, *_centralMoments, *_crest, *_decrease,
@@ -108,36 +108,36 @@ namespace standard {
 
 class LowLevelSpectralExtractor : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<std::vector<Real> > > _barkBands;
-  Output<std::vector<Real> > _kurtosis;
-  Output<std::vector<Real> > _skewness;
-  Output<std::vector<Real> > _spread;
-  Output<std::vector<Real> > _hfc;
-  Output<std::vector<std::vector<Real> > > _mfcc;
-  Output<std::vector<Real> > _pitch;
-  Output<std::vector<Real> > _pitchConfidence;
-  Output<std::vector<Real> > _pitchSalience;
-  Output<std::vector<Real> > _threshold_0;
-  Output<std::vector<Real> > _threshold_1;
-  Output<std::vector<Real> > _threshold_2;
-  Output<std::vector<Real> > _spectralComplexity;
-  Output<std::vector<Real> > _crest;
-  Output<std::vector<Real> > _decrease;
-  Output<std::vector<Real> > _energy;
-  Output<std::vector<Real> > _energyBand_0;
-  Output<std::vector<Real> > _energyBand_1;
-  Output<std::vector<Real> > _energyBand_2;
-  Output<std::vector<Real> > _energyBand_3;
-  Output<std::vector<Real> > _flatnessdb;
-  Output<std::vector<Real> > _flux;
-  Output<std::vector<Real> > _rms;
-  Output<std::vector<Real> > _rollOff;
-  Output<std::vector<Real> > _strongPeak;
-  Output<std::vector<Real> > _zeroCrossingRate;
-  Output<std::vector<Real> > _inharmonicity;
-  Output<std::vector<std::vector<Real> > > _tristimulus;
-  Output<std::vector<Real> > _oddToEvenHarmonicEnergyRatio;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _barkBands;
+  Output<::essentia::VectorEx<Real> > _kurtosis;
+  Output<::essentia::VectorEx<Real> > _skewness;
+  Output<::essentia::VectorEx<Real> > _spread;
+  Output<::essentia::VectorEx<Real> > _hfc;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _mfcc;
+  Output<::essentia::VectorEx<Real> > _pitch;
+  Output<::essentia::VectorEx<Real> > _pitchConfidence;
+  Output<::essentia::VectorEx<Real> > _pitchSalience;
+  Output<::essentia::VectorEx<Real> > _threshold_0;
+  Output<::essentia::VectorEx<Real> > _threshold_1;
+  Output<::essentia::VectorEx<Real> > _threshold_2;
+  Output<::essentia::VectorEx<Real> > _spectralComplexity;
+  Output<::essentia::VectorEx<Real> > _crest;
+  Output<::essentia::VectorEx<Real> > _decrease;
+  Output<::essentia::VectorEx<Real> > _energy;
+  Output<::essentia::VectorEx<Real> > _energyBand_0;
+  Output<::essentia::VectorEx<Real> > _energyBand_1;
+  Output<::essentia::VectorEx<Real> > _energyBand_2;
+  Output<::essentia::VectorEx<Real> > _energyBand_3;
+  Output<::essentia::VectorEx<Real> > _flatnessdb;
+  Output<::essentia::VectorEx<Real> > _flux;
+  Output<::essentia::VectorEx<Real> > _rms;
+  Output<::essentia::VectorEx<Real> > _rollOff;
+  Output<::essentia::VectorEx<Real> > _strongPeak;
+  Output<::essentia::VectorEx<Real> > _zeroCrossingRate;
+  Output<::essentia::VectorEx<Real> > _inharmonicity;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _tristimulus;
+  Output<::essentia::VectorEx<Real> > _oddToEvenHarmonicEnergyRatio;
 
   bool _configured;
 

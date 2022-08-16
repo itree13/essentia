@@ -30,7 +30,7 @@ class SBic : public Algorithm {
 
  private:
   Input<TNT::Array2D<Real> > _features;
-  Output<std::vector<Real> > _segmentation;
+  Output<::essentia::VectorEx<Real> > _segmentation;
 
   int _size1;
   int _size2;
@@ -83,7 +83,7 @@ class SBic : public StreamingAlgorithmWrapper {
 
  protected:
   Sink<TNT::Array2D<Real> > _features;
-  Source<std::vector<Real> > _segmentation;
+  Source<::essentia::VectorEx<Real> > _segmentation;
 
  public:
   SBic() {

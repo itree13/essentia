@@ -48,7 +48,7 @@ void depthFirstApply(NodeType* root, void (*nodeFunc)(NodeType* node)) {
 
     nodeFunc(currentNode);
 
-    const std::vector<NodeType*>& children = currentNode->children();
+    const ::essentia::VectorEx<NodeType*>& children = currentNode->children();
     // only add the nodes which have not been previously visited
     // NB: we could let the check on currentNode at the beginning of this loop take care
     //     of this, but doing it here is faster because it spares us adding the node and
@@ -64,12 +64,12 @@ void depthFirstApply(NodeType* root, void (*nodeFunc)(NodeType* node)) {
 
 
 template <typename NodeType, typename MappedType>
-std::vector<MappedType> depthFirstMap(NodeType* root,
+::essentia::VectorEx<MappedType> depthFirstMap(NodeType* root,
                                       MappedType (*mapFunc)(NodeType* node)) {
 
-  if (!root) return std::vector<MappedType>();
+  if (!root) return ::essentia::VectorEx<MappedType>();
 
-  std::vector<MappedType> result;
+  ::essentia::VectorEx<MappedType> result;
   std::stack<NodeType*> toVisit;
   std::set<NodeType*> visited;
   toVisit.push(root);
@@ -83,7 +83,7 @@ std::vector<MappedType> depthFirstMap(NodeType* root,
 
     result.push_back(mapFunc(currentNode));
 
-    const std::vector<NodeType*>& children = currentNode->children();
+    const ::essentia::VectorEx<NodeType*>& children = currentNode->children();
     // only add the nodes which have not been previously visited
     // NB: we could let the check on currentNode at the beginning of this loop take care
     //     of this, but doing it here is faster because it spares us adding the node and
@@ -104,7 +104,7 @@ NodeType* returnIdentity(NodeType* node) {
 }
 
 template <typename NodeType>
-std::vector<NodeType*> depthFirstSearch(NodeType* root) {
+::essentia::VectorEx<NodeType*> depthFirstSearch(NodeType* root) {
   return depthFirstMap(root, returnIdentity<NodeType>);
 }
 
@@ -133,14 +133,14 @@ class ReversePairCompare {
 };
 
 template <typename NodeType>
-void adjacencyMatrix(const std::vector<std::pair<NodeType*, std::string> >& nodes,
-                     std::vector<std::vector<bool> >& adjMatrix) {
+void adjacencyMatrix(const ::essentia::VectorEx<std::pair<NodeType*, std::string> >& nodes,
+                     ::essentia::VectorEx<::essentia::VectorEx<bool> >& adjMatrix) {
   int nnodes = nodes.size();
-  adjMatrix = std::vector<std::vector<bool> >(nnodes, std::vector<bool>(nnodes, false));
+  adjMatrix = ::essentia::VectorEx<::essentia::VectorEx<bool> >(nnodes, ::essentia::VectorEx<bool>(nnodes, false));
 
   for (int i=0; i<nnodes; i++) {
     NodeType* start = nodes[i].first;
-    const std::vector<NodeType*>& children = start->children();
+    const ::essentia::VectorEx<NodeType*>& children = start->children();
     for (int j=0; j<(int)children.size(); j++) {
       for (int k=0; k<nnodes; k++) {
         if (children[j] == nodes[k].first) adjMatrix[i][k] = true;
@@ -151,8 +151,8 @@ void adjacencyMatrix(const std::vector<std::pair<NodeType*, std::string> >& node
 
 // most likely this overload is not very dangerous
 template <typename NodeType>
-void printAdjacencyMatrix(const std::vector<std::vector<bool> >& adjMatrix,
-                          const std::vector<std::pair<NodeType*, std::string> >& nodes) {
+void printAdjacencyMatrix(const ::essentia::VectorEx<::essentia::VectorEx<bool> >& adjMatrix,
+                          const ::essentia::VectorEx<std::pair<NodeType*, std::string> >& nodes) {
   int size = adjMatrix.size();
   for (int i=0; i<size; i++) {
     for (int j=0; j<size; j++) {
@@ -178,8 +178,8 @@ bool areNetworkTopologiesEqual(NodeType* n1, NodeType* n2) {
   //    - if the matrices are different for all the permutations, then the networks are different
 
   // get the list of nodes and their names
-  std::vector<std::pair<NodeType*, std::string> > nodes1 = depthFirstMap(n1, getIdentityAndName);
-  std::vector<std::pair<NodeType*, std::string> > nodes2 = depthFirstMap(n2, getIdentityAndName);
+  ::essentia::VectorEx<std::pair<NodeType*, std::string> > nodes1 = depthFirstMap(n1, getIdentityAndName);
+  ::essentia::VectorEx<std::pair<NodeType*, std::string> > nodes2 = depthFirstMap(n2, getIdentityAndName);
 
   E_DEBUG(EGraph, "Comparing network topologies:");
   E_DEBUG(EGraph, "  n1.size() = " << nodes1.size() << " - n2.size() = " << nodes2.size());
@@ -200,7 +200,7 @@ bool areNetworkTopologiesEqual(NodeType* n1, NodeType* n2) {
 
   // now try all the permutations of the nodes with the same name and try to look whether there is
   // one for which the adjacency matrices are equal
-  std::vector<std::pair<int, int> > same; // ranges for the nodes which have the same name
+  ::essentia::VectorEx<std::pair<int, int> > same; // ranges for the nodes which have the same name
 
   int idx = 0;
   while (idx < (nnodes-1)) {
@@ -219,8 +219,8 @@ bool areNetworkTopologiesEqual(NodeType* n1, NodeType* n2) {
               nodes1.begin() + same[i].second);
   }
 
-  std::vector<std::vector<bool> > adjMatrix1;
-  std::vector<std::vector<bool> > adjMatrix2;
+  ::essentia::VectorEx<::essentia::VectorEx<bool> > adjMatrix1;
+  ::essentia::VectorEx<::essentia::VectorEx<bool> > adjMatrix2;
 
   // 2 will be fixed, compute its adjacency matrix now
   adjacencyMatrix(nodes2, adjMatrix2);

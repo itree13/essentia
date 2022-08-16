@@ -38,8 +38,8 @@ class TensorflowPredict2D : public AlgorithmComposite {
   Algorithm* _poolToTensor;
   Algorithm* _tensorToVectorReal;
 
-  SinkProxy<std::vector<Real> > _features;
-  SourceProxy<std::vector<Real> > _predictions;
+  SinkProxy<::essentia::VectorEx<Real> > _features;
+  SourceProxy<::essentia::VectorEx<Real> > _predictions;
 
   scheduler::Network* _network;
   bool _configured;
@@ -93,10 +93,10 @@ namespace standard {
 class TensorflowPredict2D : public Algorithm {
  protected:
   Input<TNT::Array2D<Real> > _features;
-  Output<std::vector<std::vector<Real> > > _predictions;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _predictions;
 
   streaming::Algorithm* _tensorflowPredict2D;
-  streaming::VectorInput<std::vector<Real> >* _vectorVectorInput;
+  streaming::VectorInput<::essentia::VectorEx<Real> >* _vectorVectorInput;
   scheduler::Network* _network;
   Pool _pool;
 

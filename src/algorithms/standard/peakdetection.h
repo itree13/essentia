@@ -28,9 +28,9 @@ namespace standard {
 class PeakDetection : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _array;
-  Output<std::vector<Real> > _values;
-  Output<std::vector<Real> > _positions;
+  Input<::essentia::VectorEx<Real> > _array;
+  Output<::essentia::VectorEx<Real> > _values;
+  Output<::essentia::VectorEx<Real> > _positions;
 
   Real _minPos;
   Real _maxPos;
@@ -82,9 +82,9 @@ namespace streaming {
 class PeakDetection : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
-  Source<std::vector<Real> > _positions;
-  Source<std::vector<Real> > _values;
+  Sink<::essentia::VectorEx<Real> > _array;
+  Source<::essentia::VectorEx<Real> > _positions;
+  Source<::essentia::VectorEx<Real> > _values;
 
  public:
   PeakDetection() {

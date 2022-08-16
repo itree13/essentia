@@ -118,7 +118,7 @@ void EasyLoader::configure() {
 }
 
 void EasyLoader::compute() {
-  vector<AudioSample>& audio = _audio.get();
+  ::essentia::VectorEx<AudioSample>& audio = _audio.get();
   audio.clear();
   // TODO: somehow retrieve the audioFileLength from the internal loader at
   // configure time

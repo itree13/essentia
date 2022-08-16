@@ -54,7 +54,7 @@ void SilenceRate::clearOutputs() {
 }
 
 void SilenceRate::compute() {
-  const vector<Real>& frame = _frame.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
 
   Real power = instantPower(frame);
 
@@ -102,7 +102,7 @@ AlgorithmStatus SilenceRate::process() {
 
   if (status != OK) return status;
 
-  const vector<Real>& frame = _frame.firstToken();
+  const ::essentia::VectorEx<Real>& frame = _frame.firstToken();
 
   if (frame.empty()) {
     throw EssentiaException("SilenceRate: a given input frame was empty, "

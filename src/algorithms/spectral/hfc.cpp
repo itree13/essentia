@@ -52,7 +52,7 @@ void HFC::configure() {
 void HFC::compute() {
 
   // get the inputs and outputs
-  const std::vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   Real& hfc = _hfc.get();
 
   if (spectrum.size() == 0) {
@@ -71,21 +71,21 @@ void HFC::compute() {
 
   // case "Masri" (default)
   if (_type == "masri") {
-    for (std::vector<Real>::size_type i=0; i<spectrum.size(); i++) {
+    for (::essentia::VectorEx<Real>::size_type i=0; i<spectrum.size(); i++) {
       hfc += (Real)i*bin2hz * spectrum[i] * spectrum[i];
     }
   }
 
   // case "Jensen"
   else if (_type == "jensen") {
-    for (std::vector<Real>::size_type i=0; i<spectrum.size(); i++) {
+    for (::essentia::VectorEx<Real>::size_type i=0; i<spectrum.size(); i++) {
       hfc += (Real)i*bin2hz * (Real)i*bin2hz * spectrum[i];
     }
   }
 
   // case "Brossier"
   else if (_type == "brossier") {
-    for (std::vector<Real>::size_type i=0; i<spectrum.size(); i++) {
+    for (::essentia::VectorEx<Real>::size_type i=0; i<spectrum.size(); i++) {
       hfc += (Real)i * bin2hz * spectrum[i];
     }
   }

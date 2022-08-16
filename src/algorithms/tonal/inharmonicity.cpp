@@ -39,8 +39,8 @@ const char* Inharmonicity::description = DOC("This algorithm calculates the inha
 
 void Inharmonicity::compute() {
 
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
   Real& inharmonicity = _inharmonicity.get();
 
   if (magnitudes.size() != frequencies.size()) {

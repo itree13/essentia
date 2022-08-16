@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 
 
   ifstream inbeats(beatsFilename.c_str());
-  vector<Real> beats;
+  ::essentia::VectorEx<Real> beats;
   while (true) {
     Real beat; inbeats >> beat;
     if (inbeats.eof()) break;

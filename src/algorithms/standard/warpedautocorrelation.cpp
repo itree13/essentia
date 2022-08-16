@@ -48,8 +48,8 @@ void WarpedAutoCorrelation::configure() {
 
 void WarpedAutoCorrelation::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
-  std::vector<Real>& warpedAutoCorrelation = _warpedAutoCorrelation.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& warpedAutoCorrelation = _warpedAutoCorrelation.get();
 
   int maxLag = parameter("maxLag").toInt();
 

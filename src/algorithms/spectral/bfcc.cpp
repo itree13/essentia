@@ -93,9 +93,9 @@ void BFCC::configure() {
 void BFCC::compute() {
 
   // get the inputs and outputs
-  const vector<Real>& spectrum = _spectrum.get();
-  vector<Real>& bfcc = _bfcc.get();
-  vector<Real>& bands = _bands.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
+  ::essentia::VectorEx<Real>& bfcc = _bfcc.get();
+  ::essentia::VectorEx<Real>& bands = _bands.get();
 
   // filter the spectrum using a mel-scaled filterbank
   _triangularBarkFilter->input("spectrum").set(spectrum);

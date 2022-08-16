@@ -90,8 +90,8 @@ void MelBands::calculateFilterFrequencies() {
 
 
 void MelBands::compute() {
-  const std::vector<Real>& spectrum = _spectrumInput.get();
-  std::vector<Real>& bands = _bandsOutput.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrumInput.get();
+  ::essentia::VectorEx<Real>& bands = _bandsOutput.get();
 
   _triangularBands->input("spectrum").set(spectrum);
   _triangularBands->output("bands").set(bands);

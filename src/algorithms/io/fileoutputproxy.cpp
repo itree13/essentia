@@ -45,11 +45,11 @@ void connect(SourceBase& source, FileOutputProxy& file) {
   Algorithm* fs = 0;
   CREATE_FILE_STORAGE(int, file);
   CREATE_FILE_STORAGE(Real, file);
-  CREATE_FILE_STORAGE(vector<Real>, file);
+  CREATE_FILE_STORAGE(::essentia::VectorEx<Real>, file);
   CREATE_FILE_STORAGE(complex<Real>, file);
-  CREATE_FILE_STORAGE(vector<complex<Real> >, file);
+  CREATE_FILE_STORAGE(::essentia::VectorEx<complex<Real> >, file);
   CREATE_FILE_STORAGE(std::string, file);
-  CREATE_FILE_STORAGE(vector<std::string>, file);
+  CREATE_FILE_STORAGE(::essentia::VectorEx<std::string>, file);
   CREATE_FILE_STORAGE(TNT::Array1D<Real>, file);
   CREATE_FILE_STORAGE(TNT::Array2D<Real>, file);
 

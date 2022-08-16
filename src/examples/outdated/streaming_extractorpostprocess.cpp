@@ -35,7 +35,7 @@ void PostProcess(Pool& pool, const Pool& options, const string& nspace) {
   if (options.value<Real>("rhythm.compute") != 0) {
     string rhythmspace = "rhythm.";
     if (!nspace.empty()) rhythmspace = nspace + ".rhythm.";
-    const vector<string>& descNames = pool.descriptorNames();
+    const ::essentia::VectorEx<string>& descNames = pool.descriptorNames();
     if (find(descNames.begin(), descNames.end(), rhythmspace + "bpm_confidence") == descNames.end())
       pool.set(rhythmspace + "bpm_confidence", 0.0);
     if (find(descNames.begin(), descNames.end(), rhythmspace + "perceptual_tempo") == descNames.end())
@@ -43,10 +43,10 @@ void PostProcess(Pool& pool, const Pool& options, const string& nspace) {
     if (find(descNames.begin(), descNames.end(), rhythmspace + "beats_loudness") == descNames.end())
       pool.add(rhythmspace + "beats_loudness", Real(0.0));
     if (find(descNames.begin(), descNames.end(), rhythmspace + "beats_loudness_band_ratio") == descNames.end())
-      pool.add(rhythmspace + "beats_loudness_band_Ratio", vector<Real>());
+      pool.add(rhythmspace + "beats_loudness_band_Ratio", ::essentia::VectorEx<Real>());
     //if (find(descNames.begin(), descNames.end(), rhythmspace + "rubato_start") == descNames.end())
-    //  pool.set(rhythmspace + "rubato_start", vector<Real>(0));
+    //  pool.set(rhythmspace + "rubato_start", ::essentia::VectorEx<Real>(0));
     //if (find(descNames.begin(), descNames.end(), rhythmspace + "rubato_stop") == descNames.end())
-    //  pool.set(rhythmspace + "rubato_stop", vector<Real>(0));
+    //  pool.set(rhythmspace + "rubato_stop", ::essentia::VectorEx<Real>(0));
   }
 }

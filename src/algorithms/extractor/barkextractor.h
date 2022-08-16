@@ -32,7 +32,7 @@ class BarkExtractor : public AlgorithmComposite {
  protected:
   SinkProxy<Real> _signal;
 
-  SourceProxy<std::vector<Real> > _bbands;
+  SourceProxy<::essentia::VectorEx<Real> > _bbands;
   SourceProxy<Real> _bbandsKurtosis;
   SourceProxy<Real> _bbandsSkewness;
   SourceProxy<Real> _bbandsSpread;

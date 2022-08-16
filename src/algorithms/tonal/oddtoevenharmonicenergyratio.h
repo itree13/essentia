@@ -28,8 +28,8 @@ namespace standard {
 class OddToEvenHarmonicEnergyRatio : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _magnitudes;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
   Output<Real> _oddtoevenharmonicenergyratio;
 
  public:
@@ -59,8 +59,8 @@ namespace streaming {
 class OddToEvenHarmonicEnergyRatio : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _magnitudes;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
   Source<Real> _oddtoevenharmonicenergyratio;
 
  public:

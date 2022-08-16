@@ -45,18 +45,18 @@ void NoveltyCurveFixedBpmEstimator::configure() {
 }
 
 void NoveltyCurveFixedBpmEstimator::compute() {
-  const vector<Real>& novelty = _novelty.get();
-  vector<Real>& bpmPositions = _bpmPositions.get();
-  vector<Real>& bpmAmplitudes = _bpmAmplitudes.get();
+  const ::essentia::VectorEx<Real>& novelty = _novelty.get();
+  ::essentia::VectorEx<Real>& bpmPositions = _bpmPositions.get();
+  ::essentia::VectorEx<Real>& bpmAmplitudes = _bpmAmplitudes.get();
 
 
-  vector<Real> corr;
+  ::essentia::VectorEx<Real> corr;
   _autocor->input("array").set(novelty);
   _autocor->output("autoCorrelation").set(corr);
   _autocor->compute();
 
   Real minPos = int(bpmToLag(_maxBpm, _sampleRate, _hopSize)+0.5);
-  vector<Real> maCorr;
+  ::essentia::VectorEx<Real> maCorr;
   Algorithm* mavg=AlgorithmFactory::create("MovingAverage","size", minPos);
   mavg->input("signal").set(corr);
   mavg->output("signal").set(maCorr);
@@ -75,7 +75,7 @@ void NoveltyCurveFixedBpmEstimator::compute() {
                                                  "maxPeaks", range,
                                                  "minPosition", minPos,
                                                  "maxPosition", range);
-  vector<Real> peaksPositions, peaksAmplitudes;
+  ::essentia::VectorEx<Real> peaksPositions, peaksAmplitudes;
   peakDetect->input("array").set(maCorr);
   peakDetect->output("positions").set( peaksPositions);
   peakDetect->output("amplitudes").set(peaksAmplitudes);
@@ -100,7 +100,7 @@ void NoveltyCurveFixedBpmEstimator::compute() {
     delete peakDetect2;
 
     int nPeaks = peaksPositions.size();
-    vector<Real> peaksBpm;
+    ::essentia::VectorEx<Real> peaksBpm;
     //int meters[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
     //int meters[] = {1,2, 4, 8};
     int meters[] = {1};
@@ -133,15 +133,15 @@ void NoveltyCurveFixedBpmEstimator::compute() {
   }
 }
 
-void NoveltyCurveFixedBpmEstimator::histogramPeaks(const vector<Real>& bpms,
-                                       vector<Real>& positions,
-                                       vector<Real>& amplitudes) {
+void NoveltyCurveFixedBpmEstimator::histogramPeaks(const ::essentia::VectorEx<Real>& bpms,
+                                       ::essentia::VectorEx<Real>& positions,
+                                       ::essentia::VectorEx<Real>& amplitudes) {
 
   if (bpms.size() == 0) return;
 
   int nbins = 100;
-  vector<int> dist(nbins);
-  vector<Real> distx(nbins);
+  ::essentia::VectorEx<int> dist(nbins);
+  ::essentia::VectorEx<Real> distx(nbins);
   int size = bpms.size();
   hist(&bpms[0], size, &dist[0], &distx[0], nbins);
 
@@ -154,8 +154,8 @@ void NoveltyCurveFixedBpmEstimator::histogramPeaks(const vector<Real>& bpms,
     distx.push_back(distx[nbins-1]+distx[nbins-1]-distx[nbins-2]);
     nbins++;
   }
-  vector<Real> distReal(nbins);
-  // convert to Real as peakdetection expects a vector<Real>
+  ::essentia::VectorEx<Real> distReal(nbins);
+  // convert to Real as peakdetection expects a ::essentia::VectorEx<Real>
   for (int i=0; i<nbins; i++) distReal[i] = Real(dist[i]);
   int range = dist.size();
   Algorithm* peakDetect=AlgorithmFactory::create("PeakDetection",
@@ -176,11 +176,11 @@ void NoveltyCurveFixedBpmEstimator::histogramPeaks(const vector<Real>& bpms,
   }
 }
 
-void NoveltyCurveFixedBpmEstimator::inplaceMergeBpms(vector<Real>& bpms,
-                                         vector<Real>& amplitudes) {
-  vector<Real>::iterator peaksIter = bpms.begin();
-  vector<Real>::iterator ampsIter = amplitudes.begin();
-  vector<Real>::iterator it1, it2;
+void NoveltyCurveFixedBpmEstimator::inplaceMergeBpms(::essentia::VectorEx<Real>& bpms,
+                                         ::essentia::VectorEx<Real>& amplitudes) {
+  ::essentia::VectorEx<Real>::iterator peaksIter = bpms.begin();
+  ::essentia::VectorEx<Real>::iterator ampsIter = amplitudes.begin();
+  ::essentia::VectorEx<Real>::iterator it1, it2;
   for (;peaksIter!=bpms.end(); ++peaksIter, ++ampsIter) {
    it1 = peaksIter; it2=ampsIter;
    ++it1; ++it2;
@@ -204,10 +204,10 @@ void NoveltyCurveFixedBpmEstimator::inplaceMergeBpms(vector<Real>& bpms,
   }
 }
 
-Real NoveltyCurveFixedBpmEstimator::computeTatum(const vector<Real>& peaks) {
+Real NoveltyCurveFixedBpmEstimator::computeTatum(const ::essentia::VectorEx<Real>& peaks) {
   // it is actually just a very rough estimation of the tatum
   int nPeaks = peaks.size();
-  vector<Real> bpms; bpms.reserve(nPeaks-1);
+  ::essentia::VectorEx<Real> bpms; bpms.reserve(nPeaks-1);
   for (int i=1; i<nPeaks; i++) {
     Real diff = fabs(peaks[i] - peaks[i-1]);
     Real bpm = round(lagToBpm(diff, _sampleRate, _hopSize));
@@ -215,20 +215,20 @@ Real NoveltyCurveFixedBpmEstimator::computeTatum(const vector<Real>& peaks) {
       bpms.push_back(bpm);
     }
   }
-  vector<Real> peaksBpm, amplitudes;
+  ::essentia::VectorEx<Real> peaksBpm, amplitudes;
   histogramPeaks(bpms, peaksBpm, amplitudes);
   sortpair<Real, Real, greater<Real> > (amplitudes, peaksBpm);
   return peaksBpm[0];
 }
 
-Real NoveltyCurveFixedBpmEstimator::mainPeaksMean(const vector<Real>& positions,
-                                      const vector<Real>& amplitudes,
+Real NoveltyCurveFixedBpmEstimator::mainPeaksMean(const ::essentia::VectorEx<Real>& positions,
+                                      const ::essentia::VectorEx<Real>& amplitudes,
                                       int size) {
   // NOTE: peaks should be ordered by position
   int nPeaks = positions.size();
   // first get rid of very small peaks
   Real threshold = 0.1*min(median(amplitudes), mean(amplitudes));
-  vector<Real> peaksPositions, peaksAmplitudes;
+  ::essentia::VectorEx<Real> peaksPositions, peaksAmplitudes;
   peaksPositions.reserve(nPeaks);
   peaksAmplitudes.reserve(nPeaks);
   for (int i=0; i<nPeaks; i++) {
@@ -244,7 +244,7 @@ Real NoveltyCurveFixedBpmEstimator::mainPeaksMean(const vector<Real>& positions,
   // find out which is the mean of the most relevant peaks.
   // slide in a window of about 16*tatum and keep the max amplitudes and
   // corresponding positions
-  vector<Real> maxPositions;
+  ::essentia::VectorEx<Real> maxPositions;
   maxPositions.reserve(nPeaks);
   Real cumAmp = 0;
   int count = 0;

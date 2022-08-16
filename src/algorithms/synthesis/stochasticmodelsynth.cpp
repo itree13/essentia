@@ -62,18 +62,18 @@ void StochasticModelSynth::configure() {
 void StochasticModelSynth::compute() {
 
   // inputs and outputs
- const  std::vector<Real>& stocEnv = _stocenv.get();
- std::vector<Real>& frame = _frame.get();
+ const  ::essentia::VectorEx<Real>& stocEnv = _stocenv.get();
+ ::essentia::VectorEx<Real>& frame = _frame.get();
 
 
-  std::vector<Real> magResDB;
-  std::vector<std::complex<Real> > fftMagRes;
-  std::vector<Real> ifftframe;
-  std::vector<Real> wframe;
+  ::essentia::VectorEx<Real> magResDB;
+  ::essentia::VectorEx<std::complex<Real> > fftMagRes;
+  ::essentia::VectorEx<Real> ifftframe;
+  ::essentia::VectorEx<Real> wframe;
 
 
   // limit size of input envelope before resampling
-  std::vector<Real> stocEnv2 = stocEnv;
+  ::essentia::VectorEx<Real> stocEnv2 = stocEnv;
 
   if (_stocSize < (int) stocEnv2.size())
   {
@@ -111,7 +111,7 @@ void StochasticModelSynth::compute() {
 // ---------------------------
 // additional methods
 
-void StochasticModelSynth::getFFTFromEnvelope(const std::vector<Real> magResDB, std::vector<std::complex<Real> > &fftStoc)
+void StochasticModelSynth::getFFTFromEnvelope(const ::essentia::VectorEx<Real> magResDB, ::essentia::VectorEx<std::complex<Real> > &fftStoc)
 {
   // get spectral envelope in DB
   Real magdB, phase;

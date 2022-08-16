@@ -29,9 +29,9 @@ namespace standard {
 class Danceability : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _danceability;
-  Output<std::vector<Real> > _dfa;
+  Output<::essentia::VectorEx<Real> > _dfa;
 
  public:
   Danceability() {
@@ -55,9 +55,9 @@ class Danceability : public Algorithm {
   static const char* description;
 
  protected:
-  std::vector<int> _tau;
+  ::essentia::VectorEx<int> _tau;
 
-  Real stddev(const std::vector<Real>& array, int start, int end) const;
+  Real stddev(const ::essentia::VectorEx<Real>& array, int start, int end) const;
 
   // inline version
   /**
@@ -66,7 +66,7 @@ class Danceability : public Algorithm {
    * 'y' and linear_fit(y) we calculate it via the direct formula
    * which uses ssxx, ssxy and ssyy
    **/
-  inline Real residualError(const std::vector<Real>& array, int start, int end) const {
+  inline Real residualError(const ::essentia::VectorEx<Real>& array, int start, int end) const {
 
     int size = end - start;
 
@@ -123,7 +123,7 @@ class Danceability : public AlgorithmComposite {
  protected:
   SinkProxy<Real> _signal;
   Source<Real> _danceability;
-  Source<std::vector<Real> > _dfa;
+  Source<::essentia::VectorEx<Real> > _dfa;
 
   Pool _pool;
   Algorithm* _poolStorage;

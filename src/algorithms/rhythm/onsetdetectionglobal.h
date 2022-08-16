@@ -28,8 +28,8 @@ namespace standard {
 class OnsetDetectionGlobal : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _onsetDetections;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _onsetDetections;
 
   Algorithm* _frameCutter;
   Algorithm* _windowing;
@@ -42,25 +42,25 @@ class OnsetDetectionGlobal : public Algorithm {
 
   std::string _method;
 
-  std::vector<Real> _frame;
-  std::vector<Real> _frameWindowed;
+  ::essentia::VectorEx<Real> _frame;
+  ::essentia::VectorEx<Real> _frameWindowed;
 
   int _minFrequencyBin;
   int _maxFrequencyBin;
   int _numberFFTBins;
   int _bufferSize;
   int _histogramSize;
-  std::vector<Real> _weights;
-  std::vector<Real> _rweights;
+  ::essentia::VectorEx<Real> _weights;
+  ::essentia::VectorEx<Real> _rweights;
 
   // beat emphasis function
   int _numberERBBands;
   static const int _smoothingWindowHalfSize=8;
   int _maxPeriodODF;
 
-  std::vector<Real> _phase_1;
-  std::vector<Real> _phase_2;
-  std::vector<Real> _spectrum_1;
+  ::essentia::VectorEx<Real> _phase_1;
+  ::essentia::VectorEx<Real> _phase_2;
+  ::essentia::VectorEx<Real> _spectrum_1;
 
 
  public:

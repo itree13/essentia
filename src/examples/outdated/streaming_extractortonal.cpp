@@ -32,7 +32,7 @@ void TuningSystemFeatures(Pool& pool, const string& nspace) {
   string tonalspace = "tonal.";
   if (!nspace.empty()) tonalspace = nspace + ".tonal.";
 
-  vector<Real> hpcp_highres = meanFrames(pool.value<vector<vector<Real> > >(tonalspace + "hpcp_highres"));
+  ::essentia::VectorEx<Real> hpcp_highres = meanFrames(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(tonalspace + "hpcp_highres"));
   normalize(hpcp_highres);
 
   // 1- diatonic strength
@@ -66,10 +66,10 @@ void TuningSystemFeatures(Pool& pool, const string& nspace) {
   pool.set(tonalspace + "tuning_nontempered_energy_ratio", ntEnergy);
 
   // 3- THPCP
-  vector<Real> hpcp = meanFrames(pool.value<vector<vector<Real> > >(tonalspace + "hpcp"));
+  ::essentia::VectorEx<Real> hpcp = meanFrames(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(tonalspace + "hpcp"));
   normalize(hpcp);
   int idxMax = argmax(hpcp);
-  vector<Real> hpcp_bak = hpcp;
+  ::essentia::VectorEx<Real> hpcp_bak = hpcp;
   for (int i=idxMax; i<(int)hpcp.size(); i++) {
     hpcp[i-idxMax] = hpcp_bak[i];
   }
@@ -174,7 +174,7 @@ void TonalDescriptors(SourceBase& input, Pool& pool, const Pool& options, const 
   connect(spec->output("spectrum"), peaks->input("spectrum"));
 
   // Tuning Frequency
-  Real tuningFreq = pool.value<vector<Real> >(tonalspace + "tuning_frequency").back();
+  Real tuningFreq = pool.value<::essentia::VectorEx<Real> >(tonalspace + "tuning_frequency").back();
 
   // HPCP Key
   Algorithm* hpcp_key = factory.create("HPCP",
@@ -256,7 +256,7 @@ void TonalPoolCleaning(Pool& pool, const string& nspace) {
   string tonalspace = "tonal.";
   if (!nspace.empty()) tonalspace = nspace + ".tonal.";
 
-  Real tuningFreq = pool.value<vector<Real> >(tonalspace + "tuning_frequency").back();
+  Real tuningFreq = pool.value<::essentia::VectorEx<Real> >(tonalspace + "tuning_frequency").back();
   pool.remove(tonalspace + "tuning_frequency");
   pool.set(tonalspace + "tuning_frequency", tuningFreq);
 

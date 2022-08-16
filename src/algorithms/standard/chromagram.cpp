@@ -54,8 +54,8 @@ void Chromagram::configure() {
 
 void Chromagram::compute() {
 
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& chromagram = _chromagram.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& chromagram = _chromagram.get();
 
   chromagram.assign(_binsPerOctave, 0.0);
 

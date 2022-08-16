@@ -28,9 +28,9 @@ namespace standard {
 
 class SaturationDetector : public Algorithm {
  private:
-  Input<std::vector<Real> > _frame;
-  Output<std::vector<Real>> _starts;
-  Output<std::vector<Real>> _ends;
+  Input<::essentia::VectorEx<Real> > _frame;
+  Output<::essentia::VectorEx<Real>> _starts;
+  Output<::essentia::VectorEx<Real>> _ends;
 
   Real _sampleRate;
   uint _hopSize, _frameSize;
@@ -76,9 +76,9 @@ namespace streaming {
 
 class SaturationDetector : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<Real> > _frame;
-  Source<std::vector<Real> > _starts;
-  Source<std::vector<Real> > _ends;
+  Sink<::essentia::VectorEx<Real> > _frame;
+  Source<::essentia::VectorEx<Real> > _starts;
+  Source<::essentia::VectorEx<Real> > _ends;
 
  public:
   SaturationDetector() {

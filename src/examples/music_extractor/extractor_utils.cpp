@@ -35,7 +35,7 @@ void mergeValues(Pool& pool, Pool& options) {
   // TODO implement a method in Pool to detect the type of a descriptor given its name
 
   string mergeKeyPrefix = "mergeValues";
-  vector<string> keys = options.descriptorNames(mergeKeyPrefix);
+  ::essentia::VectorEx<string> keys = options.descriptorNames(mergeKeyPrefix);
 
   for (int i=0; i<(int) keys.size(); ++i) {
     keys[i].replace(0, mergeKeyPrefix.size()+1, "");

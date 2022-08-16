@@ -28,7 +28,7 @@ using namespace std;
 using namespace essentia;
 using namespace essentia::standard;
 
-vector<vector<Real> > readMatrixFile(string inputFileName);
+::essentia::VectorEx<::essentia::VectorEx<Real> > readMatrixFile(string inputFileName);
 
 int main(int argc, char* argv[]) {
 
@@ -46,8 +46,8 @@ int main(int argc, char* argv[]) {
   string referenceFilename = argv[2];
   string outputFilename = argv[3];
 
-  vector<vector<Real> > queryFeature = readMatrixFile(queryFilename);
-  vector<vector<Real> > referenceFeature = readMatrixFile(referenceFilename);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > queryFeature = readMatrixFile(queryFilename);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > referenceFeature = readMatrixFile(referenceFilename);
 
   cout << "------------ Inputs -------------" << endl;
   cout << "Query shape: " << queryFeature.size() << ", " << queryFeature[0].size() << endl;
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 
   /////////// CONNECTING THE ALGORITHMS ////////////////
   cout << "-------- connecting algos ---------" << endl;
-  vector<vector<Real> > csmout;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > csmout;
   csm->input("queryFeature").set(queryFeature);
   csm->input("referenceFeature").set(referenceFeature);
   csm->output("csm").set(csmout);
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
   csm->compute();
   
   cout << "--- computing for the second iteration ---" << endl;
-  vector<vector<Real> > csmout2;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > csmout2;
   csm->input("queryFeature").set(queryFeature);
   csm->input("referenceFeature").set(referenceFeature);
   csm->output("csm").set(csmout2);
@@ -111,17 +111,17 @@ int main(int argc, char* argv[]) {
 
 
 // read the 2d array text file and store it to a 2D vector 
-vector<vector<Real> > readMatrixFile(string inputFileName) {
+::essentia::VectorEx<::essentia::VectorEx<Real> > readMatrixFile(string inputFileName) {
   ifstream myReadFile;
   myReadFile.open(inputFileName);
   std::string line;
   int i = 0;
-  vector<vector<Real> > outputArray;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > outputArray;
 
   while (getline(myReadFile, line)) {
     Real value;
     stringstream ss(line);
-    outputArray.push_back(vector<Real> ());
+    outputArray.push_back(::essentia::VectorEx<Real> ());
     while (ss >> value) {
       outputArray[i].push_back(value);
     }

@@ -73,9 +73,9 @@ void ClickDetector::configure() {
 
 
 void ClickDetector::compute() {
-  const std::vector<Real> frame = _frame.get();
-  std::vector<Real> &clickStarts = _clickStarts.get();
-  std::vector<Real> &clickEnds = _clickEnds.get();
+  const ::essentia::VectorEx<Real> frame = _frame.get();
+  ::essentia::VectorEx<Real> &clickStarts = _clickStarts.get();
+  ::essentia::VectorEx<Real> &clickEnds = _clickEnds.get();
 
 
   if (instantPower(frame) <_silenceThld) {
@@ -83,9 +83,9 @@ void ClickDetector::compute() {
     return;
   }
 
-  std::vector<Real> lpcCoeff(_order, 0.f);
-  std::vector<Real> matchedCoeff(_order, 0.f);
-  std::vector<Real> reflectionCoeff;
+  ::essentia::VectorEx<Real> lpcCoeff(_order, 0.f);
+  ::essentia::VectorEx<Real> matchedCoeff(_order, 0.f);
+  ::essentia::VectorEx<Real> reflectionCoeff;
   _LPC->input("frame").set(frame);
   _LPC->output("lpc").set(lpcCoeff);
   _LPC->output("reflection").set(reflectionCoeff);
@@ -99,19 +99,19 @@ void ClickDetector::compute() {
   _InverseFilter->configure("numerator", lpcCoeff);
 
   // It is not necessary to process the overlapping part of the signal.
-  std::vector<Real> subframe(frame.begin() + _startProc - _order, frame.begin() + _endProc + _order);
-  std::vector<Real> e;
+  ::essentia::VectorEx<Real> subframe(frame.begin() + _startProc - _order, frame.begin() + _endProc + _order);
+  ::essentia::VectorEx<Real> e;
   _InverseFilter->input("signal").set(subframe);
   _InverseFilter->output("signal").set(e);
   _InverseFilter->compute();
 
-  std::vector<Real> eInv = e;
+  ::essentia::VectorEx<Real> eInv = e;
   std::reverse(eInv.begin(), eInv.end());
 
   for (uint i = 0; i < matchedCoeff.size(); i++)
     matchedCoeff[i] = -lpcCoeff[i];
 
-  std::vector<Real> eMF;
+  ::essentia::VectorEx<Real> eMF;
   _MatchedFilter->configure("numerator", matchedCoeff);
   _MatchedFilter->input("signal").set(eInv);
   _MatchedFilter->output("signal").set(eMF);
@@ -123,7 +123,7 @@ void ClickDetector::compute() {
 
   Real threshold = std::max(robustPowerValue, _silenceThld);
 
-  std::vector<uint> detections;
+  ::essentia::VectorEx<uint> detections;
   for (uint i = _order; i < eMF.size() - _order; i++)
     if (pow(eMF[i], 2.0) >= threshold)
       detections.push_back(_startProc + i - _order);
@@ -153,7 +153,7 @@ void ClickDetector::reset() {
 }
 
 
-Real ClickDetector::robustPower(std::vector<Real> x, Real k ) {
+Real ClickDetector::robustPower(::essentia::VectorEx<Real> x, Real k ) {
   for (uint i = 0; i < x.size(); i ++)
     x[i] *= x[i];
 
@@ -161,7 +161,7 @@ Real ClickDetector::robustPower(std::vector<Real> x, Real k ) {
 
   _Clipper->configure("max", medianValue * k);
   
-  std::vector<Real> robustPowerX;
+  ::essentia::VectorEx<Real> robustPowerX;
   _Clipper->input("signal").set(x);
   _Clipper->output("signal").set(robustPowerX);
   _Clipper->compute();

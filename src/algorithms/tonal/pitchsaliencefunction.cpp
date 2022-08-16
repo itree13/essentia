@@ -79,9 +79,9 @@ void PitchSalienceFunction::configure() {
 }
 
 void PitchSalienceFunction::compute() {
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
-  vector <Real>& salienceFunction = _salienceFunction.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
+  ::essentia::VectorEx<Real>& salienceFunction = _salienceFunction.get();
 
   // do sanity checks
   if (magnitudes.size() != frequencies.size()) {

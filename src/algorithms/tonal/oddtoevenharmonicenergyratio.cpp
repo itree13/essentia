@@ -41,8 +41,8 @@ const char* OddToEvenHarmonicEnergyRatio::description = DOC("This algorithm comp
 
 void OddToEvenHarmonicEnergyRatio::compute() {
 
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
   Real& oddtoevenharmonicenergyratio = _oddtoevenharmonicenergyratio.get();
 
   if (magnitudes.size() != frequencies.size()) {

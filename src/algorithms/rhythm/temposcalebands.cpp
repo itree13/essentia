@@ -38,8 +38,8 @@ const char* TempoScaleBands::description = DOC("This algorithm computes features
 "  the time of this writing.\n");
 
 void TempoScaleBands::compute() {
-  const vector<Real>& bands = _bands.get();
-  vector<Real>& scaledBands = _scaledBands.get();
+  const ::essentia::VectorEx<Real>& bands = _bands.get();
+  ::essentia::VectorEx<Real>& scaledBands = _scaledBands.get();
   Real& cumul = _cumulBands.get();
 
   int size = bands.size();

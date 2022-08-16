@@ -435,7 +435,7 @@ void AudioLoader::copyFFmpegOutput() {
         throw EssentiaException("AudioLoader: could not acquire output for audio");
     }
 
-    vector<StereoSample>& audio = *((vector<StereoSample>*)_audio.getTokens());
+    ::essentia::VectorEx<StereoSample>& audio = *((::essentia::VectorEx<StereoSample>*)_audio.getTokens());
 
     if (_nChannels == 1) {
         for (int i=0; i<nsamples; i++) {
@@ -535,7 +535,7 @@ void AudioLoader::compute() {
     string& md5 = _md5.get();
     int& bit_rate = _bit_rate.get();
     string& codec = _codec.get();
-    vector<StereoSample>& audio = _audio.get();
+    ::essentia::VectorEx<StereoSample>& audio = _audio.get();
 
     _audioStorage->setVector(&audio);
     // TODO: is using VectorInput indeed faster than using Pool?

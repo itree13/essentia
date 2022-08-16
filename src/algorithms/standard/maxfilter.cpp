@@ -51,8 +51,8 @@ void MaxFilter::configure() {
 
 
 void MaxFilter::compute() {
-  const vector<Real>& array = _array.get();
-  vector<Real>& filtered = _filtered.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
+  ::essentia::VectorEx<Real>& filtered = _filtered.get();
 
   int size = array.size();
   if (size < 1) { 

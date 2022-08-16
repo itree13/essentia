@@ -28,7 +28,7 @@ namespace standard {
 class Centroid : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _centroid;
 
   Real _range;
@@ -63,7 +63,7 @@ namespace streaming {
 class Centroid : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _centroid;
 
  public:

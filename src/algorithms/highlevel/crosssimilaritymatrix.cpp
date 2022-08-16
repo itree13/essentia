@@ -46,16 +46,16 @@ void CrossSimilarityMatrix::configure() {
 }
 
 // Construct a 'stacked-frames' feature vector from an input audio feature vector by given 'frameStackSize' and 'frameStackStride'
-std::vector<std::vector<Real> > CrossSimilarityMatrix::stackFrames(std::vector<std::vector<Real> >& frames, int frameStackSize, int frameStackStride) const {
+::essentia::VectorEx<::essentia::VectorEx<Real> > CrossSimilarityMatrix::stackFrames(::essentia::VectorEx<::essentia::VectorEx<Real> >& frames, int frameStackSize, int frameStackStride) const {
 
   if (frameStackSize == 1) {
     return frames;
   }
   size_t stopIdx;
   int increment = frameStackSize * frameStackStride;
-  std::vector<std::vector<Real> > stackedFrames;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > stackedFrames;
   stackedFrames.reserve(frames.size() - increment);
-  std::vector<Real> stack;
+  ::essentia::VectorEx<Real> stack;
   stack.reserve(frames[0].size() * frameStackSize);
   for (size_t i=0; i<(frames.size() - increment); i+=frameStackStride) {
     stopIdx = i + increment;
@@ -71,9 +71,9 @@ std::vector<std::vector<Real> > CrossSimilarityMatrix::stackFrames(std::vector<s
 
 void CrossSimilarityMatrix::compute() {
   // get inputs and output
-  std::vector<std::vector<Real> > queryFeature = _queryFeature.get();
-  std::vector<std::vector<Real> > referenceFeature = _referenceFeature.get();
-  std::vector<std::vector<Real> >& csm = _csm.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > queryFeature = _queryFeature.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > referenceFeature = _referenceFeature.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& csm = _csm.get();
 
   if (queryFeature.empty())
     throw EssentiaException("CrossSimilarityMatrix: input queryFeature array is empty.");
@@ -81,20 +81,20 @@ void CrossSimilarityMatrix::compute() {
     throw EssentiaException("CrossSimilarityMatrix: input referenceFeature array is empty.");
 
   // construct a new vector by stacking the input features by an specified 'frameStackStride' and 'frameStackSize'
-  std::vector<std::vector<Real> >  queryFeatureStack = stackFrames(queryFeature, _frameStackSize, _frameStackStride);
-  std::vector<std::vector<Real> >  referenceFeatureStack = stackFrames(referenceFeature, _frameStackSize, _frameStackStride);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >  queryFeatureStack = stackFrames(queryFeature, _frameStackSize, _frameStackStride);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >  referenceFeatureStack = stackFrames(referenceFeature, _frameStackSize, _frameStackStride);
 
   // check whether to binarize the euclidean cross-similarity matrix using the given threshold kappa
   if (_binarize) {
     // pairwise euclidean distance
-    std::vector<std::vector<Real> > pdistances = pairwiseDistance(queryFeatureStack, referenceFeatureStack);
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > pdistances = pairwiseDistance(queryFeatureStack, referenceFeatureStack);
     size_t queryFeatureSize = pdistances.size();
     size_t referenceFeatureSize = pdistances[0].size();
 
-    std::vector<Real> thresholdQuery(queryFeatureSize);
-    std::vector<Real> thresholdReference(referenceFeatureSize);
+    ::essentia::VectorEx<Real> thresholdQuery(queryFeatureSize);
+    ::essentia::VectorEx<Real> thresholdReference(referenceFeatureSize);
 
-    csm.assign(queryFeatureSize, std::vector<Real>(referenceFeatureSize, 1));
+    csm.assign(queryFeatureSize, ::essentia::VectorEx<Real>(referenceFeatureSize, 1));
     // construct the binary output similarity matrix using the thresholds computed along the queryFeature axis
     for (size_t k=0; k<queryFeatureSize; k++) {
       thresholdQuery[k] = percentile(pdistances[k], _binarizePercentile*100);
@@ -124,9 +124,9 @@ void CrossSimilarityMatrix::compute() {
 }
 
 // returns a column corresponding to a specified index in the given 2D input matrix
-std::vector<Real> CrossSimilarityMatrix::getColsAtVecIndex(std::vector<std::vector<Real> >& inputMatrix, int index) const {
+::essentia::VectorEx<Real> CrossSimilarityMatrix::getColsAtVecIndex(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputMatrix, int index) const {
   
-  std::vector<Real> cols;
+  ::essentia::VectorEx<Real> cols;
   cols.reserve(inputMatrix.size());
   for (size_t i=0; i<inputMatrix.size(); i++) {
     cols.push_back(inputMatrix[i][index]);

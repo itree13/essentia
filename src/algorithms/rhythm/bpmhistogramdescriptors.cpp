@@ -37,11 +37,11 @@ const int BpmHistogramDescriptors::spreadWidth = 9;
 void BpmHistogramDescriptors::compute() {
   
   // copy input
-  vector<Real> bpmValues = _bpmIntervals.get();
+  ::essentia::VectorEx<Real> bpmValues = _bpmIntervals.get();
 
   // drop too-short intervals
   Real threshold = 60. / Real(maxBPM);
-  vector<Real>::iterator i = bpmValues.begin();
+  ::essentia::VectorEx<Real>::iterator i = bpmValues.begin();
   while (i != bpmValues.end()) {
     if (*i < threshold) {
       i = bpmValues.erase(i);
@@ -53,7 +53,7 @@ void BpmHistogramDescriptors::compute() {
     }
   }
 
-  vector<Real> weights(maxBPM, 0.0);
+  ::essentia::VectorEx<Real> weights(maxBPM, 0.0);
 
   if (bpmValues.empty()) {
     _firstPeakBPM.get() = 0.0;

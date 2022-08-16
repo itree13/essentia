@@ -46,7 +46,7 @@ void Flux::configure() {
 
 void Flux::compute() {
 
-  const vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   Real& flux = _flux.get();
 
   if (_spectrumMemory.empty()) {

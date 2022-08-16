@@ -28,8 +28,8 @@ namespace standard {
 class Trimmer : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _input;
-  Output<std::vector<Real> > _output;
+  Input<::essentia::VectorEx<Real> > _input;
+  Output<::essentia::VectorEx<Real> > _output;
 
   long long _startIndex;
   long long _endIndex;

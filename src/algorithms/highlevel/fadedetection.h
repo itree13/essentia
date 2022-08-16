@@ -29,7 +29,7 @@ namespace standard {
 class FadeDetection : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _rms;
+  Input<::essentia::VectorEx<Real> > _rms;
   Output<TNT::Array2D<Real> > _fade_in;
   Output<TNT::Array2D<Real> > _fade_out;
 
@@ -75,7 +75,7 @@ class FadeDetection : public Algorithm {
   Source<TNT::Array2D<Real> > _fade_in;
   Source<TNT::Array2D<Real> > _fade_out;
 
-  std::vector<Real> _accu;
+  ::essentia::VectorEx<Real> _accu;
 
   standard::Algorithm* _fadeAlgo;
 

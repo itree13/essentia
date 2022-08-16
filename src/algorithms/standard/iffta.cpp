@@ -52,8 +52,8 @@ IFFTA::~IFFTA() {
 
 void IFFTA::compute() {
 
-  const std::vector<std::complex<Real> >& fft = _fft.get();
-  std::vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<std::complex<Real> >& fft = _fft.get();
+  ::essentia::VectorEx<Real>& signal = _signal.get();
 
   // check if input is OK
   int size = ((int)fft.size()-1)*2;

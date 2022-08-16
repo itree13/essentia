@@ -46,10 +46,10 @@ namespace TagLib {
   {
   public:
 #ifndef DO_NOT_DOCUMENT
-    typedef std::vector<char>::iterator Iterator;
-    typedef std::vector<char>::const_iterator ConstIterator;
-    typedef std::vector<char>::reverse_iterator ReverseIterator;
-    typedef std::vector<char>::const_reverse_iterator ConstReverseIterator;
+    typedef ::essentia::VectorEx<char>::iterator Iterator;
+    typedef ::essentia::VectorEx<char>::const_iterator ConstIterator;
+    typedef ::essentia::VectorEx<char>::reverse_iterator ReverseIterator;
+    typedef ::essentia::VectorEx<char>::const_reverse_iterator ConstReverseIterator;
 #endif
 
     /*!

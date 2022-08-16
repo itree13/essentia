@@ -28,8 +28,8 @@ namespace standard {
 class OnsetDetection : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _spectrum;
-  Input<std::vector<Real> > _phase;
+  Input<::essentia::VectorEx<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _phase;
   Output<Real> _onsetDetection;
 
   Algorithm* _hfc;
@@ -67,9 +67,9 @@ class OnsetDetection : public Algorithm {
   static const char* category;
   static const char* description;
 
-  std::vector<Real> _phase_1;
-  std::vector<Real> _phase_2;
-  std::vector<Real> _spectrum_1;
+  ::essentia::VectorEx<Real> _phase_1;
+  ::essentia::VectorEx<Real> _phase_2;
+  ::essentia::VectorEx<Real> _spectrum_1;
   Real _rmsOld;
   bool _firstFrame;
 };
@@ -85,8 +85,8 @@ namespace streaming {
 class OnsetDetection : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _phase;
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _phase;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _onsetDetection;
 
  public:

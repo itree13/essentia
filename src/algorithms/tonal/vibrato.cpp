@@ -60,9 +60,9 @@ void Vibrato::compute() {
   Real vibdBDropLobe = 15.;
   Real vibdBDropSecondPeak = 20.;
     
-  const vector<Real>& pitch = _pitch.get();
-  vector<Real>& vibratoFrequency =_vibratoFrequency.get();
-  vector<Real>& vibratoExtend = _vibratoExtend.get();
+  const ::essentia::VectorEx<Real>& pitch = _pitch.get();
+  ::essentia::VectorEx<Real>& vibratoFrequency =_vibratoFrequency.get();
+  ::essentia::VectorEx<Real>& vibratoExtend = _vibratoExtend.get();
 
   // if pitch vector is empty
   if (pitch.empty()) {
@@ -74,7 +74,7 @@ void Vibrato::compute() {
   vibratoFrequency.assign(pitch.size(), 0.);
   vibratoExtend.assign(pitch.size(), 0.);
   
-  vector<Real> pitchP;
+  ::essentia::VectorEx<Real> pitchP;
     
   // set negative pitch values to zero
   for (int i=0; i<(int)pitch.size(); i++) {
@@ -86,7 +86,7 @@ void Vibrato::compute() {
   }
 
   // get contour start and end indices
-  vector<Real> startC, endC;
+  ::essentia::VectorEx<Real> startC, endC;
   if (pitchP[0]>0){
     startC.push_back(0);
   }
@@ -105,22 +105,22 @@ void Vibrato::compute() {
   // iterate over contour segments
   for (int i=0; i<(int)startC.size(); i++) {
     // get a segment in cents
-    vector<Real> contour;
+    ::essentia::VectorEx<Real> contour;
     for (int ii=startC[i]; ii<=endC[i]; ii++) {
       contour.push_back(1200*log2(pitch[ii]/55.0));
     }
       
     // setup algorithm I/O
-    vector<Real> frame;
+    ::essentia::VectorEx<Real> frame;
     frameCutter->input("signal").set(contour);
     frameCutter->output("frame").set(frame);
-    vector<Real> windowedFrame;
+    ::essentia::VectorEx<Real> windowedFrame;
     window->input("frame").set(frame);
     window->output("frame").set(windowedFrame);
-    vector<Real> vibSpectrum;
+    ::essentia::VectorEx<Real> vibSpectrum;
     spectrum->input("frame").set(windowedFrame);
     spectrum->output("spectrum").set(vibSpectrum);
-    vector<Real> peakFrequencies, peakMagnitudes;
+    ::essentia::VectorEx<Real> peakFrequencies, peakMagnitudes;
     spectralPeaks->input("spectrum").set(vibSpectrum);
     spectralPeaks->output("frequencies").set(peakFrequencies);
     spectralPeaks->output("magnitudes").set(peakMagnitudes);

@@ -102,11 +102,11 @@ int main(int argc,char** argv)
   StreamingAlgorithm* ringBufferInput = streaming::AlgorithmFactory::create("RingBufferInput");
   StreamingAlgorithm* ringBufferOutput = streaming::AlgorithmFactory::create("RingBufferOutput");
 	StreamingAlgorithm* frameCutter = 0;
-	DiskWriter< vector<Real> >* diskWriter = 0;
+	DiskWriter< ::essentia::VectorEx<Real> >* diskWriter = 0;
 	if (outputFilename!="")
 	{
 		frameCutter = streaming::AlgorithmFactory::create("FrameCutter","startFromZero",true,"frameSize",128,"hopSize",128);
-		diskWriter = new DiskWriter< vector<Real> >(outputFilename);
+		diskWriter = new DiskWriter< ::essentia::VectorEx<Real> >(outputFilename);
 		connect(ringBufferInput->output("signal"), frameCutter->input("signal"));
 		connect(frameCutter->output("frame"), diskWriter->input("data"));
 	}

@@ -28,7 +28,7 @@ namespace standard {
 class LoudnessVickers : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _loudness;
 
   Real _sampleRate;
@@ -77,7 +77,7 @@ namespace streaming {
 class LoudnessVickers : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _loudness;
 
  public:

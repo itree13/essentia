@@ -59,8 +59,8 @@ void Envelope::reset() {
 
 void Envelope::compute() {
 
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& envelope = _envelope.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& envelope = _envelope.get();
 
   envelope.resize(signal.size());
   reset();

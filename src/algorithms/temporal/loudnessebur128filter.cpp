@@ -78,7 +78,7 @@ void LoudnessEBUR128Filter::configure() {
 
   Real sampleRate = parameter("sampleRate").toReal(); 
 
-  vector<Real> filterB1(3, 0.), filterA1(3, 0.), 
+  ::essentia::VectorEx<Real> filterB1(3, 0.), filterA1(3, 0.), 
                filterB2(3, 0.), filterA2(3, 0.);
 
   // NOTE: ITU-R BS.1770-2 provides precomputed values for filter coefficients.
@@ -121,7 +121,7 @@ void LoudnessEBUR128Filter::configure() {
   filterA2[2] = (1.0 - K / Q + K * K) / (1.0 + K / Q + K * K);
 
   // combine two filters into one
-  vector<Real> filterB(5, 0.), filterA(5, 0.);
+  ::essentia::VectorEx<Real> filterB(5, 0.), filterA(5, 0.);
 
   filterB[0] = filterB1[0] * filterB2[0];
   filterB[1] = filterB1[0] * filterB2[1] + filterB1[1] * filterB2[0];

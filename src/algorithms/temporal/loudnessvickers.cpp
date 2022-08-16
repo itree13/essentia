@@ -39,11 +39,11 @@ void LoudnessVickers::configure() {
 
   _sampleRate = parameter("sampleRate").toReal();
 
-  vector<Real> b(2, 0.0);
+  ::essentia::VectorEx<Real> b(2, 0.0);
   b[0] = 0.98595;
   b[1] = -0.98595;
 
-  vector<Real> a(2, 0.0);
+  ::essentia::VectorEx<Real> a(2, 0.0);
   a[0] = 1.0;
   a[1] = -0.9719;
 
@@ -55,20 +55,20 @@ void LoudnessVickers::configure() {
 
 void LoudnessVickers::compute() {
 
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& loudness = _loudness.get();
 
   // cheap B-curve loudness compensation
-  vector<Real> signalFiltered;
+  ::essentia::VectorEx<Real> signalFiltered;
   _filtering->input("signal").set(signal);
   _filtering->output("signal").set(signalFiltered);
   _filtering->compute();
 
   // create weight vector
-  vector<Real> weight(signal.size(), 0.0);
+  ::essentia::VectorEx<Real> weight(signal.size(), 0.0);
   Real Vweight = 1.0;
   // create energy vector
-  vector<Real> signalSquare(signal.size(), 0.0);
+  ::essentia::VectorEx<Real> signalSquare(signal.size(), 0.0);
 
   for (int i=signal.size()-1; i>=0; --i) {
     weight[i] = Vweight;

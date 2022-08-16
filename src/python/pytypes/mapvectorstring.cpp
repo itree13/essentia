@@ -25,7 +25,7 @@ using namespace essentia;
 DEFINE_PYTHON_TYPE(MapVectorString);
 
 
-PyObject* MapVectorString::toPythonCopy(const map<string, vector<string> >* v) {
+PyObject* MapVectorString::toPythonCopy(const map<string, ::essentia::VectorEx<string> >* v) {
   throw EssentiaException("MapVectorString::fromPythonCopy currently not implemented");
 }
 
@@ -39,7 +39,7 @@ void* MapVectorString::fromPythonCopy(PyObject* obj) {
 }
 
 Parameter* MapVectorString::toParameter(PyObject* obj) {
-  map<string, vector<string> >* value = (map<string, vector<string> >*)fromPythonCopy(obj);
+  map<string, ::essentia::VectorEx<string> >* value = (map<string, ::essentia::VectorEx<string> >*)fromPythonCopy(obj);
   Parameter* result = new Parameter(*value);
   delete value;
   return result;

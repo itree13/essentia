@@ -28,15 +28,15 @@ namespace standard {
 
 class GapsDetector : public Algorithm {
  private:
-  Input<std::vector<Real>> _frame;
-  Output<std::vector<Real>> _gapsStarts;
-  Output<std::vector<Real>> _gapsEnds;
+  Input<::essentia::VectorEx<Real>> _frame;
+  Output<::essentia::VectorEx<Real>> _gapsStarts;
+  Output<::essentia::VectorEx<Real>> _gapsEnds;
 
   struct gap {
     uint remaining;
     Real start, end;
     bool active, finished;
-    std::vector<Real> rBuffer;
+    ::essentia::VectorEx<Real> rBuffer;
   };
 
   uint _frameSize, _hopSize;
@@ -47,8 +47,8 @@ class GapsDetector : public Algorithm {
   Real _silenceThreshold;
   Real _prepowerThreshold;
   Real _prepowerTime, _postpowerTime, _minimumTime, _maximumTime;
-  std::vector<Real> _lBuffer;
-  std::vector<gap> _gaps;
+  ::essentia::VectorEx<Real> _lBuffer;
+  ::essentia::VectorEx<gap> _gaps;
 
   Algorithm *_medianFilter;
   Algorithm *_envelope;
@@ -103,9 +103,9 @@ namespace streaming {
 
 class GapsDetector : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<Real>> _frame;
-  Source<std::vector<Real>> _gapsStarts;
-  Source<std::vector<Real>> _gapsEnds;
+  Sink<::essentia::VectorEx<Real>> _frame;
+  Source<::essentia::VectorEx<Real>> _gapsStarts;
+  Source<::essentia::VectorEx<Real>> _gapsEnds;
 
  public:
   GapsDetector() {

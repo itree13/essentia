@@ -30,8 +30,8 @@ namespace standard {
 class Panning : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _spectrumLeft;
-  Input<std::vector<Real> >_spectrumRight;
+  Input<::essentia::VectorEx<Real> > _spectrumLeft;
+  Input<::essentia::VectorEx<Real> >_spectrumRight;
   Output<TNT::Array2D<Real> > _panningCoeffs;
 
   int _averageFrames;
@@ -40,7 +40,7 @@ class Panning : public Algorithm {
   int _numBands;
   Real _sampleRate;
   bool _warpedPanorama;
-  std::vector<Real> _histogramAccumulated;
+  ::essentia::VectorEx<Real> _histogramAccumulated;
   int _nFrames;
 
   Algorithm* _ifft;
@@ -78,9 +78,9 @@ class Panning : public Algorithm {
 
  protected:
 
-  void calculateHistogram(const std::vector<Real>& specL, const std::vector<Real>& specR, std::vector<Real>& ratios, std::vector<Real>& result );
-  void calculateCoefficients(const std::vector<Real>& histAcum, std::vector<std::complex<Real> >& coeffs );
-  void correctAudibleAngle(std::vector<Real>& ratios);
+  void calculateHistogram(const ::essentia::VectorEx<Real>& specL, const ::essentia::VectorEx<Real>& specR, ::essentia::VectorEx<Real>& ratios, ::essentia::VectorEx<Real>& result );
+  void calculateCoefficients(const ::essentia::VectorEx<Real>& histAcum, ::essentia::VectorEx<std::complex<Real> >& coeffs );
+  void correctAudibleAngle(::essentia::VectorEx<Real>& ratios);
 };
 
 } // namespace standard
@@ -94,8 +94,8 @@ namespace streaming {
 class Panning : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrumLeft;
-  Sink<std::vector<Real> > _spectrumRight;
+  Sink<::essentia::VectorEx<Real> > _spectrumLeft;
+  Sink<::essentia::VectorEx<Real> > _spectrumRight;
   Source<TNT::Array2D<Real> > _panningCoeffs;
 
  public:

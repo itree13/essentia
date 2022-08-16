@@ -31,7 +31,7 @@ class PitchSalience : public Algorithm {
   // parameters
   Real _lowBoundary, _highBoundary, _sampleRate;
 
-  Input<std::vector<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _spectrum;
   Output<Real> _pitchSalience;
 
   Algorithm* _autoCorrelation;
@@ -74,7 +74,7 @@ namespace streaming {
 class PitchSalience : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _pitchSalience;
 
  public:

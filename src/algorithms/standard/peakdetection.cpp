@@ -52,16 +52,16 @@ void PeakDetection::configure() {
   }
 
   // blunt test to make sure some compiler which we won't name isn't going berserk...
-  std::vector<Peak> v;
+  ::essentia::VectorEx<Peak> v;
   v.resize(1);
   assert(v.size() == 1);
 }
 
 void PeakDetection::compute() {
 
-  const std::vector<Real>& array = _array.get();
-  std::vector<Real>& peakValue = _values.get();
-  std::vector<Real>& peakPosition = _positions.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
+  ::essentia::VectorEx<Real>& peakValue = _values.get();
+  ::essentia::VectorEx<Real>& peakPosition = _positions.get();
 
   const int size = (int)array.size();
 
@@ -74,7 +74,7 @@ void PeakDetection::compute() {
   // which makes more sense in general?
   const Real scale = _range / (Real)(size - 1);
 
-  std::vector<Peak> peaks;
+  ::essentia::VectorEx<Peak> peaks;
   peaks.reserve(size);
 
   // we want to round up to the next integer instead of simple truncation,
@@ -170,7 +170,7 @@ void PeakDetection::compute() {
   // remove peaks that are closer than 'minPeakDistance'
   if (_minPeakDistance > 0 && peaks.size() > 1) {
     
-    std::vector<int> deletedPeaks;
+    ::essentia::VectorEx<int> deletedPeaks;
     deletedPeaks.reserve(peaks.size());
     Real minPos;
     Real maxPos;

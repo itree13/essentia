@@ -48,10 +48,10 @@ bool SineModelAnal::comparator_down ( const mypair& l, const mypair& r)
 }
 
 // It sorts the indexes of an input vector v, and outputs the sorted index vector idx
-void SineModelAnal::sort_indexes(std::vector<int> &idx, const std::vector<Real> &v, bool ascending) {
+void SineModelAnal::sort_indexes(::essentia::VectorEx<int> &idx, const ::essentia::VectorEx<Real> &v, bool ascending) {
 
   // initialize original index locations
-  std::vector<mypair> pairs(v.size());
+  ::essentia::VectorEx<mypair> pairs(v.size());
   for (int i = 0; i != (int)pairs.size(); ++i){
     pairs[i].first = i;
     pairs[i].second = v[i];
@@ -69,7 +69,7 @@ void SineModelAnal::sort_indexes(std::vector<int> &idx, const std::vector<Real> 
   return;
 }
 
-void SineModelAnal::copy_vector_from_indexes(std::vector<Real> &out, const std::vector<Real> v, const std::vector<int> idx){
+void SineModelAnal::copy_vector_from_indexes(::essentia::VectorEx<Real> &out, const ::essentia::VectorEx<Real> v, const ::essentia::VectorEx<int> idx){
 
   for (int i = 0; i < (int)idx.size(); ++i){
     out.push_back(v[idx[i]]);
@@ -77,7 +77,7 @@ void SineModelAnal::copy_vector_from_indexes(std::vector<Real> &out, const std::
   return;
 }
 
-void SineModelAnal::copy_int_vector_from_indexes(std::vector<int> &out, const std::vector<int> v, const std::vector<int> idx){
+void SineModelAnal::copy_int_vector_from_indexes(::essentia::VectorEx<int> &out, const ::essentia::VectorEx<int> v, const ::essentia::VectorEx<int> idx){
 
   for (int i = 0; i < (int)idx.size(); ++i){
     out.push_back(v[idx[i]]);
@@ -86,8 +86,8 @@ void SineModelAnal::copy_int_vector_from_indexes(std::vector<int> &out, const st
 }
 
 // erase elements from a vector given a vector of indexes
-void SineModelAnal::erase_vector_from_indexes(std::vector<Real> &v, const std::vector<int> idx){
-  std::vector<Real> tmp;
+void SineModelAnal::erase_vector_from_indexes(::essentia::VectorEx<Real> &v, const ::essentia::VectorEx<int> idx){
+  ::essentia::VectorEx<Real> tmp;
   bool found;
   for (int i = 0; i < (int)v.size(); ++i) {
     found = false;
@@ -139,21 +139,21 @@ void SineModelAnal::configure() {
 
 void SineModelAnal::compute() {
   // inputs and outputs
-  const std::vector<std::complex<Real> >& fft = _fft.get();
+  const ::essentia::VectorEx<std::complex<Real> >& fft = _fft.get();
 
-  std::vector<Real>& tpeakMagnitude = _magnitudes.get();
-  std::vector<Real>& tpeakFrequency = _frequencies.get();
-  std::vector<Real>& tpeakPhase = _phases.get();
+  ::essentia::VectorEx<Real>& tpeakMagnitude = _magnitudes.get();
+  ::essentia::VectorEx<Real>& tpeakFrequency = _frequencies.get();
+  ::essentia::VectorEx<Real>& tpeakPhase = _phases.get();
 
   // temp arrays
-  std::vector<Real> peakMagnitude;
-  std::vector<Real> peakFrequency;
-  std::vector<Real> peakPhase;
+  ::essentia::VectorEx<Real> peakMagnitude;
+  ::essentia::VectorEx<Real> peakFrequency;
+  ::essentia::VectorEx<Real> peakPhase;
 
 
-  std::vector<Real> fftmag;
-  std::vector<Real> fftmagdB;
-  std::vector<Real> fftphase;
+  ::essentia::VectorEx<Real> fftmag;
+  ::essentia::VectorEx<Real> fftmagdB;
+  ::essentia::VectorEx<Real> fftphase;
 
   _cartesianToPolar->input("complex").set(fft);
   _cartesianToPolar->output("magnitude").set(fftmag);
@@ -195,7 +195,7 @@ void SineModelAnal::compute() {
 // ---------------------------
 // additional methods
 
-void SineModelAnal::sinusoidalTracking(std::vector<Real>& peakMags, std::vector<Real>& peakFrequencies, std::vector<Real>& peakPhases, const std::vector<Real> tfreq, Real freqDevOffset, Real freqDevSlope, std::vector<Real> &tmagn, std::vector<Real> &tfreqn, std::vector<Real> &tphasen ){
+void SineModelAnal::sinusoidalTracking(::essentia::VectorEx<Real>& peakMags, ::essentia::VectorEx<Real>& peakFrequencies, ::essentia::VectorEx<Real>& peakPhases, const ::essentia::VectorEx<Real> tfreq, Real freqDevOffset, Real freqDevSlope, ::essentia::VectorEx<Real> &tmagn, ::essentia::VectorEx<Real> &tfreqn, ::essentia::VectorEx<Real> &tphasen ){
 
   //	pfreq, pmag, pphase: frequencies and magnitude of current frame
   //	tfreq: frequencies of incoming tracks from previous frame
@@ -215,25 +215,25 @@ void SineModelAnal::sinusoidalTracking(std::vector<Real>& peakMags, std::vector<
   std::fill(tphasen.begin(), tphasen.end(), 0.);
 
   //	pindexes = np.array(np.nonzero(pfreq), dtype=np.int)[0]    # indexes of current peaks
-  std::vector<int> pindexes;
+  ::essentia::VectorEx<int> pindexes;
   for (int i=0;i < (int)peakFrequencies.size(); ++i){  if (peakFrequencies[i] > 0) pindexes.push_back(i); }
 
   //	incomingTracks = np.array(np.nonzero(tfreq), dtype=np.int)[0] # indexes of incoming tracks
-  std::vector<Real> incomingTracks ;
+  ::essentia::VectorEx<Real> incomingTracks ;
   for (int i=0;i < (int)tfreq.size(); ++i){ if (tfreq[i]>0) incomingTracks.push_back(i); }
   //	newTracks = np.zeros(tfreq.size, dtype=np.int) -1           # initialize to -1 new tracks
-  std::vector<int> newTracks(tfreq.size());
+  ::essentia::VectorEx<int> newTracks(tfreq.size());
   std::fill(newTracks.begin(), newTracks.end(), -1);
 
   //	magOrder = np.argsort(-pmag[pindexes])                      # order current peaks by magnitude
-  std::vector<int> magOrder;
+  ::essentia::VectorEx<int> magOrder;
   sort_indexes(magOrder, peakMags, false);
 
 
   // copy temporary arrays (as reference)
-  std::vector<Real>	&pfreqt = peakFrequencies;
-  std::vector<Real>	&pmagt = peakMags;
-  std::vector<Real>	&pphaset = peakPhases;
+  ::essentia::VectorEx<Real>	&pfreqt = peakFrequencies;
+  ::essentia::VectorEx<Real>	&pmagt = peakMags;
+  ::essentia::VectorEx<Real>	&pphaset = peakPhases;
 
 
   // -----
@@ -270,7 +270,7 @@ void SineModelAnal::sinusoidalTracking(std::vector<Real>& peakMags, std::vector<
 
 
   //	indext = np.array(np.nonzero(newTracks != -1), dtype=np.int)[0]   # indexes of assigned tracks
-  std::vector<int> indext;
+  ::essentia::VectorEx<int> indext;
   for (int i=0; i < (int)newTracks.size(); ++i)
   {
     if (newTracks[i] != -1) indext.push_back(i);
@@ -279,7 +279,7 @@ void SineModelAnal::sinusoidalTracking(std::vector<Real>& peakMags, std::vector<
   if (indext.size() > 0)
   {
     //		indexp = newTracks[indext]                                    # indexes of assigned peaks
-    std::vector<int> indexp;
+    ::essentia::VectorEx<int> indexp;
     copy_int_vector_from_indexes(indexp, newTracks, indext);
 
     for (int i=0; i < (int)indexp.size(); ++i){
@@ -296,14 +296,14 @@ void SineModelAnal::sinusoidalTracking(std::vector<Real>& peakMags, std::vector<
 
   // -----
   // create new tracks for non used peaks
-  std::vector<int> emptyt;
+  ::essentia::VectorEx<int> emptyt;
   for (int i=0; i < (int)tfreq.size(); ++i)
   {
     if (tfreq[i] == 0) emptyt.push_back(i);
   }
 
   //	peaksleft = np.argsort(-pmagt)                                  # sort left peaks by magnitude
-  std::vector<int> peaksleft;
+  ::essentia::VectorEx<int> peaksleft;
   sort_indexes(peaksleft, pmagt, false);
 
   if ((peaksleft.size() > 0) && (emptyt.size() >= peaksleft.size())){    // fill empty tracks
@@ -339,7 +339,7 @@ void SineModelAnal::sinusoidalTracking(std::vector<Real>& peakMags, std::vector<
 
 
 
-void SineModelAnal::phaseInterpolation(std::vector<Real> fftphase, std::vector<Real> peakFrequencies, std::vector<Real>& peakPhases){
+void SineModelAnal::phaseInterpolation(::essentia::VectorEx<Real> fftphase, ::essentia::VectorEx<Real> peakFrequencies, ::essentia::VectorEx<Real>& peakPhases){
 
   int N = peakFrequencies.size();
   peakPhases.resize(N);

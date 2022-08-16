@@ -74,10 +74,10 @@ void YamlOutput::configure() {
 
 // this function splits a string up on the '.' char and returns a vector of
 // strings where each element represents a string between dots.
-vector<string> split(const string& s) {
+::essentia::VectorEx<string> split(const string& s) {
   string::size_type dotpos = s.find('.');
   string::size_type prevdotpos = 0;
-  vector<string> result;
+  ::essentia::VectorEx<string> result;
 
   if (dotpos != string::npos) {
     result.push_back(s.substr(0, dotpos));
@@ -138,7 +138,7 @@ string escapeJsonString(const string& input) {
 struct YamlNode {
   string name;
   Parameter* value;
-  vector<YamlNode*> children;
+  ::essentia::VectorEx<YamlNode*> children;
 
   YamlNode(const string& n) : name(n), value(0) {}
 
@@ -153,7 +153,7 @@ struct YamlNode {
 
 template <typename IterType>
 void fillYamlTreeHelper(YamlNode* root, const IterType it) {
-  vector<string> pathparts = split(it->first);
+  ::essentia::VectorEx<string> pathparts = split(it->first);
   YamlNode* currNode = root;
 
   // iterate over each of the pieces of the path
@@ -220,16 +220,16 @@ void fillYamlTree (const Pool& p, YamlNode* root) {
   }
 
   FILL_YAML_TREE_MACRO(Real, SingleReal);
-  FILL_YAML_TREE_MACRO(vector<Real>, Real);
-  FILL_YAML_TREE_MACRO(vector<Real>, SingleVectorReal);
-  FILL_YAML_TREE_MACRO(vector<vector<Real> >, VectorReal);
+  FILL_YAML_TREE_MACRO(::essentia::VectorEx<Real>, Real);
+  FILL_YAML_TREE_MACRO(::essentia::VectorEx<Real>, SingleVectorReal);
+  FILL_YAML_TREE_MACRO(::essentia::VectorEx<::essentia::VectorEx<Real> >, VectorReal);
 
   FILL_YAML_TREE_MACRO(string, SingleString);
-  FILL_YAML_TREE_MACRO(vector<string>, String);
-  FILL_YAML_TREE_MACRO(vector<vector<string> >, VectorString);
+  FILL_YAML_TREE_MACRO(::essentia::VectorEx<string>, String);
+  FILL_YAML_TREE_MACRO(::essentia::VectorEx<::essentia::VectorEx<string> >, VectorString);
 
-  FILL_YAML_TREE_MACRO(vector<TNT::Array2D<Real> >, Array2DReal);
-  FILL_YAML_TREE_MACRO(vector<StereoSample>, StereoSample);
+  FILL_YAML_TREE_MACRO(::essentia::VectorEx<TNT::Array2D<Real> >, Array2DReal);
+  FILL_YAML_TREE_MACRO(::essentia::VectorEx<StereoSample>, StereoSample);
 
   if (p.getSingleTensorRealPool().begin() != p.getSingleTensorRealPool().end() ||
       p.getTensorRealPool().begin() != p.getTensorRealPool().end() ) {
@@ -290,7 +290,7 @@ void emitJson(StreamType* s, YamlNode* n, int indentsize, int indentincr) {
         *s << "\"" << escapeJsonString((*(n->value)).toString()) << "\"";
       }
       else if (nodeType == Parameter::VECTOR_STRING) {
-        vector<string> escaped = (*(n->value)).toVectorString();
+        ::essentia::VectorEx<string> escaped = (*(n->value)).toVectorString();
         for (size_t i=0; i<escaped.size(); ++i) {
           escaped[i] = "\"" + escapeJsonString(escaped[i]) + "\"";
         }

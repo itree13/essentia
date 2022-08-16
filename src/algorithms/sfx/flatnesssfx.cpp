@@ -34,7 +34,7 @@ const Real FlatnessSFX::lowerThreshold = 20.0;
 const Real FlatnessSFX::upperThreshold = 95.0;
 
 // envelope needs to be sorted
-Real FlatnessSFX::rollOff(const vector<Real>& sortedEnvelope, Real threshold) const {
+Real FlatnessSFX::rollOff(const ::essentia::VectorEx<Real>& sortedEnvelope, Real threshold) const {
   if (threshold < 0 || threshold > 100.0) {
     throw EssentiaException("FlatnessSFX: threshold out of bounds");
   }
@@ -52,14 +52,14 @@ Real FlatnessSFX::rollOff(const vector<Real>& sortedEnvelope, Real threshold) co
 }
 
 void FlatnessSFX::compute() {
-  const vector<Real>& envelope = _envelope.get();
+  const ::essentia::VectorEx<Real>& envelope = _envelope.get();
   Real& flatnessSFX = _flatnessSFX.get();
 
   if (envelope.empty()) {
     throw EssentiaException("FlatnessSFX: input signal is empty");
   }
 
-  vector<Real> sortedEnvelope = envelope;
+  ::essentia::VectorEx<Real> sortedEnvelope = envelope;
   sort(sortedEnvelope.begin(), sortedEnvelope.end());
 
   Real num = rollOff(sortedEnvelope, upperThreshold);

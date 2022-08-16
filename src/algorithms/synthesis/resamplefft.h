@@ -32,8 +32,8 @@ namespace standard {
 class ResampleFFT : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _input;
-  Output<std::vector<Real> > _output;
+  Input<::essentia::VectorEx<Real> > _input;
+  Output<::essentia::VectorEx<Real> > _output;
 
   // for resample function
   Algorithm* _fft;
@@ -84,8 +84,8 @@ namespace streaming {
 class ResampleFFT : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _input;
-  Source<std::vector<Real> > _output;
+  Sink<::essentia::VectorEx<Real> > _input;
+  Source<::essentia::VectorEx<Real> > _output;
 
  public:
   ResampleFFT() {

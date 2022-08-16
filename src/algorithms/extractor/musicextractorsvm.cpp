@@ -50,7 +50,7 @@ void MusicExtractorSVM::reset() {}
 void MusicExtractorSVM::configure() {
 
   if (parameter("svms").isConfigured()) { 
-    vector<string> svmModels = parameter("svms").toVectorString();
+    ::essentia::VectorEx<string> svmModels = parameter("svms").toVectorString();
 
     for (int i=0; i<(int) svmModels.size(); i++) {
       E_INFO("MusicExtractorSVM: adding SVM model " << svmModels[i]);

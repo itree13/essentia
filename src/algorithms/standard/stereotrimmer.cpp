@@ -41,8 +41,8 @@ void StereoTrimmer::configure() {
 }
 
 void StereoTrimmer::compute() {
-  const vector<StereoSample>& input = _input.get();
-  vector<StereoSample>& output = _output.get();
+  const ::essentia::VectorEx<StereoSample>& input = _input.get();
+  ::essentia::VectorEx<StereoSample>& output = _output.get();
   int size = input.size();
 
   if (_startIndex < 0) _startIndex = 0;
@@ -131,8 +131,8 @@ AlgorithmStatus StereoTrimmer::process() {
 
 
   // get the audio input and copy it to the output
-  const vector<StereoSample>& input = _input.tokens();
-  vector<StereoSample>& output = _output.tokens();
+  const ::essentia::VectorEx<StereoSample>& input = _input.tokens();
+  ::essentia::VectorEx<StereoSample>& output = _output.tokens();
 
 
   if (_consumed >= _startIndex && _consumed < _endIndex) {

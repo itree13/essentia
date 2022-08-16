@@ -61,19 +61,19 @@ void HarmonicModelAnal::configure() {
 void HarmonicModelAnal::compute() {
 
   // inputs and outputs
-  const std::vector<std::complex<Real> >& fftin = _fft.get();
+  const ::essentia::VectorEx<std::complex<Real> >& fftin = _fft.get();
   const Real& pitch = _pitch.get();
 
-  std::vector<Real>& hpeakMagnitude = _magnitudes.get();
-  std::vector<Real>& hpeakFrequency = _frequencies.get();
-  std::vector<Real>& hpeakPhase = _phases.get();
+  ::essentia::VectorEx<Real>& hpeakMagnitude = _magnitudes.get();
+  ::essentia::VectorEx<Real>& hpeakFrequency = _frequencies.get();
+  ::essentia::VectorEx<Real>& hpeakPhase = _phases.get();
  
-  std::vector<Real> fftmag;
-  std::vector<Real> fftphase;
+  ::essentia::VectorEx<Real> fftmag;
+  ::essentia::VectorEx<Real> fftphase;
 
-  std::vector<Real> peakMagnitude ;
-  std::vector<Real> peakFrequency;
-  std::vector<Real> peakPhase;
+  ::essentia::VectorEx<Real> peakMagnitude ;
+  ::essentia::VectorEx<Real> peakFrequency;
+  ::essentia::VectorEx<Real> peakPhase;
  
 
   _sineModelAnal->input("fft").set(fftin);
@@ -95,7 +95,7 @@ void HarmonicModelAnal::compute() {
 // additional methods
 
 
-void HarmonicModelAnal::harmonicDetection(const std::vector<Real> pfreq, const std::vector<Real> pmag, const std::vector<Real> pphase, const Real f0, const int nH,  std::vector<Real> hfreqp, Real fs, Real harmDevSlope/*=0.01*/,  std::vector<Real> &hfreq,  std::vector<Real> &hmag,  std::vector<Real> &hphase)
+void HarmonicModelAnal::harmonicDetection(const ::essentia::VectorEx<Real> pfreq, const ::essentia::VectorEx<Real> pmag, const ::essentia::VectorEx<Real> pphase, const Real f0, const int nH,  ::essentia::VectorEx<Real> hfreqp, Real fs, Real harmDevSlope/*=0.01*/,  ::essentia::VectorEx<Real> &hfreq,  ::essentia::VectorEx<Real> &hmag,  ::essentia::VectorEx<Real> &hphase)
 {
 /*
 	Detection of the harmonics of a frame from a set of spectral peaks using f0
@@ -120,7 +120,7 @@ void HarmonicModelAnal::harmonicDetection(const std::vector<Real> pfreq, const s
 
 	if (f0 > 0)
 		{
-			std::vector<Real> hf(nH);
+			::essentia::VectorEx<Real> hf(nH);
 			for (int i=1;i<=nH;i++)
 			{
 				hf [i-1]= f0*i;       
@@ -132,7 +132,7 @@ void HarmonicModelAnal::harmonicDetection(const std::vector<Real> pfreq, const s
 				hfreqp = hf;			
 			}
 			
-			std::vector<Real> difftmp =  pfreq;
+			::essentia::VectorEx<Real> difftmp =  pfreq;
       
       
 		while ((f0>0) && (hi<nH) && (hf[hi]<fs/2.))          // find harmonic peaks

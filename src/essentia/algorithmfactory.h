@@ -100,7 +100,7 @@ class ESSENTIA_API EssentiaFactory {
    * Returns a list of the available algorithms already registered in the
    * factory.
    */
-  static std::vector<std::string> keys();
+  static ::essentia::VectorEx<std::string> keys();
 
   /**
    * Returns the AlgorithmInfo structure corresponding to the specified

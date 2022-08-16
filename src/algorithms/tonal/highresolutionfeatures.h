@@ -28,7 +28,7 @@ namespace standard {
 class HighResolutionFeatures : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _hpcp;
+  Input<::essentia::VectorEx<Real> > _hpcp;
   Output<Real> _equalTemperedDeviation;
   Output<Real> _nt2tEnergyRatio;
   Output<Real> _nt2tPeaksEnergyRatio;
@@ -70,7 +70,7 @@ namespace streaming {
 class HighResolutionFeatures : public AlgorithmComposite {
 
  protected:
-  SinkProxy<std::vector<Real> > _pcp;
+  SinkProxy<::essentia::VectorEx<Real> > _pcp;
   Source<Real> _equalTemperedDeviation;
   Source<Real> _nt2tEnergyRatio;
   Source<Real> _nt2tPeaksEnergyRatio;

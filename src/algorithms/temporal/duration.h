@@ -28,7 +28,7 @@ namespace standard {
 class Duration : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _duration;
 
  public:

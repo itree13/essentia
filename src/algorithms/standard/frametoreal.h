@@ -30,12 +30,12 @@ class FrameToReal : public Algorithm {
  private:
 
 
-  Input<std::vector<Real> > _frames;
-  Output<std::vector<Real> > _audio;
+  Input<::essentia::VectorEx<Real> > _frames;
+  Output<::essentia::VectorEx<Real> > _audio;
 
 
 
-//    Output<std::vector<AudioSample> > _audio; // ?? check what data type is appropriate
+//    Output<::essentia::VectorEx<AudioSample> > _audio; // ?? check what data type is appropriate
   int _frameSize;
   int _hopSize;
 
@@ -75,10 +75,10 @@ class FrameToReal : public StreamingAlgorithmWrapper {
 
  protected:
 
-//  Sink<std::vector<Real> > _frames; // input
+//  Sink<::essentia::VectorEx<Real> > _frames; // input
 //  Source<Real> _audio; // output
 
-  Sink<std::vector<Real> > _frames; // input
+  Sink<::essentia::VectorEx<Real> > _frames; // input
   Source<Real> _audio; // output
 
 

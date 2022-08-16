@@ -39,7 +39,7 @@ const char* StrongPeak::description = DOC("This algorithm computes the Strong Pe
 
 void StrongPeak::compute() {
 
-  const std::vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   Real& strongPeak = _strongPeak.get();
 
   if (spectrum.size() < 2) {

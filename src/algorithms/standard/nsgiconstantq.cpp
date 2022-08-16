@@ -82,9 +82,9 @@ void NSGIConstantQ::configure() {
 
 
 void NSGIConstantQ::designWindow() {
-  vector<Real> cqtbw;  // bandwidths
-  vector<Real> bw;
-  vector<Real> posit;
+  ::essentia::VectorEx<Real> cqtbw;  // bandwidths
+  ::essentia::VectorEx<Real> bw;
+  ::essentia::VectorEx<Real> posit;
 
   Real nf = _sr / 2;
 
@@ -182,7 +182,7 @@ void NSGIConstantQ::designWindow() {
 
   // Use Windowing to create the required window filter-bank.
   for (int j = 0; j < baseFreqsSize; ++j) {
-    vector<Real> inputWindow(_winsLen[j], 1);
+    ::essentia::VectorEx<Real> inputWindow(_winsLen[j], 1);
 
     _windowing->configure("type", parameter("window").toLower(),
                           "size", _winsLen[j],
@@ -207,8 +207,8 @@ void NSGIConstantQ::designWindow() {
   // Setup Tukey windows for the DC and Nyquist frequencies.
   for (int j = 0; j <= _binsNum + 1; j += _binsNum + 1) {
     if ( _winsLen[j] > _winsLen[j + 1]) {
-      vector<Real> inputWindow(_winsLen[j], 1);
-      _freqWins[j] = vector<Real>(_winsLen[j], 1);
+      ::essentia::VectorEx<Real> inputWindow(_winsLen[j], 1);
+      _freqWins[j] = ::essentia::VectorEx<Real>(_winsLen[j], 1);
 
       copy(_freqWins[j+1].begin(),
            _freqWins[j+1].end(),
@@ -253,7 +253,7 @@ void NSGIConstantQ::createCoefficients() {
 
 
 void NSGIConstantQ::normalize() {
-  vector<Real> normalizeWeights(_binsNum + 2, 1);
+  ::essentia::VectorEx<Real> normalizeWeights(_binsNum + 2, 1);
 
   if (_normalize == "sine") {
     copy(_winsLen.begin(), _winsLen.begin() + _binsNum + 2, normalizeWeights.begin());
@@ -285,15 +285,15 @@ void NSGIConstantQ::normalize() {
 
 
 void NSGIConstantQ::compute() {
-  const vector<vector<complex<Real> > > & constantQ = _constantQ.get();
-  const vector<complex<Real> >& constantQDC = _constantQDC.get();
-  const vector<complex<Real> >& constantQNF = _constantQNF.get();
-  const vector<int>& winsLen = _winsLen;
-  const vector<vector<Real> >& freqWins = _freqWins;
-  vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<complex<Real> > > & constantQ = _constantQ.get();
+  const ::essentia::VectorEx<complex<Real> >& constantQDC = _constantQDC.get();
+  const ::essentia::VectorEx<complex<Real> >& constantQNF = _constantQNF.get();
+  const ::essentia::VectorEx<int>& winsLen = _winsLen;
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& freqWins = _freqWins;
+  ::essentia::VectorEx<Real>& signal = _signal.get();
 
   // Add Nyquist frequency and DC components.
-  vector<vector<complex<Real> > > CQ;
+  ::essentia::VectorEx<::essentia::VectorEx<complex<Real> > > CQ;
   CQ = constantQ;
   CQ.push_back(constantQNF);
   CQ.insert(CQ.begin(), constantQDC);
@@ -305,9 +305,9 @@ void NSGIConstantQ::compute() {
         "parameters used in the analysis by NSGConstantQ");
   }
 
-  vector<complex<Real> > fr(_NN, (complex<Real>)0);
-  vector<int> temp_idx;
-  vector<complex<Real> > temp;
+  ::essentia::VectorEx<complex<Real> > fr(_NN, (complex<Real>)0);
+  ::essentia::VectorEx<int> temp_idx;
+  ::essentia::VectorEx<complex<Real> > temp;
 
   for (int j=0; j<_N; ++j) {
     int Lg = freqWins[j].size();
@@ -350,7 +350,7 @@ void NSGIConstantQ::compute() {
     count++;
   }
 
-  vector<complex<Real> > output;
+  ::essentia::VectorEx<complex<Real> > output;
   _ifft->configure("size", _NN);
   _ifft->input("fft").set(fr);
   _ifft->output("frame").set(output);
@@ -394,7 +394,7 @@ void NSGIConstantQ::designDualFrame() {
   transform(_posit.begin(), _posit.end(), _posit.begin(),
             [&](int p){ return p - _shifts[0]; });
 
-  vector<Real> diagonal(Ls, 0.0);
+  ::essentia::VectorEx<Real> diagonal(Ls, 0.0);
 
 
   _win_range.resize(N);

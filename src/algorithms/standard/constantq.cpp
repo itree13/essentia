@@ -42,8 +42,8 @@ const char* ConstantQ::description = DOC("This algorithm computes Constant Q Tra
 
 void ConstantQ::compute() {
 
-  const vector<Real> & frame = _frame.get();
-  vector<complex<Real> >& constantQ = _constantQ.get();
+  const ::essentia::VectorEx<Real> & frame = _frame.get();
+  ::essentia::VectorEx<complex<Real> >& constantQ = _constantQ.get();
 
   if (frame.size() != _windowSize) {
     throw EssentiaException("ConstantQ: input frame size must be equal to: ", _windowSize);
@@ -101,8 +101,8 @@ void ConstantQ::configure() {
   _sparseKernel.real.reserve(_windowSize / 2 + 1);
   _sparseKernel.imag.reserve(_windowSize / 2 + 1);
 
-  vector<complex<Real> > binKernel;
-  vector<complex<Real> > binKernelFFT;
+  ::essentia::VectorEx<complex<Real> > binKernel;
+  ::essentia::VectorEx<complex<Real> > binKernelFFT;
 
   // For each bin value k, calculate temporal kernel, take its FFT to
   // calculate the spectral kernel then threshold it to make it sparse and
@@ -116,8 +116,8 @@ void ConstantQ::configure() {
     // with the unity input.
     unsigned int ilen = max((2 * (floor(length) / 2)), (Real)_minimumKernelSize);
 
-    vector<Real> unity(ilen, 1.);
-    vector<Real> window;
+    ::essentia::VectorEx<Real> unity(ilen, 1.);
+    ::essentia::VectorEx<Real> window;
     _windowing->input("frame").set(unity);
     _windowing->output("frame").set(window);
     _windowing->compute();
@@ -137,7 +137,7 @@ void ConstantQ::configure() {
     }
 
     // Compute the threshold directly from the window.
-    vector<Real> sortedWindow(window);
+    ::essentia::VectorEx<Real> sortedWindow(window);
     sort(sortedWindow.begin(), sortedWindow.end());
     
     // Notice that Essentia's windows are scaled by 2 so

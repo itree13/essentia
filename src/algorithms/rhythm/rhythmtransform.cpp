@@ -45,8 +45,8 @@ void RhythmTransform::configure() {
 }
 
 void RhythmTransform::compute() {
-  const vector<vector<Real> >& bands = _melBands.get();
-  vector<vector<Real> >& output = _rhythmTransform.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& bands = _melBands.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& output = _rhythmTransform.get();
 
   int nFrames = bands.size();
   // 
@@ -56,7 +56,7 @@ void RhythmTransform::compute() {
   }
 
   // Gather individual band lengths
-  vector<Real> bandSizes(nFrames);
+  ::essentia::VectorEx<Real> bandSizes(nFrames);
   for (int nband=0; nband<nFrames; ++nband) {
     bandSizes[nband] = bands[nband].size();
   }
@@ -73,9 +73,9 @@ void RhythmTransform::compute() {
 
   int nBands = bands[0].size();
   // derive and transpose
-  vector<vector<Real> > bandsDerivative(nBands);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > bandsDerivative(nBands);
   for (int band=0; band<nBands; ++band) {
-    vector<Real> derivTemp(nFrames);
+    ::essentia::VectorEx<Real> derivTemp(nFrames);
     derivTemp[0] = 0.0;
     for (int frame=1; frame<nFrames; frame++) {
       derivTemp[frame] = bands[frame][band]-bands[frame-1][band];
@@ -90,17 +90,17 @@ void RhythmTransform::compute() {
   // whole signal and zero pads if it i+rtFrameSize exceeds the number of
   // melbands frames
   while (i<nFrames) {
-    vector<Real> bandSpectrum(_rtFrameSize/2+1);
+    ::essentia::VectorEx<Real> bandSpectrum(_rtFrameSize/2+1);
     for (int band=0; band<nBands; band++) {
-      vector<Real> rhythmFrame(_rtFrameSize);
+      ::essentia::VectorEx<Real> rhythmFrame(_rtFrameSize);
       for (int j=0; j<_rtFrameSize; ++j) {
         if (i+j<nFrames){
           rhythmFrame[j] = bandsDerivative[band][i+j];
         }
         else rhythmFrame[j] = 0.0; // zeropadding
       }
-      vector<Real> windowedFrame;
-      vector<Real> rhythmSpectrum;
+      ::essentia::VectorEx<Real> windowedFrame;
+      ::essentia::VectorEx<Real> rhythmSpectrum;
 
       _w->input("frame").set(rhythmFrame);
       _w->output("frame").set(windowedFrame);
@@ -134,7 +134,7 @@ const char* RhythmTransform::description = standard::RhythmTransform::descriptio
 
 RhythmTransform::RhythmTransform() : AlgorithmComposite() {
 
-  _poolStorage = new PoolStorage<vector<Real> >(&_pool, "internal.mel_bands");
+  _poolStorage = new PoolStorage<::essentia::VectorEx<Real> >(&_pool, "internal.mel_bands");
   _rhythmAlgo = standard::AlgorithmFactory::create("RhythmTransform");
 
   declareInput(_poolStorage->input("data"), 1, "melBands","the energy in the melbands");
@@ -155,8 +155,8 @@ RhythmTransform::~RhythmTransform() {
 AlgorithmStatus RhythmTransform::process() {
   if (!shouldStop()) return PASS;
 
-  const vector<vector<Real> >& bands = _pool.value<vector<vector<Real> > >("internal.mel_bands");
-  vector<vector<Real> > rhythmTransform;
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& bands = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.mel_bands");
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > rhythmTransform;
 
   _rhythmAlgo->input("melBands").set(bands);
   _rhythmAlgo->output("rhythm").set(rhythmTransform);

@@ -116,9 +116,9 @@ int main(int argc, char* argv[]) {
 
   // Prepare binary file outputs or pool/yaml outputs 
   if (format=="binary") {
-    Algorithm* fileSpec = new FileOutput<vector<Real> >();
-    Algorithm* fileMelBands = new FileOutput<vector<Real> >();
-    Algorithm* fileMFCC = new FileOutput<vector<Real> >();
+    Algorithm* fileSpec = new FileOutput<::essentia::VectorEx<Real> >();
+    Algorithm* fileMelBands = new FileOutput<::essentia::VectorEx<Real> >();
+    Algorithm* fileMFCC = new FileOutput<::essentia::VectorEx<Real> >();
 
     fileSpec->configure("filename", outputFilename + ".spec", "mode", "binary");
     fileMelBands->configure("filename", outputFilename + ".mel96", "mode", "binary");

@@ -26,10 +26,10 @@
 
 using namespace essentia;
 
-std::vector<Real> globalAverageChroma(std::vector<std::vector<Real> >& inputFeature);
-int optimalTranspositionIndex(std::vector<std::vector<Real> >& chromaA, std::vector<std::vector<Real> >& chromaB, int nshifts);
-std::vector<std::vector<Real> > stackChromaFrames(std::vector<std::vector<Real> >& frames, int frameStackSize, int frameStackStride);
-std::vector<std::vector<Real> > chromaBinarySimMatrix(std::vector<std::vector<Real> >& chromaA, std::vector<std::vector<Real> >& chromaB, int nshifts, Real matchCoef, Real mismatchCoef);
+::essentia::VectorEx<Real> globalAverageChroma(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputFeature);
+int optimalTranspositionIndex(::essentia::VectorEx<::essentia::VectorEx<Real> >& chromaA, ::essentia::VectorEx<::essentia::VectorEx<Real> >& chromaB, int nshifts);
+::essentia::VectorEx<::essentia::VectorEx<Real> > stackChromaFrames(::essentia::VectorEx<::essentia::VectorEx<Real> >& frames, int frameStackSize, int frameStackStride);
+::essentia::VectorEx<::essentia::VectorEx<Real> > chromaBinarySimMatrix(::essentia::VectorEx<::essentia::VectorEx<Real> >& chromaA, ::essentia::VectorEx<::essentia::VectorEx<Real> >& chromaB, int nshifts, Real matchCoef, Real mismatchCoef);
 
 namespace essentia {
 namespace standard {
@@ -69,7 +69,7 @@ void ChromaCrossSimilarity::compute() {
   // get inputs and output
   queryFeature = _queryFeature.get();
   if (_iterIdx == 0) referenceFeature = _referenceFeature.get();
-  std::vector<std::vector<Real> >& csm = _csm.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& csm = _csm.get();
 
   if (queryFeature.empty())
     throw EssentiaException("CrossSimilarityMatrix: input queryFeature is empty.");
@@ -78,8 +78,8 @@ void ChromaCrossSimilarity::compute() {
 
   // check whether to use oti-based binary similarity 
   if (_otiBinary) {
-    std::vector<std::vector<Real> >  stackFramesA = stackChromaFrames(queryFeature, _frameStackSize, _frameStackStride);
-    std::vector<std::vector<Real> >  stackFramesB = stackChromaFrames(referenceFeature, _frameStackSize, _frameStackStride);
+    ::essentia::VectorEx<::essentia::VectorEx<Real> >  stackFramesA = stackChromaFrames(queryFeature, _frameStackSize, _frameStackStride);
+    ::essentia::VectorEx<::essentia::VectorEx<Real> >  stackFramesB = stackChromaFrames(referenceFeature, _frameStackSize, _frameStackStride);
     csm = chromaBinarySimMatrix(stackFramesA, stackFramesB, _noti, _mathcCoef, _mismatchCoef);;
   }
   // Otherwise use default cross-similarity computation method based on euclidean distances
@@ -105,7 +105,7 @@ void ChromaCrossSimilarity::compute() {
       }
       queryFeatureSize = _accumEucDistances.size();
       referenceFeatureSize = _accumEucDistances[0].size();
-      csm.assign(queryFeatureSize, std::vector<Real>(referenceFeatureSize, 0));
+      csm.assign(queryFeatureSize, ::essentia::VectorEx<Real>(referenceFeatureSize, 0));
       _thresholdQuery.assign(queryFeatureSize, 0);
       _thresholdReference.assign(referenceFeatureSize, 0);
       // compute the binary output similarity matrix by multiplying with the thresholds computed along the referenceFeature axis
@@ -140,7 +140,7 @@ void ChromaCrossSimilarity::compute() {
     else { // no streaming
       _thresholdQuery.assign(queryFeatureSize, 0);
       _thresholdReference.assign(referenceFeatureSize, 0);
-      csm.assign(queryFeatureSize, std::vector<Real>(referenceFeatureSize, 0));
+      csm.assign(queryFeatureSize, ::essentia::VectorEx<Real>(referenceFeatureSize, 0));
       // compute the binary output similarity matrix by multiplying with the thresholds computed along the referenceFeature axis
       for (size_t j=0; j<referenceFeatureSize; j++) {
         _status = true;
@@ -168,9 +168,9 @@ void ChromaCrossSimilarity::compute() {
 
 
 // returns a column corresponding to a specified index in the given 2D input matrix
-std::vector<Real> ChromaCrossSimilarity::getColsAtVecIndex(std::vector<std::vector<Real> >& inputMatrix, int index) const {
+::essentia::VectorEx<Real> ChromaCrossSimilarity::getColsAtVecIndex(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputMatrix, int index) const {
   
-  std::vector<Real> cols;
+  ::essentia::VectorEx<Real> cols;
   cols.reserve(inputMatrix.size());
   for (size_t i=0; i<inputMatrix.size(); i++) {
     cols.push_back(inputMatrix[i][index]);
@@ -255,9 +255,9 @@ AlgorithmStatus ChromaCrossSimilarity::process() {
     return process();
   }
 
-  const std::vector<std::vector<Real> >& inputQueryFrames = _queryFeature.tokens();
-  std::vector<std::vector<Real> > inputFramesCopy = inputQueryFrames; 
-  std::vector<std::vector<Real> >& csmOutput = _csm.tokens();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& inputQueryFrames = _queryFeature.tokens();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > inputFramesCopy = inputQueryFrames; 
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& csmOutput = _csm.tokens();
   _outputSimMatrix.clear();
 
   /* if we have less input frame streams than the required 'frameStackSize' in the last stream, 
@@ -275,16 +275,16 @@ AlgorithmStatus ChromaCrossSimilarity::process() {
   }
   // otherwise we compute similarity matrix as mentioned in [2]
   else { // no otiBinary method
-    std::vector<std::vector<Real> > queryFeatureStack = stackChromaFrames(inputFramesCopy, _frameStackSize, _frameStackStride);
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > queryFeatureStack = stackChromaFrames(inputFramesCopy, _frameStackSize, _frameStackStride);
     // here we compute the pairwsie euclidean distances between query and reference song time embedding and finally tranpose the resulting matrix.
-    std::vector<std::vector<Real> > pdistances = pairwiseDistance(queryFeatureStack, _referenceFeatureStack);
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > pdistances = pairwiseDistance(queryFeatureStack, _referenceFeatureStack);
     size_t queryFeatureSize = pdistances.size();
     size_t referenceFeatureSize = pdistances[0].size();
 
     // optimise the threshold computation by iniatilizing it to a matrix of ones
-    _outputSimMatrix.assign(queryFeatureSize, std::vector<Real>(referenceFeatureSize, 1));
+    _outputSimMatrix.assign(queryFeatureSize, ::essentia::VectorEx<Real>(referenceFeatureSize, 1));
 
-    std::vector<Real> thresholdQuery(queryFeatureSize);
+    ::essentia::VectorEx<Real> thresholdQuery(queryFeatureSize);
     // update the binary output similarity matrix by multiplying with the thresholds computed along the referenceFeature axis
     for (size_t i=0; i<queryFeatureSize; i++) {
       thresholdQuery[i] = percentile(pdistances[i], _binarizePercentile*100);
@@ -309,9 +309,9 @@ void ChromaCrossSimilarity::reset () {
 
 
 // computes global averaged chroma as described in [1]
-std::vector<Real> globalAverageChroma(std::vector<std::vector<Real> >& inputFeature) {
+::essentia::VectorEx<Real> globalAverageChroma(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputFeature) {
 
-  std::vector<Real> globalChroma = sumFrames(inputFeature);
+  ::essentia::VectorEx<Real> globalChroma = sumFrames(inputFeature);
   // divide the sum array by the max element to normalise it to 0-1 range
   normalize(globalChroma);
   return globalChroma;
@@ -319,11 +319,11 @@ std::vector<Real> globalAverageChroma(std::vector<std::vector<Real> >& inputFeat
 
 
 // Compute the optimal transposition index for transposing reference song feature to the musical key of query song feature as described in [1].
-int optimalTranspositionIndex(std::vector<std::vector<Real> >& chromaA, std::vector<std::vector<Real> >& chromaB, int nshifts) {
+int optimalTranspositionIndex(::essentia::VectorEx<::essentia::VectorEx<Real> >& chromaA, ::essentia::VectorEx<::essentia::VectorEx<Real> >& chromaB, int nshifts) {
     
-  std::vector<Real> globalChromaA = globalAverageChroma(chromaA);
-  std::vector<Real> globalChromaB = globalAverageChroma(chromaB);
-  std::vector<Real> valueAtShifts;
+  ::essentia::VectorEx<Real> globalChromaA = globalAverageChroma(chromaA);
+  ::essentia::VectorEx<Real> globalChromaB = globalAverageChroma(chromaB);
+  ::essentia::VectorEx<Real> valueAtShifts;
   int iterIdx = 0;
   for(int i=0; i<=nshifts; i++) {
     // circular rotate the input globalchroma by an index 'i'
@@ -338,7 +338,7 @@ int optimalTranspositionIndex(std::vector<std::vector<Real> >& chromaA, std::vec
 
 
 // Construct a 'stacked-frames' feature vector from an input audio feature vector by given 'frameStackSize' and 'frameStackStride'
-std::vector<std::vector<Real> > stackChromaFrames(std::vector<std::vector<Real> >& frames, int frameStackSize, int frameStackStride) {
+::essentia::VectorEx<::essentia::VectorEx<Real> > stackChromaFrames(::essentia::VectorEx<::essentia::VectorEx<Real> >& frames, int frameStackSize, int frameStackStride) {
 
   if (frameStackSize == 1) {
     return frames;
@@ -353,9 +353,9 @@ std::vector<std::vector<Real> > stackChromaFrames(std::vector<std::vector<Real> 
 
   }
 
-  std::vector<std::vector<Real> > stackedFrames;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > stackedFrames;
   stackedFrames.reserve(frames.size() - increment);
-  std::vector<Real> stack;
+  ::essentia::VectorEx<Real> stack;
   stack.reserve(frames[0].size() * frameStackSize);
   for (size_t i=0; i<(frames.size() - increment); i+=frameStackStride) {
     stopIdx = i + increment;
@@ -370,12 +370,12 @@ std::vector<std::vector<Real> > stackChromaFrames(std::vector<std::vector<Real> 
 
 
 // Computes a binary similarity matrix from two chroma vector inputs using OTI as described in [3]
-std::vector<std::vector<Real> > chromaBinarySimMatrix(std::vector<std::vector<Real> >& chromaA, std::vector<std::vector<Real> >& chromaB, int nshifts, Real matchCoef, Real mismatchCoef) {
+::essentia::VectorEx<::essentia::VectorEx<Real> > chromaBinarySimMatrix(::essentia::VectorEx<::essentia::VectorEx<Real> >& chromaA, ::essentia::VectorEx<::essentia::VectorEx<Real> >& chromaB, int nshifts, Real matchCoef, Real mismatchCoef) {
 
   int otiIndex;
-  std::vector<Real> valueAtShifts;
-  std::vector<Real> chromaBcopy;
-  std::vector<std::vector<Real> > simMatrix(chromaA.size(), std::vector<Real>(chromaB.size()));
+  ::essentia::VectorEx<Real> valueAtShifts;
+  ::essentia::VectorEx<Real> chromaBcopy;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > simMatrix(chromaA.size(), ::essentia::VectorEx<Real>(chromaB.size()));
   for (size_t i=0; i<chromaA.size(); i++) {
     for (size_t j=0; j<chromaB.size(); j++) {
       // compute OTI-based similarity for each frame of chromaA and chromaB

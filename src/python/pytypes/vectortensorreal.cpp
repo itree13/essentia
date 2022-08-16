@@ -26,7 +26,7 @@ DEFINE_PYTHON_TYPE(VectorTensorReal);
 
 
 
-PyObject* VectorTensorReal::toPythonCopy(const vector<Tensor<Real> >* tenVec) {
+PyObject* VectorTensorReal::toPythonCopy(const ::essentia::VectorEx<Tensor<Real> >* tenVec) {
   int size = tenVec->size();
   PyObject* result = PyList_New(size);
 
@@ -62,7 +62,7 @@ void* VectorTensorReal::fromPythonCopy(PyObject* obj) {
   }
 
   int size = PyList_Size(obj);
-  vector<Tensor<Real> >* v = new vector<Tensor<Real> >(size);
+  ::essentia::VectorEx<Tensor<Real> >* v = new ::essentia::VectorEx<Tensor<Real> >(size);
 
   for (int i=0; i<size; ++i) {
     try {

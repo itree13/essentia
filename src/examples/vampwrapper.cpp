@@ -128,7 +128,7 @@ VampWrapper::Feature VampWrapper::makeFeature(float f) const {
   return feat;
 }
 
-VampWrapper::Feature VampWrapper::makeFeature(const vector<float>& f) const {
+VampWrapper::Feature VampWrapper::makeFeature(const ::essentia::VectorEx<float>& f) const {
   Feature feat;
   feat.hasTimestamp = false;
   feat.values = f;

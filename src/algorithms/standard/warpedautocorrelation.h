@@ -28,8 +28,8 @@ namespace standard {
 class WarpedAutoCorrelation : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _warpedAutoCorrelation;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _warpedAutoCorrelation;
 
  public:
   WarpedAutoCorrelation() {
@@ -51,7 +51,7 @@ class WarpedAutoCorrelation : public Algorithm {
 
  private:
   Real _lambda;
-  std::vector<Real> _tmp;
+  ::essentia::VectorEx<Real> _tmp;
 };
 
 } // namespace standard
@@ -65,8 +65,8 @@ namespace streaming {
 class WarpedAutoCorrelation : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
-  Source<std::vector<Real> > _warpedAutoCorrelation;
+  Sink<::essentia::VectorEx<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _warpedAutoCorrelation;
 
  public:
   WarpedAutoCorrelation() {

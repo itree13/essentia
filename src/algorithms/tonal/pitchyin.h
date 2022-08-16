@@ -28,16 +28,16 @@ namespace standard {
 class PitchYin : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _pitch;
   Output<Real> _pitchConfidence;
 
   Algorithm* _peakDetectLocal;
   Algorithm* _peakDetectGlobal;
 
-  std::vector<Real> _yin;         // Yin function (cumulative mean normalized difference)
-  std::vector<Real> _positions;   // Yin function peak positions
-  std::vector<Real> _amplitudes;  // Yin function peak amplitudes
+  ::essentia::VectorEx<Real> _yin;         // Yin function (cumulative mean normalized difference)
+  ::essentia::VectorEx<Real> _positions;   // Yin function peak positions
+  ::essentia::VectorEx<Real> _amplitudes;  // Yin function peak amplitudes
 
   int _frameSize;
   Real _sampleRate;               
@@ -94,7 +94,7 @@ namespace streaming {
 class PitchYin : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _pitch;
   Source<Real> _pitchConfidence;
 

@@ -47,8 +47,8 @@ IFFTWComplex::~IFFTWComplex() {
 
 void IFFTWComplex::compute() {
 
-  const std::vector<std::complex<Real> >& fft = _fft.get();
-  std::vector<std::complex<Real> >& signal = _signal.get();
+  const ::essentia::VectorEx<std::complex<Real> >& fft = _fft.get();
+  ::essentia::VectorEx<std::complex<Real> >& signal = _signal.get();
 
   // check if input is OK
   int size = (int)fft.size();

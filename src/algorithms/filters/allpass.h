@@ -30,8 +30,8 @@ namespace standard {
 class AllPass : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _x;
-  Output<std::vector<Real> > _y;
+  Input<::essentia::VectorEx<Real> > _x;
+  Output<::essentia::VectorEx<Real> > _y;
 
   Algorithm* _filter;
 

@@ -114,9 +114,9 @@ AlgorithmStatus NSGConstantQStreaming::process() {
   // Thus, here it just discards the remaining tokens. Tested with CartesianToPoolar().
   if( shouldStop() ) return FINISHED;
 
-  const std::vector<vector<std::vector<std::complex<Real> > > > &constantQ = _constantQinner.tokens();
-  const std::vector<std::vector<std::complex<Real> > >  &constantQdc = _constantQDCinner.tokens();
-  const std::vector<std::vector<std::complex<Real> > >  &constantQnf = _constantQNFinner.tokens();
+  const ::essentia::VectorEx<::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > > > &constantQ = _constantQinner.tokens();
+  const ::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > >  &constantQdc = _constantQDCinner.tokens();
+  const ::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > >  &constantQnf = _constantQNFinner.tokens();
 
   unsigned timeStamps = constantQ[0][0].size();
   unsigned channSize = constantQ[0].size();
@@ -131,10 +131,10 @@ AlgorithmStatus NSGConstantQStreaming::process() {
   _frameStamps.acquire();
 
 
-  std::vector<std::vector<std::complex<Real> > >& constantQout = _constantQ.tokens();
-  std::vector<std::vector<std::complex<Real> > >& constantQDCout = _constantQDC.tokens();
-  std::vector<std::vector<std::complex<Real> > >& constantQNFout = _constantQNF.tokens();
-  std::vector<int>& frameStamps = _frameStamps.tokens();
+  ::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > >& constantQout = _constantQ.tokens();
+  ::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > >& constantQDCout = _constantQDC.tokens();
+  ::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > >& constantQNFout = _constantQNF.tokens();
+  ::essentia::VectorEx<int>& frameStamps = _frameStamps.tokens();
 
   constantQDCout = constantQdc;
   constantQNFout = constantQnf;
@@ -142,7 +142,7 @@ AlgorithmStatus NSGConstantQStreaming::process() {
   frameStamps[0] = _frameStampsCount;
   _frameStampsCount += timeStamps;
 
-  std::vector<std::complex<float> > item;
+  ::essentia::VectorEx<std::complex<float> > item;
   for (unsigned i=0; i<timeStamps; i++){
     for (unsigned j=0; j<channSize; j++) item.push_back(constantQ[0][j][i]);
 

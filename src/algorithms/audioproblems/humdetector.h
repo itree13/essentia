@@ -44,10 +44,10 @@ class HumDetector : public AlgorithmComposite {
   SinkProxy<Real> _signal;
 
   Source<TNT::Array2D<Real> > _rMatrix;
-  Source<std::vector<Real> > _frequencies;
-  Source<std::vector<Real> > _saliences;
-  Source<std::vector<Real> > _starts;
-  Source<std::vector<Real> > _ends;
+  Source<::essentia::VectorEx<Real> > _frequencies;
+  Source<::essentia::VectorEx<Real> > _saliences;
+  Source<::essentia::VectorEx<Real> > _starts;
+  Source<::essentia::VectorEx<Real> > _ends;
 
   Pool _pool;
   Real _absoluteThreshold;
@@ -78,11 +78,11 @@ class HumDetector : public AlgorithmComposite {
   scheduler::Network* _network;
 
   template< typename T >
-  typename std::vector<T>::iterator 
-    insertSorted( std::vector<T> & vec, T const& item );
+  typename ::essentia::VectorEx<T>::iterator 
+    insertSorted( ::essentia::VectorEx<T> & vec, T const& item );
 
   template <typename T>
-  std::vector<size_t> sort_indexes(const std::vector<T> &v);
+  ::essentia::VectorEx<size_t> sort_indexes(const ::essentia::VectorEx<T> &v);
 
   Real centBinToFrequency(Real cent, Real reff, Real binsInOctave);
 
@@ -130,12 +130,12 @@ namespace standard {
 
 class HumDetector : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<TNT::Array2D<Real> > _rMatrix;
-  Output<std::vector<Real> > _frequencies;
-  Output<std::vector<Real> > _saliences;
-  Output<std::vector<Real> > _starts;
-  Output<std::vector<Real> > _ends;
+  Output<::essentia::VectorEx<Real> > _frequencies;
+  Output<::essentia::VectorEx<Real> > _saliences;
+  Output<::essentia::VectorEx<Real> > _starts;
+  Output<::essentia::VectorEx<Real> > _ends;
 
   streaming::Algorithm* _humDetector;
   streaming::VectorInput<Real>* _vectorInput;

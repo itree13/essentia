@@ -56,17 +56,17 @@ void LPC::configure() {
 
 void LPC::compute() {
 
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& lpc = _lpc.get();
-  vector<Real>& reflection = _reflection.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& lpc = _lpc.get();
+  ::essentia::VectorEx<Real>& reflection = _reflection.get();
 
   if (_p > (int)signal.size()) {
     throw EssentiaException("LPC: you can't compute more coefficients than the size of your input");
   }
 
   if (isSilent(signal)) {
-    lpc = vector<Real>(_p+1, 0.0);
-    reflection = vector<Real>(_p, 0.0);
+    lpc = ::essentia::VectorEx<Real>(_p+1, 0.0);
+    reflection = ::essentia::VectorEx<Real>(_p, 0.0);
     return;
   }
 
@@ -77,7 +77,7 @@ void LPC::compute() {
   _correlation->compute();
 
   // Levinson-Durbin algorithm
-  vector<Real> temp(_p);
+  ::essentia::VectorEx<Real> temp(_p);
 
   Real k;
   Real E = _r[0];

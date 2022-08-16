@@ -64,17 +64,17 @@ void SprModelAnal::configure() {
 void SprModelAnal::compute() {
 
   // inputs and outputs
-  const std::vector<Real>& frame = _frame.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
 
-  std::vector<Real>& peakMagnitude = _magnitudes.get();
-  std::vector<Real>& peakFrequency = _frequencies.get();
-  std::vector<Real>& peakPhase = _phases.get();
-  std::vector<Real>& res = _res.get();
+  ::essentia::VectorEx<Real>& peakMagnitude = _magnitudes.get();
+  ::essentia::VectorEx<Real>& peakFrequency = _frequencies.get();
+  ::essentia::VectorEx<Real>& peakPhase = _phases.get();
+  ::essentia::VectorEx<Real>& res = _res.get();
 
-  std::vector<Real> wframe;
-  std::vector<std::complex<Real> > fftin;
-  std::vector<Real> fftmag;
-  std::vector<Real> fftphase;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<std::complex<Real> > fftin;
+  ::essentia::VectorEx<Real> fftmag;
+  ::essentia::VectorEx<Real> fftphase;
 
 
   _window->input("frame").set(frame);
@@ -93,7 +93,7 @@ void SprModelAnal::compute() {
   _sineModelAnal->compute();
 
 
-  std::vector<Real> subtrFrameOut;
+  ::essentia::VectorEx<Real> subtrFrameOut;
 
 // this needs to take into account overlap-add issues, introducing delay
  _sineSubtraction->input("frame").set(frame); // size is iput _fftSize

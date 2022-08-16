@@ -66,12 +66,12 @@ const char* supportedStats[] =
    "dmean", "dvar", "dmean2", "dvar2",
    "cov", "icov",
    "copy", "value", "last"};
-vector<string> tmp = arrayToVector<string>(supportedStats);
+::essentia::VectorEx<string> tmp = arrayToVector<string>(supportedStats);
 const set<string> PoolAggregator::_supportedStats(tmp.begin(), tmp.end());
 
 void addMatrixAsVectorVector(Pool& p, const string& key, const TNT::Array2D<Real>& mat) {
   for (int i=0; i<int(mat.dim1()); ++i) {
-    vector<Real> v(mat.dim1());
+    ::essentia::VectorEx<Real> v(mat.dim1());
     for (int j=0; j<int(mat.dim2()); ++j) {
       v[j] = mat[i][j];
     }
@@ -99,7 +99,7 @@ void PoolAggregator::aggregateRealPool(const Pool& input, Pool& output) {
        it != realPool.end();
        ++it) {
     string key = it->first;
-    vector<Real> data = it->second;
+    ::essentia::VectorEx<Real> data = it->second;
     int dsize = int(data.size());
 
     // mean, variance, and standard deviation
@@ -122,8 +122,8 @@ void PoolAggregator::aggregateRealPool(const Pool& input, Pool& output) {
     }
 
     // derived mean & var
-    vector<Real> derived(dsize > 1 ? dsize-1 : 1, 0.0);
-    vector<Real> derived2(dsize > 2 ? dsize-2 : 1, 0.0);
+    ::essentia::VectorEx<Real> derived(dsize > 1 ? dsize-1 : 1, 0.0);
+    ::essentia::VectorEx<Real> derived2(dsize > 2 ? dsize-2 : 1, 0.0);
 
     for (int i=0; i<dsize-1; ++i) {
       derived[i] = data[i+1] - data[i];
@@ -145,7 +145,7 @@ void PoolAggregator::aggregateRealPool(const Pool& input, Pool& output) {
     d2varianceVal = variance(derived2, mean(derived2));
 
     // figure out which computed stats to add to the output pool
-    const vector<string>& stats = getStats(key);
+    const ::essentia::VectorEx<string>& stats = getStats(key);
     for (int i=0; i<(int)stats.size(); ++i) {
       if      (stats[i] == "mean")   output.set(key + ".mean", meanVal);
       else if (stats[i] == "median") output.set(key + ".median", medianVal);
@@ -178,26 +178,26 @@ void PoolAggregator::aggregateRealPool(const Pool& input, Pool& output) {
 }
 
 void PoolAggregator::aggregateSingleVectorRealPool(const Pool& input, Pool& output) {
-  const map<string, vector<Real> >& vectorRealPool = input.getSingleVectorRealPool();
-  for (map<string, vector<Real> >::const_iterator it = vectorRealPool.begin();
+  const map<string, ::essentia::VectorEx<Real> >& vectorRealPool = input.getSingleVectorRealPool();
+  for (map<string, ::essentia::VectorEx<Real> >::const_iterator it = vectorRealPool.begin();
        it != vectorRealPool.end();
        ++it) {
 
     string key = it->first;
-    vector<Real> data = it->second;
+    ::essentia::VectorEx<Real> data = it->second;
     output.set(key, data);
   }
 }
 
 void PoolAggregator::aggregateVectorRealPool(const Pool& input, Pool& output) {
-  PoolOf(vector<Real>) vectorRealPool = input.getVectorRealPool();
+  PoolOf(::essentia::VectorEx<Real>) vectorRealPool = input.getVectorRealPool();
 
-  for (PoolOf(vector<Real>)::const_iterator it = vectorRealPool.begin();
+  for (PoolOf(::essentia::VectorEx<Real>)::const_iterator it = vectorRealPool.begin();
        it != vectorRealPool.end();
        ++it) {
 
     string key = it->first;
-    vector<vector<Real> > data = it->second;
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > data = it->second;
     int dsize = data.size();
 
     if (dsize == 0) continue;
@@ -224,22 +224,22 @@ void PoolAggregator::aggregateVectorRealPool(const Pool& input, Pool& output) {
 
 
     // mean & var
-    vector<Real> meanVals = meanFrames(data);
-    vector<Real> varVals = varianceFrames(data);
+    ::essentia::VectorEx<Real> meanVals = meanFrames(data);
+    ::essentia::VectorEx<Real> varVals = varianceFrames(data);
 
     // stdev
-    vector<Real> stdevVals(varVals);
+    ::essentia::VectorEx<Real> stdevVals(varVals);
     std::transform(stdevVals.begin(), stdevVals.end(), stdevVals.begin(), static_cast<Real (*)(Real)>(std::sqrt));
 
     // median
-    vector<Real> medianVals = medianFrames(data);
+    ::essentia::VectorEx<Real> medianVals = medianFrames(data);
 
     // skewness & kurtosis
-    vector<Real> skewnessVals = skewnessFrames(data);
-    vector<Real> kurtosisVals = kurtosisFrames(data);
+    ::essentia::VectorEx<Real> skewnessVals = skewnessFrames(data);
+    ::essentia::VectorEx<Real> kurtosisVals = kurtosisFrames(data);
 
     // min & max
-    vector<Real> minVals(vsize, 0.0), maxVals(vsize, 0.0);
+    ::essentia::VectorEx<Real> minVals(vsize, 0.0), maxVals(vsize, 0.0);
     for (int j=0; j<vsize; j++) minVals[j] = maxVals[j] = data[0][j]; // init values
     for (int i=1; i<dsize; i++) {
       for (int j=0; j<vsize; j++) {
@@ -249,8 +249,8 @@ void PoolAggregator::aggregateVectorRealPool(const Pool& input, Pool& output) {
     }
 
     // derived mean & var
-    vector<vector<Real> > derived(dsize > 1 ? dsize-1 : 1, vector<Real>(vsize, 0.0));
-    vector<vector<Real> > derived2(dsize > 2 ? dsize-2 : 1, vector<Real>(vsize, 0.0));
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > derived(dsize > 1 ? dsize-1 : 1, ::essentia::VectorEx<Real>(vsize, 0.0));
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > derived2(dsize > 2 ? dsize-2 : 1, ::essentia::VectorEx<Real>(vsize, 0.0));
 
     // first derivative
     for (int i=0; i<dsize-1; i++) {
@@ -278,16 +278,16 @@ void PoolAggregator::aggregateVectorRealPool(const Pool& input, Pool& output) {
       }
     }
 
-    vector<Real> dmeanVals = meanFrames(derived);
-    vector<Real> d2meanVals = meanFrames(derived2);
-    vector<Real> dvarVals = varianceFrames(derived);
-    vector<Real> d2varVals = varianceFrames(derived2);
+    ::essentia::VectorEx<Real> dmeanVals = meanFrames(derived);
+    ::essentia::VectorEx<Real> d2meanVals = meanFrames(derived2);
+    ::essentia::VectorEx<Real> dvarVals = varianceFrames(derived);
+    ::essentia::VectorEx<Real> d2varVals = varianceFrames(derived2);
 
     // only compute cov and icov matrix if asked, because it could throw an
     // exception if matrix is singular...
-    const vector<string>& stats = getStats(key);
+    const ::essentia::VectorEx<string>& stats = getStats(key);
 
-    vector<vector<Real> > cov(vsize), icov(vsize);
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > cov(vsize), icov(vsize);
 
     if (contains(stats, string("cov")) || contains(stats, string("icov"))) {
 
@@ -299,7 +299,7 @@ void PoolAggregator::aggregateVectorRealPool(const Pool& input, Pool& output) {
         }
       }
 
-      vector<Real> framesMean; // not used
+      ::essentia::VectorEx<Real> framesMean; // not used
       TNT::Array2D<Real> covTnt, icovTnt;
 
       Algorithm* sg = AlgorithmFactory::create("SingleGaussian");
@@ -312,7 +312,7 @@ void PoolAggregator::aggregateVectorRealPool(const Pool& input, Pool& output) {
 
       delete sg;
 
-      // convert the Array2D back into vector<vector<Real> >
+      // convert the Array2D back into ::essentia::VectorEx<::essentia::VectorEx<Real> >
       //for (int i=0; i<dsize; ++i) {
       int covSize = covTnt.dim1();
       for (int i=0; i<covSize; ++i) {
@@ -404,7 +404,7 @@ void PoolAggregator::aggregateStringPool(const Pool& input, Pool& output) {
        it != stringPool.end();
        ++it) {
     string key = it->first;
-    vector<string> data = it->second;
+    ::essentia::VectorEx<string> data = it->second;
 
     for (int i=0; i<(int)data.size(); ++i) {
       output.add(key, data[i]);
@@ -414,13 +414,13 @@ void PoolAggregator::aggregateStringPool(const Pool& input, Pool& output) {
 
 
 void PoolAggregator::aggregateVectorStringPool(const Pool& input, Pool& output) {
-  const PoolOf(vector<string>)& vectorStringPool = input.getVectorStringPool();
+  const PoolOf(::essentia::VectorEx<string>)& vectorStringPool = input.getVectorStringPool();
 
-  for (PoolOf(vector<string>)::const_iterator it = vectorStringPool.begin();
+  for (PoolOf(::essentia::VectorEx<string>)::const_iterator it = vectorStringPool.begin();
        it != vectorStringPool.end();
        ++it) {
     string key = it->first;
-    vector<vector<string> > data = it->second;
+    ::essentia::VectorEx<::essentia::VectorEx<string> > data = it->second;
 
     for (int i=0; i<(int)data.size(); ++i) {
       output.add(key, data[i]);
@@ -436,7 +436,7 @@ void PoolAggregator::aggregateArray2DRealPool(const Pool& input, Pool& output) {
        ++it) {
 
     string key = it->first;
-    vector<TNT::Array2D<Real> > data = it->second;
+    ::essentia::VectorEx<TNT::Array2D<Real> > data = it->second;
     // get frames:
     int dsize = data.size();
 
@@ -487,8 +487,8 @@ void PoolAggregator::aggregateArray2DRealPool(const Pool& input, Pool& output) {
     }
 
     // derived mean & var
-    vector<TNT::Array2D<Real>* > derived(dsize > 1 ? dsize-1 : 1);
-    vector<TNT::Array2D<Real>* > derived2(dsize > 2 ? dsize-2 : 1);
+    ::essentia::VectorEx<TNT::Array2D<Real>* > derived(dsize > 1 ? dsize-1 : 1);
+    ::essentia::VectorEx<TNT::Array2D<Real>* > derived2(dsize > 2 ? dsize-2 : 1);
 
     // first derivative
     for (int i=0; i<dsize-1; i++) {
@@ -526,7 +526,7 @@ void PoolAggregator::aggregateArray2DRealPool(const Pool& input, Pool& output) {
     for (int i=0; i<(int)derived2.size(); i++) delete derived2[i];
 
     // cov and icov matrix : not implemented yet
-    const vector<string>& stats = getStats(key);
+    const ::essentia::VectorEx<string>& stats = getStats(key);
 
     if (contains(stats, string("cov")) || contains(stats, string("icov"))) {
       E_WARNING("PoolAggregator: Covariance and inverse covariance for vectors of matrices are not yet implemented");
@@ -597,10 +597,10 @@ void PoolAggregator::configure() {
   // make sure there are no duplicate keys in 'exceptions'
   // make sure there are no unsupported statistics in the values of 'exceptions'
   set<string> keys;
-  for (map<string, vector<string> >::const_iterator it = _exceptions.begin();
+  for (map<string, ::essentia::VectorEx<string> >::const_iterator it = _exceptions.begin();
        it != _exceptions.end();
        ++it) {
-    const vector<string>& exceptionStats = it->second;
+    const ::essentia::VectorEx<string>& exceptionStats = it->second;
 
     if (indexOf<string>(exceptionStats, "copy") != -1 &&
         int(exceptionStats.size()) != 1) {
@@ -639,7 +639,7 @@ void PoolAggregator::compute() {
 }
 
 
-const vector<string>& PoolAggregator::getStats(const string& key) const {
+const ::essentia::VectorEx<string>& PoolAggregator::getStats(const string& key) const {
   if (_exceptions.count(key) > 0) {
     return (*(_exceptions.find(key))).second;
   }

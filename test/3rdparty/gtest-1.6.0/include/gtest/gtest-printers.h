@@ -76,7 +76,7 @@
 //   // Prints the fields of a tuple tersely to a string vector, one
 //   // element for each field. Tuple support must be enabled in
 //   // gtest-port.h.
-//   std::vector<string> UniversalTersePrintTupleFieldsToStrings(
+//   ::essentia::VectorEx<string> UniversalTersePrintTupleFieldsToStrings(
 //       const Tuple& value);
 //
 // Known limitation:
@@ -698,7 +698,7 @@ void UniversalPrint(const T& value, ::std::ostream* os) {
 }
 
 #if GTEST_HAS_TR1_TUPLE
-typedef ::std::vector<string> Strings;
+typedef ::essentia::VectorEx<string> Strings;
 
 // This helper template allows PrintTo() for tuples and
 // UniversalTersePrintTupleFieldsToStrings() to be defined by

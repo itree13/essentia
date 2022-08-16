@@ -48,9 +48,9 @@ void PitchFilter::configure() {
 }
 
 void PitchFilter::compute() {
-  const vector<Real>& pitch = _pitch.get();
-  const vector<Real>& pitchConfidence = _pitchConfidence.get();
-  std::vector<Real> modifiedPitchConfidence(pitchConfidence.size());
+  const ::essentia::VectorEx<Real>& pitch = _pitch.get();
+  const ::essentia::VectorEx<Real>& pitchConfidence = _pitchConfidence.get();
+  ::essentia::VectorEx<Real> modifiedPitchConfidence(pitchConfidence.size());
 
   // sanity checks, pitch and pitchConfidence values should be non-negative
   if (pitch.size() != pitchConfidence.size()) {
@@ -74,7 +74,7 @@ void PitchFilter::compute() {
     modifiedPitchConfidence[i] = con;
   }
 
-  vector <Real>& pitchFiltered = _pitchFiltered.get();
+  ::essentia::VectorEx<Real>& pitchFiltered = _pitchFiltered.get();
 
   pitchFiltered = pitch;
   correctOctaveErrorsByChunks(pitchFiltered);
@@ -110,10 +110,10 @@ bool PitchFilter::areClose(Real num1, Real num2) {
     return false;
 }
 
-void PitchFilter::splitToChunks(const vector <Real>& pitch,
-    vector <vector <Real> >& chunks,
-    vector <long long>& chunksIndexes,
-    vector <long long>& chunksSize) {
+void PitchFilter::splitToChunks(const ::essentia::VectorEx<Real>& pitch,
+    ::essentia::VectorEx<::essentia::VectorEx<Real> >& chunks,
+    ::essentia::VectorEx<long long>& chunksIndexes,
+    ::essentia::VectorEx<long long>& chunksSize) {
 
     // populate chunks
     for (size_t i=0; i<pitch.size(); i++) {
@@ -128,7 +128,7 @@ void PitchFilter::splitToChunks(const vector <Real>& pitch,
 
         if (pitch_interval < 0.80 || pitch_interval > 1.2) {
             // add to a new chunk
-            vector <Real> new_chunk;
+            ::essentia::VectorEx<Real> new_chunk;
             new_chunk.push_back(pitch[i]);
             chunks.push_back(new_chunk);
             chunksIndexes.push_back(i);
@@ -143,21 +143,21 @@ void PitchFilter::splitToChunks(const vector <Real>& pitch,
     }
 }
 
-void PitchFilter::joinChunks(const vector <vector <Real> >& chunks, vector <Real>& result) {
+void PitchFilter::joinChunks(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& chunks, ::essentia::VectorEx<Real>& result) {
   result.clear();
   for (size_t i=0; i<chunks.size(); i++) {
     result.insert(result.end(), chunks[i].begin(), chunks[i].end());
   }
 }
 
-Real PitchFilter::confidenceOfChunk(const vector <Real>& PitchConfidence, long long chunkIndex, long long chunkSize) {
+Real PitchFilter::confidenceOfChunk(const ::essentia::VectorEx<Real>& PitchConfidence, long long chunkIndex, long long chunkSize) {
   return accumulate(PitchConfidence.begin() + chunkIndex, PitchConfidence.begin() + chunkIndex + chunkSize, 0.0) / chunkSize;
 }
 
-void PitchFilter::correctOctaveErrorsByChunks(vector <Real>& pitch) {
-  vector <vector <Real> > chunks;
-  vector <long long> chunksIndexes;
-  vector <long long> chunksSize;
+void PitchFilter::correctOctaveErrorsByChunks(::essentia::VectorEx<Real>& pitch) {
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > chunks;
+  ::essentia::VectorEx<long long> chunksIndexes;
+  ::essentia::VectorEx<long long> chunksSize;
 
   // split pitch values vector to chunks
   splitToChunks(pitch, chunks, chunksIndexes, chunksSize);
@@ -190,7 +190,7 @@ void PitchFilter::correctOctaveErrorsByChunks(vector <Real>& pitch) {
   joinChunks(chunks, pitch);
 }
 
-void PitchFilter::removeExtremeValues(vector <Real>& pitch) {
+void PitchFilter::removeExtremeValues(::essentia::VectorEx<Real>& pitch) {
   // compute pitch statistics
   Real pitchMax = pitch[argmax(pitch)];
   Real pitchMean = mean(pitch);
@@ -198,8 +198,8 @@ void PitchFilter::removeExtremeValues(vector <Real>& pitch) {
 
   // compute pitch histogram [0; maximum pitch] with 99 bins
   const int nbins = 99;
-  vector <int> binValues(nbins);
-  vector <Real> binCenters(nbins);
+  ::essentia::VectorEx<int> binValues(nbins);
+  ::essentia::VectorEx<Real> binCenters(nbins);
 
   // FIXME is int range enough for extremly long audio input?
   hist(&pitch[0], pitch.size(), &binValues[0], &binCenters[0], nbins);
@@ -235,7 +235,7 @@ void PitchFilter::removeExtremeValues(vector <Real>& pitch) {
       pitch[i] = 0;
 }
 
-void PitchFilter::correctJumps(vector <Real>& pitch) {
+void PitchFilter::correctJumps(::essentia::VectorEx<Real>& pitch) {
   // corrects jumps/discontinuities within the pitch curve
   for (size_t i=4; i<pitch.size()-6; i++) {
     // if four previous values form continuous curve
@@ -273,7 +273,7 @@ void PitchFilter::correctJumps(vector <Real>& pitch) {
   }
 }
 
-void PitchFilter::filterNoiseRegions(vector <Real>& pitch) {
+void PitchFilter::filterNoiseRegions(::essentia::VectorEx<Real>& pitch) {
   // assign zero frequency to noisy pitch regions in three rounds
   // in original algorithm, frequency of 8.17579891564371 Hz, refered as 'zero cent frequency',  is used
   for (int m=0; m<3; m++) {
@@ -308,7 +308,7 @@ void PitchFilter::filterNoiseRegions(vector <Real>& pitch) {
   }
 }
 
-void PitchFilter::correctOctaveErrors(vector <Real>& pitch) {
+void PitchFilter::correctOctaveErrors(::essentia::VectorEx<Real>& pitch) {
   Real pitchMid = (median(pitch)+ mean(pitch)) / 2;
   for (size_t i=4; i<pitch.size()-2; i++) {
     // if previous values are continuous
@@ -328,14 +328,14 @@ void PitchFilter::correctOctaveErrors(vector <Real>& pitch) {
   }
 }
 
-void PitchFilter::filterChunksByPitchConfidence(std::vector <Real>& pitch, const std::vector <Real>& pitchConfidence) {
+void PitchFilter::filterChunksByPitchConfidence(::essentia::VectorEx <Real>& pitch, const ::essentia::VectorEx <Real>& pitchConfidence) {
   // original algorithm uses average signal amplitude instead of energy
   // short chunks with average amplitude, less than 1/6 of average energy of the longest chunk, are filtered
   // we, instead, use pitch confidence
 
-  vector <vector <Real> > chunks;
-  vector <long long> chunksIndexes;
-  vector <long long> chunksSize;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > chunks;
+  ::essentia::VectorEx<long long> chunksIndexes;
+  ::essentia::VectorEx<long long> chunksSize;
 
   // split pitch values vector to chunks
   splitToChunks(pitch, chunks, chunksIndexes, chunksSize);

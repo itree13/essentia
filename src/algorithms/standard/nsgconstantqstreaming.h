@@ -11,15 +11,15 @@ namespace streaming {
 
 class NSGConstantQStreaming : public Algorithm{
  protected:
-  SinkProxy<std::vector<Real> >_frame;
+  SinkProxy<::essentia::VectorEx<Real> >_frame;
 
-  Sink<std::vector<std::vector<std::complex<Real> > > >_constantQinner;
-  Sink<std::vector<std::complex<Real> > > _constantQDCinner;
-  Sink<std::vector<std::complex<Real> > > _constantQNFinner;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > > >_constantQinner;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _constantQDCinner;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _constantQNFinner;
 
-  Source<std::vector<std::complex<Real> > > _constantQ;
-  Source<std::vector<std::complex<Real> > > _constantQDC;
-  Source<std::vector<std::complex<Real> > > _constantQNF;
+  Source<::essentia::VectorEx<std::complex<Real> > > _constantQ;
+  Source<::essentia::VectorEx<std::complex<Real> > > _constantQDC;
+  Source<::essentia::VectorEx<std::complex<Real> > > _constantQNF;
 
   Source<int> _frameStamps;
 

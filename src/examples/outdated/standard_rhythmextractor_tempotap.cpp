@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
   int frameNumber = 1024; // feature frames to buffer on
   int frameHop = 1024;    // feature frames separating 2 evaluations
   Real tolerance = 0.24;   // minimum interval between consecutive beats
-  std::vector<Real> tempoHints;   // list of initial beat locations, to favour detection
+  ::essentia::VectorEx<Real> tempoHints;   // list of initial beat locations, to favour detection
                                   // of pre-determined tempo period and beats alignment
   int maxTempo = 208;     // maximum tempo allowed
   int minTempo = 40;      // minimum tempo allowed
@@ -129,26 +129,26 @@ int main(int argc, char* argv[]) {
   // ====================== Setting up algorithms ==========================
 
   //set audio:
-  vector<Real> audio;
+  ::essentia::VectorEx<Real> audio;
   audioloader->output("audio").set(audio);
 
   // set frame creator
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   frameCutter->input("signal").set(audio);
   frameCutter->output("frame").set(frame);
 
   //set windowing:
-  vector<Real> wFrame;
+  ::essentia::VectorEx<Real> wFrame;
   window->input("frame").set(frame);
   window->output("frame").set(wFrame);
 
   // set fft
-  vector<complex<Real> > fftFrame;
+  ::essentia::VectorEx<complex<Real> > fftFrame;
   fft->input("frame").set(wFrame);
   fft->output("fft").set(fftFrame);
 
   // set conversion from cartesian to polar:
-  vector<Real> mag, ph;
+  ::essentia::VectorEx<Real> mag, ph;
   cart2polar->input("complex").set(fftFrame);
   cart2polar->output("magnitude").set(mag);
   cart2polar->output("phase").set(ph);
@@ -169,21 +169,21 @@ int main(int argc, char* argv[]) {
   spectrum->output("spectrum").set(mag);
 
   // set frequency bands:
-  vector<Real> bands;
+  ::essentia::VectorEx<Real> bands;
   tempoTapBands->input("spectrum").set(mag);
   tempoTapBands->output("bands").set(bands);
 
   // set scaled bands:
-  vector<Real> scaledBands;
+  ::essentia::VectorEx<Real> scaledBands;
   Real cumulBands;
   tempoScaleBands->input("bands").set(bands);
   tempoScaleBands->output("scaledBands").set(scaledBands);
   tempoScaleBands->output("cumulativeBands").set(cumulBands);
 
   // set tempotap algo
-  vector<Real> features;
-  vector<Real> periods, matchingPeriods;
-  vector<Real> phases;
+  ::essentia::VectorEx<Real> features;
+  ::essentia::VectorEx<Real> periods, matchingPeriods;
+  ::essentia::VectorEx<Real> phases;
   TNT::Array2D<Real> acf;
   TNT::Array2D<Real> mcomb;
 
@@ -192,7 +192,7 @@ int main(int argc, char* argv[]) {
   tempoTap->output("phases").set(phases);
 
   // set tempo tap ticks
-  vector<Real> these_ticks;
+  ::essentia::VectorEx<Real> these_ticks;
   tempoTapTicks->input("periods").set(periods);
   tempoTapTicks->input("phases").set(phases);
   tempoTapTicks->output("ticks").set(these_ticks);
@@ -200,12 +200,12 @@ int main(int argc, char* argv[]) {
 
   // vars to hold tempotap extraction
   Real bpm;                  // estimated bpm (in beats per minute)
-  vector<Real> ticks;        // estimated tick locations (in seconds)
-  vector<Real> estimates;    // estimated bpm per frame (in beats per minute)
-  //vector<Real> rubatoStart;  // list of start times of rubato regions
-  //vector<Real> rubatoStop;   // list of stop times of rubato regions
+  ::essentia::VectorEx<Real> ticks;        // estimated tick locations (in seconds)
+  ::essentia::VectorEx<Real> estimates;    // estimated bpm per frame (in beats per minute)
+  //::essentia::VectorEx<Real> rubatoStart;  // list of start times of rubato regions
+  //::essentia::VectorEx<Real> rubatoStop;   // list of stop times of rubato regions
   //int rubatoNumber;          // number of rubato regions
-  vector<Real> bpmIntervals; // list of beats interval (in seconds)
+  ::essentia::VectorEx<Real> bpmIntervals; // list of beats interval (in seconds)
 
 
   // ====================== Processing ==========================
@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
 
   int nframes = 0;
   Real oldHfc = 0.0;
-  vector<Real> bpmEstimateList, periodEstimateList;
+  ::essentia::VectorEx<Real> bpmEstimateList, periodEstimateList;
 
   Real fileLength = audio.size() / Real(sr);
   int startSilence = 0;
@@ -380,7 +380,7 @@ int main(int argc, char* argv[]) {
 
   if (bpmEstimateList.size() > 0) {
     Real closestBpm = 0;
-    std::vector<Real> countedBins;
+    ::essentia::VectorEx<Real> countedBins;
     for (uint i = 0; i < bpmEstimateList.size(); i++) {
       bpmEstimateList[i] /= 2.;
     }

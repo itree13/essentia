@@ -28,7 +28,7 @@ namespace standard {
 class EnergyBandRatio : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _spectrum;
   Output<Real> _energyBandRatio;
 
   Real _startFreqNormalized, _stopFreqNormalized;
@@ -65,7 +65,7 @@ namespace streaming {
 class EnergyBandRatio : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _energyBandRatio;
 
  public:

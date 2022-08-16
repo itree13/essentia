@@ -29,8 +29,8 @@ namespace standard {
 
 class Welch : public Algorithm {
  protected:
-  Input<std::vector<Real> > _frame;
-  Output<std::vector<Real> > _psd;
+  Input<::essentia::VectorEx<Real> > _frame;
+  Output<::essentia::VectorEx<Real> > _psd;
   Real _sampleRate;
   uint _frameSize;
   uint _fftSize;
@@ -45,9 +45,9 @@ class Welch : public Algorithm {
   Algorithm* _window;
   Algorithm* _powerSpectrum;
 
-  std::vector<std::vector<Real> > _psdBuffer;
-  std::vector<Real> _windowed;
-  std::vector<Real> _powerSpectrumFrame;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _psdBuffer;
+  ::essentia::VectorEx<Real> _windowed;
+  ::essentia::VectorEx<Real> _powerSpectrumFrame;
 
  public:
   Welch() {
@@ -94,8 +94,8 @@ namespace streaming {
 class Welch : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frame;
-  Source<std::vector<Real> > _psd;
+  Sink<::essentia::VectorEx<Real> > _frame;
+  Source<::essentia::VectorEx<Real> > _psd;
 
  public:
   Welch() {

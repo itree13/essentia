@@ -25,14 +25,14 @@ using namespace essentia;
 TEST(StringUtil, TokenizeSimple) {
   string str = "hello\nthis\nis\na\ntest";
 
-  vector<string> tokens = tokenize(str, "\n");
+  ::essentia::VectorEx<string> tokens = tokenize(str, "\n");
   const char* expected[] = { "hello", "this", "is", "a", "test" };
 
   EXPECT_VEC_EQ(tokens, arrayToVector<string>(expected));
 }
 
 TEST(StringUtil, TokenizeEmpty) {
-  vector<string> tokens = tokenize("", "\n");
+  ::essentia::VectorEx<string> tokens = tokenize("", "\n");
   EXPECT_TRUE(tokens.empty());
 }
 

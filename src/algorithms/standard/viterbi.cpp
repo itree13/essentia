@@ -38,17 +38,17 @@ const char* Viterbi::description = DOC("This algorithm estimates the most-likely
 
 void Viterbi::compute() {
 
-  const vector<vector<Real> >& obs = _observationProbabilities.get();
-  const vector<Real>& init = _initialization.get();
-  const vector<int>& from = _fromIndex.get();
-  const vector<int>& to = _toIndex.get();
-  const vector<Real>&transProb = _transitionProbabilities.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& obs = _observationProbabilities.get();
+  const ::essentia::VectorEx<Real>& init = _initialization.get();
+  const ::essentia::VectorEx<int>& from = _fromIndex.get();
+  const ::essentia::VectorEx<int>& to = _toIndex.get();
+  const ::essentia::VectorEx<Real>&transProb = _transitionProbabilities.get();
 
   if (obs.size() == 0 || init.size() == 0 || from.size() == 0 || to.size() == 0 || transProb.size() == 0) {
     throw EssentiaException("Viterbi: one of the inputs has size zero");
   }
 
-  vector<int>& path = _path.get();
+  ::essentia::VectorEx<int>& path = _path.get();
 
   int nState = init.size();
   int nFrame = obs.size();
@@ -57,9 +57,9 @@ void Viterbi::compute() {
   int nTrans = transProb.size();
   
   // declaring variables, use double for a better precision
-  vector<double> delta = vector<double>(nState);
-  vector<double> oldDelta = vector<double>(nState);
-  vector<vector<int> > psi; //  "matrix" of remembered indices of the best transitions
+  ::essentia::VectorEx<double> delta = ::essentia::VectorEx<double>(nState);
+  ::essentia::VectorEx<double> oldDelta = ::essentia::VectorEx<double>(nState);
+  ::essentia::VectorEx<::essentia::VectorEx<int> > psi; //  "matrix" of remembered indices of the best transitions
   
   _tempPath.resize(nFrame);
 
@@ -77,13 +77,13 @@ void Viterbi::compute() {
       oldDelta[iState] /= deltasum; // normalise (scale)
   }
 
-  psi.push_back(vector<int>(nState,0));
+  psi.push_back(::essentia::VectorEx<int>(nState,0));
 
   // rest of forward step
   for (int iFrame = 1; iFrame < nFrame; ++iFrame)
   {
       deltasum = 0;
-      psi.push_back(vector<int>(nState,0));
+      psi.push_back(::essentia::VectorEx<int>(nState,0));
 
       // calculate best previous state for every current state
       int fromState;

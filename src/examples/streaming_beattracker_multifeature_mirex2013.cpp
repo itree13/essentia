@@ -69,9 +69,9 @@ int main(int argc, char* argv[]) {
 
 
   // writing results to file
-  vector<Real> ticks;
-  if (pool.contains<vector<Real> >("rhythm.ticks")) { // there might be empty ticks
-    ticks = pool.value<vector<Real> >("rhythm.ticks");
+  ::essentia::VectorEx<Real> ticks;
+  if (pool.contains<::essentia::VectorEx<Real> >("rhythm.ticks")) { // there might be empty ticks
+    ticks = pool.value<::essentia::VectorEx<Real> >("rhythm.ticks");
   }
   ostream* fileStream = new ofstream(outputFilename.c_str());
   for (size_t i=0; i<ticks.size(); ++i) {

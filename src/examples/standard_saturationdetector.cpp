@@ -49,13 +49,13 @@ int main (int argc,char* argv[]) {
   cout << "-------- connecting algos ---------" << endl;
 
   // Audio -> FrameCutter
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
 
   audio->output("audio").set(audioBuffer);
   fc->input("signal").set(audioBuffer);
 
   // FrameCutter -> SaturationDetector
-  vector<Real> frame, starts, ends;
+  ::essentia::VectorEx<Real> frame, starts, ends;
 
   fc->output("frame").set(frame);
   dd->input("frame").set(frame);

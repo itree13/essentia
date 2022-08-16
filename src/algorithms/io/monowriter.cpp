@@ -144,7 +144,7 @@ void MonoWriter::compute() {
     throw EssentiaException("MonoWriter: Trying to call compute() on an MonoWriter algo which hasn't been correctly configured...");
   }
 
-  const vector<AudioSample>& audio = _audio.get();
+  const ::essentia::VectorEx<AudioSample>& audio = _audio.get();
 
   _audiogen->setVector(&audio);
   _network->run();

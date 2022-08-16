@@ -38,10 +38,10 @@ const char* StrongDecay::description = DOC("This algorithm computes the Strong D
 
 void StrongDecay::compute() {
 
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& strongDecay = _strongDecay.get();
 
-  vector<Real> absSignal;
+  ::essentia::VectorEx<Real> absSignal;
   Real centroid;
 
   _abs->input("array").set(signal);
@@ -82,7 +82,7 @@ void StrongDecay::reset() {
 }
 
 void StrongDecay::consume() {
-  const vector<Real>& signal = *((const vector<Real>*)_signal.getTokens());
+  const ::essentia::VectorEx<Real>& signal = *((const ::essentia::VectorEx<Real>*)_signal.getTokens());
 
   for (int i=0; i<(int)signal.size(); i++) {
     Real absSignal = fabs(signal[i]);

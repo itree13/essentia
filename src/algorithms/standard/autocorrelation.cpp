@@ -63,8 +63,8 @@ void AutoCorrelation::configure() {
 
 void AutoCorrelation::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
-  vector<Real>& correlation = _correlation.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& correlation = _correlation.get();
 
   if (signal.size() == 0) {
     correlation.resize(0);

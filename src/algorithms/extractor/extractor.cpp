@@ -64,7 +64,7 @@ void Extractor::configure() {
 }
 
 void Extractor::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Pool& pool = _pool.get();
   VectorInput<Real> * gen = new VectorInput<Real>(&signal);
   if (_lowLevel) connectLowLevel(gen, pool);
@@ -94,7 +94,7 @@ void Extractor::connectLowLevel(VectorInput<Real>* gen, Pool& pool) {
   // low level spectral:
   connect(*gen, lowLevel->input("signal"));
   const char * sfxDescArray[] = {"inharmonicity", "oddtoevenharmonicenergyratio", "tristimulus"};
-  vector<string> sfxDesc = arrayToVector<string>(sfxDescArray);
+  ::essentia::VectorEx<string> sfxDesc = arrayToVector<string>(sfxDescArray);
   streaming::Algorithm::OutputMap::const_iterator it = lowLevel->outputs().begin();
   for (; it != lowLevel->outputs().end(); ++it) {
     string output_name = it->first;
@@ -146,11 +146,11 @@ void Extractor::connectRhythm(VectorInput<Real>* gen, Pool& pool) {
   }
 }
 
-void Extractor::computeMidLevel(const vector<Real>& signal, Pool& pool) {
+void Extractor::computeMidLevel(const ::essentia::VectorEx<Real>& signal, Pool& pool) {
   if (!_tuning) {
     throw EssentiaException("Extractor: Mid level features depend on the tuning frequency. The algorithm should be reconfigured with the tuning parameter set to true");
   }
-  Real tuningFreq = pool.value<vector<Real> >(_tonalspace + "tuning_frequency").back();
+  Real tuningFreq = pool.value<::essentia::VectorEx<Real> >(_tonalspace + "tuning_frequency").back();
 
   VectorInput<Real> * gen = new VectorInput<Real>(&signal);
   streaming::Algorithm* tonal =
@@ -165,7 +165,7 @@ void Extractor::computeMidLevel(const vector<Real>& signal, Pool& pool) {
     connect(*it->second, pool, _tonalspace + it->first);
 
   if (_rhythm) {
-    vector<Real> ticks = pool.value<vector<Real> >(_rhythmspace + "beats_position");
+    ::essentia::VectorEx<Real> ticks = pool.value<::essentia::VectorEx<Real> >(_rhythmspace + "beats_position");
     streaming::Algorithm* beatsLoudness =
       streaming::AlgorithmFactory::create("BeatsLoudness",
                                           "sampleRate", _sampleRate,
@@ -184,7 +184,7 @@ void Extractor::computeHighLevel(Pool& pool) {
     levelAverage(pool);
     sfxPitch(pool);
     // clean up some tonal stuff:
-    Real tuningFreq = pool.value<vector<Real> >(_tonalspace + "tuning_frequency").back();
+    Real tuningFreq = pool.value<::essentia::VectorEx<Real> >(_tonalspace + "tuning_frequency").back();
     pool.remove(_tonalspace + "tuning_frequency");
     pool.set(_tonalspace + "tuning_frequency", tuningFreq);
   }
@@ -199,13 +199,13 @@ void Extractor::computeRelativeIoi(Pool& p) {
   if (!_rhythm) {
     throw EssentiaException("Extractor: relative ioi depends on the rhythm features. The algorithm should be reconfigured with the rhythm parameter set to true");
   }
-  const vector<string>& desc = p.descriptorNames();
+  const ::essentia::VectorEx<string>& desc = p.descriptorNames();
   if (!contains(desc, _rhythmspace + "onset_times")) {
     p.add(_rhythmspace + "relative_ioi_peaks", TNT::Array2D<Real>());
     p.add(_rhythmspace + "relative_ioi", TNT::Array2D<Real>());
     return;
   }
-  const vector<Real>& onsets = p.value<vector<Real> >(_rhythmspace + "onset_times");
+  const ::essentia::VectorEx<Real>& onsets = p.value<::essentia::VectorEx<Real> >(_rhythmspace + "onset_times");
   Real bpm = p.value<Real>(_rhythmspace + "bpm");
   int interp = 32; // 32th note interval
   Real interval = (60.0/bpm)/Real(interp);
@@ -215,16 +215,16 @@ void Extractor::computeRelativeIoi(Pool& p) {
     p.add(_rhythmspace + "relative_ioi", TNT::Array2D<Real>());
     return;
   }
-  vector<Real> riois;
+  ::essentia::VectorEx<Real> riois;
   riois.reserve(size-1 + size-2 + size-3 + size-4);
   for (int i=1; i<size; ++i) riois.push_back((onsets[i]-onsets[i-1])/interval);
   for (int i=2; i<size; ++i) riois.push_back((onsets[i]-onsets[i-2])/interval);
   for (int i=3; i<size; ++i) riois.push_back((onsets[i]-onsets[i-3])/interval);
   for (int i=4; i<size; ++i) riois.push_back((onsets[i]-onsets[i-4])/interval);
 
-  vector<Real> ioiDist;
+  ::essentia::VectorEx<Real> ioiDist;
   bincount(riois, ioiDist);
-  vector<pair<Real,Real> > fullIoiDist(ioiDist.size());
+  ::essentia::VectorEx<pair<Real,Real> > fullIoiDist(ioiDist.size());
   Real sumIoi = accumulate(ioiDist.begin(), ioiDist.end(), 0.0);
   for (int i=0; i<(int)fullIoiDist.size(); ++i) {
     fullIoiDist[i]=make_pair(Real(i)/Real(interp), ioiDist[i]/sumIoi);
@@ -242,14 +242,14 @@ void Extractor::computeRelativeIoi(Pool& p) {
                                                        "minPosition", 0., "maxPosition", size,
                                                        "maxPeaks", 5, "range", size-1,
                                                        "interpolate", true, "orderBy", "amplitude");
-  vector<Real> pos, values;
+  ::essentia::VectorEx<Real> pos, values;
   peakDetection->input("array").set(ioiDist);
   peakDetection->output("positions").set(pos);
   peakDetection->output("amplitudes").set(values);
   peakDetection->compute();
   delete peakDetection;
 
-  //vector<pair<Real, Real> > ioi_peaks(pos.size());
+  //::essentia::VectorEx<pair<Real, Real> > ioi_peaks(pos.size());
   TNT::Array2D<Real> ioi_peaks(pos.size(), 2);
   for (int i=0; i<int(pos.size()); ++i) {
     // scale back to 1 beat
@@ -267,7 +267,7 @@ void Extractor::computeRelativeIoi(Pool& p) {
 void Extractor::postProcessOnsetRate(VectorInput<Real>* gen, Pool& pool) {
   int nOnsets = 0;
   try {
-    nOnsets = pool.value<vector<Real> >(_rhythmspace + "onset_times").size();
+    nOnsets = pool.value<::essentia::VectorEx<Real> >(_rhythmspace + "onset_times").size();
   }
   catch (const EssentiaException& ) { // no onsets found
     pool.set(_rhythmspace + "onset_rate", 0.0);
@@ -283,7 +283,7 @@ Real Extractor::squeezeRange(Real& x, Real& x1, Real& x2) {
 }
 
 void Extractor::levelAverage(Pool& pool) {
-  vector<Real> levelArray = pool.value<vector<Real> >(_llspace + "loudness");
+  ::essentia::VectorEx<Real> levelArray = pool.value<::essentia::VectorEx<Real> >(_llspace + "loudness");
   pool.remove(_llspace + "loudness");
   // Maximum dynamic
   Real EPSILON = 10e-5;
@@ -314,7 +314,7 @@ void Extractor::levelAverage(Pool& pool) {
 }
 
 void Extractor::tuningSystemFeatures(Pool& pool) {
-  vector<Real> hpcp_highres = meanFrames(pool.value<vector<vector<Real> > >(_tonalspace + "hpcp_highres"));
+  ::essentia::VectorEx<Real> hpcp_highres = meanFrames(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(_tonalspace + "hpcp_highres"));
   normalize(hpcp_highres);
 
   // 1- diatonic strength
@@ -347,10 +347,10 @@ void Extractor::tuningSystemFeatures(Pool& pool) {
   pool.set(_tonalspace + "tuning_nontempered_energy_ratio", ntEnergy);
 
   // 3- THPCP
-  vector<Real> hpcp = meanFrames(pool.value<vector<vector<Real> > >(_tonalspace + "hpcp"));
+  ::essentia::VectorEx<Real> hpcp = meanFrames(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(_tonalspace + "hpcp"));
   normalize(hpcp);
   int idxMax = argmax(hpcp);
-  vector<Real> hpcp_bak = hpcp;
+  ::essentia::VectorEx<Real> hpcp_bak = hpcp;
   for (int i=idxMax; i<(int)hpcp.size(); i++) {
     hpcp[i-idxMax] = hpcp_bak[i];
   }
@@ -366,7 +366,7 @@ void Extractor::tuningSystemFeatures(Pool& pool) {
 }
 
 void Extractor::sfxPitch(Pool& pool) {
-  vector<Real> pitch = pool.value<vector<Real> >(_llspace + "pitch");
+  ::essentia::VectorEx<Real> pitch = pool.value<::essentia::VectorEx<Real> >(_llspace + "pitch");
 
   Algorithm* maxtt = AlgorithmFactory::create("MaxToTotal");
   Real maxToTotal;

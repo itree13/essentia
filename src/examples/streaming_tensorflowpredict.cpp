@@ -50,9 +50,9 @@ int main(int argc, char* argv[]) {
   Real sampleRate = 44100.0;
   int frameSize = 1024;
   int hopSize = 1024;
-  vector<int> inputShape({-1, 1, 128, 128});
-  vector<string> inputs({"model/Placeholder"});
-  vector<string> outputs({"model/Softmax"});
+  ::essentia::VectorEx<int> inputShape({-1, 1, 128, 128});
+  ::essentia::VectorEx<string> inputs({"model/Placeholder"});
+  ::essentia::VectorEx<string> outputs({"model/Softmax"});
 
   // we want to compute the MFCC of a file: we need the create the following:
   // audioloader -> framecutter -> windowing -> FFT -> MFCC -> PoolStorage
@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
   // write results to file
   cout << "-------- writing results to standard output " << outputFilename << " --------" << endl;
 
-  cout << aggrPool.value<vector<Real> >("vgg_probs.mean");
+  cout << aggrPool.value<::essentia::VectorEx<Real> >("vgg_probs.mean");
 
   standard::Algorithm* output = standard::AlgorithmFactory::create("YamlOutput",
                                                                    "format", "json",

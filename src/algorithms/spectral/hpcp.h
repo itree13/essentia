@@ -36,9 +36,9 @@ class HPCP : public Algorithm {
   };
 
  protected:
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _hpcp;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _hpcp;
 
  public:
   HPCP() {
@@ -72,9 +72,9 @@ class HPCP : public Algorithm {
   static const Real precision;
 
  protected:
-  void addContribution(Real freq, Real mag_lin, std::vector<Real>& hpcp) const;
-  void addContributionWithWeight(Real freq, Real mag_lin, std::vector<Real>& hpcp, Real harmonicWeight) const;
-  void addContributionWithoutWeight(Real freq, Real mag_lin, std::vector<Real>& hpcp, Real harmonicWeight) const;
+  void addContribution(Real freq, Real mag_lin, ::essentia::VectorEx<Real>& hpcp) const;
+  void addContributionWithWeight(Real freq, Real mag_lin, ::essentia::VectorEx<Real>& hpcp, Real harmonicWeight) const;
+  void addContributionWithoutWeight(Real freq, Real mag_lin, ::essentia::VectorEx<Real>& hpcp, Real harmonicWeight) const;
 
   void initHarmonicContributionTable();
   int _size;
@@ -99,7 +99,7 @@ class HPCP : public Algorithm {
   bool _nonLinear;
   bool _maxShifted;
 
-  std::vector<HarmonicPeak> _harmonicPeaks;
+  ::essentia::VectorEx<HarmonicPeak> _harmonicPeaks;
 };
 
 } // namespace standard
@@ -113,9 +113,9 @@ namespace streaming {
 class HPCP : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _hpcp;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _hpcp;
 
  public:
   HPCP() {

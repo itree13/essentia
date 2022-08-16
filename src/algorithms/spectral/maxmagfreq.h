@@ -28,7 +28,7 @@ namespace standard {
 class MaxMagFreq : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _spectrum;
   Output<Real> _maxMagFreq;
   Real _sampleRate;
 
@@ -65,7 +65,7 @@ namespace streaming {
 class MaxMagFreq : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _maxMagFreq;
 
  public:

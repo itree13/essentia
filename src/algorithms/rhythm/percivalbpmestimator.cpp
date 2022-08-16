@@ -157,7 +157,7 @@ void PercivalBpmEstimator::configure() {
 
   // Configure filter (FIR lowpass)
   // Filter coefficients from: scipy.signal.firwin(15, 7 / (oss_sr/2.0))
-  std::vector<Real> b;
+  ::essentia::VectorEx<Real> b;
   b.resize(15);
   b[0] = 0.00933978;
   b[1] = 0.01521148;
@@ -175,7 +175,7 @@ void PercivalBpmEstimator::configure() {
   b[13] = 0.01521148;
   b[14] = 0.00933978;
 
-  std::vector<Real> a;
+  ::essentia::VectorEx<Real> a;
   a.resize(15);
   a[0] = 1.0;  // FIR filter, denominator a0=1 and ai=0 (no feedback terms)
   _lowPass->configure("numerator", b, "denominator", a);
@@ -183,7 +183,7 @@ void PercivalBpmEstimator::configure() {
   _configured = true;
 }
 
-Real PercivalBpmEstimator::energyInRange(const std::vector<Real>& array,
+Real PercivalBpmEstimator::energyInRange(const ::essentia::VectorEx<Real>& array,
                                    const Real low,
                                    const Real high,
                                    const Real scale) {
@@ -202,10 +202,10 @@ AlgorithmStatus PercivalBpmEstimator::process() {
   if (!shouldStop()) return PASS;
 
   // Skip invalid lag candidates (lag=-1)
-  std::vector<int> lags;
-  lags.reserve(_pool.value<vector<Real> >("lags").size());
-  for (int i=0; i<(int)_pool.value<vector<Real> >("lags").size(); ++i) {
-    int lag = (int)_pool.value<vector<Real> >("lags")[i];
+  ::essentia::VectorEx<int> lags;
+  lags.reserve(_pool.value<::essentia::VectorEx<Real> >("lags").size());
+  for (int i=0; i<(int)_pool.value<::essentia::VectorEx<Real> >("lags").size(); ++i) {
+    int lag = (int)_pool.value<::essentia::VectorEx<Real> >("lags")[i];
     if (lag > -1) {
         lags.push_back(lag);
     }
@@ -220,7 +220,7 @@ AlgorithmStatus PercivalBpmEstimator::process() {
   // Compute Step 3 of algorithm
 
   // Create single gaussian template
-  std::vector<Real> gaussian;
+  ::essentia::VectorEx<Real> gaussian;
   int gaussianSize = 2000;
   gaussian.resize(gaussianSize);
   Real gaussianStd = 10.0;
@@ -232,7 +232,7 @@ AlgorithmStatus PercivalBpmEstimator::process() {
   }
 
   // Accumulate (sum gaussians for every estimated lag)
-  std::vector<Real> accum;
+  ::essentia::VectorEx<Real> accum;
   accum.resize(414);  // 414 "long enough to accommodate all possible tempo lags"
   for (int i=0; i<(int)lags.size(); ++i){
     for (int j=0; j<(int)accum.size(); ++j){
@@ -248,7 +248,7 @@ AlgorithmStatus PercivalBpmEstimator::process() {
 
   // Get features
   Real tolerance = 10.0;
-  std::vector<Real> features;
+  ::essentia::VectorEx<Real> features;
   features.resize(3);
   Real energyTotal = energyInRange(accum, 0, accum.size() - 1, 1.0);
   Real energyUnder = energyInRange(accum, 0, selectedLag - tolerance, 1.0/energyTotal);
@@ -259,29 +259,29 @@ AlgorithmStatus PercivalBpmEstimator::process() {
 
   // Hard-coded values provided by original authors
   // Apparently list initializer is not enabled so must initialize in this way...
-  std::vector<Real> mins;
+  ::essentia::VectorEx<Real> mins;
   mins.resize(3);
   mins[0] = 0.0321812;
   mins[1] = 1.68126e-83;
   mins[2] = 50.1745;
-  std::vector<Real> maxs;
+  ::essentia::VectorEx<Real> maxs;
   maxs.resize(3);
   maxs[0] = 0.863237;
   maxs[1] = 0.449184;
   maxs[2] = 208.807;
-  std::vector<Real> svmWeights51;
+  ::essentia::VectorEx<Real> svmWeights51;
   svmWeights51.resize(4);
   svmWeights51[0] = -1.955100;
   svmWeights51[1] = 0.434800;
   svmWeights51[2] = -4.644200;
   svmWeights51[3] = 3.289600;
-  std::vector<Real> svmWeights52;
+  ::essentia::VectorEx<Real> svmWeights52;
   svmWeights52.resize(4);
   svmWeights52[0] = -3.040800;
   svmWeights52[1] = 2.759100;
   svmWeights52[2] = -6.536700;
   svmWeights52[3] = 3.081000;
-  std::vector<Real> svmWeights12;
+  ::essentia::VectorEx<Real> svmWeights12;
   svmWeights12.resize(4);
   svmWeights12[0] = -3.462400;
   svmWeights12[1] = 3.439700;
@@ -363,7 +363,7 @@ void PercivalBpmEstimator::createInnerNetwork() {
 }
 
 void PercivalBpmEstimator::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& bpm = _bpm.get();
   _vectorInput->setVector(&signal);
   _network->run();

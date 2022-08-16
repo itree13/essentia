@@ -70,7 +70,7 @@ namespace standard {
 
 class MonoWriter : public Algorithm {
  protected:
-  Input<std::vector<AudioSample> > _audio;
+  Input<::essentia::VectorEx<AudioSample> > _audio;
 
   Real _duration;
   int _nChannels;

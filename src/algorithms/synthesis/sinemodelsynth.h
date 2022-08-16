@@ -34,17 +34,17 @@ namespace standard {
 class SineModelSynth : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _magnitudes;
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _phases;
-  Output<std::vector<std::complex<Real> > > _outfft;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _phases;
+  Output<::essentia::VectorEx<std::complex<Real> > > _outfft;
 
   Real _sampleRate;
   int _fftSize;
   int _hopSize;
 
-  std::vector<Real> _lastytfreq;
-  std::vector<Real> _lastytphase;
+  ::essentia::VectorEx<Real> _lastytfreq;
+  ::essentia::VectorEx<Real> _lastytphase;
 
 
  public:
@@ -88,10 +88,10 @@ namespace streaming {
 class SineModelSynth : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _magnitudes;
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _phases;
-  Source<std::vector<std::complex<Real> > > _outfft;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _phases;
+  Source<::essentia::VectorEx<std::complex<Real> > > _outfft;
 
  public:
   SineModelSynth() {

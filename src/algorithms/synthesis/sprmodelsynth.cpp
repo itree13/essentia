@@ -53,21 +53,21 @@ void SprModelSynth::configure()
 
 void SprModelSynth::compute() {
 
-  const std::vector<Real>& magnitudes = _magnitudes.get();
-  const std::vector<Real>& frequencies = _frequencies.get();
-  const std::vector<Real>& phases = _phases.get();
-  const std::vector<Real>& res = _res.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& phases = _phases.get();
+  const ::essentia::VectorEx<Real>& res = _res.get();
 
-  std::vector<Real>& outframe = _outframe.get();
-  std::vector<Real>& outsineframe = _outsineframe.get();
-  std::vector<Real>& outresframe = _outresframe.get();
+  ::essentia::VectorEx<Real>& outframe = _outframe.get();
+  ::essentia::VectorEx<Real>& outsineframe = _outsineframe.get();
+  ::essentia::VectorEx<Real>& outresframe = _outresframe.get();
 
 
   // temp vectors
-  std::vector<std::complex<Real> > fftSines;
-  std::vector<Real> wsineFrame; // windowed frames
-  std::vector<Real> sineFrame;  // overlap output frame
-  std::vector<Real> resFrame;
+  ::essentia::VectorEx<std::complex<Real> > fftSines;
+  ::essentia::VectorEx<Real> wsineFrame; // windowed frames
+  ::essentia::VectorEx<Real> sineFrame;  // overlap output frame
+  ::essentia::VectorEx<Real> resFrame;
   
     int i = 0;
   // copy input residual to output residual frame

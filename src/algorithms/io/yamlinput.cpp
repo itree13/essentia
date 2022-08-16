@@ -164,13 +164,13 @@ void updatePool(const YamlNode* n, Pool* p, const string& keyPrefix) {
   // sequence nodes
   if (const YamlSequenceNode* seqNode = dynamic_cast<const YamlSequenceNode*>(n)) {
     //cout << "node is a sequence" << endl;
-    const vector<YamlNode*>& data = seqNode->getData();
+    const ::essentia::VectorEx<YamlNode*>& data = seqNode->getData();
 
     // first, figure out what yaml node types are inside data
 
     // if empty, assume sequence of reals
     if (data.empty()) {
-      vector<Real> values;
+      ::essentia::VectorEx<Real> values;
       p->set(keyPrefix, values);
       return;
     }
@@ -226,9 +226,9 @@ void updatePool(const YamlNode* n, Pool* p, const string& keyPrefix) {
           break;
         }
 
-        // if no non-empty subsequence found, add them all as vector<Real>s
+        // if no non-empty subsequence found, add them all as ::essentia::VectorEx<Real>s
         if (nonEmptySubSeq->empty()) {
-          for (int i=0; i<int(data.size()); ++i) p->add(keyPrefix, vector<Real>());
+          for (int i=0; i<int(data.size()); ++i) p->add(keyPrefix, ::essentia::VectorEx<Real>());
           return;
         }
       }
@@ -248,8 +248,8 @@ void updatePool(const YamlNode* n, Pool* p, const string& keyPrefix) {
               throw EssentiaException("YamlInput: mixed sequence types are not supported");
             }
 
-            const vector<YamlNode*>& subData = subSeq->getData();
-            vector<string> strVec(subData.size());
+            const ::essentia::VectorEx<YamlNode*>& subData = subSeq->getData();
+            ::essentia::VectorEx<string> strVec(subData.size());
             for (int j=0; j<int(strVec.size()); ++j) {
               const YamlScalarNode* subSeqScalar = dynamic_cast<const YamlScalarNode*>(subData[j]);
               if (!subSeqScalar) {
@@ -272,8 +272,8 @@ void updatePool(const YamlNode* n, Pool* p, const string& keyPrefix) {
               throw EssentiaException("YamlInput: mixed sequence types are not supported");
             }
 
-            const vector<YamlNode*>& subData = subSeq->getData();
-            vector<Real> realVec(subData.size());
+            const ::essentia::VectorEx<YamlNode*>& subData = subSeq->getData();
+            ::essentia::VectorEx<Real> realVec(subData.size());
             for (int j=0; j<int(realVec.size()); ++j) {
               const YamlScalarNode* subSeqScalar = dynamic_cast<const YamlScalarNode*>(subData[j]);
               if (!subSeqScalar) {
@@ -298,7 +298,7 @@ void updatePool(const YamlNode* n, Pool* p, const string& keyPrefix) {
 
           if (!subseq) throw EssentiaException("YamlInput: mixed sub-sequence types are not supported");
 
-          const vector<YamlNode*>& subdata = subseq->getData();
+          const ::essentia::VectorEx<YamlNode*>& subdata = subseq->getData();
           const YamlSequenceNode* subsubseq = dynamic_cast<const YamlSequenceNode*>(subdata[0]);
 
           if (subsubseq->empty()) {
@@ -315,7 +315,7 @@ void updatePool(const YamlNode* n, Pool* p, const string& keyPrefix) {
 
             if (!subsubseq) throw EssentiaException("YamlInput: mixed sub-sequence types are not supported");
 
-            const vector<YamlNode*>& subsubdata = subsubseq->getData();
+            const ::essentia::VectorEx<YamlNode*>& subsubdata = subsubseq->getData();
 
             if (int(subsubdata.size()) != d2) {
               throw EssentiaException("YamlInput: in sequences of matrices, each matrix must be rectangular");

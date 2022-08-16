@@ -28,7 +28,7 @@ namespace standard {
 class HFC : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _spectrum;
   Output<Real> _hfc;
 
   std::string _type;
@@ -65,7 +65,7 @@ namespace streaming {
 class HFC : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _hfc;
 
  public:

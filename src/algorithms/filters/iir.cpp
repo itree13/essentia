@@ -90,8 +90,8 @@ inline void renormalize(Real& x) {
 }
 
 
-inline void updateStateLine(vector<Real>& state, int size,
-                            const vector<Real>& a, const vector<Real>& b,
+inline void updateStateLine(::essentia::VectorEx<Real>& state, int size,
+                            const ::essentia::VectorEx<Real>& a, const ::essentia::VectorEx<Real>& b,
                             const Real& x, const Real& y) {
   for (int k=1; k<size; ++k) {
     state[k-1] = (b[k]*x - a[k]*y) + state[k];
@@ -100,8 +100,8 @@ inline void updateStateLine(vector<Real>& state, int size,
 }
 
 template <int n>
-void updateStateLineUnrolled(vector<Real>& state,
-                            const vector<Real>& a, const vector<Real>& b,
+void updateStateLineUnrolled(::essentia::VectorEx<Real>& state,
+                            const ::essentia::VectorEx<Real>& a, const ::essentia::VectorEx<Real>& b,
                             const Real& x, Real& y) {
   for (int k=1; k<n; ++k) {
     state[k-1] = b[k]*x - a[k]*y + state[k];
@@ -115,9 +115,9 @@ void updateStateLineUnrolled(vector<Real>& state,
 }
 
 template <int filterSize>
-void filterABEqualSize(const vector<Real>& x, vector<Real>& y,
-                       const vector<Real>& a, const vector<Real>& b,
-                       vector<Real>& state) {
+void filterABEqualSize(const ::essentia::VectorEx<Real>& x, ::essentia::VectorEx<Real>& y,
+                       const ::essentia::VectorEx<Real>& a, const ::essentia::VectorEx<Real>& b,
+                       ::essentia::VectorEx<Real>& state) {
   for (int n=0; n < int(y.size()); ++n) {
     y[n] = b[0]*x[n] + state[0];
     updateStateLineUnrolled<filterSize>(state, a, b, x[n], y[n]);
@@ -128,8 +128,8 @@ void filterABEqualSize(const vector<Real>& x, vector<Real>& y,
 
 void IIR::compute() {
 
-  const vector<Real>& x = _x.get();
-  vector<Real>& y = _y.get();
+  const ::essentia::VectorEx<Real>& x = _x.get();
+  ::essentia::VectorEx<Real>& y = _y.get();
 
   y.resize(x.size());
 

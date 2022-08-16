@@ -55,7 +55,7 @@ void EnergyBand::configure() {
 }
 
 void EnergyBand::compute() {
-  const std::vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   Real& energyBand = _energyBand.get();
   if (spectrum.empty()) {
     throw EssentiaException("EnergyBand: spectrum is empty");

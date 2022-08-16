@@ -28,7 +28,7 @@ namespace standard {
 class FlatnessSFX : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _envelope;
+  Input<::essentia::VectorEx<Real> > _envelope;
   Output<Real> _flatnessSFX;
 
  public:
@@ -52,7 +52,7 @@ class FlatnessSFX : public Algorithm {
   static const Real upperThreshold;
 
  private:
-  Real rollOff(const std::vector<Real>& envelope, Real x) const;
+  Real rollOff(const ::essentia::VectorEx<Real>& envelope, Real x) const;
 };
 
 } // namespace standard
@@ -66,7 +66,7 @@ namespace streaming {
 class FlatnessSFX : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _envelope;
+  Sink<::essentia::VectorEx<Real> > _envelope;
   Source<Real> _flatnessSFX;
 
  public:

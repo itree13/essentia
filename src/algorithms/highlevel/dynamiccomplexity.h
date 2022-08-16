@@ -28,7 +28,7 @@ namespace standard {
 class DynamicComplexity : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _complexity;
   Output<Real> _loudness;
 
@@ -56,7 +56,7 @@ class DynamicComplexity : public Algorithm {
   static const char* description;
 
  protected:
-  void filter(std::vector<Real>& result, const std::vector<Real>& input) const;
+  void filter(::essentia::VectorEx<Real>& result, const ::essentia::VectorEx<Real>& input) const;
 };
 
 } // namespace standard

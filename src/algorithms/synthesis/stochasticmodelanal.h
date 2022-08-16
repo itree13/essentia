@@ -32,8 +32,8 @@ class StochasticModelAnal : public Algorithm {
 
  protected:
 
-  Input<std::vector<Real> > _frame;
-  Output<std::vector<Real> > _stocenv;
+  Input<::essentia::VectorEx<Real> > _frame;
+  Output<::essentia::VectorEx<Real> > _stocenv;
 
   Real _stocf;
   int _fftSize;
@@ -75,7 +75,7 @@ class StochasticModelAnal : public Algorithm {
   void configure();
   void compute();
 
-  void getSpecEnvelope(const std::vector<std::complex<Real> > fftRes,std::vector<Real> &magResDB);
+  void getSpecEnvelope(const ::essentia::VectorEx<std::complex<Real> > fftRes,::essentia::VectorEx<Real> &magResDB);
 
   static const char* name;
   static const char* category;
@@ -99,8 +99,8 @@ class StochasticModelAnal : public StreamingAlgorithmWrapper {
 
  protected:
 
-  Sink<std::vector<Real> > _frame; // input
-  Source<std::vector<Real> > _stocenv;
+  Sink<::essentia::VectorEx<Real> > _frame; // input
+  Source<::essentia::VectorEx<Real> > _stocenv;
 
  public:
   StochasticModelAnal() {

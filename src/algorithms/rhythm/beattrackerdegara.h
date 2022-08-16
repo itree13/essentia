@@ -84,8 +84,8 @@ namespace standard {
 
 class BeatTrackerDegara : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _ticks;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _ticks;
 
   streaming::Algorithm* _beatTracker;
   streaming::VectorInput<Real>* _vectorInput;

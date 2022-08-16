@@ -40,9 +40,9 @@ void CrossCorrelation::configure() {
 
 void CrossCorrelation::compute() {
 
-  const std::vector<Real>& signal_x = _signal_x.get();
-  const std::vector<Real>& signal_y = _signal_y.get();
-  std::vector<Real>& correlation = _correlation.get();
+  const ::essentia::VectorEx<Real>& signal_x = _signal_x.get();
+  const ::essentia::VectorEx<Real>& signal_y = _signal_y.get();
+  ::essentia::VectorEx<Real>& correlation = _correlation.get();
 
   if (signal_x.empty() || signal_y.empty()) {
     throw EssentiaException("CrossCorrelation: one or both of the input vectors are empty");

@@ -68,7 +68,7 @@ bool cmpBoxes(const AsciiBox& b1, const AsciiBox& b2) {
 void AsciiDAGParser::parseGraph() {
   _nodes.clear();
 
-  vector<AsciiBox> boxes = AsciiBox::findBoxes(_network);
+  ::essentia::VectorEx<AsciiBox> boxes = AsciiBox::findBoxes(_network);
   sort(boxes.begin(), boxes.end(), cmpBoxes);
 
   for (int i=0; i<(int)boxes.size(); i++) _nodes.push_back(boxes[i].title);
@@ -85,7 +85,7 @@ void AsciiDAGParser::parseGraph() {
 }
 
 
-void AsciiDAGParser::parseEdges(const vector<AsciiBox>& boxes) {
+void AsciiDAGParser::parseEdges(const ::essentia::VectorEx<AsciiBox>& boxes) {
   // for each of the algorithms, look whether there is an outgoing path, and if
   // that is the case, follow it until we reach another algorithm, which we then identify
   for (int i=0; i<(int)boxes.size(); i++) {

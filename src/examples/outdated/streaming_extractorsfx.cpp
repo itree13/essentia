@@ -105,7 +105,7 @@ void SFXPitch(Pool& pool, const string& nspace) {
   string llspace = "lowlevel.";
   if (!nspace.empty()) llspace = nspace + ".lowlevel.";
 
-  vector<Real> pitch = pool.value<vector<Real> >(llspace + "pitch");
+  ::essentia::VectorEx<Real> pitch = pool.value<::essentia::VectorEx<Real> >(llspace + "pitch");
 
   standard::Algorithm* maxtt = standard::AlgorithmFactory::create("MaxToTotal");
   Real maxToTotal;

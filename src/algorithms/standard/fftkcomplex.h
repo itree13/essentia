@@ -31,8 +31,8 @@ namespace standard {
 class FFTKComplex : public Algorithm {
 
  protected:
-  Input<std::vector<std::complex<Real> > > _signal;
-  Output<std::vector<std::complex<Real> > > _fft;
+  Input<::essentia::VectorEx<std::complex<Real> > > _signal;
+  Output<::essentia::VectorEx<std::complex<Real> > > _fft;
   bool _negativeFrequencies;
 
  public:
@@ -76,8 +76,8 @@ namespace streaming {
 class FFTKComplex : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::complex<Real> > > _signal;
-  Source<std::vector<std::complex<Real> > > _fft;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _signal;
+  Source<::essentia::VectorEx<std::complex<Real> > > _fft;
 
  public:
   FFTKComplex() {

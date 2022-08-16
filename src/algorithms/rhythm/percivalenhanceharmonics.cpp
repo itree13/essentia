@@ -41,8 +41,8 @@ void PercivalEnhanceHarmonics::configure() {
 }
 
 void PercivalEnhanceHarmonics::compute() {
-  const vector<Real>& input = _input.get();
-  vector<Real>& output = _output.get();
+  const ::essentia::VectorEx<Real>& input = _input.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
   
   output = input;
   for (int i=0; i<(int)(input.size()/4); ++i) {

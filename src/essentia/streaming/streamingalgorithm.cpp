@@ -134,7 +134,7 @@ SinkBase& Algorithm::input(const std::string& name) {
     std::ostringstream msg;
     msg << "Couldn't find '" << name << "' in " << this->name() << "::inputs.";
     msg << " Available input names are:";
-    std::vector<std::string> availableInputs = _inputs.keys();
+    ::essentia::VectorEx<std::string> availableInputs = _inputs.keys();
     for (uint i=0; i<availableInputs.size(); i++) {
       msg << ' ' << availableInputs[i];
     }
@@ -150,7 +150,7 @@ SourceBase& Algorithm::output(const std::string& name) {
     std::ostringstream msg;
     msg << "Couldn't find '" << name << "' in " << this->name() << "::outputs.";
     msg << " Available output names are:";
-    std::vector<std::string> availableOutputs = _outputs.keys();
+    ::essentia::VectorEx<std::string> availableOutputs = _outputs.keys();
     for (uint i=0; i<availableOutputs.size(); i++) {
       msg << ' ' << availableOutputs[i];
     }
@@ -184,9 +184,9 @@ void Algorithm::disconnectAll() {
   for (OutputMap::const_iterator output = _outputs.begin();
        output != _outputs.end();
        ++output) {
-    vector<SinkBase*>& sinks = output->second->sinks();
+    ::essentia::VectorEx<SinkBase*>& sinks = output->second->sinks();
 
-    for (vector<SinkBase*>::iterator it = sinks.begin(); it != sinks.end(); ++it) {
+    for (::essentia::VectorEx<SinkBase*>::iterator it = sinks.begin(); it != sinks.end(); ++it) {
       disconnect(*output->second, **it);
     }
   }

@@ -47,12 +47,12 @@ int main (int argc,char* argv[]) {
 
   cout << "-------- connecting algos ---------" << endl;
 
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
 
   audio->output("audio").set(audioBuffer);
   fc->input("signal").set(audioBuffer);
 
-  vector<Real> frame, peaks, amps;
+  ::essentia::VectorEx<Real> frame, peaks, amps;
 
   fc->output("frame").set(frame);
   dd->input("frame").set(frame);

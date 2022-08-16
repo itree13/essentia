@@ -50,13 +50,13 @@ int main (int argc,char* argv[]) {
   cout << "-------- connecting algos ---------" << endl;
 
   // Audio -> FrameCutter
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
 
   audio->output("audio").set(audioBuffer);
   fc->input("signal").set(audioBuffer);
 
   // FrameCutter -> SNR
-  vector<Real> frame, spectralSNR;
+  ::essentia::VectorEx<Real> frame, spectralSNR;
   Real instantSNR, averagedSNR;
   fc->output("frame").set(frame);
   snr->input("frame").set(frame);

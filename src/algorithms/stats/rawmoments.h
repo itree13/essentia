@@ -28,8 +28,8 @@ namespace standard {
 class RawMoments : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
-  Output<std::vector<Real> > _rawMoments;
+  Input<::essentia::VectorEx<Real> > _array;
+  Output<::essentia::VectorEx<Real> > _rawMoments;
 
  public:
   RawMoments() {
@@ -60,8 +60,8 @@ namespace streaming {
 class RawMoments : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
-  Source<std::vector<Real> > _rawMoments;
+  Sink<::essentia::VectorEx<Real> > _array;
+  Source<::essentia::VectorEx<Real> > _rawMoments;
 
  public:
   RawMoments() {

@@ -119,7 +119,7 @@ void HPCP::initHarmonicContributionTable() {
     }
 
     // Check to see if the semitone has already been added to _harmonicPeaks
-    vector<HarmonicPeak>::iterator it;
+    ::essentia::VectorEx<HarmonicPeak>::iterator it;
     for (it = _harmonicPeaks.begin(); it != _harmonicPeaks.end(); it++) {
       if ((*it).semitone > semitone-precision && (*it).semitone < semitone+precision) break;
     }
@@ -136,7 +136,7 @@ void HPCP::initHarmonicContributionTable() {
 }
 
 
-void HPCP::addContributionWithWeight(Real freq, Real mag_lin, vector<Real>& hpcp, Real harmonicWeight) const {
+void HPCP::addContributionWithWeight(Real freq, Real mag_lin, ::essentia::VectorEx<Real>& hpcp, Real harmonicWeight) const {
   int pcpSize = hpcp.size();
   Real resolution = pcpSize / 12; // # of bins / semitone
 
@@ -175,7 +175,7 @@ void HPCP::addContributionWithWeight(Real freq, Real mag_lin, vector<Real>& hpcp
 }
 
 
-void HPCP::addContributionWithoutWeight(Real freq, Real mag_lin, vector<Real>& hpcp, Real harmonicWeight) const {
+void HPCP::addContributionWithoutWeight(Real freq, Real mag_lin, ::essentia::VectorEx<Real>& hpcp, Real harmonicWeight) const {
   if (freq <= 0)
     return;
 
@@ -197,8 +197,8 @@ void HPCP::addContributionWithoutWeight(Real freq, Real mag_lin, vector<Real>& h
 // Adds the magnitude contribution of the given frequency as the tonic
 // semitone, as well as its possible contribution as a harmonic of another
 // pitch.
-void HPCP::addContribution(Real freq, Real mag_lin, vector<Real>& hpcp) const {
-  vector<HarmonicPeak>::const_iterator it;
+void HPCP::addContribution(Real freq, Real mag_lin, ::essentia::VectorEx<Real>& hpcp) const {
+  ::essentia::VectorEx<HarmonicPeak>::const_iterator it;
 
   for (it=_harmonicPeaks.begin(); it!= _harmonicPeaks.end(); it++) {
     // Calculate the frequency of the hypothesized fundmental frequency. The
@@ -218,9 +218,9 @@ void HPCP::addContribution(Real freq, Real mag_lin, vector<Real>& hpcp) const {
 
 
 void HPCP::compute() {
-  const vector<Real>& frequencies = _frequencies.get();
-  const vector<Real>& magnitudes = _magnitudes.get();
-  vector<Real>& hpcp = _hpcp.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
+  ::essentia::VectorEx<Real>& hpcp = _hpcp.get();
 
   // Check inputs
   if (magnitudes.size() != frequencies.size()) {
@@ -231,8 +231,8 @@ void HPCP::compute() {
   hpcp.resize(_size);
   fill(hpcp.begin(), hpcp.end(), (Real)0.0);
 
-  vector<Real> hpcp_LO;
-  vector<Real> hpcp_HI;
+  ::essentia::VectorEx<Real> hpcp_LO;
+  ::essentia::VectorEx<Real> hpcp_HI;
 
   if (_bandPreset) {
     hpcp_LO.resize(_size);
@@ -301,7 +301,7 @@ void HPCP::compute() {
   // only if this option is enabled.
   if (_maxShifted) {
     int idxMax = argmax(hpcp);
-    vector<Real> hpcp_bak = hpcp;
+    ::essentia::VectorEx<Real> hpcp_bak = hpcp;
     for (int i=idxMax; i<(int)hpcp.size(); i++) {
       hpcp[i-idxMax] = hpcp_bak[i];
     }

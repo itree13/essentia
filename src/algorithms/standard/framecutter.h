@@ -29,8 +29,8 @@ namespace standard {
 class FrameCutter : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _buffer;
-  Output<std::vector<Real> > _frame;
+  Input<::essentia::VectorEx<Real> > _buffer;
+  Output<::essentia::VectorEx<Real> > _frame;
 
   bool _startFromZero;
   bool _lastFrameToEndOfFile;
@@ -85,7 +85,7 @@ class FrameCutter : public Algorithm {
  protected:
 
   Sink<AudioSample> _audio;
-  Source<std::vector<AudioSample> > _frames;
+  Source<::essentia::VectorEx<AudioSample> > _frames;
 
   int _frameSize;
   int _hopSize;

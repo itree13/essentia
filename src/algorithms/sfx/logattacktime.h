@@ -31,7 +31,7 @@ class LogAttackTime : public Algorithm {
   Real _startThreshold, _stopThreshold;
   Real _sampleRate;
 
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _logAttackTime;
   Output<Real> _attackStart;
   Output<Real> _attackStop;
@@ -70,7 +70,7 @@ namespace streaming {
 class LogAttackTime : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _logAttackTime;
   Source<Real> _attackStart;
   Source<Real> _attackStop;

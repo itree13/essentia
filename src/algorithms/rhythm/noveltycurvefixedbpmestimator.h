@@ -28,9 +28,9 @@ namespace standard {
 class NoveltyCurveFixedBpmEstimator : public Algorithm {
 
   protected:
-    Input<std::vector<Real> > _novelty;
-    Output<std::vector<Real> > _bpmPositions;
-    Output<std::vector<Real> > _bpmAmplitudes;
+    Input<::essentia::VectorEx<Real> > _novelty;
+    Output<::essentia::VectorEx<Real> > _bpmPositions;
+    Output<::essentia::VectorEx<Real> > _bpmAmplitudes;
     // TODO: output a feature that tells whether the signal can be considered
     // to have constant tempo or not:
     //Output<int> _constantTempo;[0, 1, 0.5] or maybe a boolean
@@ -47,12 +47,12 @@ class NoveltyCurveFixedBpmEstimator : public Algorithm {
     // inner algos
     Algorithm* _autocor;
 
-    Real computeTatum(const std::vector<Real>& peaks);
-    Real mainPeaksMean(const std::vector<Real>& positions,
-                       const std::vector<Real>& amplitudes, int size);
-    void inplaceMergeBpms(std::vector<Real>& bpms, std::vector<Real>& amplitudes);
-    void histogramPeaks(const std::vector<Real>& bpms,
-                        std::vector<Real>& positions, std::vector<Real>& amplitudes);
+    Real computeTatum(const ::essentia::VectorEx<Real>& peaks);
+    Real mainPeaksMean(const ::essentia::VectorEx<Real>& positions,
+                       const ::essentia::VectorEx<Real>& amplitudes, int size);
+    void inplaceMergeBpms(::essentia::VectorEx<Real>& bpms, ::essentia::VectorEx<Real>& amplitudes);
+    void histogramPeaks(const ::essentia::VectorEx<Real>& bpms,
+                        ::essentia::VectorEx<Real>& positions, ::essentia::VectorEx<Real>& amplitudes);
 
   public:
     NoveltyCurveFixedBpmEstimator() {

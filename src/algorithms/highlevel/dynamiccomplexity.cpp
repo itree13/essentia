@@ -40,7 +40,7 @@ void DynamicComplexity::configure() {
 }
 
 void DynamicComplexity::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& complexity = _complexity.get();
   Real& loudness = _loudness.get();
 
@@ -53,7 +53,7 @@ void DynamicComplexity::compute() {
   Real c = exp(-1.0/(0.035*_sampleRate));
 
   // create weight vector
-  vector<Real> weight(_frameSize, (Real)0.0);
+  ::essentia::VectorEx<Real> weight(_frameSize, (Real)0.0);
   Real Vweight = 1.0;
   for (int i=_frameSize-1; i>=0; i--) {
     weight[i] = Vweight;
@@ -61,13 +61,13 @@ void DynamicComplexity::compute() {
   }
 
   // cheap B-curve loudness compensation
-  vector<Real> samps;
+  ::essentia::VectorEx<Real> samps;
   filter(samps, signal);
 
   // compute energy per frame and apply smearing function
   int framenum = signal.size() / _frameSize;
   Real Vms = 0.0;
-  vector<Real> VdB(framenum);
+  ::essentia::VectorEx<Real> VdB(framenum);
 
   int nSamples = signal.size();
 
@@ -99,7 +99,7 @@ void DynamicComplexity::compute() {
   complexity = 0.0;
 
   if (!VdB.empty()) {
-    vector<Real> u(VdB.size());
+    ::essentia::VectorEx<Real> u(VdB.size());
     for (int i=0; i<int(u.size()); i++) u[i] = pow((Real)0.9, -VdB[i]);
     Real s = accumulate(u.begin(), u.end(), 0.0);
     for (int i=0; i<int(u.size()); i++) u[i] /= s;
@@ -124,7 +124,7 @@ void DynamicComplexity::compute() {
 
 }
 
-void DynamicComplexity::filter(vector<Real>& result, const vector<Real>& input) const {
+void DynamicComplexity::filter(::essentia::VectorEx<Real>& result, const ::essentia::VectorEx<Real>& input) const {
   static const Real nominator[] = { 0.98595, -0.98595 };
   static const Real denominator[] = { 1.0, -0.9719 };
 
@@ -168,7 +168,7 @@ void DynamicComplexity::configure() {
 AlgorithmStatus DynamicComplexity::process() {
   if (!shouldStop()) return PASS;
 
-  const vector<Real>& signal = _pool.value<vector<Real> >("internal.signal");
+  const ::essentia::VectorEx<Real>& signal = _pool.value<::essentia::VectorEx<Real> >("internal.signal");
   Real complexity;
   Real loudness;
 

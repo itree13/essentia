@@ -126,8 +126,8 @@ protected:
     OutputMap m_pluginOutputs;
 
     std::map<Plugin *, VampFeatureList *> m_fs;
-    std::map<Plugin *, std::vector<size_t> > m_fsizes;
-    std::map<Plugin *, std::vector<std::vector<size_t> > > m_fvsizes;
+    std::map<Plugin *, ::essentia::VectorEx<size_t> > m_fsizes;
+    std::map<Plugin *, ::essentia::VectorEx<::essentia::VectorEx<size_t> > > m_fvsizes;
     void resizeFS(Plugin *plugin, int n);
     void resizeFL(Plugin *plugin, int n, size_t sz);
     void resizeFV(Plugin *plugin, int n, int j, size_t sz);
@@ -863,7 +863,7 @@ PluginAdapterBase::Impl::resizeFS(Plugin *plugin, int n)
         m_fs[plugin][i].featureCount = 0;
         m_fs[plugin][i].features = 0;
         m_fsizes[plugin].push_back(0);
-        m_fvsizes[plugin].push_back(std::vector<size_t>());
+        m_fvsizes[plugin].push_back(::essentia::VectorEx<size_t>());
         i++;
     }
 }

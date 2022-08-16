@@ -36,7 +36,7 @@ void AlgorithmComposite::declareOutput(SourceBase& source, const string& name, c
 }
 
 
-vector<ProcessStep> AlgorithmComposite::processOrder() {
+::essentia::VectorEx<ProcessStep> AlgorithmComposite::processOrder() {
   _processOrder.clear();
   declareProcessOrder();
 
@@ -73,12 +73,12 @@ void AlgorithmComposite::reset() {
 
   // find all algos used by this composite in its process order and reset them
   E_DEBUG_INDENT;
-  vector<ProcessStep> porder = processOrder();
+  ::essentia::VectorEx<ProcessStep> porder = processOrder();
   for (int i=0; i<(int)porder.size(); i++) {
     ProcessStep& pstep = porder[i];
 
     if (pstep.type() == "chain") {
-      vector<Algorithm*> algos = scheduler::Network::innerVisibleAlgorithms(pstep.algorithm());
+      ::essentia::VectorEx<Algorithm*> algos = scheduler::Network::innerVisibleAlgorithms(pstep.algorithm());
       for (int i=0; i<(int)algos.size(); i++) {
         resetAlgorithmAndClearPool(algos[i]);
       }

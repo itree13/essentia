@@ -28,7 +28,7 @@ namespace standard {
 class RMS : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _rms;
 
  public:
@@ -57,7 +57,7 @@ namespace streaming {
 class RMS : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _rms;
 
  public:

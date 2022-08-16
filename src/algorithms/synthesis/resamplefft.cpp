@@ -42,13 +42,13 @@ void ResampleFFT::configure()
 
 void ResampleFFT::compute() {
 
-  const std::vector<Real>& input = _input.get();
-  std::vector<Real>& output = _output.get();
+  const ::essentia::VectorEx<Real>& input = _input.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
 
 
-  std::vector<std::complex<Real> >fftin; // temp vectors
-  std::vector<std::complex<Real> >fftout; // temp vectors
-  std::vector<Real> ifftout; // temp vectors
+  ::essentia::VectorEx<std::complex<Real> >fftin; // temp vectors
+  ::essentia::VectorEx<std::complex<Real> >fftout; // temp vectors
+  ::essentia::VectorEx<Real> ifftout; // temp vectors
 
   int sizeIn = parameter("inSize").toInt(); // input.size();
   int sizeOut = parameter("outSize").toInt();

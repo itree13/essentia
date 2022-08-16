@@ -43,14 +43,14 @@ set<Algorithm*> visibleDependencies(const Algorithm* algo, bool logWarnings=true
     // whenever 1 of our outputs is actually proxied
     if (output->second->isProxied()) continue;
 
-    vector<SinkBase*>& sinks = output->second->sinks();
+    ::essentia::VectorEx<SinkBase*>& sinks = output->second->sinks();
 
     if (!sinks.size() && logWarnings) {
       E_WARNING("Unconnected source (" << output->first << ") in " << algo->name());
     }
 
     // ...get the attached sinks and their parent algorithms
-    for (vector<SinkBase*>::iterator it = sinks.begin(); it != sinks.end(); ++it) {
+    for (::essentia::VectorEx<SinkBase*>::iterator it = sinks.begin(); it != sinks.end(); ++it) {
       // add the owning algorithm to the list of dependencies
       dependencies.insert((*it)->parent());
     }
@@ -73,18 +73,18 @@ void deleteNetwork(const streaming::Algorithm* algo) {
  * not proxies (ie: all connections that do not cross the boundary of a
  * composite algorithm)
  */
-map<string, vector<Algorithm*> > mapVisibleDependencies(const Algorithm* algo) {
-  map<string, vector<Algorithm*> > result;
+map<string, ::essentia::VectorEx<Algorithm*> > mapVisibleDependencies(const Algorithm* algo) {
+  map<string, ::essentia::VectorEx<Algorithm*> > result;
 
   // for each source of this algorithm...
   for (Algorithm::OutputMap::const_iterator output = algo->outputs().begin();
        output != algo->outputs().end();
        ++output) {
 
-    vector<SinkBase*>& sinks = output->second->sinks();
+    ::essentia::VectorEx<SinkBase*>& sinks = output->second->sinks();
 
     // ...get the attached sinks and their parent algorithms
-    for (vector<SinkBase*>::iterator it = sinks.begin(); it != sinks.end(); ++it) {
+    for (::essentia::VectorEx<SinkBase*>::iterator it = sinks.begin(); it != sinks.end(); ++it) {
       // if the sink is connected through the proxy, don't follow it
       if (output->second->isProxied() &&
           indexOf(output->second->proxiedSinks(), *it) != -1) continue;
@@ -100,8 +100,8 @@ map<string, vector<Algorithm*> > mapVisibleDependencies(const Algorithm* algo) {
 
 
 template <typename NodeType>
-vector<NodeType*> nodeDependencies(const Algorithm* algo) {
-  vector<NodeType> result;
+::essentia::VectorEx<NodeType*> nodeDependencies(const Algorithm* algo) {
+  ::essentia::VectorEx<NodeType> result;
   set<Algorithm*> dependencies = visibleDependencies(algo);
 
   for (set<Algorithm*>::iterator it = dependencies.begin(); it != dependencies.end(); ++it) {
@@ -131,7 +131,7 @@ NodeType* visibleNetwork(Algorithm* algo) {
     if (visited.find(currentNode) != visited.end()) continue;
     visited.insert(currentNode);
 
-    vector<NodeType*> deps = currentNode->addVisibleDependencies(algoNodeMap);
+    ::essentia::VectorEx<NodeType*> deps = currentNode->addVisibleDependencies(algoNodeMap);
 
     E_DEBUG(ENetwork, currentNode->algorithm()->name() << ":");
     for (int i=0; i<(int)deps.size(); i++) {
@@ -146,9 +146,9 @@ NodeType* visibleNetwork(Algorithm* algo) {
 }
 
 
-vector<NetworkNode*> NetworkNode::addVisibleDependencies(map<Algorithm*, NetworkNode*>& algoNodeMap) {
+::essentia::VectorEx<NetworkNode*> NetworkNode::addVisibleDependencies(map<Algorithm*, NetworkNode*>& algoNodeMap) {
   set<Algorithm*> dependencies = visibleDependencies(_algo);
-  vector<NetworkNode*> nodeChildren;
+  ::essentia::VectorEx<NetworkNode*> nodeChildren;
 
   for (set<Algorithm*>::iterator it = dependencies.begin(); it != dependencies.end(); ++it) {
     if (!contains(algoNodeMap, *it)) {
@@ -198,7 +198,7 @@ void Network::clear() {
 
 void Network::clearVisibleNetwork() {
   E_DEBUG(ENetwork, "Network::clearVisibleNetwork()");
-  vector<NetworkNode*> nodes = depthFirstSearch(_visibleNetworkRoot);
+  ::essentia::VectorEx<NetworkNode*> nodes = depthFirstSearch(_visibleNetworkRoot);
   for (int i=0; i<(int)nodes.size(); i++) delete nodes[i];
   _visibleNetworkRoot = 0;
   E_DEBUG(ENetwork, "Network::clearVisibleNetwork() ok!");
@@ -206,7 +206,7 @@ void Network::clearVisibleNetwork() {
 
 void Network::clearExecutionNetwork() {
   E_DEBUG(ENetwork, "Network::clearExecutionNetwork()");
-  vector<NetworkNode*> nodes = depthFirstSearch(_executionNetworkRoot);
+  ::essentia::VectorEx<NetworkNode*> nodes = depthFirstSearch(_executionNetworkRoot);
   for (int i=0; i<(int)nodes.size(); i++) delete nodes[i];
   _executionNetworkRoot = 0;
   E_DEBUG(ENetwork, "Network::clearExecutionNetwork() ok!");
@@ -391,10 +391,10 @@ void Network::buildVisibleNetwork() {
 }
 
 
-vector<Algorithm*> Network::innerVisibleAlgorithms(Algorithm* algo) {
+::essentia::VectorEx<Algorithm*> Network::innerVisibleAlgorithms(Algorithm* algo) {
   NetworkNode* visibleNetworkRoot = visibleNetwork<NetworkNode>(algo);
 
-  vector<Algorithm*> algos = depthFirstMap(visibleNetworkRoot, returnAlgorithm);
+  ::essentia::VectorEx<Algorithm*> algos = depthFirstMap(visibleNetworkRoot, returnAlgorithm);
 
   NodeVector nodes = depthFirstSearch(visibleNetworkRoot);
   for (int i=0; i<(int)nodes.size(); i++) delete nodes[i];
@@ -409,7 +409,7 @@ class FractalNode : public NetworkNode {
   // the expanded version of this fractal node
   FractalNode* expanded;
 
-  typedef map<string, vector<FractalNode*> > NodeMap;
+  typedef map<string, ::essentia::VectorEx<FractalNode*> > NodeMap;
 
   // for each source name, the list of expanded (ie: not composite) algorithm which execution
   // should be completed before this source is allowed to produce data
@@ -423,24 +423,24 @@ class FractalNode : public NetworkNode {
  public:
   FractalNode(Algorithm* algo) : NetworkNode(algo) {}
 
-  const vector<FractalNode*>& children() const { return _fchildren; }
-        vector<FractalNode*>& children()       { return _fchildren; }
+  const ::essentia::VectorEx<FractalNode*>& children() const { return _fchildren; }
+        ::essentia::VectorEx<FractalNode*>& children()       { return _fchildren; }
 
   void addChild(FractalNode* child) { if (!essentia::contains(_fchildren, child)) _fchildren.push_back(child); }
 
   // we need to overload this method, because in the case of FractalNodes, we want
   // to fill the OutputMap at the same time with the names of the outputs
-  vector<FractalNode*> addVisibleDependencies(map<Algorithm*, FractalNode*>& algoNodeMap) {
+  ::essentia::VectorEx<FractalNode*> addVisibleDependencies(map<Algorithm*, FractalNode*>& algoNodeMap) {
     E_DEBUG(ENetwork, "add visible deps to " << _algo->name());
-    map<string, vector<Algorithm*> > namedDeps = mapVisibleDependencies(_algo);
+    map<string, ::essentia::VectorEx<Algorithm*> > namedDeps = mapVisibleDependencies(_algo);
     //E_DEBUG(ENetwork, "name deps size: " << namedDeps.size());
 
-    for (map<string, vector<Algorithm*> >::iterator connection = namedDeps.begin();
+    for (map<string, ::essentia::VectorEx<Algorithm*> >::iterator connection = namedDeps.begin();
          connection != namedDeps.end();
          ++connection) {
       const string& outputName = connection->first;
       //E_DEBUG(ENetwork, "--" << outputName);
-      const vector<Algorithm*>& connectedAlgos = connection->second;
+      const ::essentia::VectorEx<Algorithm*>& connectedAlgos = connection->second;
 
       for (int i=0; i<(int)connectedAlgos.size(); i++) {
         if (!contains(algoNodeMap, connectedAlgos[i])) {
@@ -456,18 +456,18 @@ class FractalNode : public NetworkNode {
   }
 
  protected:
-  vector<FractalNode*> _fchildren;
+  ::essentia::VectorEx<FractalNode*> _fchildren;
 };
 
 
-typedef std::vector<FractalNode*> FNodeVector;
+typedef ::essentia::VectorEx<FractalNode*> FNodeVector;
 typedef std::set<FractalNode*> FNodeSet;
 typedef std::stack<FractalNode*> FNodeStack;
 
 FractalNode* expandNode(FractalNode* node);
 
-void printInnerMap(const map<string, vector<FractalNode*> >& innerMap) {
-  for (map<string, vector<FractalNode*> >::const_iterator it = innerMap.begin(); it != innerMap.end(); ++it) {
+void printInnerMap(const map<string, ::essentia::VectorEx<FractalNode*> >& innerMap) {
+  for (map<string, ::essentia::VectorEx<FractalNode*> >::const_iterator it = innerMap.begin(); it != innerMap.end(); ++it) {
     for (int i=0; i<(int)it->second.size(); i++) {
       E_DEBUG(ENetwork, "output " <<  it->first << " → " << it->second[i]->algorithm()->name());
     }
@@ -493,11 +493,11 @@ void connectExpandedNodes(FNodeVector& visibleNodes) {
     for (FractalNode::NodeMap::iterator output = node->outputMap.begin();
          output != node->outputMap.end(); ++output) {
       const string& outputName = output->first;
-      const vector<FractalNode*>& dnodes = output->second;
+      const ::essentia::VectorEx<FractalNode*>& dnodes = output->second;
       //E_DEBUG(ENetwork, "        output: " << outputName << " - " << dnodes.size() << " connected algos");
 
       for (int j=0; j<(int)dnodes.size(); j++) {
-        vector<FractalNode*>& lnodes = node->expanded->innerMap[outputName]; // algos inside the composite
+        ::essentia::VectorEx<FractalNode*>& lnodes = node->expanded->innerMap[outputName]; // algos inside the composite
         for (int k=0; k<(int)lnodes.size(); k++) {
           FractalNode* lhs = lnodes[k];
           FractalNode* rhs = dnodes[j]->expanded;                  // algo outside, ie: inside the visible dependency
@@ -579,11 +579,11 @@ class ProxyMatcher {
     }
     E_DEBUG(ENetwork, "******************************");
     E_DEBUG(ENetwork, "Actual dependency:");
-    printInnerMap(proxyMap(vector<FractalNode*>()));
+    printInnerMap(proxyMap(::essentia::VectorEx<FractalNode*>()));
     E_DEBUG(ENetwork, "******************************");
   }
 
-  map<string, vector<FractalNode*> > proxyMap(const vector<FractalNode*>& previousLeaves) {
+  map<string, ::essentia::VectorEx<FractalNode*> > proxyMap(const ::essentia::VectorEx<FractalNode*>& previousLeaves) {
     // _proxyMap contains pointers to the non-expanded versions of the algorithms,
     // we need to expand that now
 
@@ -603,7 +603,7 @@ class ProxyMatcher {
     */
 
     // now replace all source proxies by their corresponding inner algorithms dependencies
-    map<string, vector<FractalNode*> > result;
+    map<string, ::essentia::VectorEx<FractalNode*> > result;
     for (map<string, pair<Algorithm*, string> >::iterator it = _proxiedSources.begin(); it != _proxiedSources.end(); ++it) {
       const string& outputName = it->first;
       Algorithm* innerAlgo = it->second.first;
@@ -626,9 +626,9 @@ FractalNode* expandNonCompositeNode(FractalNode* node) {
   FractalNode* expanded = new FractalNode(node->algorithm());
 
   // standard algorithm: all the inner connections are on the algorithm itself
-  vector<string> outputNames = node->algorithm()->outputNames();
+  ::essentia::VectorEx<string> outputNames = node->algorithm()->outputNames();
   for (int i=0; i<(int)outputNames.size(); i++) {
-    expanded->innerMap[outputNames[i]] = vector<FractalNode*>(1, expanded);
+    expanded->innerMap[outputNames[i]] = ::essentia::VectorEx<FractalNode*>(1, expanded);
   }
 
   return expanded;
@@ -640,7 +640,7 @@ FractalNode* expandNode(FractalNode* node) {
   AlgorithmComposite* calgo = dynamic_cast<AlgorithmComposite*>(node->algorithm());
   if (calgo) {
     // composite algorithm: we need to expand it
-    vector<ProcessStep> processOrder = calgo->processOrder();
+    ::essentia::VectorEx<ProcessStep> processOrder = calgo->processOrder();
 
     if (processOrder.empty()) {
       throw EssentiaException("You forgot to specify a process order for the composite algorithm '", calgo->name(), "'");
@@ -652,13 +652,13 @@ FractalNode* expandNode(FractalNode* node) {
     // leaves of the previous step, so that the next one can depend on all of them
     // (in case a ChainFrom branches, we need to wait on the full execution of it, which
     // is equivalent to waiting on the leaves of it)
-    vector<FractalNode*> previousLeaves(1, froot);
+    ::essentia::VectorEx<FractalNode*> previousLeaves(1, froot);
 
     // TODO: (maybe not here) check that all the ProxySinks are connected to the same
     //       algorithm, otherwise we're in trouble
     ProxyMatcher pmatch(calgo);
 
-    vector<FractalNode*> sroots; // used for cleaning up afterwards
+    ::essentia::VectorEx<FractalNode*> sroots; // used for cleaning up afterwards
 
     // process each step one after the other, while attaching the root of the next one to
     // the leaves of the previous one
@@ -778,7 +778,7 @@ FractalNode* expandNode(FractalNode* node) {
     // clean up all the visible nodes we used before. We can only do this now because
     // we needed them before to be able to compute the proxy map correctly
     for (int i=0; i<(int)sroots.size(); i++) {
-      vector<FractalNode*> stree = depthFirstSearch(sroots[i]);
+      ::essentia::VectorEx<FractalNode*> stree = depthFirstSearch(sroots[i]);
       for (int j=0; j<(int)stree.size(); j++) delete stree[j];
     }
 
@@ -832,7 +832,7 @@ void Network::buildExecutionNetwork() {
   }
   for (int i=0; i<(int)expandedNodes.size(); i++) {
     NetworkNode* parent = falgoMap[expandedNodes[i]];
-    vector<FractalNode*> children = expandedNodes[i]->children();
+    ::essentia::VectorEx<FractalNode*> children = expandedNodes[i]->children();
     for (int j=0; j<(int)children.size(); j++) {
       E_DEBUG(ENetwork, "  -  " << parent->algorithm()->name() << " → " << falgoMap[children[j]]->algorithm()->name());
       parent->addChild(falgoMap[children[j]]);
@@ -916,7 +916,7 @@ void Network::topologicalSortExecutionNetwork() {
 
 
 void Network::checkConnections() {
-  vector<Algorithm*> algos = depthFirstMap(_visibleNetworkRoot, returnAlgorithm);
+  ::essentia::VectorEx<Algorithm*> algos = depthFirstMap(_visibleNetworkRoot, returnAlgorithm);
 
   for (int i=0; i<(int)algos.size(); i++) {
     Algorithm* algo = algos[i];
@@ -924,7 +924,7 @@ void Network::checkConnections() {
          output != algo->outputs().end();
          ++output) {
 
-      vector<SinkBase*>& sinks = output->second->sinks();
+      ::essentia::VectorEx<SinkBase*>& sinks = output->second->sinks();
 
       if (sinks.empty()) {
         ostringstream msg;
@@ -939,7 +939,7 @@ void Network::checkConnections() {
 void Network::printBufferFillState() {
   if (!E_ACTIVE(EScheduler)) return;
 
-  vector<Algorithm*> algos = depthFirstMap(_executionNetworkRoot, returnAlgorithm);
+  ::essentia::VectorEx<Algorithm*> algos = depthFirstMap(_executionNetworkRoot, returnAlgorithm);
 
   for (int i=0; i<(int)algos.size(); i++) {
     Algorithm* algo = algos[i];
@@ -990,7 +990,7 @@ bool isExcludedFromInfo(const string& algoname) {
 void Network::checkBufferSizes() {
   // TODO: we should do this on the execution network, right?
   E_DEBUG(ENetwork, "checking buffer sizes");
-  vector<Algorithm*> algos = depthFirstMap(_executionNetworkRoot, returnAlgorithm);
+  ::essentia::VectorEx<Algorithm*> algos = depthFirstMap(_executionNetworkRoot, returnAlgorithm);
 
   for (int i=0; i<(int)algos.size(); i++) {
     Algorithm* algo = algos[i];
@@ -1000,7 +1000,7 @@ void Network::checkBufferSizes() {
          ++output) {
 
       SourceBase* source = output->second;
-      vector<SinkBase*>& sinks = source->sinks();
+      ::essentia::VectorEx<SinkBase*>& sinks = source->sinks();
 
       BufferInfo sbuf = source->bufferInfo();
       bool noInfo = isExcludedFromInfo(source->parent()->name());
@@ -1024,7 +1024,7 @@ void Network::checkBufferSizes() {
         }
       }
 
-      for (vector<SinkBase*>::iterator it = sinks.begin(); it!=sinks.end(); ++it) {
+      for (::essentia::VectorEx<SinkBase*>::iterator it = sinks.begin(); it!=sinks.end(); ++it) {
         SinkBase* sink = *it;
 
         if (sbuf.maxContiguousElements + 1 < sink->acquireSize()) {

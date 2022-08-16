@@ -32,15 +32,15 @@ namespace standard {
 
 class ConstantQ : public Algorithm {
  protected:
-  Input<std::vector<Real> > _frame;
-  Output<std::vector<std::complex<Real> > > _constantQ;
+  Input<::essentia::VectorEx<Real> > _frame;
+  Output<::essentia::VectorEx<std::complex<Real> > > _constantQ;
 
   Algorithm* _fftc;
   Algorithm* _windowing;
   Algorithm* _fft;
 
-  std::vector<double> _CQdata;
-  std::vector<std::complex<Real> > _fftData;
+  ::essentia::VectorEx<double> _CQdata;
+  ::essentia::VectorEx<std::complex<Real> > _fftData;
   
   double _sampleRate;
   double _minFrequency;
@@ -59,10 +59,10 @@ class ConstantQ : public Algorithm {
   bool _zeroPhase;
 
   struct SparseKernel {
-    std::vector<double> real;
-    std::vector<double> imag;
-    std::vector<unsigned> i; 
-    std::vector<unsigned> j;
+    ::essentia::VectorEx<double> real;
+    ::essentia::VectorEx<double> imag;
+    ::essentia::VectorEx<unsigned> i; 
+    ::essentia::VectorEx<unsigned> j;
   };
 
   SparseKernel _sparseKernel;
@@ -117,8 +117,8 @@ namespace streaming {
 class ConstantQ : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frame;
-  Source<std::vector<std::complex<Real> > > _constantQ;
+  Sink<::essentia::VectorEx<Real> > _frame;
+  Source<::essentia::VectorEx<std::complex<Real> > > _constantQ;
 
  public:
   ConstantQ() {

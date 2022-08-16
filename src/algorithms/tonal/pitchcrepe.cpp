@@ -76,11 +76,11 @@ void PitchCREPE::configure() {
 
 
 void PitchCREPE::compute() {
-  const vector<Real>& audio = _audio.get();
-  vector<Real>& time = _time.get();
-  vector<Real>& frequency = _frequency.get();
-  vector<Real>& confidence = _confidence.get();
-  vector<vector<Real> >& activations = _activations.get();
+  const ::essentia::VectorEx<Real>& audio = _audio.get();
+  ::essentia::VectorEx<Real>& time = _time.get();
+  ::essentia::VectorEx<Real>& frequency = _frequency.get();
+  ::essentia::VectorEx<Real>& confidence = _confidence.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& activations = _activations.get();
 
   _tensorflowPredictCREPE->input("signal").set(audio);
   _tensorflowPredictCREPE->output("predictions").set(activations);
@@ -96,7 +96,7 @@ void PitchCREPE::compute() {
   confidence.assign(timestamps, 0.0);
 
   // Activations to cents.
-  vector<Real> cents = toLocalAverageCents(activations);
+  ::essentia::VectorEx<Real> cents = toLocalAverageCents(activations);
 
   for (int i = 0; i < timestamps; i++) {
     // Get the timestamp of each pitch prediction.
@@ -116,13 +116,13 @@ void PitchCREPE::compute() {
   }
 }
 
-vector<Real> PitchCREPE::toLocalAverageCents(vector<vector<Real> > &activations) {
+::essentia::VectorEx<Real> PitchCREPE::toLocalAverageCents(::essentia::VectorEx<::essentia::VectorEx<Real> > &activations) {
   int timestamps = activations.size();
-  vector<Real> cents(timestamps, 0);
+  ::essentia::VectorEx<Real> cents(timestamps, 0);
 
   int center, start, end;
   Real productSum, weightSum;
-  vector<Real> salience, toCents;
+  ::essentia::VectorEx<Real> salience, toCents;
   for (int i = 0; i < timestamps; i++) {
     center = argmax(activations[i]);
     start = max(0, center - 4);

@@ -36,31 +36,31 @@ namespace standard {
 class SineSubtraction : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _inframe;
-  Input<std::vector<Real> > _magnitudes;
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _phases;
-  Output<std::vector<Real> > _outframe;
+  Input<::essentia::VectorEx<Real> > _inframe;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _phases;
+  Output<::essentia::VectorEx<Real> > _outframe;
 
   Real _sampleRate;
   int _fftSize;
   int _hopSize;
 
-  std::vector<Real> _synwindow;
+  ::essentia::VectorEx<Real> _synwindow;
 
-  std::vector<Real> _lastytfreq;
-  std::vector<Real> _lastytphase;
+  ::essentia::VectorEx<Real> _lastytfreq;
+  ::essentia::VectorEx<Real> _lastytphase;
 
   Algorithm* _window;
   Algorithm* _fft;
   Algorithm* _ifft;
   Algorithm* _overlapadd;
 
-  void initializeFFT(std::vector<std::complex<Real> >&fft, int sizeFFT);
-  void subtractFFT(std::vector<std::complex<Real> >&fft1, const std::vector<std::complex<Real> >&fft2);
-  void generateSines(const std::vector<Real> magnitudes, const std::vector<Real> frequencies, const std::vector<Real> phases, std::vector<std::complex<Real> >&outfft);
-  void createSynthesisWindow(std::vector<Real> &synwindow, int hopSize, int winSize);
-  void applySynthesisWindow(std::vector<Real> &inframe, const std::vector<Real> synwindow);
+  void initializeFFT(::essentia::VectorEx<std::complex<Real> >&fft, int sizeFFT);
+  void subtractFFT(::essentia::VectorEx<std::complex<Real> >&fft1, const ::essentia::VectorEx<std::complex<Real> >&fft2);
+  void generateSines(const ::essentia::VectorEx<Real> magnitudes, const ::essentia::VectorEx<Real> frequencies, const ::essentia::VectorEx<Real> phases, ::essentia::VectorEx<std::complex<Real> >&outfft);
+  void createSynthesisWindow(::essentia::VectorEx<Real> &synwindow, int hopSize, int winSize);
+  void applySynthesisWindow(::essentia::VectorEx<Real> &inframe, const ::essentia::VectorEx<Real> synwindow);
 
  public:
   SineSubtraction() {
@@ -111,11 +111,11 @@ namespace streaming {
 class SineSubtraction : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _inframe;
-  Sink<std::vector<Real> > _magnitudes;
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _phases;
-  Source<std::vector<Real> > _outframe;
+  Sink<::essentia::VectorEx<Real> > _inframe;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _phases;
+  Source<::essentia::VectorEx<Real> > _outframe;
 
 
  public:

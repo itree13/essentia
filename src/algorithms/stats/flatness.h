@@ -28,7 +28,7 @@ namespace standard {
 class Flatness : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _flatness;
   Algorithm* _geometricMean;
 
@@ -65,7 +65,7 @@ namespace streaming {
 class Flatness : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _flatness;
 
  public:

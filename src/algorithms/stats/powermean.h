@@ -28,7 +28,7 @@ namespace standard {
 class PowerMean : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _powerMean;
   Algorithm* _geometricMean;
 
@@ -67,7 +67,7 @@ namespace streaming {
 class PowerMean : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _powerMean;
 
  public:

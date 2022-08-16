@@ -28,9 +28,9 @@ namespace standard {
 class ChordsDetection : public Algorithm {
 
   protected:
-    Input<std::vector<std::vector<Real> > > _pcp;
-    Output<std::vector<std::string> > _chords;
-    Output<std::vector<Real> > _strength;
+    Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _pcp;
+    Output<::essentia::VectorEx<std::string> > _chords;
+    Output<::essentia::VectorEx<Real> > _strength;
 
     Algorithm* _chordsAlgo;
     int _numFramesWindow;
@@ -83,7 +83,7 @@ namespace streaming {
  */
 class ChordsDetection : public AlgorithmComposite {
  protected:
-  SinkProxy<std::vector<Real> > _pcp;
+  SinkProxy<::essentia::VectorEx<Real> > _pcp;
 
   Source<std::string> _chords;
   Source<Real> _strength;

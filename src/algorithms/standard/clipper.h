@@ -28,8 +28,8 @@ namespace standard {
 class Clipper : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _input;
-  Output<std::vector<Real> > _output;
+  Input<::essentia::VectorEx<Real> > _input;
+  Output<::essentia::VectorEx<Real> > _output;
 
   Real _max;
   Real _min;

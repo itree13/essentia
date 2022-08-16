@@ -80,14 +80,14 @@ int main(int argc, char* argv[]) {
   // printing results
   cout << "-------- results --------" << endl;
   cout << "bpm: " << pool.value<Real>("rhythm.bpm") << endl;
-  cout << "ticks: " << pool.value<vector<Real> >("rhythm.ticks") << endl;
+  cout << "ticks: " << pool.value<::essentia::VectorEx<Real> >("rhythm.ticks") << endl;
   cout << "ticks detection confidence: " << pool.value<Real>("rhythm.ticks_confidence") << endl; 
-  cout << "estimates: " << pool.value<vector<Real> >("rhythm.estimates") << endl;
-  cout << "bpmIntervals: " << pool.value<vector<Real> >("rhythm.bpmIntervals") << endl;
+  cout << "estimates: " << pool.value<::essentia::VectorEx<Real> >("rhythm.estimates") << endl;
+  cout << "bpmIntervals: " << pool.value<::essentia::VectorEx<Real> >("rhythm.bpmIntervals") << endl;
   //cout << "rubatoNumber:" << (int) pool.value<Real>("rhythm.rubatoNumber") << endl;
   //try {
-  //    cout << "rubatoStart: " << pool.value<vector<Real> >("rhythm.rubatoStart") << endl;
-  //    cout << "rubatoStop: " << pool.value<vector<Real> >("rhythm.rubatoStop") << endl;
+  //    cout << "rubatoStart: " << pool.value<::essentia::VectorEx<Real> >("rhythm.rubatoStart") << endl;
+  //    cout << "rubatoStop: " << pool.value<::essentia::VectorEx<Real> >("rhythm.rubatoStop") << endl;
   //}
   //catch (EssentiaException&) {
   //  cout << "No rubato regions found" << endl;

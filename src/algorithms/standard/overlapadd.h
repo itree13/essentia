@@ -29,15 +29,15 @@ class OverlapAdd : public Algorithm {
 
  private:
 
-  Input<std::vector<Real> > _windowedFrame;
-  Output<std::vector<Real> > _output;
+  Input<::essentia::VectorEx<Real> > _windowedFrame;
+  Output<::essentia::VectorEx<Real> > _output;
 
   int _frameSize;
   int _hopSize;
   Real _gain;
   float _normalizationGain;
-  std::vector<Real> _frameHistory;
-  std::vector<Real> _tmpFrame;
+  ::essentia::VectorEx<Real> _frameHistory;
+  ::essentia::VectorEx<Real> _tmpFrame;
 
  public:
   OverlapAdd() {
@@ -71,15 +71,15 @@ namespace streaming {
 class OverlapAdd : public Algorithm {
 
  protected:
-  Sink<std::vector<Real> > _frames;
+  Sink<::essentia::VectorEx<Real> > _frames;
   Source<Real> _output;
 
   int _frameSize;
   int _hopSize;
   Real _gain;
   float _normalizationGain;
-  std::vector<Real> _frameHistory;
-  std::vector<Real> _tmpFrame;
+  ::essentia::VectorEx<Real> _frameHistory;
+  ::essentia::VectorEx<Real> _tmpFrame;
 
   bool _configured;
 

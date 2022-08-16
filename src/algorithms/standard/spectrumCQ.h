@@ -31,13 +31,13 @@ namespace standard {
 class SpectrumCQ : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _spectrumCQ;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _spectrumCQ;
 
   Algorithm* _constantq;
   Algorithm* _magnitude;
 
-  std::vector<std::complex<Real> > _CQBuffer;
+  ::essentia::VectorEx<std::complex<Real> > _CQBuffer;
 
  
  public:
@@ -86,8 +86,8 @@ namespace streaming {
 class SpectrumCQ : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
-  Source<std::vector<Real> > _spectrumCQ;
+  Sink<::essentia::VectorEx<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _spectrumCQ;
 
  public:
   SpectrumCQ() {

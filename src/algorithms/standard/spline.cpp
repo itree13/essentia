@@ -66,8 +66,8 @@ void Spline::configure() {
   else if (type == "beta") _type = BETA;
   else  _type = QUADRATIC;/*if (type == "quadratic")*/ // check already done in declareParameter
 
-  vector<Real> x = parameter("xPoints").toVectorReal();
-  vector<Real> y = parameter("yPoints").toVectorReal();
+  ::essentia::VectorEx<Real> x = parameter("xPoints").toVectorReal();
+  ::essentia::VectorEx<Real> y = parameter("yPoints").toVectorReal();
   if (x.size() != y.size() ) {
     throw EssentiaException("parameter 'xPoints' must have the same size than parameter 'yPoints')");
   }

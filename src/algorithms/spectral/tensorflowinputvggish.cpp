@@ -88,7 +88,7 @@ void TensorflowInputVGGish::configure() {
 
 
 void TensorflowInputVGGish::compute() {
-  const std::vector<Real>& frame = _frame.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
 
   if (frame.size() != 400) {
     throw(EssentiaException("TensorflowInputVGGish: This algorithm only accepts input frames of size 400."));

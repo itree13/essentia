@@ -41,7 +41,7 @@ const char* FlatnessDB::description = DOC("This algorithm computes the flatness 
 
 void FlatnessDB::compute() {
 
-  const std::vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
 
   if (array.empty()) {
     throw EssentiaException("FlatnessDB: size of input array is zero");

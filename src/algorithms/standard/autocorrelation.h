@@ -29,14 +29,14 @@ namespace standard {
 class AutoCorrelation : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _correlation;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _correlation;
   bool _unbiasedNormalization;
   bool _generalized;
   Real _frequencyDomainCompression;
-  std::vector<std::complex<Real> > _fftBuffer;
-  std::vector<Real> _corr;
-  std::vector<Real> _paddedSignal;
+  ::essentia::VectorEx<std::complex<Real> > _fftBuffer;
+  ::essentia::VectorEx<Real> _corr;
+  ::essentia::VectorEx<Real> _paddedSignal;
 
   Algorithm* _fft;
   Algorithm* _ifft;
@@ -85,8 +85,8 @@ namespace streaming {
 class AutoCorrelation : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
-  Source<std::vector<Real> > _correlation;
+  Sink<::essentia::VectorEx<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _correlation;
 
  public:
   AutoCorrelation() {

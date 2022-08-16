@@ -26,9 +26,9 @@ namespace standard {
 
 class ChromaCrossSimilarity : public Algorithm {
   protected:
-   Input<std::vector<std::vector<Real> > > _queryFeature;
-   Input<std::vector<std::vector<Real> > > _referenceFeature;
-   Output<std::vector<std::vector<Real> > > _csm;
+   Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _queryFeature;
+   Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _referenceFeature;
+   Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _csm;
   public:
    ChromaCrossSimilarity() {
     declareInput(_queryFeature, "queryFeature", "frame-wise chromagram of the query song (e.g., a HPCP)");
@@ -69,15 +69,15 @@ class ChromaCrossSimilarity : public Algorithm {
    int _iterIdx;
    size_t queryFeatureSize;
    size_t referenceFeatureSize;
-   std::vector<std::vector<Real> > queryFeature;
-   std::vector<std::vector<Real> > referenceFeature;
-   std::vector<std::vector<Real> >  _queryFeatureStack;
-   std::vector<std::vector<Real> >  _referenceFeatureStack;
-   std::vector<Real> _thresholdQuery;
-   std::vector<Real> _thresholdReference;
-   std::vector<std::vector<Real> > _pdistances;
-   std::vector<std::vector<Real> > _accumEucDistances;
-   std::vector<Real> getColsAtVecIndex(std::vector<std::vector<Real> >& inputMatrix, int index) const; 
+   ::essentia::VectorEx<::essentia::VectorEx<Real> > queryFeature;
+   ::essentia::VectorEx<::essentia::VectorEx<Real> > referenceFeature;
+   ::essentia::VectorEx<::essentia::VectorEx<Real> >  _queryFeatureStack;
+   ::essentia::VectorEx<::essentia::VectorEx<Real> >  _referenceFeatureStack;
+   ::essentia::VectorEx<Real> _thresholdQuery;
+   ::essentia::VectorEx<Real> _thresholdReference;
+   ::essentia::VectorEx<::essentia::VectorEx<Real> > _pdistances;
+   ::essentia::VectorEx<::essentia::VectorEx<Real> > _accumEucDistances;
+   ::essentia::VectorEx<Real> getColsAtVecIndex(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputMatrix, int index) const; 
 };
 
 } // namespace standard
@@ -90,8 +90,8 @@ namespace streaming {
 
 class ChromaCrossSimilarity : public Algorithm {
  protected:
-  Sink<std::vector<Real> > _queryFeature;
-  Source<std::vector<Real> > _csm;
+  Sink<::essentia::VectorEx<Real> > _queryFeature;
+  Source<::essentia::VectorEx<Real> > _csm;
 
   // params variables
   int _frameStackStride;
@@ -103,9 +103,9 @@ class ChromaCrossSimilarity : public Algorithm {
   Real _mathcCoef;
   Real _mismatchCoef;
   Real _minFramesSize;
-  std::vector<std::vector<Real> > _referenceFeature;
-  std::vector<std::vector<Real> > _referenceFeatureStack;
-  std::vector<std::vector<Real> > _outputSimMatrix;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _referenceFeature;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _referenceFeatureStack;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _outputSimMatrix;
 
  public:
   ChromaCrossSimilarity() : Algorithm() {
@@ -119,7 +119,7 @@ class ChromaCrossSimilarity : public Algorithm {
   void reset();
 
   void declareParameters() {
-    declareParameter("referenceFeature", "2D matrix corresponds to the input chromagram of the reference song. (eg. a HPCP)", "", std::vector<std::vector<Real> >());
+    declareParameter("referenceFeature", "2D matrix corresponds to the input chromagram of the reference song. (eg. a HPCP)", "", ::essentia::VectorEx<::essentia::VectorEx<Real> >());
     declareParameter("frameStackStride", "stride size to form a stack of frames (e.g., 'frameStackStride'=1 to use consecutive frames; 'frameStackStride'=2 for using every second frame)", "[1,inf)", 1);
     declareParameter("frameStackSize", "number of input frames to stack together and treat as a feature vector for similarity computation. Choose 'frameStackSize=1' to use the original input frames without stacking", "[0,inf)", 9);
     declareParameter("binarizePercentile", "maximum percent of distance values to consider as similar in each row and each column", "[0,1]", 0.095);

@@ -60,7 +60,7 @@ void DCT::createDctTableII(int inputSize, int outputSize) {
     throw EssentiaException("DCT: 'outputSize' is greater than 'inputSize'. You can only compute the DCT with an output size smaller than the input size (i.e. you can only compress information)");
   }
 
-  _dctTable = vector<vector<Real> >(outputSize, vector<Real>(inputSize));
+  _dctTable = ::essentia::VectorEx<::essentia::VectorEx<Real> >(outputSize, ::essentia::VectorEx<Real>(inputSize));
 
   // scale for index = 0
   Real scale0 = 1.0 / sqrt(Real(inputSize));
@@ -86,7 +86,7 @@ void DCT::createDctTableIII(int inputSize, int outputSize) {
     throw EssentiaException("DCT: 'outputSize' is greater than 'inputSize'. You can only compute the DCT with an output size smaller than the input size (i.e. you can only compress information)");
   }
 
-  _dctTable = vector<vector<Real> >(outputSize, vector<Real>(inputSize));
+  _dctTable = ::essentia::VectorEx<::essentia::VectorEx<Real> >(outputSize, ::essentia::VectorEx<Real>(inputSize));
 /*
   // scale for index = 0
   Real scale0 = 1.0 / sqrt(Real(inputSize));
@@ -124,8 +124,8 @@ void DCT::createDctTableIII(int inputSize, int outputSize) {
 
 void DCT::compute() {
 
-  const vector<Real>& array = _array.get();
-  vector<Real>& dct = _dct.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
+  ::essentia::VectorEx<Real>& dct = _dct.get();
   int inputSize = int(array.size());
 
   if (inputSize == 0) {

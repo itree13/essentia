@@ -84,7 +84,7 @@ class DiamondShapeAlgo : public AlgorithmComposite {
   Algorithm *_fcutter, *_spectrum, *_peaks, *_pitch, *_hpeaks;
 
   SinkProxy<Real> _srcProxy;
-  SourceProxy<std::vector<Real> > _destProxy;
+  SourceProxy<::essentia::VectorEx<Real> > _destProxy;
 
  public:
   DiamondShapeAlgo() {

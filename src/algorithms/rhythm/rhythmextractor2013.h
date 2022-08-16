@@ -33,14 +33,14 @@ class RhythmExtractor2013 : public AlgorithmComposite {
  protected:
   SinkProxy<Real> _signal;
 
-  Source<std::vector<Real> > _ticks;
+  Source<::essentia::VectorEx<Real> > _ticks;
   Source<Real> _confidence;
   Source<Real> _bpm;
-  Source<std::vector<Real> > _estimates;
-  //Source<std::vector<Real> > _rubatoStart;
-  //Source<std::vector<Real> > _rubatoStop;
+  Source<::essentia::VectorEx<Real> > _estimates;
+  //Source<::essentia::VectorEx<Real> > _rubatoStart;
+  //Source<::essentia::VectorEx<Real> > _rubatoStop;
   //Source<int> _rubatoNumber;
-  Source<std::vector<Real> > _bpmIntervals;
+  Source<::essentia::VectorEx<Real> > _bpmIntervals;
 
   Pool _pool;
   Real _sampleRate;
@@ -94,15 +94,15 @@ namespace standard {
 
 class RhythmExtractor2013 : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _bpm;
-  Output<std::vector<Real> > _ticks;
+  Output<::essentia::VectorEx<Real> > _ticks;
   Output<Real> _confidence;
-  Output<std::vector<Real> > _estimates;
-  //Output<std::vector<Real> > _rubatoStart;
-  //Output<std::vector<Real> > _rubatoStop;
+  Output<::essentia::VectorEx<Real> > _estimates;
+  //Output<::essentia::VectorEx<Real> > _rubatoStart;
+  //Output<::essentia::VectorEx<Real> > _rubatoStop;
   //Output<int> _rubatoNumber;
-  Output<std::vector<Real> > _bpmIntervals;
+  Output<::essentia::VectorEx<Real> > _bpmIntervals;
 
   bool _configured;
 

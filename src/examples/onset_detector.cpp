@@ -29,14 +29,14 @@ using namespace std;
 using namespace essentia;
 using namespace standard;
 
-int save_onsets(const std::string& outputName,const vector<Real>& onsets)
+int save_onsets(const std::string& outputName,const ::essentia::VectorEx<Real>& onsets)
 {
   try
   {
     std::fstream dataFile(outputName.c_str(),std::ios_base::out);
     if(!dataFile.is_open()) { throw("Could not open output file!"); }
     {
-      vector<Real>::const_iterator iter;
+      ::essentia::VectorEx<Real>::const_iterator iter;
       for(iter = onsets.begin();iter != onsets.end();iter++)
       {
         float val = *iter;
@@ -72,9 +72,9 @@ int main(int argc, char* argv[])
   essentia::init();
 
   Real onsetRate;
-  vector<Real> onsets;
+  ::essentia::VectorEx<Real> onsets;
 
-  vector<Real> audio, unused;
+  ::essentia::VectorEx<Real> audio, unused;
   // cut the file extension to create output file later
   std::string fileName = argv[1];
   size_t pos = fileName.find(".wav");

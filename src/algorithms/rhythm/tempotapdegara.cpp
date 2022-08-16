@@ -120,8 +120,8 @@ void TempoTapDegara::reset() {
 
 void TempoTapDegara::compute() {
 
-  vector<Real> detections = _onsetDetections.get(); // we need a copy
-  vector<Real>& ticks = _ticks.get();
+  ::essentia::VectorEx<Real> detections = _onsetDetections.get(); // we need a copy
+  ::essentia::VectorEx<Real>& ticks = _ticks.get();
 
   // sanity checks
   for(size_t i=0; i<detections.size(); ++i) {
@@ -140,7 +140,7 @@ void TempoTapDegara::compute() {
 
   // optional interpolation
   if (_resample > 1 && detections.size()>1) {
-    vector<Real> temp((detections.size()-1)*_resample + 1, 0.);
+    ::essentia::VectorEx<Real> temp((detections.size()-1)*_resample + 1, 0.);
     for (size_t i=0; i<detections.size()-1; ++i) {
       Real delta = (detections[i+1] - detections[i]) / _resample;
       for (int j=0; j<_resample; ++j) {
@@ -151,18 +151,18 @@ void TempoTapDegara::compute() {
     detections = temp;
   }
 
-  vector<Real> beatPeriods;
-  vector<Real> beatEndPositions;
+  ::essentia::VectorEx<Real> beatPeriods;
+  ::essentia::VectorEx<Real> beatEndPositions;
 
   computeBeatPeriodsDavies(detections, beatPeriods, beatEndPositions);
   computeBeatsDegara(detections, beatPeriods, beatEndPositions, ticks);
 }
 
 
-void TempoTapDegara::computeBeatsDegara(vector <Real>& detections,
-                        const vector<Real>& beatPeriods,
-                        const vector<Real>& beatEndPositions,
-                        vector<Real>& ticks) {
+void TempoTapDegara::computeBeatsDegara(::essentia::VectorEx<Real>& detections,
+                        const ::essentia::VectorEx<Real>& beatPeriods,
+                        const ::essentia::VectorEx<Real>& beatEndPositions,
+                        ::essentia::VectorEx<Real>& ticks) {
 
   // Implementation of Degara's beat tracking using a probabilitic framework
   // (Hidden Markov Model). Tempo estimations throughout the track are assumed
@@ -180,7 +180,7 @@ void TempoTapDegara::computeBeatsDegara(vector <Real>& detections,
   // The number of states of the HMM is determined bt the largest time between
   // beats allowed (periodMax + 3 standard deviations). Compute a list of
   // inter-beat time intervals corresponding to each state (ignore zero period):
-  vector<Real> ibi;
+  ::essentia::VectorEx<Real> ibi;
   Real ibiMax = periodMax + 3 *_sigma_ibi;
 
   ibi.reserve(ceil(ibiMax / _resolutionODF));
@@ -192,9 +192,9 @@ void TempoTapDegara::computeBeatsDegara(vector <Real>& detections,
   // Compute transition matrix from the inter-beat-interval distribution
   // according to the tempo estimates. Transition matrix is unique for each beat
   // period.
-  map<Real, vector<vector<Real> > > transitionMatrix;
-  vector<Real> gaussian;
-  vector<Real> ibiPDF(_numberStates);
+  map<Real, ::essentia::VectorEx<::essentia::VectorEx<Real> > > transitionMatrix;
+  ::essentia::VectorEx<Real> gaussian;
+  ::essentia::VectorEx<Real> ibiPDF(_numberStates);
 
   gaussianPDF(gaussian, _sigma_ibi, _resolutionODF, 0.01 / _resample);
   // Scale down to avoid computational errors,
@@ -215,13 +215,13 @@ void TempoTapDegara::computeBeatsDegara(vector <Real>& detections,
   }
 
   // Compute observation likelihoods for each HMM state
-  vector<vector<Real> > biy;   // _numberStates x _numberFramesODF
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > biy;   // _numberStates x _numberFramesODF
   biy.reserve(_numberStates);
 
   // treat ODF as probability, normalize to 0.99 to avoid numerical problems
   _numberFrames = detections.size();
-  vector<Real> beatProbability(_numberFrames);
-  vector<Real> noBeatProbability(_numberFrames);
+  ::essentia::VectorEx<Real> beatProbability(_numberFrames);
+  ::essentia::VectorEx<Real> noBeatProbability(_numberFrames);
   for (size_t i=0; i<_numberFrames; ++i) {
     beatProbability[i] = 0.99 * detections[i];
     noBeatProbability[i] = 1. - beatProbability[i];
@@ -234,7 +234,7 @@ void TempoTapDegara::computeBeatsDegara(vector <Real>& detections,
   biy.insert(biy.end(), _numberStates-1, noBeatProbability);
 
   // Decoding
-  vector<int> stateSequence;
+  ::essentia::VectorEx<int> stateSequence;
   decodeBeats(transitionMatrix, beatPeriods, beatEndPositions, biy, stateSequence);
   for (size_t i=0; i<stateSequence.size(); ++i) {
     if (stateSequence[i] == 0) { // beat detected
@@ -244,22 +244,22 @@ void TempoTapDegara::computeBeatsDegara(vector <Real>& detections,
 }
 
 void TempoTapDegara::decodeBeats(map<Real,
-                                 vector<vector<Real> > >& transitionMatrix,
-                                 const vector<Real>& beatPeriods,
-                                 const vector<Real>& beatEndPositions,
-                                 const vector<vector<Real> >& biy,
-                                 vector<int>& sequenceStates) {
+                                 ::essentia::VectorEx<::essentia::VectorEx<Real> > >& transitionMatrix,
+                                 const ::essentia::VectorEx<Real>& beatPeriods,
+                                 const ::essentia::VectorEx<Real>& beatEndPositions,
+                                 const ::essentia::VectorEx<::essentia::VectorEx<Real> >& biy,
+                                 ::essentia::VectorEx<int>& sequenceStates) {
   // Transition probability matrix at the begining of the track
   size_t currentIndex = 0;
 
   // Best transition information for backtracking
-  vector<vector<int> > stateBacktracking(_numberStates, vector<int>(_numberFrames));
+  ::essentia::VectorEx<::essentia::VectorEx<int> > stateBacktracking(_numberStates, ::essentia::VectorEx<int>(_numberFrames));
 
   // HMM cost for each state for the current time
-  vector<Real> cost(_numberStates, numeric_limits<Real>::max());
+  ::essentia::VectorEx<Real> cost(_numberStates, numeric_limits<Real>::max());
   cost[0] = 0;
-  vector<Real> costOld = cost;
-  vector<Real> diff(_numberStates);
+  ::essentia::VectorEx<Real> costOld = cost;
+  ::essentia::VectorEx<Real> diff(_numberStates);
 
   // Dynamic programming
   for (size_t t=0; t<_numberFrames; ++t) {
@@ -316,8 +316,8 @@ void TempoTapDegara::decodeBeats(map<Real,
   }
 }
 
-void TempoTapDegara::computeHMMTransitionMatrix(const vector<Real>& ibiPDF,
-                                vector<vector<Real> >& transitions) {
+void TempoTapDegara::computeHMMTransitionMatrix(const ::essentia::VectorEx<Real>& ibiPDF,
+                                ::essentia::VectorEx<::essentia::VectorEx<Real> >& transitions) {
 
   // Fill in with zeros
   transitions.clear();
@@ -330,7 +330,7 @@ void TempoTapDegara::computeHMMTransitionMatrix(const vector<Real>& ibiPDF,
   transitions[0][0] = ibiPDF[0];
   transitions[0][1] = 1 - transitions[0][0];
   for (int i=1; i<_numberStates; ++i) {
-    vector<Real> temp(i, 0.);
+    ::essentia::VectorEx<Real> temp(i, 0.);
     for (int k=0; k<i; ++k) {
       temp[k] = log(transitions[k][k+1]);
     }
@@ -362,9 +362,9 @@ void TempoTapDegara::computeHMMTransitionMatrix(const vector<Real>& ibiPDF,
 }
 
 
-void TempoTapDegara::computeBeatPeriodsDavies(vector<Real> detections,
-                              vector<Real>& beatPeriods,
-                              vector<Real>& beatEndPositions) {
+void TempoTapDegara::computeBeatPeriodsDavies(::essentia::VectorEx<Real> detections,
+                              ::essentia::VectorEx<Real>& beatPeriods,
+                              ::essentia::VectorEx<Real>& beatEndPositions) {
   // Implementation of the beat period detection algorithm by M. Davies.
 
   adaptiveThreshold(detections, _smoothingWindowHalfSize);
@@ -374,11 +374,11 @@ void TempoTapDegara::computeBeatPeriodsDavies(vector<Real> detections,
   // - Compute autocorrelation (ACF) for each frame with bias correction.
   // - Weight it by the tempo preference curve (Rayleigh distrubution).
 
-  vector<vector<Real> > observations;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > observations;
   Real observationsMax = 0;
-  vector<Real> frame;
-  vector<Real> frameACF;
-  vector<Real> frameACFNormalized(_hopSizeODF);
+  ::essentia::VectorEx<Real> frame;
+  ::essentia::VectorEx<Real> frameACF;
+  ::essentia::VectorEx<Real> frameACFNormalized(_hopSizeODF);
 
   _frameCutter->input("signal").set(detections);
   _frameCutter->output("frame").set(frame);
@@ -436,7 +436,7 @@ void TempoTapDegara::computeBeatPeriodsDavies(vector<Real> detections,
 
   // find Viterbi path (ODF-frame-wise list of indices of the estimated periods;
   // zero index corresponds to beat period of 1 ODF frame hopsize)
-  vector <Real> path;
+  ::essentia::VectorEx<Real> path;
   findViterbiPath(_tempoWeights, _transitionsViterbi, observations, path);
 
   beatPeriods.reserve(_numberFramesODF);
@@ -449,10 +449,10 @@ void TempoTapDegara::computeBeatPeriodsDavies(vector<Real> detections,
 }
 
 
-void TempoTapDegara::findViterbiPath(const vector<Real>& prior,
-                     const vector<vector<Real> > transitionMatrix,
-                     const vector<vector <Real> >& observations,
-                     vector<Real>& path) {
+void TempoTapDegara::findViterbiPath(const ::essentia::VectorEx<Real>& prior,
+                     const ::essentia::VectorEx<::essentia::VectorEx<Real> > transitionMatrix,
+                     const ::essentia::VectorEx<::essentia::VectorEx<Real> >& observations,
+                     ::essentia::VectorEx<Real>& path) {
   // Find the most-probable (Viterbi) path through the HMM state trellis.
 
   // Inputs:
@@ -468,10 +468,10 @@ void TempoTapDegara::findViterbiPath(const vector<Real>& prior,
 
   int numberPeriods = prior.size();
 
-  vector<vector<Real> > delta; // = zeros(numberFramesODF,numberPeriods);
-  vector<vector<Real> > psi;   // = zeros(numberFramesODF,numberPeriods);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > delta; // = zeros(numberFramesODF,numberPeriods);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > psi;   // = zeros(numberFramesODF,numberPeriods);
 
-  vector<Real> deltaNew;
+  ::essentia::VectorEx<Real> deltaNew;
   deltaNew.resize(numberPeriods);
 
   // weighten likelihoods of periods in the first frame by the prior
@@ -481,12 +481,12 @@ void TempoTapDegara::findViterbiPath(const vector<Real>& prior,
   normalizeSum(deltaNew);
   delta.push_back(deltaNew);
 
-  vector<Real> psiNew;
+  ::essentia::VectorEx<Real> psiNew;
   // a vector of zeros (arbitrary, since there is no predecessor to the first frame)
   psiNew.resize(numberPeriods);
   psi.push_back(psiNew);
 
-  vector<Real> tmp;
+  ::essentia::VectorEx<Real> tmp;
   tmp.resize(numberPeriods);
 
   for (size_t t=1; t<_numberFramesODF; ++t) {
@@ -537,7 +537,7 @@ void TempoTapDegara::createViterbiTransitionMatrix() {
   Real scale = _sampleRateODF / (44100./512);
 
   // each sequent column contains a gaussian shifted by 1 line
-  vector<Real> gaussian;
+  ::essentia::VectorEx<Real> gaussian;
   gaussianPDF(gaussian, 8*scale, 1.);
 
   int minIndex = floor(28 * scale) - 1;  // because 0-th index is 1st column/line
@@ -555,7 +555,7 @@ void TempoTapDegara::createViterbiTransitionMatrix() {
 }
 
 
-void TempoTapDegara::gaussianPDF(vector<Real>& gaussian, Real gaussianStd, Real step, Real scale) {
+void TempoTapDegara::gaussianPDF(::essentia::VectorEx<Real>& gaussian, Real gaussianStd, Real step, Real scale) {
   // Estimate probability density function on an interval within 3 standard
   // deviations which will cover 99.7% of cases. Central element of gaussian
   // vector contains mean value, +/- 1 index contain PDF for +/- 1 step.
@@ -597,7 +597,7 @@ void TempoTapDegara::createTempoPreferenceCurve() {
 }
 
 
-void TempoTapDegara::adaptiveThreshold(vector<Real>& array, int smoothingHalfSize) {
+void TempoTapDegara::adaptiveThreshold(::essentia::VectorEx<Real>& array, int smoothingHalfSize) {
   // Adaptive moving average threshold to emphasize the strongest and discard the
   // least significant peaks. Subtract the adaptive mean, and half-wave rectify
   // the output, setting any negative valued elements to zero.
@@ -608,7 +608,7 @@ void TempoTapDegara::adaptiveThreshold(vector<Real>& array, int smoothingHalfSiz
 
   array.insert(array.begin(), smoothingHalfSize, array.front());
   array.insert(array.end(), smoothingHalfSize, array.back());
-  vector<Real> smoothed;
+  ::essentia::VectorEx<Real> smoothed;
   _movingAverage->input("signal").set(array);
   _movingAverage->output("signal").set(smoothed);
   _movingAverage->compute();
@@ -668,8 +668,8 @@ void TempoTapDegara::reset() {
 AlgorithmStatus TempoTapDegara::process() {
   if (!shouldStop()) return PASS;
 
-  vector<Real> ticks;
-  _tempoTapDegara->input("onsetDetections").set(_pool.value<vector<Real> >("internal.detections"));
+  ::essentia::VectorEx<Real> ticks;
+  _tempoTapDegara->input("onsetDetections").set(_pool.value<::essentia::VectorEx<Real> >("internal.detections"));
   _tempoTapDegara->output("ticks").set(ticks);
   _tempoTapDegara->compute();
 

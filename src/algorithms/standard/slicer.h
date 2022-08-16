@@ -28,15 +28,15 @@ namespace streaming {
 class Slicer : public Algorithm {
  protected:
   Sink<Real> _input;
-  Source<std::vector<Real> > _output;
+  Source<::essentia::VectorEx<Real> > _output;
 
   // pair of [ startSample, endSample ]
-  std::vector<std::pair<int, int> > _slices;
+  ::essentia::VectorEx<std::pair<int, int> > _slices;
   int _consumed;
   std::string _timeUnits;
   Real _sampleRate;
-  std::vector<Real> _startTimes;
-  std::vector<Real> _endTimes;
+  ::essentia::VectorEx<Real> _startTimes;
+  ::essentia::VectorEx<Real> _endTimes;
   int _sliceIdx;
 
   static const int defaultPreferredSize = 4096;
@@ -52,10 +52,10 @@ class Slicer : public Algorithm {
                      "(0,inf)", 44100.0);
     declareParameter("startTimes", "the list of start times for the slices "
                      "you want to extract",
-                     "", std::vector<Real>());
+                     "", ::essentia::VectorEx<Real>());
     declareParameter("endTimes", "the list of end times for the slices you "
                      "want to extract",
-                     "", std::vector<Real>());
+                     "", ::essentia::VectorEx<Real>());
     declareParameter("timeUnits", "the units of time of the start and end times",
                      "{samples,seconds}", "seconds");
   }
@@ -85,13 +85,13 @@ namespace standard {
 // depends on it
 class Slicer : public Algorithm {
  protected:
-  Input<std::vector<Real> > _audio;
-  Output<std::vector<std::vector<Real> > > _output;
+  Input<::essentia::VectorEx<Real> > _audio;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _output;
 
   bool _configured;
 
   streaming::Algorithm* _slicer;
-  streaming::VectorOutput<std::vector<Real> >* _storage;
+  streaming::VectorOutput<::essentia::VectorEx<Real> >* _storage;
   streaming::VectorInput<Real>* _gen;
   scheduler::Network* _network;
 
@@ -112,10 +112,10 @@ class Slicer : public Algorithm {
                      "(0,inf)", 44100.);
     declareParameter("startTimes", "the list of start times for the slices "
                      "you want to extract",
-                     "", std::vector<Real>());
+                     "", ::essentia::VectorEx<Real>());
     declareParameter("endTimes", "the list of end times for the slices you "
                      "want to extract",
-                     "", std::vector<Real>());
+                     "", ::essentia::VectorEx<Real>());
     declareParameter("timeUnits", "the units of time of the start and end times",
                      "{samples,seconds}", "seconds");
   }

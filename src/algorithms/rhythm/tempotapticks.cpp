@@ -58,20 +58,20 @@ void TempoTapTicks::reset() {
 
 void TempoTapTicks::compute() {
   _nframes++;
-  vector<Real>& matchingPeriods = _matchingPeriods.get();
+  ::essentia::VectorEx<Real>& matchingPeriods = _matchingPeriods.get();
 
-  const vector<Real>& periods = _periods.get();
-  const vector<Real>& phases = _phases.get();
-  vector<Real>& ticks = _ticks.get();
+  const ::essentia::VectorEx<Real>& periods = _periods.get();
+  const ::essentia::VectorEx<Real>& phases = _phases.get();
+  ::essentia::VectorEx<Real>& ticks = _ticks.get();
 
   // tempotapticks needs to be synchronised with tempotap, which only produces output (periods and phases) after frameHop frames.
 
   // before this modification, periods_copy was an exact copy of periods.
   // now only periods and phases which are strictly positive are kept, this has
   // improved the detection on short audio (see trac ticket #110)
-  vector<Real> periods_copy;
+  ::essentia::VectorEx<Real> periods_copy;
   periods_copy.reserve(periods.size());
-  vector<Real> phases_copy;
+  ::essentia::VectorEx<Real> phases_copy;
   phases_copy.reserve(phases.size());
 
   for (int i=0; i<(int)periods.size(); i++) {
@@ -88,8 +88,8 @@ void TempoTapTicks::compute() {
 
   // FIXME: Why do we need copies?
 
-  vector<Real> countedBins;
-  //vector<Real>& bpmCandidates = _bpmCandidates.get();
+  ::essentia::VectorEx<Real> countedBins;
+  //::essentia::VectorEx<Real>& bpmCandidates = _bpmCandidates.get();
   //Real& bpmConfidence = _bpmConfidence.get();
   // rough estimate of the phase as the median of all candidates
   Real phase     = 0;
@@ -135,7 +135,7 @@ void TempoTapTicks::compute() {
   }
 
   if (phases_copy.size() > 0) {
-    vector<Real> matchingPhase;
+    ::essentia::VectorEx<Real> matchingPhase;
     for (int i=0; i < int(phases_copy.size()); ++i) {
       phases_copy[i] /= 2.;
     }

@@ -104,7 +104,7 @@ void FreesoundExtractor::configure() {
 
   if (options.value<Real>("highlevel.compute")) {
 #if HAVE_GAIA2 
-    svmModels = options.value<vector<string> >("highlevel.svm_models");
+    svmModels = options.value<::essentia::VectorEx<string> >("highlevel.svm_models");
     _svms = AlgorithmFactory::create("MusicExtractorSVM", "svms", svmModels);
 #else
     E_WARNING("FreesoundExtractor: Gaia library is missing. Skipping configuration of SVM models.");
@@ -243,7 +243,7 @@ void FreesoundExtractor::compute() {
   network_2.run();
 
   // requires 'pitch'
-  vector<Real> pitch = results.value<vector<Real> >("lowlevel.pitch");
+  ::essentia::VectorEx<Real> pitch = results.value<::essentia::VectorEx<Real> >("lowlevel.pitch");
   VectorInput<Real> *pitchVector = new VectorInput<Real>();
   pitchVector->setVector(&pitch);
   sfx->createPitchNetwork(*pitchVector, results);
@@ -276,7 +276,7 @@ Pool FreesoundExtractor::computeAggregation(Pool& pool){
   const char* defaultStats[] = { 
     "mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2" };
 
-  map<string, vector<string> > exceptions;
+  map<string, ::essentia::VectorEx<string> > exceptions;
 
   // do not aggregate values for features characterizing the whole audio  
   const char* noStats[] = { "last" };
@@ -285,33 +285,33 @@ Pool FreesoundExtractor::computeAggregation(Pool& pool){
     "max_der_before_max", "pitch_centroid",
     "temporal_centroid","temporal_decrease" ,"temporal_kurtosis",
     "temporal_skewness","temporal_spread"};
-  vector<string> noStatsSfx = arrayToVector<string>(noStatsSfxArray);
+  ::essentia::VectorEx<string> noStatsSfx = arrayToVector<string>(noStatsSfxArray);
 
   for (int i=0; i<(int)noStatsSfx.size(); i++) {
     exceptions["sfx."+noStatsSfx[i]] = arrayToVector<string>(noStats);
   }
 
   // keeping this from MusicExtractor
-  const vector<string>& descNames = pool.descriptorNames();
+  const ::essentia::VectorEx<string>& descNames = pool.descriptorNames();
   for (int i=0; i<(int)descNames.size(); i++) {
     if (descNames[i].find("lowlevel.mfcc") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("lowlevel.mfccStats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("lowlevel.mfccStats");
       continue;
     }
     if (descNames[i].find("lowlevel.gfcc") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("lowlevel.gfccStats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("lowlevel.gfccStats");
       continue;
     }
     if (descNames[i].find("lowlevel.") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("lowlevel.stats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("lowlevel.stats");
       continue;
     }
     if (descNames[i].find("rhythm.") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("rhythm.stats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("rhythm.stats");
       continue;
     }
     if (descNames[i].find("tonal.") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("tonal.stats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("tonal.stats");
       continue;
     }
   }
@@ -328,18 +328,18 @@ Pool FreesoundExtractor::computeAggregation(Pool& pool){
 
   // variable descriptor length counts
   poolStats.set(string("rhythm.onset_count"),
-                pool.value<vector<Real> >("rhythm.onset_times").size());
+                pool.value<::essentia::VectorEx<Real> >("rhythm.onset_times").size());
   poolStats.set(string("rhythm.beats_count"),
-                pool.value<vector<Real> >("rhythm.beats_position").size());
+                pool.value<::essentia::VectorEx<Real> >("rhythm.beats_position").size());
   poolStats.set(string("tonal.chords_count"),
-                pool.value<vector<string> >("tonal.chords_progression").size());
+                pool.value<::essentia::VectorEx<string> >("tonal.chords_progression").size());
     
   // hpcp_mean peak count
-  vector<Real> hpcp_peak_amps, hpcp_peak_pos;
+  ::essentia::VectorEx<Real> hpcp_peak_amps, hpcp_peak_pos;
   standard::Algorithm* hpcp_peaks =
       standard::AlgorithmFactory::create("PeakDetection", "threshold",0.1);
 
-  hpcp_peaks->input("array").set(poolStats.value<vector<Real> >("tonal.hpcp.mean"));
+  hpcp_peaks->input("array").set(poolStats.value<::essentia::VectorEx<Real> >("tonal.hpcp.mean"));
   hpcp_peaks->output("amplitudes").set(hpcp_peak_amps);
   hpcp_peaks->output("positions").set(hpcp_peak_pos);
   hpcp_peaks->compute();
@@ -353,12 +353,12 @@ Pool FreesoundExtractor::computeAggregation(Pool& pool){
 
   int statsSize = int(sizeof(defaultStats)/sizeof(defaultStats[0]));
 
-  if (!pool.contains<vector<Real> >("rhythm.beats_loudness")) {
+  if (!pool.contains<::essentia::VectorEx<Real> >("rhythm.beats_loudness")) {
     for (int i=0; i<statsSize; i++)
         poolStats.set(string("rhythm.beats_loudness.")+defaultStats[i], 0);
   }
 
-  if (!pool.contains<vector<vector<Real> > >("rhythm.beats_loudness_band_ratio")) {
+  if (!pool.contains<::essentia::VectorEx<::essentia::VectorEx<Real> > >("rhythm.beats_loudness_band_ratio")) {
     for (int i=0; i<statsSize; i++)
       poolStats.set(string("rhythm.beats_loudness_band_ratio.")+defaultStats[i], arrayToVector<Real>(emptyVector));
   }
@@ -482,7 +482,7 @@ void FreesoundExtractor::computeAudioMetadata(const string& audioFilename, Pool&
   // It won't protect us against people converting from (e.g.) mp3 -> flac
   // before submitting
   const char* losslessCodecs[] = {"alac", "ape", "flac", "shorten", "tak", "truehd", "tta", "wmalossless"};
-  vector<string> lossless = arrayToVector<string>(losslessCodecs);
+  ::essentia::VectorEx<string> lossless = arrayToVector<string>(losslessCodecs);
   const string codec = results.value<string>("metadata.audio_properties.codec");
   bool isLossless = find(lossless.begin(), lossless.end(), codec) != lossless.end();
   if (!isLossless && codec.substr(0, 4) == "pcm_") {

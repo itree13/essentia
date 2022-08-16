@@ -187,7 +187,7 @@ int main(int argc, char* argv[]) {
   // Compute tuning frequency
   TuningFrequency(filename, framesize, hopsize, zeropadding, rgain,  pool);
   
-  Real tuningFrequency = mean(pool.value<vector<Real> >("tonal.tuning_freq"));
+  Real tuningFrequency = mean(pool.value<::essentia::VectorEx<Real> >("tonal.tuning_freq"));
   cout << "tuning frequency:\t" << tuningFrequency << endl;
 
   // Compute key

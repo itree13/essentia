@@ -29,8 +29,8 @@ namespace standard {
 class DCRemoval : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _signalDC;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _signalDC;
 
   Algorithm* _filter;
 

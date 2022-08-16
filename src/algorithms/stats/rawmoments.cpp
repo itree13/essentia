@@ -50,8 +50,8 @@ void RawMoments::compute() {
   raw_moment[order] = sum((i_in_freq - mu)^order * p[i], i=0..size-1)
   */
 
-  const std::vector<Real>& frame = _array.get();
-  std::vector<Real>& rawMoments = _rawMoments.get();
+  const ::essentia::VectorEx<Real>& frame = _array.get();
+  ::essentia::VectorEx<Real>& rawMoments = _rawMoments.get();
   rawMoments.resize(5);
 
   if (frame.size() <= 1) {

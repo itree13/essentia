@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 
   if (argc == 4 && atoi(argv[3])) {
     // printing to stdout:
-    const vector<Real>& pitches = pool.value<vector<Real> >("tonal.pitch");
+    const ::essentia::VectorEx<Real>& pitches = pool.value<::essentia::VectorEx<Real> >("tonal.pitch");
     cout << "number of frames: " << pitches.size() << endl;
     cout << pitches << endl;
   }

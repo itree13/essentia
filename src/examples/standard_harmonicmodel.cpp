@@ -28,7 +28,7 @@ using namespace std;
 using namespace essentia;
 using namespace standard;
 
-std::vector< std::vector<Real> > readIn2dData(const char* filename);
+::essentia::VectorEx< ::essentia::VectorEx<Real> > readIn2dData(const char* filename);
 
 int main(int argc, char* argv[]) {
 
@@ -134,27 +134,27 @@ int main(int argc, char* argv[]) {
                                      "filename", outputFilename);
   
  
-  vector<Real> audio;
-  vector<Real> frame;
-  vector<Real> eqaudio;
-  vector<Real> wframe;
-  vector<complex<Real> > fftframe;
+  ::essentia::VectorEx<Real> audio;
+  ::essentia::VectorEx<Real> frame;
+  ::essentia::VectorEx<Real> eqaudio;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<complex<Real> > fftframe;
 
-  vector<Real> predPitch;
-  vector<Real> predConf;
+  ::essentia::VectorEx<Real> predPitch;
+  ::essentia::VectorEx<Real> predConf;
 
-  vector<Real> magnitudes;
-  vector<Real> frequencies;
-  vector<Real> phases;
+  ::essentia::VectorEx<Real> magnitudes;
+  ::essentia::VectorEx<Real> frequencies;
+  ::essentia::VectorEx<Real> phases;
 
   // accumulate estimated values   for all frames for cleaning tracks before synthesis
-  vector< vector<Real> > frequenciesAllFrames;
-  vector< vector<Real> > magnitudesAllFrames;
-  vector< vector<Real> > phasesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > frequenciesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > magnitudesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > phasesAllFrames;
 
-  vector<complex<Real> >  sfftframe; // sine model FFT frame
-  vector<Real> ifftframe; //  sine model IFFT frame
-  vector<Real> allaudio; // concatenated audio file output
+  ::essentia::VectorEx<complex<Real> >  sfftframe; // sine model FFT frame
+  ::essentia::VectorEx<Real> ifftframe; //  sine model IFFT frame
+  ::essentia::VectorEx<Real> allaudio; // concatenated audio file output
 
 
   // analysis
@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
   fft->output("fft").set(fftframe);
   
   // configure spectrum:
-  vector<Real> spec;
+  ::essentia::VectorEx<Real> spec;
   spectrum->input("frame").set(wframe);
   spectrum->output("spectrum").set(spec);
   
@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
   ifft->input("fft").set(sfftframe);
   ifft->output("frame").set(ifftframe);
 
-  vector<Real> audioOutput;
+  ::essentia::VectorEx<Real> audioOutput;
 
   overlapAdd->input("signal").set(ifftframe);
   overlapAdd->output("signal").set(audioOutput);
@@ -334,13 +334,13 @@ int main(int argc, char* argv[]) {
 
 
 // support functinos to read data from numpy
-std::vector< std::vector<Real> > readIn2dData(const char* filename)
+::essentia::VectorEx< ::essentia::VectorEx<Real> > readIn2dData(const char* filename)
 {
     /* Function takes a char* filename argument and returns a
      * 2d dynamic array containing the data
      */
 
-    std::vector< std::vector<Real> > table;
+    ::essentia::VectorEx< ::essentia::VectorEx<Real> > table;
     std::fstream ifs;
 
     /*  open file  */
@@ -363,7 +363,7 @@ std::vector< std::vector<Real> > readIn2dData(const char* filename)
             continue;
 
 
-        std::vector<Real> row;
+        ::essentia::VectorEx<Real> row;
 
         while (ss >> buf)
             row.push_back(buf);

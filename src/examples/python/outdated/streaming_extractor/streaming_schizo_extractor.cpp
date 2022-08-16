@@ -133,7 +133,7 @@ int main(int argc, char* argv[]) {
   if (computeSegmentation) {
     // pool for storing segments:
     computeSegments(audioFilename, startTime, endTime, eqPool, neqPool);
-    vector<Real> segments = eqPool.value<vector<Real> >("segmentation.timestamps");
+    ::essentia::VectorEx<Real> segments = eqPool.value<::essentia::VectorEx<Real> >("segmentation.timestamps");
     for (int i=0; i<int(segments.size()-1); ++i) {
       Real start = segments[i];
       Real end = segments[i+1];
@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
 
       // set segment scope
       ns.str(""); ns << "segments." << sn << ".scope";
-      vector<Real> scope(2, 0);
+      ::essentia::VectorEx<Real> scope(2, 0);
       scope[0] = start;
       scope[1] = end;
       eqPool.set(ns.str(), scope);
@@ -233,9 +233,9 @@ void computeSegments(const string& audioFilename, Real startTime, Real endTime, 
   // compute low level features to feed SBIc
   computeLowLevel(audioFilename, startTime, endTime, eqPool, neqPool);
 
-  vector<vector<Real> > features;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > features;
   try {
-    features = eqPool.value<vector<vector<Real> > >("lowlevel.mfcc");
+    features = eqPool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("lowlevel.mfcc");
   }
   catch(const EssentiaException&) {
     cerr << "Error: could not find MFCC features in low level eqPool. Aborting..." << endl;
@@ -252,7 +252,7 @@ void computeSegments(const string& audioFilename, Real startTime, Real endTime, 
   standard::Algorithm* sbic = standard::AlgorithmFactory::create("SBic", "size1", size1, "inc1", inc1,
                                                                  "size2", size2, "inc2", inc2, "cpw", cpw,
                                                                  "minLength", minimumSegmentsLength);
-  vector<Real> segments;
+  ::essentia::VectorEx<Real> segments;
   sbic->input("features").set(featuresArray);
   sbic->output("segmentation").set(segments);
   sbic->compute();
@@ -413,7 +413,7 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime,
   connect(eqloudSource, eqLowLevelSpectral->input("signal"));
   // connect outputs:
   const char * sfxDescArray[] = {"inharmonicity", "oddtoevenharmonicenergyratio", "tristimulus"};
-  vector<string> sfxDesc = arrayToVector<string>(sfxDescArray);
+  ::essentia::VectorEx<string> sfxDesc = arrayToVector<string>(sfxDescArray);
   OutputMap::const_iterator it = eqLowLevelSpectral->outputs().begin();
   for (; it != eqLowLevelSpectral->outputs().end(); ++it) {
     string output_name = it->first;
@@ -513,7 +513,7 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime,
   // check if we processed enough audio for it to be useful, in particular did
   // we manage to get an estimation for the loudness (2 seconds required)
   try {
-    eqPool.value<vector<Real> >(llspace + "loudness")[0];
+    eqPool.value<::essentia::VectorEx<Real> >(llspace + "loudness")[0];
   }
   catch (const EssentiaException& e) {
     cerr << "Error: File is too short (< 2sec)... Aborting..." << endl;
@@ -521,11 +521,11 @@ void computeLowLevel(const string& audioFilename, Real startTime, Real endTime,
   }
 
   // compute onset rate = len(onsets) / len(audio)
-  eqPool.set(rhythmspace + "onset_rate", eqPool.value<vector<Real> >(rhythmspace + "onset_times").size()
+  eqPool.set(rhythmspace + "onset_rate", eqPool.value<::essentia::VectorEx<Real> >(rhythmspace + "onset_times").size()
      / (Real)audio_2->output("audio").totalProduced()
      * eqPool.value<Real>("metadata.audio_properties.analysis_sample_rate"));
 
-  neqPool.set(rhythmspace + "onset_rate", neqPool.value<vector<Real> >(rhythmspace + "onset_times").size()
+  neqPool.set(rhythmspace + "onset_rate", neqPool.value<::essentia::VectorEx<Real> >(rhythmspace + "onset_times").size()
      / (Real)audio_2->output("audio").totalProduced()
      * neqPool.value<Real>("metadata.audio_properties.analysis_sample_rate"));
 
@@ -567,7 +567,7 @@ void computeMidLevel(const string& audioFilename, Real startTime, Real endTime,
   SourceBase& eqloudSource_2 = eqloud->output("signal");
 
   // Compute Tonal descriptors (needed TuningFrequency before)
-  Real eqTuningFreq = eqPool.value<vector<Real> >(tonalspace + "tuning_frequency").back();
+  Real eqTuningFreq = eqPool.value<::essentia::VectorEx<Real> >(tonalspace + "tuning_frequency").back();
   Algorithm * eqTonalDescriptors = new TonalDescriptorsExtractor();
   eqTonalDescriptors->configure("frameSize", _tonalFrameSize,
                                 "hopSize", _tonalHopSize,
@@ -578,7 +578,7 @@ void computeMidLevel(const string& audioFilename, Real startTime, Real endTime,
     connect(*it->second, eqPool, tonalspace + it->first);
   }
 
-  Real neqTuningFreq = neqPool.value<vector<Real> >(tonalspace + "tuning_frequency").back();
+  Real neqTuningFreq = neqPool.value<::essentia::VectorEx<Real> >(tonalspace + "tuning_frequency").back();
   Algorithm * neqTonalDescriptors = new TonalDescriptorsExtractor();
   neqTonalDescriptors->configure("frameSize", _tonalFrameSize,
                                  "hopSize", _tonalHopSize,
@@ -590,8 +590,8 @@ void computeMidLevel(const string& audioFilename, Real startTime, Real endTime,
   }
 
   // Compute the loudness at the beats position (needed beats position)
-  vector<Real> eqTicks = eqPool.value<vector<Real> >(rhythmspace + "beats_position");
-  vector<Real> neqTicks = neqPool.value<vector<Real> >(rhythmspace + "beats_position");
+  ::essentia::VectorEx<Real> eqTicks = eqPool.value<::essentia::VectorEx<Real> >(rhythmspace + "beats_position");
+  ::essentia::VectorEx<Real> neqTicks = neqPool.value<::essentia::VectorEx<Real> >(rhythmspace + "beats_position");
 
   Algorithm* eqBeatsLoudness = factory.create("BeatsLoudness",
                                               "sampleRate", analysisSampleRate,
@@ -686,10 +686,10 @@ Pool computeAggregation(Pool& pool, int nSegments) {
   // choose which descriptors stats to output
   const char* stats[] = { "mean", "var", "min", "max", "dmean", "dmean2", "dvar", "dvar2" };
   const char* mfccStats[] = { "mean", "cov", "icov" };
-  vector<string> value(1);
+  ::essentia::VectorEx<string> value(1);
   value[0] = "copy";
 
-  map<string, vector<string> > exceptions;
+  map<string, ::essentia::VectorEx<string> > exceptions;
   exceptions["lowlevel.mfcc"] = arrayToVector<string>(mfccStats);
 
   // in case there is segmentation:

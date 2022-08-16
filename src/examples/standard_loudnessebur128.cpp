@@ -32,7 +32,7 @@ int main (int argc,char* argv[]) {
   int ch, br;
   std::string md5, cod;
 
-  vector<StereoSample> audioBuffer;
+  ::essentia::VectorEx<StereoSample> audioBuffer;
   audio->output("audio").set(audioBuffer);
   audio->output("sampleRate").set(sr);
   audio->output("numberChannels").set(ch);
@@ -42,7 +42,7 @@ int main (int argc,char* argv[]) {
 
   le->input("signal").set(audioBuffer);
 
-  vector<Real> momentaryLoudness, shortTermLoudness;
+  ::essentia::VectorEx<Real> momentaryLoudness, shortTermLoudness;
   Real integratedLoudness, loudnessRange;
 
   le->output("momentaryLoudness").set(momentaryLoudness);

@@ -1059,10 +1059,10 @@ GTEST_API_ String GetCapturedStderr();
 #if GTEST_HAS_DEATH_TEST
 
 // A copy of all command line arguments.  Set by InitGoogleTest().
-extern ::std::vector<String> g_argvs;
+extern ::essentia::VectorEx<String> g_argvs;
 
 // GTEST_HAS_DEATH_TEST implies we have ::std::string.
-const ::std::vector<String>& GetArgvs();
+const ::essentia::VectorEx<String>& GetArgvs();
 
 #endif  // GTEST_HAS_DEATH_TEST
 

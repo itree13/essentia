@@ -56,7 +56,7 @@ void Centroid::configure() {
 
 void Centroid::compute() {
 
-  const std::vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
   Real& centroid = _centroid.get();
 
   if (array.empty()) {

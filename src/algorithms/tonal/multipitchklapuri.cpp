@@ -109,53 +109,53 @@ void MultiPitchKlapuri::configure() {
 }
 
 void MultiPitchKlapuri::compute() {
-  const vector<Real>& signal = _signal.get();
-  vector<vector<Real> >& pitch = _pitch.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& pitch = _pitch.get();
   if (signal.empty()) {
     pitch.clear();
     return;
   }
 
   // Pre-processing
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   _frameCutter->input("signal").set(signal);
   _frameCutter->output("frame").set(frame);
 
-  vector<Real> frameWindowed;
+  ::essentia::VectorEx<Real> frameWindowed;
   _windowing->input("frame").set(frame);
   _windowing->output("frame").set(frameWindowed);
 
   // Spectral peaks
-  vector<Real> frameSpectrum;
+  ::essentia::VectorEx<Real> frameSpectrum;
   _spectrum->input("frame").set(frameWindowed);
   _spectrum->output("spectrum").set(frameSpectrum);
 
-  vector<Real> frameFrequencies;
-  vector<Real> frameMagnitudes;
+  ::essentia::VectorEx<Real> frameFrequencies;
+  ::essentia::VectorEx<Real> frameMagnitudes;
   _spectralPeaks->input("spectrum").set(frameSpectrum);
   _spectralPeaks->output("frequencies").set(frameFrequencies);
   _spectralPeaks->output("magnitudes").set(frameMagnitudes);
 
   // Spectral whitening
-  vector<Real> frameWhiteMagnitudes;
+  ::essentia::VectorEx<Real> frameWhiteMagnitudes;
   _spectralWhitening->input("spectrum").set(frameSpectrum);
   _spectralWhitening->input("frequencies").set(frameFrequencies);
   _spectralWhitening->input("magnitudes").set(frameMagnitudes);
   _spectralWhitening->output("magnitudes").set(frameWhiteMagnitudes);
   
   // Pitch salience contours
-  vector<Real> frameSalience;
+  ::essentia::VectorEx<Real> frameSalience;
   _pitchSalienceFunction->input("frequencies").set(frameFrequencies);
   _pitchSalienceFunction->input("magnitudes").set(frameMagnitudes);
   _pitchSalienceFunction->output("salienceFunction").set(frameSalience);
 
-  vector<Real> frameSalienceBins;
-  vector<Real> frameSalienceValues;
+  ::essentia::VectorEx<Real> frameSalienceBins;
+  ::essentia::VectorEx<Real> frameSalienceValues;
   _pitchSalienceFunctionPeaks->input("salienceFunction").set(frameSalience);
   _pitchSalienceFunctionPeaks->output("salienceBins").set(frameSalienceBins);
   _pitchSalienceFunctionPeaks->output("salienceValues").set(frameSalienceValues);
 
-  vector<Real> nearestBinWeights;
+  ::essentia::VectorEx<Real> nearestBinWeights;
   nearestBinWeights.resize(_binsInSemitone + 1);
   for (int b=0; b <= _binsInSemitone; b++) {
     nearestBinWeights[b] = pow(cos((Real(b)/_binsInSemitone)* M_PI/2), 2);
@@ -204,16 +204,16 @@ void MultiPitchKlapuri::compute() {
     }
   
     // get indices corresponding to harmonics of each found peak
-    vector<vector<int> > kPeaks;
+    ::essentia::VectorEx<::essentia::VectorEx<int> > kPeaks;
     for (int i=0; i<(int)frameSalienceBins.size(); i++) {
-      vector<int> k;
+      ::essentia::VectorEx<int> k;
       Real f = _referenceFrequency * pow(_centToHertzBase, frameSalienceBins[i]);
       for (int m=0; m<_numberHarmonicsMax; m++) {
         // find the exact peak for each harmonic
         int kBin = frequencyToCentBin(f*(m+1));
         int kBinMin = max(0, int(kBin-_binsInSemitone));
         int kBinMax = min(_numberBins-1, int(kBin+_binsInSemitone));
-        vector<Real> specSegment;
+        ::essentia::VectorEx<Real> specSegment;
         for (int ii=kBinMin; ii<=kBinMax; ii++) {
           specSegment.push_back(_centSpectrum[ii]);
         }
@@ -224,9 +224,9 @@ void MultiPitchKlapuri::compute() {
     }
     
     // candidate Spectra
-    vector<vector<Real> > Z;
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > Z;
     for (int i=0; i<(int)frameSalienceBins.size(); i++) {
-      vector<Real> z(_numberBins, 0.);
+      ::essentia::VectorEx<Real> z(_numberBins, 0.);
       for (int h=0; h<_numberHarmonicsMax; h++) {
         int hBin = kPeaks[i][h];
         for(int b = max(0, hBin-_binsInSemitone); b <= min(_numberBins-1, hBin+_binsInSemitone); b++) {
@@ -239,10 +239,10 @@ void MultiPitchKlapuri::compute() {
     // TODO: segfault somewhere here
     // inhibition function
     int numCandidates = frameSalienceBins.size();
-    vector<vector<Real> > inhibition;
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > inhibition;
 
     for (int i=0; i<numCandidates; i++) {
-      vector<Real> inh(numCandidates, 0.); 
+      ::essentia::VectorEx<Real> inh(numCandidates, 0.); 
       for (int j=0; j<numCandidates; j++) {
         for (int m=0; m<_numberHarmonicsMax; m++) {
           inh[j] += getWeight(kPeaks[i][m], m) * _centSpectrum[kPeaks[i][m]] * Z[j][kPeaks[i][m]];
@@ -252,16 +252,16 @@ void MultiPitchKlapuri::compute() {
     }
 
     // polyphony estimation initialization
-    vector<int> finalSelection;
+    ::essentia::VectorEx<int> finalSelection;
     int p = 1;
     Real gamma = 0.73;
     Real S = frameSalienceValues[argmax(frameSalienceValues)] / pow(p,gamma);
     finalSelection.push_back(argmax(frameSalienceValues));
     
     // goodness function
-    vector<vector<Real> > G;
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > G;
     for (int i=0; i<numCandidates; i++) {
-      vector<Real> g;
+      ::essentia::VectorEx<Real> g;
       for (int j=0; j<numCandidates; j++) {
         if(i==j) {
           g.push_back(0.0);
@@ -273,9 +273,9 @@ void MultiPitchKlapuri::compute() {
       G.push_back(g);
     }
   
-    vector<vector<int> > selCandInd;
-    vector<Real> selCandVal;
-    vector<Real> localF0;
+    ::essentia::VectorEx<::essentia::VectorEx<int> > selCandInd;
+    ::essentia::VectorEx<Real> selCandVal;
+    ::essentia::VectorEx<Real> localF0;
     
     while (true) {
       // find numCandidates largest values
@@ -284,7 +284,7 @@ void MultiPitchKlapuri::compute() {
       int maxInd_j=0;
   
       for (int I=0; I < numCandidates; I++) {
-        vector<int> localInd;
+        ::essentia::VectorEx<int> localInd;
         for (int i=0; i < numCandidates; i++) {
           for (int j=0; j < numCandidates; j++) {
             if (G[i][j] > maxVal) {

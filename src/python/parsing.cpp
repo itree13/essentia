@@ -32,25 +32,25 @@ Parameter* PythonDictToParameter(PyObject* dict, Edt tp) {
 
   switch (tp) {
     case MAP_VECTOR_REAL: {
-      map<string, vector<Real> > mapVecReal;
+      map<string, ::essentia::VectorEx<Real> > mapVecReal;
       while (PyDict_Next(dict, &pos, &key, &value)) {
         if (!PyString_Check(key)) throw EssentiaException("all keys in the dict should be strings");
 
         string skey = PyString_AS_STRING(key);
         RogueVector<Real>* rv = (RogueVector<Real>*)VectorReal::fromPythonRef(value);
-        mapVecReal[skey] = *((vector<Real>*)rv);
+        mapVecReal[skey] = *((::essentia::VectorEx<Real>*)rv);
         delete rv;
       }
       return new Parameter(mapVecReal);
     }
 
     case MAP_VECTOR_STRING: {
-      map<string, vector<string> > mapVecString;
+      map<string, ::essentia::VectorEx<string> > mapVecString;
       while (PyDict_Next(dict, &pos, &key, &value)) {
         if (!PyString_Check(key)) throw EssentiaException("all keys in the dict should be strings");
 
         string skey = PyString_AS_STRING(key);
-        mapVecString[skey] = *((vector<string>*)VectorString::fromPythonCopy(value));
+        mapVecString[skey] = *((::essentia::VectorEx<string>*)VectorString::fromPythonCopy(value));
       }
       return new Parameter(mapVecString);
     }
@@ -99,12 +99,12 @@ void parseParameters(ParameterMap* pm, PyObject* args, PyObject* keywds) {
 /**
  * This function parses a python tuple into a vector of separate PyObjects.
  */
-vector<PyObject*> unpack(PyObject* args) {
+::essentia::VectorEx<PyObject*> unpack(PyObject* args) {
   if (!PyTuple_Check(args)) {
     throw EssentiaException("Trying to unwrap an object which is not a tuple: "+strtype(args));
   }
 
-  vector<PyObject*> result;
+  ::essentia::VectorEx<PyObject*> result;
   int ninputs = PyTuple_GET_SIZE(args);
   result.resize(ninputs);
 
@@ -122,7 +122,7 @@ vector<PyObject*> unpack(PyObject* args) {
 // * a vector of outputs. It automatically chooses the correct output type
 // * (None, simple value, tuple of values) wrt the number of outputs.
 // */
-PyObject* buildReturnValue(const vector<PyObject*>& result_vec) {
+PyObject* buildReturnValue(const ::essentia::VectorEx<PyObject*>& result_vec) {
   int size = result_vec.size();
 
   // if there is no result to be returned, return None to the python interpreter
@@ -149,18 +149,18 @@ PyObject* toPython(void* obj, Edt tp) {
     case BOOL: return Boolean::toPythonCopy((bool*)obj);
     case STEREOSAMPLE: return PyStereoSample::toPythonCopy((StereoSample*)obj);
     case VECTOR_REAL: return VectorReal::toPythonRef((RogueVector<Real>*)obj);
-    case VECTOR_STRING: return VectorString::toPythonCopy((vector<string>*)obj);
+    case VECTOR_STRING: return VectorString::toPythonCopy((::essentia::VectorEx<string>*)obj);
     case VECTOR_COMPLEX: return VectorComplex::toPythonRef((RogueVector<complex<Real> >*)obj);
     case VECTOR_INTEGER: return VectorInteger::toPythonRef((RogueVector<int>*)obj);
-    case VECTOR_STEREOSAMPLE: return VectorStereoSample::toPythonCopy((vector<StereoSample>*)obj);
-    case VECTOR_VECTOR_REAL: return VectorVectorReal::toPythonCopy((vector<vector<Real> >*)obj);
-    case VECTOR_VECTOR_COMPLEX: return VectorVectorComplex::toPythonCopy((vector<vector<complex<Real> > >*)obj);
-    case VECTOR_VECTOR_STRING: return VectorVectorString::toPythonCopy((vector<vector<string> >*)obj);
-    case VECTOR_VECTOR_STEREOSAMPLE: return VectorVectorStereoSample::toPythonCopy((vector<vector<StereoSample> >*)obj);
+    case VECTOR_STEREOSAMPLE: return VectorStereoSample::toPythonCopy((::essentia::VectorEx<StereoSample>*)obj);
+    case VECTOR_VECTOR_REAL: return VectorVectorReal::toPythonCopy((::essentia::VectorEx<::essentia::VectorEx<Real> >*)obj);
+    case VECTOR_VECTOR_COMPLEX: return VectorVectorComplex::toPythonCopy((::essentia::VectorEx<::essentia::VectorEx<complex<Real> > >*)obj);
+    case VECTOR_VECTOR_STRING: return VectorVectorString::toPythonCopy((::essentia::VectorEx<::essentia::VectorEx<string> >*)obj);
+    case VECTOR_VECTOR_STEREOSAMPLE: return VectorVectorStereoSample::toPythonCopy((::essentia::VectorEx<::essentia::VectorEx<StereoSample> >*)obj);
     case TENSOR_REAL: return TensorReal::toPythonCopy((Tensor<Real>*)obj);
-    case VECTOR_TENSOR_REAL: return VectorTensorReal::toPythonCopy((vector<Tensor<Real> >*)obj);
+    case VECTOR_TENSOR_REAL: return VectorTensorReal::toPythonCopy((::essentia::VectorEx<Tensor<Real> >*)obj);
     case MATRIX_REAL: return MatrixReal::toPythonRef((TNT::Array2D<Real>*)obj);
-    case VECTOR_MATRIX_REAL: return VectorMatrixReal::toPythonCopy((vector<TNT::Array2D<Real> >*)obj);
+    case VECTOR_MATRIX_REAL: return VectorMatrixReal::toPythonCopy((::essentia::VectorEx<TNT::Array2D<Real> >*)obj);
     case POOL: return PyPool::toPythonRef((Pool*)obj);
 
     // WARNING: This list is very incomplete. For example, paramToPython uses this function and is
@@ -173,9 +173,9 @@ PyObject* toPython(void* obj, Edt tp) {
 }
 
 typedef map<string, Real> mapreal;
-typedef map<string, vector<Real> > mapvectorreal;
-typedef map<string, vector<string> > mapvectorstring;
-typedef map<string, vector<int> > mapvectorint;
+typedef map<string, ::essentia::VectorEx<Real> > mapvectorreal;
+typedef map<string, ::essentia::VectorEx<string> > mapvectorstring;
+typedef map<string, ::essentia::VectorEx<int> > mapvectorint;
 
 PyObject* paramToPython(const Parameter& p) {
   if (!p.isConfigured()) return NULL;
@@ -195,25 +195,25 @@ PyObject* paramToPython(const Parameter& p) {
     case Parameter::VECTOR_REAL: {
       // we have to do the vectors in a special way since they need to not be deleted (i.e. toPython
       // won't make a copy of them: toPythonRef)
-      vector<Real> v = p.toVectorReal();
+      ::essentia::VectorEx<Real> v = p.toVectorReal();
       RogueVector<Real>* r = new RogueVector<Real>(v.size(), 0);
       for (int i=0; i<int(v.size()); ++i) (*r)[i] = v[i];
       return toPython(r, paramTypeToEdt(pType));
     }
-    PARAM_CASE(VECTOR_STRING, vector<string>, VectorString);
-    PARAM_CASE(VECTOR_BOOL, vector<bool>, VectorBool);
+    PARAM_CASE(VECTOR_STRING, ::essentia::VectorEx<string>, VectorString);
+    PARAM_CASE(VECTOR_BOOL, ::essentia::VectorEx<bool>, VectorBool);
     case Parameter::VECTOR_INT: {
-      vector<int> v = p.toVectorInt();
+      ::essentia::VectorEx<int> v = p.toVectorInt();
       RogueVector<int>* r = new RogueVector<int>(v.size(), 0);
       for (int i=0; i<int(v.size()); ++i) (*r)[i] = v[i];
       return toPython(r, paramTypeToEdt(pType));
     }
-    PARAM_CASE(VECTOR_STEREOSAMPLE, vector<StereoSample>, VectorStereoSample);
-    PARAM_CASE(VECTOR_VECTOR_REAL, vector<vector<Real> >, VectorVectorReal);
-    PARAM_CASE(VECTOR_VECTOR_STRING, vector<vector<string> >, VectorVectorString);
-    PARAM_CASE(VECTOR_VECTOR_STEREOSAMPLE, vector<vector<StereoSample> >, VectorVectorStereoSample);
+    PARAM_CASE(VECTOR_STEREOSAMPLE, ::essentia::VectorEx<StereoSample>, VectorStereoSample);
+    PARAM_CASE(VECTOR_VECTOR_REAL, ::essentia::VectorEx<::essentia::VectorEx<Real> >, VectorVectorReal);
+    PARAM_CASE(VECTOR_VECTOR_STRING, ::essentia::VectorEx<::essentia::VectorEx<string> >, VectorVectorString);
+    PARAM_CASE(VECTOR_VECTOR_STEREOSAMPLE, ::essentia::VectorEx<::essentia::VectorEx<StereoSample> >, VectorVectorStereoSample);
     PARAM_CASE(MATRIX_REAL, TNT::Array2D<Real>, MatrixReal);
-    PARAM_CASE(VECTOR_MATRIX_REAL, vector<TNT::Array2D<Real> >, VectorMatrixReal);
+    PARAM_CASE(VECTOR_MATRIX_REAL, ::essentia::VectorEx<TNT::Array2D<Real> >, VectorMatrixReal);
     PARAM_CASE(MAP_VECTOR_REAL, mapvectorreal, MapVectorReal);
     PARAM_CASE(MAP_VECTOR_STRING, mapvectorstring, MapVectorString);
     PARAM_CASE(MAP_VECTOR_INT, mapvectorint, MapVectorInt);

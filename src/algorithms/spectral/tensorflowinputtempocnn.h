@@ -31,8 +31,8 @@ namespace standard {
 class TensorflowInputTempoCNN : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _frame;
-  Output<std::vector<Real> > _bands;
+  Input<::essentia::VectorEx<Real> > _frame;
+  Output<::essentia::VectorEx<Real> > _bands;
 
   Algorithm* _windowing;
   Algorithm* _spectrum;
@@ -64,9 +64,9 @@ class TensorflowInputTempoCNN : public Algorithm {
   static const char* description;
 
  protected:
-  std::vector<Real> _windowedFrame;
-  std::vector<Real> _spectrumFrame;
-  std::vector<Real> _melBandsFrame;
+  ::essentia::VectorEx<Real> _windowedFrame;
+  ::essentia::VectorEx<Real> _spectrumFrame;
+  ::essentia::VectorEx<Real> _melBandsFrame;
 };
 
 } // namespace standard
@@ -80,8 +80,8 @@ namespace streaming {
 class TensorflowInputTempoCNN : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frame;
-  Source<std::vector<Real> > _bands;
+  Sink<::essentia::VectorEx<Real> > _frame;
+  Source<::essentia::VectorEx<Real> > _bands;
 
  public:
   TensorflowInputTempoCNN() {

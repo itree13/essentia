@@ -27,7 +27,7 @@ namespace standard {
 class LoopBpmConfidence : public Algorithm {
 
   protected:
-    Input<std::vector<Real> > _signal;
+    Input<::essentia::VectorEx<Real> > _signal;
     Input<Real> _bpmEstimate;
     Output<Real> _confidence;
     Algorithm* _envelope;

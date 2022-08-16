@@ -52,7 +52,7 @@ void EnergyBandRatio::configure() {
 
 void EnergyBandRatio::compute() {
 
-  const vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
 
   if (spectrum.empty()) {
     throw EssentiaException("EnergyBandRatio: input audio spectrum empty");

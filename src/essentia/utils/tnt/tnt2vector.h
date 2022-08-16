@@ -25,7 +25,7 @@
 
 namespace essentia {
 
-  inline TNT::Array2D<Real> vecvecToArray2D(const std::vector<std::vector<Real> >& v) {
+  inline TNT::Array2D<Real> vecvecToArray2D(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& v) {
 
     if (v.size() == 0) {
       throw EssentiaException("You are trying to convert an empty vector of vector into a Array2D.");
@@ -41,13 +41,13 @@ namespace essentia {
     return v2D;
   }
 
-  inline std::vector<std::vector<Real> > array2DToVecvec(const TNT::Array2D<Real>& v2D) {
+  inline ::essentia::VectorEx<::essentia::VectorEx<Real> > array2DToVecvec(const TNT::Array2D<Real>& v2D) {
 
     if (v2D.dim1() == 0) {
       throw EssentiaException("You are trying to convert an empty Array2D into a vector of vector.");
     }
 
-    std::vector<std::vector<Real> > v;
+    ::essentia::VectorEx<::essentia::VectorEx<Real> > v;
     v.resize(v2D.dim1());
 
     for (uint i=0; i<v.size(); i++) {

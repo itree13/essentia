@@ -55,7 +55,7 @@ void PitchYinProbabilities::configure() {
   _RMSALGO->configure();
 }
 
-Real PitchYinProbabilities::parabolicInterpolation(const std::vector<Real> yinBuffer, const size_t tau, const size_t yinBufferSize) {
+Real PitchYinProbabilities::parabolicInterpolation(const ::essentia::VectorEx<Real> yinBuffer, const size_t tau, const size_t yinBufferSize) {
   // this is taken almost literally from Joren Six's Java implementation
   if (tau == yinBufferSize) // not valid anyway.
   {
@@ -80,7 +80,7 @@ Real PitchYinProbabilities::parabolicInterpolation(const std::vector<Real> yinBu
   return betterTau;
 }
 
-void PitchYinProbabilities::slowDifference(const std::vector<Real> sig, std::vector<Real> &yinBuffer) 
+void PitchYinProbabilities::slowDifference(const ::essentia::VectorEx<Real> sig, ::essentia::VectorEx<Real> &yinBuffer) 
 {
   yinBuffer[0] = 0;
 
@@ -97,7 +97,7 @@ void PitchYinProbabilities::slowDifference(const std::vector<Real> sig, std::vec
   }
 }
 
-void PitchYinProbabilities::fastDifference(const std::vector<Real> in, std::vector<Real> &yinBuffer, const size_t yinBufferSize) 
+void PitchYinProbabilities::fastDifference(const ::essentia::VectorEx<Real> in, ::essentia::VectorEx<Real> &yinBuffer, const size_t yinBufferSize) 
 {
     
     // DECLARE AND INITIALISE
@@ -106,15 +106,15 @@ void PitchYinProbabilities::fastDifference(const std::vector<Real> in, std::vect
     
     size_t frameSize = 2 * (yinBufferSize-1);
     
-    vector<Real> audioTransformedReal(frameSize, 0.);
-    vector<Real> audioTransformedImag(frameSize, 0.);
-    vector<Real> kernel(frameSize, 0.);
-    vector<Real> kernelTransformedReal(frameSize, 0.);
-    vector<Real> kernelTransformedImag(frameSize, 0.);
+    ::essentia::VectorEx<Real> audioTransformedReal(frameSize, 0.);
+    ::essentia::VectorEx<Real> audioTransformedImag(frameSize, 0.);
+    ::essentia::VectorEx<Real> kernel(frameSize, 0.);
+    ::essentia::VectorEx<Real> kernelTransformedReal(frameSize, 0.);
+    ::essentia::VectorEx<Real> kernelTransformedImag(frameSize, 0.);
 
-    vector<Real> yinStyleACFReal(frameSize, 0.);
-    vector<Real> yinStyleACFImag(frameSize, 0.);
-    vector<Real> powerTerms(yinBufferSize, 0.);
+    ::essentia::VectorEx<Real> yinStyleACFReal(frameSize, 0.);
+    ::essentia::VectorEx<Real> yinStyleACFImag(frameSize, 0.);
+    ::essentia::VectorEx<Real> powerTerms(yinBufferSize, 0.);
     
     for (size_t j = 0; j < yinBufferSize; ++j)
     {
@@ -135,8 +135,8 @@ void PitchYinProbabilities::fastDifference(const std::vector<Real> in, std::vect
 
     // YIN-STYLE AUTOCORRELATION via FFT
     // 1. data
-    vector<std::complex<Real> > inComplex(frameSize);
-    vector<std::complex<Real> > audioTransformed(frameSize);
+    ::essentia::VectorEx<std::complex<Real> > inComplex(frameSize);
+    ::essentia::VectorEx<std::complex<Real> > audioTransformed(frameSize);
     for (size_t i=0; i<frameSize; i++) {
       inComplex[i] = std::complex<Real>(in[i], 0.);
     }
@@ -154,11 +154,11 @@ void PitchYinProbabilities::fastDifference(const std::vector<Real> in, std::vect
     for (size_t j = 0; j < yinBufferSize; ++j) {
         kernel[j] = in[yinBufferSize-1-j];
     }
-    vector<std::complex<Real> > kernelComplex(frameSize);
+    ::essentia::VectorEx<std::complex<Real> > kernelComplex(frameSize);
     for (size_t i=0; i<frameSize; i++) {
       kernelComplex[i] = std::complex<Real>(kernel[i], 0.);
     }
-    vector<std::complex<Real> > kernelTransformed(frameSize);
+    ::essentia::VectorEx<std::complex<Real> > kernelTransformed(frameSize);
     _FFT->input("frame").set(kernelComplex);
     _FFT->output("fft").set(kernelTransformed);
     _FFT->compute();
@@ -168,7 +168,7 @@ void PitchYinProbabilities::fastDifference(const std::vector<Real> in, std::vect
     }
 
     // 3. convolution via complex multiplication -- written into
-    vector<std::complex<Real> > yinStyleACF(frameSize);
+    ::essentia::VectorEx<std::complex<Real> > yinStyleACF(frameSize);
     for (size_t j = 0; j < frameSize; ++j) {
         yinStyleACFReal[j] = audioTransformedReal[j]*kernelTransformedReal[j] - audioTransformedImag[j]*kernelTransformedImag[j]; // real
         yinStyleACFImag[j] = audioTransformedReal[j]*kernelTransformedImag[j] + audioTransformedImag[j]*kernelTransformedReal[j]; // imaginary
@@ -191,7 +191,7 @@ void PitchYinProbabilities::fastDifference(const std::vector<Real> in, std::vect
 }
 
 void PitchYinProbabilities::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   if (signal.empty()) {
     throw EssentiaException("PitchYinProbabilities: Cannot compute pitch detection on empty signal frame.");
   }
@@ -199,8 +199,8 @@ void PitchYinProbabilities::compute() {
     Algorithm::configure( "frameSize", int(signal.size()) );
   } 
 
-  vector<Real>& pitch = _pitch.get();
-  vector<Real>& probabilities = _probabilities.get();
+  ::essentia::VectorEx<Real>& pitch = _pitch.get();
+  ::essentia::VectorEx<Real>& probabilities = _probabilities.get();
   Real& RMS = _RMS.get();
   
   if (_preciseTime) {
@@ -240,8 +240,8 @@ void PitchYinProbabilities::compute() {
   size_t nThreshold = 100;
   int nThresholdInt = nThreshold;
 
-  vector<Real> thresholds(nThresholdInt);
-  vector<Real> distribution(nThresholdInt);
+  ::essentia::VectorEx<Real> thresholds(nThresholdInt);
+  ::essentia::VectorEx<Real> distribution(nThresholdInt);
   _peakProb.assign(_yin.size(), 0.0);
 
   for (int i = 0; i < nThresholdInt; ++i) {
@@ -280,7 +280,7 @@ void PitchYinProbabilities::compute() {
 
   if (_peakProb[minInd] > 1) {
     E_WARNING("WARNING: yin has prob > 1 ??? I'm returning all zeros instead.");
-    _peakProb = vector<Real>(_yin.size());
+    _peakProb = ::essentia::VectorEx<Real>(_yin.size());
   }
     
   Real nonPeakProb = 1.0;
@@ -297,9 +297,9 @@ void PitchYinProbabilities::compute() {
   }
 
   // calculate RMS of the signal, use only size of _yin
-  vector<Real>::const_iterator beginYin = signal.begin();
-  vector<Real>::const_iterator endYin = signal.begin() + _yin.size();
-  vector<Real> signalYinSize(beginYin, endYin);
+  ::essentia::VectorEx<Real>::const_iterator beginYin = signal.begin();
+  ::essentia::VectorEx<Real>::const_iterator endYin = signal.begin() + _yin.size();
+  ::essentia::VectorEx<Real> signalYinSize(beginYin, endYin);
   _RMSALGO->input("array").set(signalYinSize);
   _RMSALGO->output("rms").set(RMS);
   _RMSALGO->compute();

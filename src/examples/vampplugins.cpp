@@ -61,14 +61,14 @@ WRAP_MEL_ALGO(algoname, unit, ndim, dtype);          \
 static Vamp::PluginAdapter<M##algoname> m##algoname;
 
 // Spectral
-WRAP_PLUGIN(BarkBands, "", _algo->parameter("numberBands").toInt(), vector<float>);
+WRAP_PLUGIN(BarkBands, "", _algo->parameter("numberBands").toInt(), ::essentia::VectorEx<float>);
 WRAP_PLUGIN(Flux, "", 1, float);
 WRAP_BARK_PLUGIN(Flux, "", 1, float);
 //WRAP_PLUGIN(HFC, "", 1, float);
 WRAP_PLUGIN(MaxMagFreq, "Hz", 1, float);
-WRAP_PLUGIN(MelBands, "", _algo->parameter("numberBands").toInt(), vector<float>);
-//WRAP_PLUGIN(MFCC, "", _algo->parameter("numberCoefficients").toInt(), vector<float>);
-WRAP_PLUGIN(ERBBands, "", _algo->parameter("numberBands").toInt(), vector<float>);
+WRAP_PLUGIN(MelBands, "", _algo->parameter("numberBands").toInt(), ::essentia::VectorEx<float>);
+//WRAP_PLUGIN(MFCC, "", _algo->parameter("numberCoefficients").toInt(), ::essentia::VectorEx<float>);
+WRAP_PLUGIN(ERBBands, "", _algo->parameter("numberBands").toInt(), ::essentia::VectorEx<float>);
 WRAP_PLUGIN(RollOff, "Hz", 1, float);
 WRAP_PLUGIN(SpectralComplexity, "", 1, float);
 WRAP_PLUGIN(StrongPeak, "", 1, float);
@@ -88,7 +88,7 @@ static Vamp::PluginAdapter<BpmHistogram> aBpmHistogram;
 WRAP_PLUGIN(PitchSalience, "", 1, float);
 WRAP_PEAKS_PLUGIN(Dissonance, "", 1, float);
 WRAP_PEAKS_PLUGIN(Inharmonicity, "", 1, float);
-WRAP_PEAKS_PLUGIN(Tristimulus, "", 3, vector<float>);
+WRAP_PEAKS_PLUGIN(Tristimulus, "", 3, ::essentia::VectorEx<float>);
 WRAP_PEAKS_PLUGIN(OddToEvenHarmonicEnergyRatio, "", 1, float);
 
 static Vamp::PluginAdapter<Friction> pFriction;

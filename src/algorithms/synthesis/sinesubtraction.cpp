@@ -51,21 +51,21 @@ void SineSubtraction::configure() {
 
 void SineSubtraction::compute() {
 
-  const std::vector<Real>& inframe = _inframe.get();
-  const std::vector<Real>& magnitudes = _magnitudes.get();
-  const std::vector<Real>& frequencies = _frequencies.get();
-  const std::vector<Real>& phases = _phases.get();
+  const ::essentia::VectorEx<Real>& inframe = _inframe.get();
+  const ::essentia::VectorEx<Real>& magnitudes = _magnitudes.get();
+  const ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  const ::essentia::VectorEx<Real>& phases = _phases.get();
 
-  std::vector<Real>& outframe = _outframe.get();
+  ::essentia::VectorEx<Real>& outframe = _outframe.get();
 //
-  std::vector<Real> sinesframe;
+  ::essentia::VectorEx<Real> sinesframe;
 
     // compute input frame FFT
-    std::vector<Real> synframe;
-    std::vector<Real> wsynframe;
-    std::vector<Real> synframeout;
+    ::essentia::VectorEx<Real> synframe;
+    ::essentia::VectorEx<Real> wsynframe;
+    ::essentia::VectorEx<Real> synframeout;
 
-    std::vector<std::complex<Real> > synfft;
+    ::essentia::VectorEx<std::complex<Real> > synfft;
     for (int i= (int) ((inframe.size()/2) - _fftSize/2); i <  (int) ((inframe.size()/2) + _fftSize/2); ++i) {
         synframe.push_back(inframe[i]);
     }
@@ -79,7 +79,7 @@ void SineSubtraction::compute() {
     _fft->compute();
 
     // generate sine spectrum
-    std::vector<std::complex<Real> > sinefft;
+    ::essentia::VectorEx<std::complex<Real> > sinefft;
     generateSines(magnitudes, frequencies, phases, sinefft);
 
   // subtract  sines in FFT domain
@@ -99,7 +99,7 @@ void SineSubtraction::compute() {
 
 }
 
-void 	SineSubtraction::subtractFFT(std::vector<std::complex<Real> >&fft1, const std::vector<std::complex<Real> >&fft2) {
+void 	SineSubtraction::subtractFFT(::essentia::VectorEx<std::complex<Real> >&fft1, const ::essentia::VectorEx<std::complex<Real> >&fft2) {
   int minSize = std::min((int)fft1.size(), (int)fft2.size());
   for (int i=0; i < minSize; ++i) {
     fft1[i].real( fft1[i].real() -  fft2[i].real());
@@ -109,7 +109,7 @@ void 	SineSubtraction::subtractFFT(std::vector<std::complex<Real> >&fft1, const 
 
 
 
-void SineSubtraction::initializeFFT(std::vector<std::complex<Real> >&fft, int sizeFFT) {
+void SineSubtraction::initializeFFT(::essentia::VectorEx<std::complex<Real> >&fft, int sizeFFT) {
   fft.resize(sizeFFT);
   for (int i=0; i < sizeFFT; ++i){
     fft[i].real(0);
@@ -119,22 +119,22 @@ void SineSubtraction::initializeFFT(std::vector<std::complex<Real> >&fft, int si
 
 
 
-void SineSubtraction::generateSines(const std::vector<Real> magnitudes,
-                                    const std::vector<Real> frequencies,
-                                    const std::vector<Real> phases,
-                                    std::vector<std::complex<Real> >&outfft) {
+void SineSubtraction::generateSines(const ::essentia::VectorEx<Real> magnitudes,
+                                    const ::essentia::VectorEx<Real> frequencies,
+                                    const ::essentia::VectorEx<Real> phases,
+                                    ::essentia::VectorEx<std::complex<Real> >&outfft) {
   int outSize = (int)floor(_fftSize/2.0) + 1;
 
   initializeFFT(outfft, outSize);
   int i = 0;
 
   // convert frequencies to peak locations
-  std::vector<Real> locs(frequencies.size());
+  ::essentia::VectorEx<Real> locs(frequencies.size());
   for (i=0; i < int(frequencies.size()); ++i) {
     locs[i] = _fftSize*frequencies[i]/float(_sampleRate);
   }
   // init synth phase vector
-  std::vector<Real> ytphase(frequencies.size());
+  ::essentia::VectorEx<Real> ytphase(frequencies.size());
   std::fill(ytphase.begin(), ytphase.end(), 0.);
 
   // initialize last phase and frequency vectors
@@ -171,10 +171,10 @@ void SineSubtraction::generateSines(const std::vector<Real> magnitudes,
 
 }
 
-void SineSubtraction::createSynthesisWindow(std::vector<Real> &synwindow, int hopSize, int winSize) {
-    std::vector<Real> ones;
-    std::vector<Real> triangle;
-    std::vector<Real> win;
+void SineSubtraction::createSynthesisWindow(::essentia::VectorEx<Real> &synwindow, int hopSize, int winSize) {
+    ::essentia::VectorEx<Real> ones;
+    ::essentia::VectorEx<Real> triangle;
+    ::essentia::VectorEx<Real> win;
 
     for (int i=0; i < winSize;++i) {
         ones.push_back(1.f);
@@ -217,7 +217,7 @@ void SineSubtraction::createSynthesisWindow(std::vector<Real> &synwindow, int ho
 
 }
 
-void SineSubtraction::applySynthesisWindow(std::vector<Real> &inframe, const std::vector<Real> synwindow) {
+void SineSubtraction::applySynthesisWindow(::essentia::VectorEx<Real> &inframe, const ::essentia::VectorEx<Real> synwindow) {
 // it considers already the zero-phase window shift
     int signalSize = (int)inframe.size();
 

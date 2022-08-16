@@ -42,7 +42,7 @@ const char* DistributionShape::description = DOC("This algorithm computes the sp
 
 void DistributionShape::compute() {
 
-  const std::vector<Real>& centralMoments = _centralMoments.get();
+  const ::essentia::VectorEx<Real>& centralMoments = _centralMoments.get();
   Real& spread = _spread.get();
   Real& skewness = _skewness.get();
   Real& kurtosis = _kurtosis.get();

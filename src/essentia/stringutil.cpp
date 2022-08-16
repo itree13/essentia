@@ -82,8 +82,8 @@ void tokenize(const std::string& str, Container& tokens,
 
 
 
-  vector<string> tokenize(const string& str, const string& delimiters, bool trimEmpty) {
-  vector<string> result;
+  ::essentia::VectorEx<string> tokenize(const string& str, const string& delimiters, bool trimEmpty) {
+  ::essentia::VectorEx<string> result;
   tokenize(str, result, delimiters, trimEmpty);
   return result;
 }

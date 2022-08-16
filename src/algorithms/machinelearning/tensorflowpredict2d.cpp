@@ -95,7 +95,7 @@ void TensorflowPredict2D::configure() {
 
   if (accumulate) batchSize = -1;
 
-  vector<int> inputShape({batchSize, 1, patchSize, dimensions});
+  ::essentia::VectorEx<int> inputShape({batchSize, 1, patchSize, dimensions});
 
   _vectorRealToTensor->configure("shape", inputShape,
                                  "lastPatchMode", lastPatchMode,
@@ -116,8 +116,8 @@ void TensorflowPredict2D::configure() {
 
   _tensorflowPredict->configure("graphFilename", graphFilename,
                                 "savedModel", savedModel,
-                                "inputs", vector<string>({input}),
-                                "outputs", vector<string>({output}),
+                                "inputs", ::essentia::VectorEx<string>({input}),
+                                "outputs", ::essentia::VectorEx<string>({output}),
                                 "isTrainingName", isTrainingName);
 }
 
@@ -178,7 +178,7 @@ TensorflowPredict2D::~TensorflowPredict2D() {
 
 void TensorflowPredict2D::createInnerNetwork() {
   _tensorflowPredict2D = streaming::AlgorithmFactory::create("TensorflowPredict2D");
-  _vectorVectorInput = new streaming::VectorInput<vector<Real> >();
+  _vectorVectorInput = new streaming::VectorInput<::essentia::VectorEx<Real> >();
 
   *_vectorVectorInput >> _tensorflowPredict2D->input("features");
   _tensorflowPredict2D->output("predictions") >>  PC(_pool, "predictions");
@@ -206,7 +206,7 @@ void TensorflowPredict2D::configure() {
 
 void TensorflowPredict2D::compute() {
   const Array2D<Real>& features = _features.get();
-  vector<vector<Real> >& predictions = _predictions.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& predictions = _predictions.get();
 
   if (features.dim2() != _dimensions) {
     _dimensions = features.dim2();
@@ -217,13 +217,13 @@ void TensorflowPredict2D::compute() {
   if (!features.dim1()) {
     throw EssentiaException("TensorflowPredict2D: empty input signal");
   }
-  vector<vector<Real> > featuresVector = array2DToVecvec(features);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > featuresVector = array2DToVecvec(features);
   _vectorVectorInput->setVector(&featuresVector);
 
   _network->run();
 
   try {
-    predictions = _pool.value<vector<vector<Real> > >("predictions");
+    predictions = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("predictions");
   }
   catch (EssentiaException&) {
     predictions.clear();

@@ -27,10 +27,10 @@ namespace streaming {
 
 class Multiplexer : public Algorithm {
  protected:
-  std::vector<Sink<Real>*> _realInputs;
-  std::vector<Sink<std::vector<Real> >*> _vectorRealInputs;
+  ::essentia::VectorEx<Sink<Real>*> _realInputs;
+  ::essentia::VectorEx<Sink<::essentia::VectorEx<Real> >*> _vectorRealInputs;
 
-  Source<std::vector<Real> > _output;
+  Source<::essentia::VectorEx<Real> > _output;
 
   void clearInputs();
 
@@ -47,7 +47,7 @@ class Multiplexer : public Algorithm {
 
   void declareParameters() {
     declareParameter("numberRealInputs", "the number of inputs of type Real to multiplex", "[0,inf)", 0);
-    declareParameter("numberVectorRealInputs", "the number of inputs of type vector<Real> to multiplex", "[0,inf)", 0);
+    declareParameter("numberVectorRealInputs", "the number of inputs of type ::essentia::VectorEx<Real> to multiplex", "[0,inf)", 0);
   }
 
   void configure();
@@ -75,9 +75,9 @@ namespace standard {
 // implemented this way, cause I find simpler not having to use vectorInput and vectoOutput
 class Multiplexer : public Algorithm {
  protected:
-   std::vector<Input<std::vector<Real> >* > _realInputs;
-   std::vector<Input<std::vector<std::vector<Real> > >* >_vectorRealInputs;
-   Output<std::vector<std::vector<Real> > > _output;
+   ::essentia::VectorEx<Input<::essentia::VectorEx<Real> >* > _realInputs;
+   ::essentia::VectorEx<Input<::essentia::VectorEx<::essentia::VectorEx<Real> > >* >_vectorRealInputs;
+   Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _output;
 
   void clearInputs();
 
@@ -92,7 +92,7 @@ class Multiplexer : public Algorithm {
 
   void declareParameters() {
     declareParameter("numberRealInputs", "the number of inputs of type Real to multiplex", "[0,inf)", 0);
-    declareParameter("numberVectorRealInputs", "the number of inputs of type vector<Real> to multiplex", "[0,inf)", 0);
+    declareParameter("numberVectorRealInputs", "the number of inputs of type ::essentia::VectorEx<Real> to multiplex", "[0,inf)", 0);
   }
 
   void configure();

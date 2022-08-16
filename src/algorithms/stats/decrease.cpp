@@ -39,7 +39,7 @@ void Decrease::configure() {
 }
 
 void Decrease::compute() {
-  const std::vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
   Real& decrease = _decrease.get();
 
   if (array.size() <= 1) {

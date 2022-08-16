@@ -73,11 +73,11 @@ void PitchContourSegmentation::reSegment() {
 void PitchContourSegmentation::compute() {
   
   // I/O
-  const vector<Real>& pitchGlob = _pitch.get();
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& onset = _onset.get();
-  vector<Real>& duration = _duration.get();
-  vector<Real>& MIDIpitch = _MIDIpitch.get();
+  const ::essentia::VectorEx<Real>& pitchGlob = _pitch.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& onset = _onset.get();
+  ::essentia::VectorEx<Real>& duration = _duration.get();
+  ::essentia::VectorEx<Real>& MIDIpitch = _MIDIpitch.get();
 
   // we do not want to access the actual pitch contour -> create copy
   pitch = pitchGlob;
@@ -86,7 +86,7 @@ void PitchContourSegmentation::compute() {
   reSegment();
   
   // extract the RMS
-  vector<Real> frame, rms;
+  ::essentia::VectorEx<Real> frame, rms;
   Real r;
   frameCutter = AlgorithmFactory::create("FrameCutter", "frameSize", _frameSizeFeat, "hopSize", _hopSizeFeat);
   RMS = AlgorithmFactory::create("RMS");
@@ -109,7 +109,7 @@ void PitchContourSegmentation::compute() {
   minDurPitchSamples = round(_minDur * Real(_sampleRate)/Real(_hopSize));
   for (int i=0; i<(int)startC.size(); i++) {
     if (endC[i]-startC[i] > 2*minDurPitchSamples) {
-      vector<Real> contourH, contourC;
+      ::essentia::VectorEx<Real> contourH, contourC;
       // contour in Hz
       for (int ii = startC[i]; ii <= endC[i]; ii++){
         contourH.push_back(pitch[ii]);
@@ -143,7 +143,7 @@ void PitchContourSegmentation::compute() {
   Real resampleFactor = _hopSizeFeat / _hopSize;
   for (int i=0; i<(int)startC.size(); i++) {
     if (endC[i]-startC[i] > 2*minDurPitchSamples) {
-      vector<Real> rmsSeg;
+      ::essentia::VectorEx<Real> rmsSeg;
       for (int ii=startC[i]; ii<=endC[i]; ii++) {
         rmsSeg.push_back(rms[round(Real(ii) / resampleFactor)]);
       }
@@ -167,7 +167,7 @@ void PitchContourSegmentation::compute() {
     
   // assign pitch values
   for (int i=0; i<(int)startC.size(); i++) {
-    vector<Real> contour;
+    ::essentia::VectorEx<Real> contour;
     onset.push_back(Real(startC[i]) * Real(_hopSize) / Real(_sampleRate));
     Real d = endC[i] - startC[i];
     duration.push_back(d * Real(_hopSize) / Real(_sampleRate));

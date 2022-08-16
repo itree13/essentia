@@ -54,7 +54,7 @@ void LevelAverage(Pool& pool, const string& nspace) {
   string llspace = "lowlevel.";
   if (!nspace.empty()) llspace = nspace + ".lowlevel.";
 
-  vector<Real> levelArray = pool.value<vector<Real> >(llspace + "loudness");
+  ::essentia::VectorEx<Real> levelArray = pool.value<::essentia::VectorEx<Real> >(llspace + "loudness");
   pool.remove(llspace + "loudness");
 
   // Maximum dynamic
@@ -93,7 +93,7 @@ void TuningSystemFeatures(Pool& pool, const string& nspace) {
   string tonalspace = "tonal.";
   if (!nspace.empty()) tonalspace = nspace + ".tonal.";
 
-  vector<Real> hpcp_highres = meanFrames(pool.value<vector<vector<Real> > >(tonalspace + "hpcp_highres"));
+  ::essentia::VectorEx<Real> hpcp_highres = meanFrames(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(tonalspace + "hpcp_highres"));
   normalize(hpcp_highres);
 
   // 1- diatonic strength
@@ -127,10 +127,10 @@ void TuningSystemFeatures(Pool& pool, const string& nspace) {
   pool.set(tonalspace + "tuning_nontempered_energy_ratio", ntEnergy);
 
   // 3- THPCP
-  vector<Real> hpcp = meanFrames(pool.value<vector<vector<Real> > >(tonalspace + "hpcp"));
+  ::essentia::VectorEx<Real> hpcp = meanFrames(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(tonalspace + "hpcp"));
   normalize(hpcp);
   int idxMax = argmax(hpcp);
-  vector<Real> hpcp_bak = hpcp;
+  ::essentia::VectorEx<Real> hpcp_bak = hpcp;
   for (int i=idxMax; i<(int)hpcp.size(); i++) {
     hpcp[i-idxMax] = hpcp_bak[i];
   }
@@ -153,7 +153,7 @@ void SFXPitch(Pool& pool, const string& nspace) {
   string llspace = "lowlevel.";
   if (!nspace.empty()) llspace = nspace + ".lowlevel.";
 
-  vector<Real> pitch = pool.value<vector<Real> >(llspace + "pitch");
+  ::essentia::VectorEx<Real> pitch = pool.value<::essentia::VectorEx<Real> >(llspace + "pitch");
 
   standard::Algorithm* maxtt = standard::AlgorithmFactory::create("MaxToTotal");
   Real maxToTotal;
@@ -196,7 +196,7 @@ void TonalPoolCleaning(Pool& pool, const string& nspace) {
   string tonalspace = "tonal.";
   if (!nspace.empty()) tonalspace = nspace + ".tonal.";
 
-  Real tuningFreq = pool.value<vector<Real> >(tonalspace + "tuning_frequency").back();
+  Real tuningFreq = pool.value<::essentia::VectorEx<Real> >(tonalspace + "tuning_frequency").back();
   pool.remove(tonalspace + "tuning_frequency");
   pool.set(tonalspace + "tuning_frequency", tuningFreq);
 
@@ -211,13 +211,13 @@ void PCA(Pool& pool, const string& nspace) {
   string llspace = "lowlevel.";
   if (!nspace.empty()) llspace = nspace + ".lowlevel.";
 
-  vector<vector<Real> > sccoeffs = pool.value<vector<vector<Real> > >(llspace + "sccoeffs");
-  vector<vector<Real> > scvalleys = pool.value<vector<vector<Real> > >(llspace + "scvalleys");
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > sccoeffs = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(llspace + "sccoeffs");
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > scvalleys = pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >(llspace + "scvalleys");
 
   Pool poolSc, poolTransformed;
 
   for (int iFrame = 0; iFrame < (int)sccoeffs.size(); iFrame++) {
-    vector<Real> merged(2*sccoeffs[iFrame].size(), 0.0);
+    ::essentia::VectorEx<Real> merged(2*sccoeffs[iFrame].size(), 0.0);
     for(int i=0, j=0; i<(int)sccoeffs[iFrame].size(); i++, j++) {
       merged[j++] = sccoeffs[iFrame][i];
       merged[j] = scvalleys[iFrame][i];
@@ -233,9 +233,9 @@ void PCA(Pool& pool, const string& nspace) {
   pca->compute();
 
   pool.set(llspace + "spectral_contrast.mean",
-           meanFrames(poolTransformed.value<vector<vector<Real> > >("contrast")));
+           meanFrames(poolTransformed.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("contrast")));
   pool.set(llspace + "spectral_contrast.var",
-           varianceFrames(poolTransformed.value<vector<vector<Real> > >("contrast")));
+           varianceFrames(poolTransformed.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("contrast")));
 
   // remove original data from spectral contrast:
   pool.remove(llspace + "sccoeffs");
@@ -254,7 +254,7 @@ void PostProcess(Pool& pool, const string& nspace) {
   pool.set(rhythmspace + "perceptual_tempo", "unknown");
 
   try {
-    pool.value<vector<Real> >(rhythmspace + "beats_loudness");
+    pool.value<::essentia::VectorEx<Real> >(rhythmspace + "beats_loudness");
   }
   catch (EssentiaException&) {
     pool.set(rhythmspace + "beats_loudness", 0.0);
@@ -262,17 +262,17 @@ void PostProcess(Pool& pool, const string& nspace) {
   }
 
   try {
-    pool.value<vector<Real> >(rhythmspace + "rubato_start");
+    pool.value<::essentia::VectorEx<Real> >(rhythmspace + "rubato_start");
   }
   catch (EssentiaException&) {
-    pool.set(rhythmspace + "rubato_start", vector<Real>(0));
+    pool.set(rhythmspace + "rubato_start", ::essentia::VectorEx<Real>(0));
   }
 
   try {
-    pool.value<vector<Real> >(rhythmspace + "rubato_stop");
+    pool.value<::essentia::VectorEx<Real> >(rhythmspace + "rubato_stop");
   }
   catch (EssentiaException&) {
-    pool.set(rhythmspace + "rubato_stop", vector<Real>(0));
+    pool.set(rhythmspace + "rubato_stop", ::essentia::VectorEx<Real>(0));
   }
 
   // PCA analysis of spectral contrast output:

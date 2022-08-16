@@ -83,7 +83,7 @@ void SpectralContrast::configure() {
 }
 
 void SpectralContrast::compute() {
-  vector<Real> spectrum = _spectrum.get(); // I want a copy because I'll be transforming it
+  ::essentia::VectorEx<Real> spectrum = _spectrum.get(); // I want a copy because I'll be transforming it
   if (int(spectrum.size()) != _frameSize/2 + 1) {
     ostringstream msg;
     msg << "SpectralContrast: the size of the input spectrum should be half the frameSize parameter + 1. Current spectrum size is: " << spectrum.size() << " while frameSize is " << _frameSize;
@@ -93,8 +93,8 @@ void SpectralContrast::compute() {
   Real minReal = 1e-30; //numeric_limits<Real>::min();
 
   // get the outputs
-  vector<Real>& sc = _spectralcontrast.get();
-  vector<Real>& valleys = _valleys.get();
+  ::essentia::VectorEx<Real>& sc = _spectralcontrast.get();
+  ::essentia::VectorEx<Real>& valleys = _valleys.get();
 
   sc.clear();
   valleys.clear();

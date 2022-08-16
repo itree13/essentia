@@ -32,7 +32,7 @@ class MusicExtractorSVM : public Algorithm {
   Input<Pool> _inputPool;
   Output<Pool> _outputPool;
 
-  std::vector<standard::Algorithm*> _svms;
+  ::essentia::VectorEx<standard::Algorithm*> _svms;
 
 
  public:

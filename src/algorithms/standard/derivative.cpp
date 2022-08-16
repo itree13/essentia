@@ -29,8 +29,8 @@ const char* Derivative::category = "Standard";
 const char* Derivative::description = DOC("This algorithm returns the first-order derivative of an input signal. That is, for each input value it returns the value minus the previous one.");
 
 void Derivative::compute() {
-  const std::vector<Real>& input = _input.get();
-  std::vector<Real>& output = _output.get();
+  const ::essentia::VectorEx<Real>& input = _input.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
   int size = input.size();
   output.resize(size);
 

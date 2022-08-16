@@ -25,8 +25,8 @@ using namespace std;
 
 namespace essentia {
 
-void processFrame(vector<Real>& tmpFrame, const vector<Real>& windowedFrame,
-                  vector<Real>& output, vector<Real> &frameHistory,
+void processFrame(::essentia::VectorEx<Real>& tmpFrame, const ::essentia::VectorEx<Real>& windowedFrame,
+                  ::essentia::VectorEx<Real>& output, ::essentia::VectorEx<Real> &frameHistory,
                   const int& _frameSize, const int& _hopSize, const float& normalizationGain) {
 
   bool _zeroPhase = true;
@@ -104,10 +104,10 @@ void OverlapAdd::reset() {
   
 void OverlapAdd::compute() {
 
-  const vector<Real>& windowedFrame = _windowedFrame.get();
-  vector<Real>& output = _output.get();
+  const ::essentia::VectorEx<Real>& windowedFrame = _windowedFrame.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
 
-  //vector<AudioSample>& audio = _audio.get();
+  //::essentia::VectorEx<AudioSample>& audio = _audio.get();
 
   if (windowedFrame.empty()) throw EssentiaException("OverlapAdd: the input frame is empty");
 
@@ -162,11 +162,11 @@ AlgorithmStatus OverlapAdd::process() {
     return CONTINUE;
   }
 
-  const vector<vector<Real> >& frames = _frames.tokens();
-  vector<Real>& output = _output.tokens();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& frames = _frames.tokens();
+  ::essentia::VectorEx<Real>& output = _output.tokens();
 
   assert(frames.size() == 1 && (int) output.size() == _hopSize);
-  const vector<Real> & windowedFrame = frames[0];
+  const ::essentia::VectorEx<Real> & windowedFrame = frames[0];
 
   if (windowedFrame.empty()) throw EssentiaException("OverlapAdd: the input frame is empty");
 

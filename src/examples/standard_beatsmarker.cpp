@@ -55,8 +55,8 @@ int main(int argc, char* argv[]) {
   Algorithm* beatTracker = factory.create("BeatTrackerMultiFeature");
 
 
-  vector<Real> audio;
-  vector<Real> beats;
+  ::essentia::VectorEx<Real> audio;
+  ::essentia::VectorEx<Real> beats;
   Real confidence;
 
   audioLoader->output("audio").set(audio);
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
   beatTracker->compute();
 
 
-  vector<Real> audioOutput;
+  ::essentia::VectorEx<Real> audioOutput;
 
   Algorithm* beatsMarker = factory.create("AudioOnsetsMarker",
                                           "onsets", beats,

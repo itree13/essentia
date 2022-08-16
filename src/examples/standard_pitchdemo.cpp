@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
                                           "sampleRate", sr,
                                           "downmix", "mix");
 
-    vector<Real> audio;
+    ::essentia::VectorEx<Real> audio;
     audioload->output("audio").set(audio);
     audioload->compute();
     
@@ -92,24 +92,24 @@ int main(int argc, char* argv[]) {
             
             
             // configure frameCutter:
-            vector<Real> frame;
+            ::essentia::VectorEx<Real> frame;
             frameCutter->input("signal").set(audio);
             frameCutter->output("frame").set(frame);
             
             // configure windowing:
-            vector<Real> windowedframe;
+            ::essentia::VectorEx<Real> windowedframe;
             window->input("frame").set(frame);
             window->output("frame").set(windowedframe);
             
             // configure spectrum:
-            vector<Real> spec;
+            ::essentia::VectorEx<Real> spec;
             spectrum->input("frame").set(windowedframe);
             spectrum->output("spectrum").set(spec);
             
             // configure pitch extraction:
             Real thisPitch = 0., thisConf = 0;
             Real localTime=0.;
-            vector<Real> allPitches, allConf, time;
+            ::essentia::VectorEx<Real> allPitches, allConf, time;
             pitchDetect->input("spectrum").set(spec);
             pitchDetect->output("pitch").set(thisPitch);
             pitchDetect->output("pitchConfidence").set(thisConf);
@@ -162,7 +162,7 @@ int main(int argc, char* argv[]) {
                                                     "sampleRate", sr, "hopSize", hopsize, "frameSize", framesize);
             
             // configure
-            vector<Real> pitch, pitchConfidence;
+            ::essentia::VectorEx<Real> pitch, pitchConfidence;
             pitchDetect->input("signal").set(audio);
             pitchDetect->output("pitch").set(pitch);
             pitchDetect->output("pitchConfidence").set(pitchConfidence);
@@ -195,13 +195,13 @@ int main(int argc, char* argv[]) {
             Algorithm* noteSeg = factory.create("PitchContourSegmentation", "sampleRate", sr, "hopSize", hopsize);
             
             // configure pitch detection
-            vector<Real> pitch, pitchConfidence;
+            ::essentia::VectorEx<Real> pitch, pitchConfidence;
             pitchDetect->input("signal").set(audio);
             pitchDetect->output("pitch").set(pitch);
             pitchDetect->output("pitchConfidence").set(pitchConfidence);
             
             // configure note segmentation
-            vector<Real> onset, duration, MIDIpitch;
+            ::essentia::VectorEx<Real> onset, duration, MIDIpitch;
             noteSeg->input("pitch").set(pitch);
             noteSeg->input("signal").set(audio);
             noteSeg->output("onset").set(onset);
@@ -238,7 +238,7 @@ int main(int argc, char* argv[]) {
             Algorithm* multiPitch = factory.create("MultiPitchKlapuri", "sampleRate", sr);
             
             // configure algorithm
-            vector<vector<Real> >pitchMulti;
+            ::essentia::VectorEx<::essentia::VectorEx<Real> >pitchMulti;
             multiPitch->input("signal").set(audio);
             multiPitch->output("pitch").set(pitchMulti);
             
@@ -270,8 +270,8 @@ int main(int argc, char* argv[]) {
             Algorithm* el = factory.create("EqualLoudness","sampleRate", sr);
             
             // configure
-            vector<Real> audioEQ;
-            vector<vector<Real> >pitchMulti;
+            ::essentia::VectorEx<Real> audioEQ;
+            ::essentia::VectorEx<::essentia::VectorEx<Real> >pitchMulti;
             el->input("signal").set(audio);
             el->output("signal").set(audioEQ);
             predmelMulti->input("signal").set(audioEQ);
@@ -304,7 +304,7 @@ int main(int argc, char* argv[]) {
             
             
             // configure pitch detection
-            vector<Real> pitch, pitchConfidence;
+            ::essentia::VectorEx<Real> pitch, pitchConfidence;
             pitchDetect->input("signal").set(audio);
             pitchDetect->output("pitch").set(pitch);
             pitchDetect->output("pitchConfidence").set(pitchConfidence);

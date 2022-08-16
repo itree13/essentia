@@ -63,7 +63,7 @@ class PercivalBpmEstimator : public AlgorithmComposite {
   bool _configured;
   void createInnerNetwork();
   void clearAlgos();
-  Real energyInRange(const std::vector<Real>& array,
+  Real energyInRange(const ::essentia::VectorEx<Real>& array,
                      const Real low,
                      const Real high,
                      const Real scale);
@@ -107,7 +107,7 @@ namespace standard {
 
 class PercivalBpmEstimator : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real > _bpm;
 
   streaming::Algorithm* _percivalBpmEstimator;

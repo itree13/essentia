@@ -30,13 +30,13 @@ class NNLSChroma : public Algorithm {
  public:
 
  protected:
-  Input<std::vector<std::vector<Real> > > _logSpectrum;
-  Input<std::vector<Real> > _meanTuning;
-  Input<std::vector<Real> > _localTuning;
-  Output<std::vector<std::vector<Real> > > _tunedLogfreqSpectrum;
-  Output<std::vector<std::vector<Real> > > _semitoneSpectrum;
-  Output<std::vector<std::vector<Real> > > _bassChromagram;
-  Output<std::vector<std::vector<Real> > > _chromagram;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _logSpectrum;
+  Input<::essentia::VectorEx<Real> > _meanTuning;
+  Input<::essentia::VectorEx<Real> > _localTuning;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _tunedLogfreqSpectrum;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _semitoneSpectrum;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _bassChromagram;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _chromagram;
 
  public:
   NNLSChroma() {
@@ -76,19 +76,19 @@ class NNLSChroma : public Algorithm {
   Real _sampleRate;
   Real _whitening;
   Real _spectralShape;
-  std::vector<int> _kernelFftIndex;
-  std::vector<int> _kernelNoteIndex;
-  std::vector<Real> _kernelValue;
-  std::vector<Real> _hw;
-  std::vector<Real> _sinvalues;
-  std::vector<Real> _cosvalues;
-  std::vector<Real> _dict;
+  ::essentia::VectorEx<int> _kernelFftIndex;
+  ::essentia::VectorEx<int> _kernelNoteIndex;
+  ::essentia::VectorEx<Real> _kernelValue;
+  ::essentia::VectorEx<Real> _hw;
+  ::essentia::VectorEx<Real> _sinvalues;
+  ::essentia::VectorEx<Real> _cosvalues;
+  ::essentia::VectorEx<Real> _dict;
 
-  bool logFreqMatrix(Real fs, int frameSize, std::vector<Real> outmatrix);
+  bool logFreqMatrix(Real fs, int frameSize, ::essentia::VectorEx<Real> outmatrix);
   Real cospuls(Real x, Real centre, Real width);
   Real pitchCospuls(Real x, Real centre, int binsperoctave);
-  std::vector<Real> SpecialConvolution(std::vector<Real> convolvee, std::vector<Real> kernel);
-  void dictionaryMatrix(std::vector<Real> dm, Real s_param);
+  ::essentia::VectorEx<Real> SpecialConvolution(::essentia::VectorEx<Real> convolvee, ::essentia::VectorEx<Real> kernel);
+  void dictionaryMatrix(::essentia::VectorEx<Real> dm, Real s_param);
 
 };
 
@@ -103,13 +103,13 @@ namespace streaming {
 class NNLSChroma : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::vector<Real> > > _logSpectrum;
-  Sink<std::vector<Real> > _meanTuning;
-  Sink<std::vector<Real> > _localTuning;
-  Source<std::vector<std::vector<Real> > > _tunedLogfreqSpectrum;
-  Source<std::vector<std::vector<Real> > > _semitoneSpectrum;
-  Source<std::vector<std::vector<Real> > > _bassChromagram;
-  Source<std::vector<std::vector<Real> > > _chromagram;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _logSpectrum;
+  Sink<::essentia::VectorEx<Real> > _meanTuning;
+  Sink<::essentia::VectorEx<Real> > _localTuning;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _tunedLogfreqSpectrum;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _semitoneSpectrum;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _bassChromagram;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _chromagram;
 
  public:
   NNLSChroma() {

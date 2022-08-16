@@ -46,11 +46,11 @@ void SpectralComplexity::configure() {
 
 void SpectralComplexity::compute() {
 
-  const vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   Real& spectralComplexity = _spectralComplexity.get();
 
-  vector<Real> frequencies;
-  vector<Real> magnitudes;
+  ::essentia::VectorEx<Real> frequencies;
+  ::essentia::VectorEx<Real> magnitudes;
 
   _spectralPeaks->input("spectrum").set(spectrum);
   _spectralPeaks->output("frequencies").set(frequencies);

@@ -43,8 +43,8 @@ void Spectrum::configure() {
 
 void Spectrum::compute() {
 
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
 
   // no need to make checks regarding the size of the input here, as they
   // will be checked anyway in the FFT algorithm.

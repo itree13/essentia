@@ -28,9 +28,9 @@ namespace standard {
 class PitchSalienceFunction : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _frequencies;
-  Input<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _salienceFunction;
+  Input<::essentia::VectorEx<Real> > _frequencies;
+  Input<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _salienceFunction;
 
   Real _binResolution;
   Real _referenceFrequency;
@@ -40,8 +40,8 @@ class PitchSalienceFunction : public Algorithm {
   Real _harmonicWeight;
 
 
-  std::vector<Real> _harmonicWeights;     // precomputed vector of weights for n-th harmonics
-  std::vector<Real> _nearestBinsWeights;  // precomputed vector of weights for salience propagation to nearest bins
+  ::essentia::VectorEx<Real> _harmonicWeights;     // precomputed vector of weights for n-th harmonics
+  ::essentia::VectorEx<Real> _nearestBinsWeights;  // precomputed vector of weights for salience propagation to nearest bins
   int _numberBins;
   int _binsInSemitone;                // number of bins in a semitone
   Real _binsInOctave;                 // number of bins in an octave
@@ -90,9 +90,9 @@ namespace streaming {
 class PitchSalienceFunction : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _frequencies;
-  Sink<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _salienceFunction;
+  Sink<::essentia::VectorEx<Real> > _frequencies;
+  Sink<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _salienceFunction;
 
  public:
   PitchSalienceFunction() {

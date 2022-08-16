@@ -42,8 +42,8 @@ void FrameToReal::configure() {
 
 void FrameToReal::compute() {
 
-  const vector<Real>& frames = _frames.get();
-  vector<Real>& audio = _audio.get();
+  const ::essentia::VectorEx<Real>& frames = _frames.get();
+  ::essentia::VectorEx<Real>& audio = _audio.get();
 
 
   if (frames.empty()) throw EssentiaException("FrameToReal: the input signal is empty");

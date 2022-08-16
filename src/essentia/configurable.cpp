@@ -46,8 +46,8 @@ void Configurable::setParameters(const ParameterMap& params) {
 
 #if !ALLOW_DEFAULT_PARAMETERS
 
-  vector<string> allParams = _defaultParams.keys();
-  vector<string> givenParams = params.keys();
+  ::essentia::VectorEx<string> allParams = _defaultParams.keys();
+  ::essentia::VectorEx<string> givenParams = params.keys();
   if (givenParams != allParams) {
     ostringstream msg;
     msg << "Trying to configure algorithm '" << _name

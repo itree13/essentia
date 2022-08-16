@@ -28,8 +28,8 @@ namespace standard {
 class IDCT : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _dct;
-  Output<std::vector<Real> > _idct;
+  Input<::essentia::VectorEx<Real> > _dct;
+  Output<::essentia::VectorEx<Real> > _idct;
 
  public:
   IDCT() {
@@ -57,7 +57,7 @@ class IDCT : public Algorithm {
   Real _lifter;
   void createIDctTableII(int inputSize, int outputSize);
   void createIDctTableIII(int inputSize, int outputSize);
-  std::vector<std::vector<Real> > _idctTable;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _idctTable;
   int _type;
 };
 
@@ -73,8 +73,8 @@ namespace streaming {
 class IDCT : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _dct;
-  Source<std::vector<Real> > _idct;
+  Sink<::essentia::VectorEx<Real> > _dct;
+  Source<::essentia::VectorEx<Real> > _idct;
 
  public:
   IDCT() {

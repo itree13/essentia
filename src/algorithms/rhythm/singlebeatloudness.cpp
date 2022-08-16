@@ -76,9 +76,9 @@ void SingleBeatLoudness::configure() {
 }
 
 void SingleBeatLoudness::compute() {
-  const vector<Real>& beat = _beat.get();
+  const ::essentia::VectorEx<Real>& beat = _beat.get();
   Real& loudness = _loudness.get();
-  vector<Real>& loudnessBand = _loudnessBand.get();
+  ::essentia::VectorEx<Real>& loudnessBand = _loudnessBand.get();
 
   if (int(beat.size()) < _beatWindowSize + _beatDuration) {
     throw EssentiaException("SingleBeatLoudness: the size of the input beat segment cannot be smaller than beatWindowSize + beatDuration");
@@ -98,7 +98,7 @@ void SingleBeatLoudness::compute() {
     }
   }
   else {
-    vector<Real> beatPower(beat.size());
+    ::essentia::VectorEx<Real> beatPower(beat.size());
     for (int i=0; i<(int)beat.size(); i++)
       beatPower[i] = beat[i]*beat[i];
     for (int i=0; i<_beatWindowSize; i++) {

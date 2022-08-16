@@ -37,7 +37,7 @@ const char* Crest::description = DOC("This algorithm computes the crest of an ar
 
 void Crest::compute() {
 
-  const vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
   Real& crest = _crest.get();
 
   if (array.size() == 0) {

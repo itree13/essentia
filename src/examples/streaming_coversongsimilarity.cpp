@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
   string queryAudioFile = argv[1]; 
   string referenceFile = argv[2];
   string outputFilename = argv[3];
-  vector<vector<Real> > referenceFeature;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > referenceFeature;
 
   // read the 2d array text file and store it to a 2D vector 
   ifstream myReadFile;
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
   while (getline(myReadFile, line)) {
     Real value;
     stringstream ss(line);
-    referenceFeature.push_back(vector<Real> ());
+    referenceFeature.push_back(::essentia::VectorEx<Real> ());
     while (ss >> value) {
       referenceFeature[i].push_back(value);
     }
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 
   streaming::AlgorithmFactory& factory = streaming::AlgorithmFactory::instance();
 
-  // Algorithm* vectorInput = new streaming::VectorInput<vector<Real> >(&inputSimMatrix);
+  // Algorithm* vectorInput = new streaming::VectorInput<::essentia::VectorEx<Real> >(&inputSimMatrix);
 
   Algorithm* audio = factory.create("MonoLoader",
                                     "filename", queryAudioFile,

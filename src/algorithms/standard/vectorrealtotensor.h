@@ -28,10 +28,10 @@ namespace streaming {
 
 class VectorRealToTensor : public Algorithm {
  protected:
-  Sink<std::vector<Real> > _frame;
+  Sink<::essentia::VectorEx<Real> > _frame;
   Source<Tensor<Real> > _tensor;
 
-  std::vector<int> _shape;
+  ::essentia::VectorEx<int> _shape;
   int _timeStamps;
   int _batchHopSize;
   int _patchHopSize;
@@ -40,7 +40,7 @@ class VectorRealToTensor : public Algorithm {
   std::string _lastPatchMode;
   std::string _lastBatchMode;
 
-  std::vector<std::vector<std::vector<Real> > > _acc;
+  ::essentia::VectorEx<::essentia::VectorEx<::essentia::VectorEx<Real> > > _acc;
 
  public:
   VectorRealToTensor() : _push(false), _accumulate(false) {
@@ -51,7 +51,7 @@ class VectorRealToTensor : public Algorithm {
   void declareParameters() {
     // Process 187 frames x 96 features by default.
     // This is a common setup for mel-spectrogram based architectures.
-    std::vector<int> outputShape = {1, 1, 187, 96};
+    ::essentia::VectorEx<int> outputShape = {1, 1, 187, 96};
 
     declareParameter("shape", "shape of the output tensor (batchSize, channels, patchSize, featureSize). If batchSize is set to -1 or 0 a single tensor is generated when the end of the stream is reached", "", outputShape);
     declareParameter("patchHopSize", "number of frames between the beginnings of adjacent patches. Use `0` to avoid overlap", "[0,inf)", 0);

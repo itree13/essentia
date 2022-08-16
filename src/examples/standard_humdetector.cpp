@@ -42,12 +42,12 @@ int main (int argc,char* argv[]) {
   cout << "-------- connecting algos ---------" << endl;
 
   // Audio -> FrameCutter
-  vector<Real> audioBuffer;
+  ::essentia::VectorEx<Real> audioBuffer;
 
   audio->output("audio").set(audioBuffer);
   hd->input("signal").set(audioBuffer);
 
-  vector<Real> a, f, s, e;
+  ::essentia::VectorEx<Real> a, f, s, e;
   TNT::Array2D<Real> r;
 
   hd->output("saliences").set(a);

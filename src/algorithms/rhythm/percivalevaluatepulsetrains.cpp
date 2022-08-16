@@ -43,11 +43,11 @@ const char* PercivalEvaluatePulseTrains::description = DOC("This algorithm imple
 void PercivalEvaluatePulseTrains::configure() {
 }
 
-void PercivalEvaluatePulseTrains::calculatePulseTrains(const std::vector<Real>& ossWindow,
+void PercivalEvaluatePulseTrains::calculatePulseTrains(const ::essentia::VectorEx<Real>& ossWindow,
                                                const int lag,
                                                Real& magScore,
                                                Real& varScore) {
-  vector<Real> bpMagnitudes;
+  ::essentia::VectorEx<Real> bpMagnitudes;
   int period = lag;
   bpMagnitudes.resize(lag);
   for (int phase=0; phase < period; ++phase) {
@@ -75,8 +75,8 @@ void PercivalEvaluatePulseTrains::calculatePulseTrains(const std::vector<Real>& 
 }
 
 void PercivalEvaluatePulseTrains::compute() {
-  const vector<Real>& oss = _oss.get();
-  const vector<Real>& peakPositions = _peakPositions.get();
+  const ::essentia::VectorEx<Real>& oss = _oss.get();
+  const ::essentia::VectorEx<Real>& peakPositions = _peakPositions.get();
   Real& lag = _lag.get();
 
   if (peakPositions.size() == 0) {
@@ -85,8 +85,8 @@ void PercivalEvaluatePulseTrains::compute() {
     return;
   }
 
-  vector<Real> tempoScores;
-  vector<Real> onsetScores;
+  ::essentia::VectorEx<Real> tempoScores;
+  ::essentia::VectorEx<Real> onsetScores;
   tempoScores.reserve(peakPositions.size());
   onsetScores.reserve(peakPositions.size());
   for (int i=0; i<(int)peakPositions.size(); ++i) {
@@ -103,7 +103,7 @@ void PercivalEvaluatePulseTrains::compute() {
       onsetScores[i] = varScore;
     }
   }
-  vector<Real> comboScores;
+  ::essentia::VectorEx<Real> comboScores;
   comboScores.resize(peakPositions.size());
   Real sumTempoScores = sum(tempoScores);
   Real sumOnsetScroes = sum(onsetScores);

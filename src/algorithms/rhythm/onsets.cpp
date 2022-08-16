@@ -84,8 +84,8 @@ void Onsets::configure() {
 
 void Onsets::compute() {
   const Array2D<Real>& detections = _detections.get();
-  const vector<Real>& weights = _weights.get();
-  vector<Real>& onsets = _onsets.get();
+  const ::essentia::VectorEx<Real>& weights = _weights.get();
+  ::essentia::VectorEx<Real>& onsets = _onsets.get();
 
   if (detections.dim1() == 0) {
     throw EssentiaException("Onsets: Passing empty matrix as input");
@@ -96,7 +96,7 @@ void Onsets::compute() {
   }
 
   // Copying the Array2D to a vector of vector, much more easy to normalize
-  vector<vector<Real> > detections_norm( detections.dim1(), vector<Real>(detections.dim2()) );
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > detections_norm( detections.dim1(), ::essentia::VectorEx<Real>(detections.dim2()) );
   for (int i=0; i<detections.dim1(); ++i) {
     for (int j=0; j<detections.dim2(); ++j) {
       detections_norm[i][j] = detections[i][j];
@@ -105,7 +105,7 @@ void Onsets::compute() {
   }
 
   // Summing the detection functions into a global detection function
-  vector<Real> detection(detections_norm[0].size(), Real(0.0));
+  ::essentia::VectorEx<Real> detection(detections_norm[0].size(), Real(0.0));
   for (int j=0; j<int(detections_norm[0].size()); ++j) {
     for (int i=0; i<int(detections_norm.size()); ++i) {
       detection[j] += weights[i] * detections_norm[i][j];
@@ -113,7 +113,7 @@ void Onsets::compute() {
   }
 
   // Smoothing the global detection function with a moving average filter
-  vector<Real> detection_ma(detection.size(), Real(0.0));
+  ::essentia::VectorEx<Real> detection_ma(detection.size(), Real(0.0));
   _movingAverage->input("signal").set(detection);
   _movingAverage->output("signal").set(detection_ma);
   _movingAverage->compute();
@@ -127,8 +127,8 @@ void Onsets::compute() {
   }
 
   // Finding the possible onsets with the adaptative threshold
-  vector<bool> onsetDetection(detection_ma.size(), false);
-  vector<Real> buffer(_bufferSize, Real(0.0));
+  ::essentia::VectorEx<bool> onsetDetection(detection_ma.size(), false);
+  ::essentia::VectorEx<Real> buffer(_bufferSize, Real(0.0));
   int index = 0;
 
   for (int i=1; i<int(onsetDetection.size()); ++i) {

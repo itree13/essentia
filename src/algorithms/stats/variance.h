@@ -28,7 +28,7 @@ namespace standard {
 class Variance : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _variance;
 
  public:
@@ -58,7 +58,7 @@ namespace streaming {
 class Variance : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _variance;
 
  public:

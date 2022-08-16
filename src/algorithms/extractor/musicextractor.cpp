@@ -110,7 +110,7 @@ void MusicExtractor::configure() {
 
   if (options.value<Real>("highlevel.compute")) {
 #if HAVE_GAIA2 
-    svmModels = options.value<vector<string> >("highlevel.svm_models");
+    svmModels = options.value<::essentia::VectorEx<string> >("highlevel.svm_models");
     _svms = AlgorithmFactory::create("MusicExtractorSVM", "svms", svmModels);
 #else
     E_WARNING("MusicExtractor: Gaia library is missing. Skipping configuration of SVM models.");
@@ -210,7 +210,7 @@ void MusicExtractor::compute() {
   readMetadata(audioFilename, results);
 
   if (requireMbid
-      && !results.contains<vector<string> >("metadata.tags.musicbrainz_trackid")
+      && !results.contains<::essentia::VectorEx<string> >("metadata.tags.musicbrainz_trackid")
       && !results.contains<string>("metadata.tags.musicbrainz_trackid")) {
       throw EssentiaException("MusicExtractor: Error processing ", audioFilename, " file: cannot find musicbrainz recording id");
   }
@@ -278,7 +278,7 @@ void MusicExtractor::compute() {
   tonal->computeTuningSystemFeatures(results); // requires 'hpcp_highres'
 
   // TODO is this necessary? tuning_frequency should always have one value:
-  Real tuningFreq = results.value<vector<Real> >(tonal->nameSpace + "tuning_frequency").back();
+  Real tuningFreq = results.value<::essentia::VectorEx<Real> >(tonal->nameSpace + "tuning_frequency").back();
   results.remove(tonal->nameSpace + "tuning_frequency");
   results.set(tonal->nameSpace + "tuning_frequency", tuningFreq);
   
@@ -310,27 +310,27 @@ Pool MusicExtractor::computeAggregation(Pool& pool){
   // choose which descriptors stats to output
   const char* defaultStats[] = { "mean", "var", "stdev", "median", "min", "max", "dmean", "dmean2", "dvar", "dvar2" };
 
-  map<string, vector<string> > exceptions;
-  const vector<string>& descNames = pool.descriptorNames();
+  map<string, ::essentia::VectorEx<string> > exceptions;
+  const ::essentia::VectorEx<string>& descNames = pool.descriptorNames();
   for (int i=0; i<(int)descNames.size(); i++) {
     if (descNames[i].find("lowlevel.mfcc") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("lowlevel.mfccStats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("lowlevel.mfccStats");
       continue;
     }
     if (descNames[i].find("lowlevel.gfcc") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("lowlevel.gfccStats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("lowlevel.gfccStats");
       continue;
     }
     if (descNames[i].find("lowlevel.") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("lowlevel.stats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("lowlevel.stats");
       continue;
     }
     if (descNames[i].find("rhythm.") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("rhythm.stats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("rhythm.stats");
       continue;
     }
     if (descNames[i].find("tonal.") != string::npos) {
-      exceptions[descNames[i]] = options.value<vector<string> >("tonal.stats");
+      exceptions[descNames[i]] = options.value<::essentia::VectorEx<string> >("tonal.stats");
       continue;
     }
   }
@@ -350,12 +350,12 @@ Pool MusicExtractor::computeAggregation(Pool& pool){
 
   int statsSize = int(sizeof(defaultStats)/sizeof(defaultStats[0]));
 
-  if (!pool.contains<vector<Real> >("rhythm.beats_loudness")) {
+  if (!pool.contains<::essentia::VectorEx<Real> >("rhythm.beats_loudness")) {
     for (int i=0; i<statsSize; i++)
         poolStats.set(string("rhythm.beats_loudness.")+defaultStats[i], 0);
   }
 
-  if (!pool.contains<vector<vector<Real> > >("rhythm.beats_loudness_band_ratio")) {
+  if (!pool.contains<::essentia::VectorEx<::essentia::VectorEx<Real> > >("rhythm.beats_loudness_band_ratio")) {
     for (int i=0; i<statsSize; i++)
       poolStats.set(string("rhythm.beats_loudness_band_ratio.")+defaultStats[i], arrayToVector<Real>(emptyVector));
   }
@@ -363,13 +363,13 @@ Pool MusicExtractor::computeAggregation(Pool& pool){
   // Code below was a workaround for the cases when beats_loudness_band_ratio contains a single vector.
   // Now, PoolAggregator computes the statistics is this case too.
   /*
-  else if (pool.value<vector<vector<Real> > >("rhythm.beats_loudness_band_ratio").size() < 2) {
+  else if (pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("rhythm.beats_loudness_band_ratio").size() < 2) {
     poolStats.remove(string("rhythm.beats_loudness_band_ratio"));
     for (int i=0; i<statsSize; i++) {
       if(i==1 || i==6 || i==7)// var, dvar and dvar2 are 0
         poolStats.set(string("rhythm.beats_loudness_band_ratio.")+defaultStats[i], arrayToVector<Real>(emptyVector));
       else
-        poolStats.set(string("rhythm.beats_loudness_band_ratio.")+defaultStats[i], pool.value<vector<vector<Real> > >("rhythm.beats_loudness_band_ratio")[0]);
+        poolStats.set(string("rhythm.beats_loudness_band_ratio.")+defaultStats[i], pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("rhythm.beats_loudness_band_ratio")[0]);
     }
   }
   */
@@ -377,9 +377,9 @@ Pool MusicExtractor::computeAggregation(Pool& pool){
 
   // variable descriptor length counts:
 
-  // poolStats.set(string("rhythm.onset_count"), pool.value<vector<Real> >("rhythm.onset_times").size());
-  poolStats.set(string("rhythm.beats_count"), pool.value<vector<Real> >("rhythm.beats_position").size());
-  //poolStats.set(string("tonal.chords_count"), pool.value<vector<string> >("tonal.chords_progression").size());
+  // poolStats.set(string("rhythm.onset_count"), pool.value<::essentia::VectorEx<Real> >("rhythm.onset_times").size());
+  poolStats.set(string("rhythm.beats_count"), pool.value<::essentia::VectorEx<Real> >("rhythm.beats_position").size());
+  //poolStats.set(string("tonal.chords_count"), pool.value<::essentia::VectorEx<string> >("tonal.chords_progression").size());
 
   delete aggregator;
 
@@ -393,7 +393,7 @@ void MusicExtractor::readMetadata(const string& audioFilename, Pool& results) {
 
   // TODO this should not be hardcoded here, this could be a part of (default) profile file configuration,
   // or passed as a parameter.
-  vector<string> whitelist = arrayToVector<string>(tagWhitelist);
+  ::essentia::VectorEx<string> whitelist = arrayToVector<string>(tagWhitelist);
   standard::Algorithm* metadata = standard::AlgorithmFactory::create("MetadataReader",
                                                                      "filename", audioFilename,
                                                                      "failOnError", true,
@@ -525,7 +525,7 @@ void MusicExtractor::computeAudioMetadata(const string& audioFilename, Pool& res
   // It won't protect us against people converting from (e.g.) mp3 -> flac
   // before submitting
   const char* losslessCodecs[] = {"alac", "ape", "flac", "shorten", "tak", "truehd", "tta", "wmalossless"};
-  vector<string> lossless = arrayToVector<string>(losslessCodecs);
+  ::essentia::VectorEx<string> lossless = arrayToVector<string>(losslessCodecs);
   const string codec = results.value<string>("metadata.audio_properties.codec");
   bool isLossless = find(lossless.begin(), lossless.end(), codec) != lossless.end();
   if (!isLossless && codec.substr(0, 4) == "pcm_") {
@@ -622,7 +622,7 @@ void MusicExtractor::computeChromaPrint(const string& audioFilename, Pool& resul
                                             "sampleRate", analysisSampleRate,
                                             "maxLength", chromaprintDuration);
 
-  vector<Real> siganl;
+  ::essentia::VectorEx<Real> siganl;
   string chromaprint;
 
   audio->output("audio").set(siganl);

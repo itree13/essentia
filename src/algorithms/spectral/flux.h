@@ -28,10 +28,10 @@ namespace standard {
 class Flux : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _spectrum;
   Output<Real> _flux;
 
-  std::vector<Real> _spectrumMemory;
+  ::essentia::VectorEx<Real> _spectrumMemory;
   std::string _norm;
   bool _halfRectify;
 
@@ -70,7 +70,7 @@ namespace streaming {
 class Flux : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _flux;
 
  public:

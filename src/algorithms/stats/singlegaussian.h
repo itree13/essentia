@@ -31,7 +31,7 @@ class SingleGaussian : public Algorithm {
 
  private:
   Input<TNT::Array2D<Real> > _matrix;
-  Output<std::vector<Real> > _mean;
+  Output<::essentia::VectorEx<Real> > _mean;
   Output<TNT::Array2D<Real> > _covariance;
   Output<TNT::Array2D<Real> > _inverseCovariance;
 
@@ -52,7 +52,7 @@ class SingleGaussian : public Algorithm {
   static const char* description;
 
  protected:
-  std::vector<Real> meanMatrix(const TNT::Array2D<Real>& matrix, int dim) const;
+  ::essentia::VectorEx<Real> meanMatrix(const TNT::Array2D<Real>& matrix, int dim) const;
   TNT::Array2D<Real> transposeMatrix(const TNT::Array2D<Real>& matrix) const;
   TNT::Array2D<Real> covarianceMatrix(const TNT::Array2D<Real>& matrix, bool lowmem = false) const;
   TNT::Array2D<Real> inverseMatrix(const TNT::Array2D<Real>& matrix) const;
@@ -71,7 +71,7 @@ class SingleGaussian : public StreamingAlgorithmWrapper {
 
  protected:
   Sink<TNT::Array2D<Real> > _matrix;
-  Source<std::vector<Real> > _mean;
+  Source<::essentia::VectorEx<Real> > _mean;
   Source<TNT::Array2D<Real> > _covariance;
   Source<TNT::Array2D<Real> > _inverseCovariance;
 

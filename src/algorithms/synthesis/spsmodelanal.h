@@ -32,11 +32,11 @@ class SpsModelAnal : public Algorithm {
 
  protected:
 
-  Input<std::vector<Real> > _frame;
-  Output<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _frequencies;
-  Output<std::vector<Real> > _phases;
-  Output<std::vector<Real> > _stocenv;
+  Input<::essentia::VectorEx<Real> > _frame;
+  Output<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _frequencies;
+  Output<::essentia::VectorEx<Real> > _phases;
+  Output<::essentia::VectorEx<Real> > _stocenv;
 
   int _stocSize;
   Algorithm* _window;
@@ -45,7 +45,7 @@ class SpsModelAnal : public Algorithm {
   Algorithm* _sineSubtraction;
   Algorithm* _stochasticModelAnal;
 
-  std::vector<Real> _stocFrameIn; // input frame for the stochaastic analysis algorithm
+  ::essentia::VectorEx<Real> _stocFrameIn; // input frame for the stochaastic analysis algorithm
 
 
  public:
@@ -93,7 +93,7 @@ class SpsModelAnal : public Algorithm {
   void configure();
   void compute();
 
-  void updateStocInFrame(const std::vector<Real> frameIn, std::vector<Real> &frameAccumulator);
+  void updateStocInFrame(const ::essentia::VectorEx<Real> frameIn, ::essentia::VectorEx<Real> &frameAccumulator);
 
   static const char* name;
   static const char* category;
@@ -116,12 +116,12 @@ namespace streaming {
 class SpsModelAnal : public StreamingAlgorithmWrapper {
 
  protected:
-  //Sink<std::vector<std::complex<Real> > > _fft; // input
-  Sink<std::vector<Real> > _frame; // input
-  Source<std::vector<Real> > _frequencies;
-  Source<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _phases;
-  Source<std::vector<Real> > _stocenv;
+  //Sink<::essentia::VectorEx<std::complex<Real> > > _fft; // input
+  Sink<::essentia::VectorEx<Real> > _frame; // input
+  Source<::essentia::VectorEx<Real> > _frequencies;
+  Source<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _phases;
+  Source<::essentia::VectorEx<Real> > _stocenv;
 
  public:
   SpsModelAnal() {

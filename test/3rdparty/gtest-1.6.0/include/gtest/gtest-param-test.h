@@ -278,8 +278,8 @@ internal::ParamGenerator<T> Range(T start, T end) {
 // This instantiates tests from test case StlStringTest
 // each with STL strings with values "a" and "b":
 //
-// ::std::vector< ::std::string> GetParameterStrings() {
-//   ::std::vector< ::std::string> v;
+// ::essentia::VectorEx< ::std::string> GetParameterStrings() {
+//   ::essentia::VectorEx< ::std::string> v;
 //   v.push_back("a");
 //   v.push_back("b");
 //   return v;

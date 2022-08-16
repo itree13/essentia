@@ -28,7 +28,7 @@ namespace standard {
 class BpmHistogramDescriptors : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _bpmIntervals;
+  Input<::essentia::VectorEx<Real> > _bpmIntervals;
 
   Output<Real> _firstPeakBPM;
   Output<Real> _firstPeakWeight;
@@ -36,7 +36,7 @@ class BpmHistogramDescriptors : public Algorithm {
   Output<Real> _secondPeakBPM;
   Output<Real> _secondPeakWeight;
   Output<Real> _secondPeakSpread;
-  Output<std::vector<Real> > _histogram;
+  Output<::essentia::VectorEx<Real> > _histogram;
 
  public:
   BpmHistogramDescriptors() {
@@ -78,7 +78,7 @@ namespace streaming {
 class BpmHistogramDescriptors : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _bpmIntervals;
+  Sink<::essentia::VectorEx<Real> > _bpmIntervals;
 
   Source<Real> _firstPeakBPM;
   Source<Real> _firstPeakWeight;
@@ -86,7 +86,7 @@ class BpmHistogramDescriptors : public StreamingAlgorithmWrapper {
   Source<Real> _secondPeakBPM;
   Source<Real> _secondPeakWeight;
   Source<Real> _secondPeakSpread;
-  Source<std::vector<Real> > _histogram;
+  Source<::essentia::VectorEx<Real> > _histogram;
 
  public:
   BpmHistogramDescriptors() {

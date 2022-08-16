@@ -29,10 +29,10 @@ namespace standard {
 
 class NSGIConstantQ : public Algorithm {
  protected:
-  Output<std::vector<Real> > _signal;
-  Input<std::vector<std::vector<std::complex<Real> > > >_constantQ ;
-  Input<std::vector<std::complex<Real> > > _constantQDC;
-  Input<std::vector<std::complex<Real> > > _constantQNF;
+  Output<::essentia::VectorEx<Real> > _signal;
+  Input<::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > > >_constantQ ;
+  Input<::essentia::VectorEx<std::complex<Real> > > _constantQDC;
+  Input<::essentia::VectorEx<std::complex<Real> > > _constantQNF;
 
  public:
   NSGIConstantQ() {
@@ -99,20 +99,20 @@ class NSGIConstantQ : public Algorithm {
   bool _INSQConstantQdata;
 
   // windowing vectors
-  std::vector< std::vector<Real> > _freqWins;
-  std::vector<int> _shifts;
-  std::vector<int> _winsLen;
-  std::vector<Real> _baseFreqs;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > _freqWins;
+  ::essentia::VectorEx<int> _shifts;
+  ::essentia::VectorEx<int> _winsLen;
+  ::essentia::VectorEx<Real> _baseFreqs;
 
   int _binsNum;
   int _NN;
   int _N;
 
-  std::vector<int> _posit;
-  std::vector<std::vector<Real> > _dualFreqWins;
+  ::essentia::VectorEx<int> _posit;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _dualFreqWins;
 
-  std::vector<std::vector<int> > _win_range;
-  std::vector<std::vector<int> > _idx;
+  ::essentia::VectorEx<::essentia::VectorEx<int> > _win_range;
+  ::essentia::VectorEx<::essentia::VectorEx<int> > _idx;
 
   bool _oddInput;
 
@@ -130,11 +130,11 @@ namespace streaming {
 
 class NSGIConstantQ : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<std::vector<std::complex<Real> > > >_constantQ ;
-  Sink<std::vector<std::complex<Real> > > _constantQDC;
-  Sink<std::vector<std::complex<Real> > > _constantQNF;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<std::complex<Real> > > >_constantQ ;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _constantQDC;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _constantQNF;
 
-  Source<std::vector<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _signal;
 
  public:
   NSGIConstantQ() {

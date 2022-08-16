@@ -42,11 +42,11 @@ void DCRemoval::configure() {
   // and scales with the sampling rate
   Real R = (Real)(1.0 - 2.0*M_PI*fc/fs);
 
-  vector<Real> b(2, 0.0);
+  ::essentia::VectorEx<Real> b(2, 0.0);
   b[0] = 1.0;
   b[1] = -1.0;
 
-  vector<Real> a(2, 0.0);
+  ::essentia::VectorEx<Real> a(2, 0.0);
   a[0] = 1.0;
   a[1] = -R;
 

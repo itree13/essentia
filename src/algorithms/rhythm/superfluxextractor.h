@@ -35,7 +35,7 @@ class SuperFluxExtractor : public AlgorithmComposite {
  
  protected:
   SinkProxy<Real> _signal;
-  SourceProxy<std::vector<Real> > _onsets;
+  SourceProxy<::essentia::VectorEx<Real> > _onsets;
 
   Algorithm* _w;
   Algorithm* _spectrum;
@@ -84,13 +84,13 @@ namespace standard {
 
 class SuperFluxExtractor : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _onsets;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _onsets;
 
   bool _configured;
   streaming::Algorithm* _SuperFluxExtractor;
   streaming::VectorInput<Real>* _vectorInput;
-  streaming::VectorOutput<std::vector<Real> >* _vectorOut;
+  streaming::VectorOutput<::essentia::VectorEx<Real> >* _vectorOut;
   scheduler::Network* _network;
 
  public:

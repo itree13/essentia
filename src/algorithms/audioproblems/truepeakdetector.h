@@ -28,9 +28,9 @@ namespace standard {
 
 class TruePeakDetector : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _output;
-  Output<std::vector<Real> > _peakLocations;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _output;
+  Output<::essentia::VectorEx<Real> > _peakLocations;
 
   Algorithm* _resampler;
   Algorithm* _emphasiser;
@@ -93,9 +93,9 @@ namespace streaming {
 
 class TruePeakDetector : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<Real> > _signal;
-  Source<std::vector<Real> > _output;
-  Source<std::vector<Real> > _peakLocations;
+  Sink<::essentia::VectorEx<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _output;
+  Source<::essentia::VectorEx<Real> > _peakLocations;
 
  public:
   TruePeakDetector() {

@@ -28,7 +28,7 @@ namespace standard {
 class Loudness : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _loudness;
 
  public:
@@ -57,7 +57,7 @@ namespace streaming {
 class Loudness : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _loudness;
 
  public:

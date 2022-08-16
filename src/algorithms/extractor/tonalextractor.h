@@ -35,14 +35,14 @@ class TonalExtractor : public AlgorithmComposite {
   SinkProxy<Real> _signal;
 
   SourceProxy<Real> _chordsChangesRate;
-  SourceProxy<std::vector<Real> > _chordsHistogram;
+  SourceProxy<::essentia::VectorEx<Real> > _chordsHistogram;
   SourceProxy<std::string> _chordsKey;
   SourceProxy<Real> _chordsNumberRate;
   SourceProxy<std::string> _chordsProgression;
   SourceProxy<std::string> _chordsScale;
   SourceProxy<Real> _chordsStrength;
-  SourceProxy<std::vector<Real> > _hpcps;
-  SourceProxy<std::vector<Real> > _hpcpsTuning;
+  SourceProxy<::essentia::VectorEx<Real> > _hpcps;
+  SourceProxy<::essentia::VectorEx<Real> > _hpcpsTuning;
   SourceProxy<std::string> _keyKey;
   SourceProxy<std::string> _keyScale;
   SourceProxy<Real> _keyStrength;
@@ -83,16 +83,16 @@ namespace standard {
 
 class TonalExtractor : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _chordsHistogram;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _chordsHistogram;
   Output<Real> _chordsChangesRate;
   Output<std::string> _chordsKey;
   Output<Real> _chordsNumberRate;
-  Output<std::vector<std::string> > _chords;
+  Output<::essentia::VectorEx<std::string> > _chords;
   Output<std::string> _chordsScale;
-  Output<std::vector<Real> > _chordsStrength;
-  Output<std::vector<std::vector<Real> > > _hpcp;
-  Output<std::vector<std::vector<Real> > > _hpcpHighRes;
+  Output<::essentia::VectorEx<Real> > _chordsStrength;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _hpcp;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _hpcpHighRes;
   Output<std::string> _key;
   Output<std::string> _scale;
   Output<Real> _keyStrength;

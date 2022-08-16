@@ -34,8 +34,8 @@ class Spline : public Algorithm {
   Input<Real> _xInput;
   Output<Real> _yOutput;
 
-  std::vector<double> _xPoints;
-  std::vector<double> _yPoints;
+  ::essentia::VectorEx<double> _xPoints;
+  ::essentia::VectorEx<double> _yPoints;
   double _beta1, _beta2;
   splineType _type;
 
@@ -48,7 +48,7 @@ class Spline : public Algorithm {
   ~Spline() {}
 
   void declareParameters() {
-    std::vector<Real> defaultPoints(2);
+    ::essentia::VectorEx<Real> defaultPoints(2);
     defaultPoints[0] = 0;
     defaultPoints[1] = 1;
     declareParameter("xPoints", "the x-coordinates where data is specified (the points must be arranged in ascending order and cannot contain duplicates)", "", defaultPoints);

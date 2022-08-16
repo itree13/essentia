@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
     n.run();
 
     cout << "Tuning frequency: " 
-         << mean(pool.value<std::vector<Real> >("tonal.tuningFrequency")) << endl;
+         << mean(pool.value<::essentia::VectorEx<Real> >("tonal.tuningFrequency")) << endl;
   }
   catch (EssentiaException& e) {
       cerr << "Error: " << e.what() << endl;

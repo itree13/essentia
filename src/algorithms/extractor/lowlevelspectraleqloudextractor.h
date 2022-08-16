@@ -35,8 +35,8 @@ class LowLevelSpectralEqloudExtractor : public AlgorithmComposite {
 
   SourceProxy<Real> _scentroid;
   SourceProxy<Real> _dissonanceValue;
-  SourceProxy<std::vector<Real> > _sccontrast;
-  SourceProxy<std::vector<Real> > _scvalleys;
+  SourceProxy<::essentia::VectorEx<Real> > _sccontrast;
+  SourceProxy<::essentia::VectorEx<Real> > _scvalleys;
   SourceProxy<Real> _kurtosis;
   SourceProxy<Real> _skewness;
   SourceProxy<Real> _spread;
@@ -80,14 +80,14 @@ namespace standard {
 
 class LowLevelSpectralEqloudExtractor : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _dissonance;
-  Output<std::vector<std::vector<Real> > > _sccoeffs;
-  Output<std::vector<std::vector<Real> > > _scvalleys;
-  Output<std::vector<Real> > _centroid;
-  Output<std::vector<Real> > _kurtosis;
-  Output<std::vector<Real> > _skewness;
-  Output<std::vector<Real> > _spread;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _dissonance;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _sccoeffs;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _scvalleys;
+  Output<::essentia::VectorEx<Real> > _centroid;
+  Output<::essentia::VectorEx<Real> > _kurtosis;
+  Output<::essentia::VectorEx<Real> > _skewness;
+  Output<::essentia::VectorEx<Real> > _spread;
 
   bool _configured;
 

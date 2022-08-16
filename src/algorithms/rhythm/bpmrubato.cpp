@@ -43,9 +43,9 @@ void BpmRubato::configure() {
 }
 
 void BpmRubato::compute() {
-  const vector<Real>& beats = _beats.get();
-  vector<Real>& rubatoStart = _rubatoStart.get();
-  vector<Real>& rubatoStop  = _rubatoStop.get();
+  const ::essentia::VectorEx<Real>& beats = _beats.get();
+  ::essentia::VectorEx<Real>& rubatoStart = _rubatoStart.get();
+  ::essentia::VectorEx<Real>& rubatoStop  = _rubatoStop.get();
   int& rubatoNumber = _rubatoNumber.get();
   _rubatoOn = false; // true means currently in a region of changing rhythm
 

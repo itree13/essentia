@@ -29,12 +29,12 @@ namespace standard {
 class IIR : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _x;
-  Output<std::vector<Real> > _y;
+  Input<::essentia::VectorEx<Real> > _x;
+  Output<::essentia::VectorEx<Real> > _y;
 
-  std::vector<Real> _a;
-  std::vector<Real> _b;
-  std::vector<Real> _state;
+  ::essentia::VectorEx<Real> _a;
+  ::essentia::VectorEx<Real> _b;
+  ::essentia::VectorEx<Real> _state;
 
  public:
   IIR() {
@@ -43,7 +43,7 @@ class IIR : public Algorithm {
   }
 
   void declareParameters() {
-    std::vector<Real> defaultParam(1, 1.0);
+    ::essentia::VectorEx<Real> defaultParam(1, 1.0);
     declareParameter("numerator", "the list of coefficients of the numerator. Often referred to as the B coefficient vector.", "", defaultParam);
     declareParameter("denominator", "the list of coefficients of the denominator. Often referred to as the A coefficient vector.", "", defaultParam);
   }

@@ -26,9 +26,9 @@ namespace standard {
 
 class CrossSimilarityMatrix : public Algorithm {
   protected:
-   Input<std::vector<std::vector<Real> > > _queryFeature;
-   Input<std::vector<std::vector<Real> > > _referenceFeature;
-   Output<std::vector<std::vector<Real> > > _csm;
+   Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _queryFeature;
+   Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _referenceFeature;
+   Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _csm;
   public:
    CrossSimilarityMatrix() {
     declareInput(_queryFeature, "queryFeature", "input frame features of the query song (e.g., a chromagram)");
@@ -56,8 +56,8 @@ class CrossSimilarityMatrix : public Algorithm {
    Real _binarizePercentile;
    bool _binarize;
    bool _status;
-   std::vector<std::vector<Real> > stackFrames(std::vector<std::vector<Real> >& frames, int frameStackSize, int frameStackStride) const;
-   std::vector<Real> getColsAtVecIndex(std::vector<std::vector<Real> >& inputMatrix, int index) const;
+   ::essentia::VectorEx<::essentia::VectorEx<Real> > stackFrames(::essentia::VectorEx<::essentia::VectorEx<Real> >& frames, int frameStackSize, int frameStackStride) const;
+   ::essentia::VectorEx<Real> getColsAtVecIndex(::essentia::VectorEx<::essentia::VectorEx<Real> >& inputMatrix, int index) const;
 };
 
 } // namespace standard

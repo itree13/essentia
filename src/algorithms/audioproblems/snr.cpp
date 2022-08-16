@@ -54,8 +54,8 @@ const char* SNR::description = DOC(
 
 
 void SNR::compute() {
-  const std::vector<Real>& frame = _frame.get();
-  std::vector<Real>& snrPrior = _SNRprior.get();
+  const ::essentia::VectorEx<Real>& frame = _frame.get();
+  ::essentia::VectorEx<Real>& snrPrior = _SNRprior.get();
   Real& snrAverage = _SNRAverage.get();
   Real& snrAverageEma = _SNRAverageEMA.get();
 
@@ -71,12 +71,12 @@ void SNR::compute() {
 
   snrPrior.assign(_specSize, 0.f);
 
-  std::vector<Real> windowed;
+  ::essentia::VectorEx<Real> windowed;
   _windowing->input("frame").set(frame);
   _windowing->output("frame").set(windowed);
   _windowing->compute();
 
-  std::vector<Real> Y;
+  ::essentia::VectorEx<Real> Y;
   _spectrum->input("frame").set(windowed);
   _spectrum->output("spectrum").set(Y);
   _spectrum->compute();
@@ -179,10 +179,10 @@ void SNR::configure() {
 }
 
 
-void SNR::SNRPriorEst(Real alpha, std::vector<Real> &snrPrior,
-                      std::vector<Real> mmse,
-                      std::vector<Real> noisePsd,
-                      std::vector<Real> snrInst) {
+void SNR::SNRPriorEst(Real alpha, ::essentia::VectorEx<Real> &snrPrior,
+                      ::essentia::VectorEx<Real> mmse,
+                      ::essentia::VectorEx<Real> noisePsd,
+                      ::essentia::VectorEx<Real> snrInst) {
   for (uint i = 0; i < _specSize; i++) {
     snrPrior[i] = alpha * pow(mmse[i], 2.f) / noisePsd[i] +
                   (1 - alpha) * std::max(snrInst[i], 0.f);
@@ -192,9 +192,9 @@ void SNR::SNRPriorEst(Real alpha, std::vector<Real> &snrPrior,
   };
 
 
-void SNR::SNRPostEst(std::vector<Real> &snrPost, 
-                std::vector<Real> noisePsd,
-                std::vector<Real> Y) {
+void SNR::SNRPostEst(::essentia::VectorEx<Real> &snrPost, 
+                ::essentia::VectorEx<Real> noisePsd,
+                ::essentia::VectorEx<Real> Y) {
   for (uint i = 0; i < _specSize; i++) {
     snrPost[i] = pow(Y[i], 2.f) / noisePsd[i];
     if (snrPost[i] == 0.f)
@@ -203,25 +203,25 @@ void SNR::SNRPostEst(std::vector<Real> &snrPost,
 };
 
 
-void SNR::SNRInstEst(std::vector<Real> &snrInst,
-                std::vector<Real> snrPost) {
+void SNR::SNRInstEst(::essentia::VectorEx<Real> &snrInst,
+                ::essentia::VectorEx<Real> snrPost) {
   for (uint i = 0; i < _specSize; i++)
     snrInst[i] = snrPost[i] - 1.f;
 };
 
 
-void SNR::V(std::vector<Real> &v,
-            std::vector<Real> snrPrior,
-            std::vector<Real> snrPost){
+void SNR::V(::essentia::VectorEx<Real> &v,
+            ::essentia::VectorEx<Real> snrPrior,
+            ::essentia::VectorEx<Real> snrPost){
   for (uint i = 0; i < _specSize; i++)
     v[i] = snrPrior[i] / (1.f + snrPrior[i]) * snrPost[i];
 };
 
 
-void SNR::MMSE(std::vector<Real> &mmse,
-               std::vector<Real> v,
-               std::vector<Real> snrPost,
-               std::vector<Real> Y) {
+void SNR::MMSE(::essentia::VectorEx<Real> &mmse,
+               ::essentia::VectorEx<Real> v,
+               ::essentia::VectorEx<Real> snrPost,
+               ::essentia::VectorEx<Real> Y) {
   static float g = 0.8862269254527579;  // gamma(1.5)
 
   for (uint i = 0; i < _specSize; i++) {
@@ -238,8 +238,8 @@ void SNR::MMSE(std::vector<Real> &mmse,
 };
 
 
-void SNR::UpdateNoisePSD(std::vector<Real> &noisePsd,
-                    std::vector<Real> noise,
+void SNR::UpdateNoisePSD(::essentia::VectorEx<Real> &noisePsd,
+                    ::essentia::VectorEx<Real> noise,
                     Real alpha) {
     for ( uint i = 0; i < _specSize; i++)
       noisePsd[i] = alpha * noisePsd[i] + 

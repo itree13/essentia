@@ -43,8 +43,8 @@ void SpectrumCQ::configure() {
 
 void SpectrumCQ::compute() {
 
-  const vector<Real>& signal = _signal.get();
-  vector<Real>& spectrumCQ = _spectrumCQ.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& spectrumCQ = _spectrumCQ.get();
 
 
   // Compute ConstantQ.

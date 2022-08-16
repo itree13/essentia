@@ -290,7 +290,7 @@ void ForEach(const Container& c, Functor functor) {
 // Returns the i-th element of the vector, or default_value if i is not
 // in range [0, v.size()).
 template <typename E>
-inline E GetElementOr(const std::vector<E>& v, int i, E default_value) {
+inline E GetElementOr(const ::essentia::VectorEx<E>& v, int i, E default_value) {
   return (i < 0 || i >= static_cast<int>(v.size())) ? default_value : v[i];
 }
 
@@ -300,7 +300,7 @@ inline E GetElementOr(const std::vector<E>& v, int i, E default_value) {
 // shuffle to the end of the vector.
 template <typename E>
 void ShuffleRange(internal::Random* random, int begin, int end,
-                  std::vector<E>* v) {
+                  ::essentia::VectorEx<E>* v) {
   const int size = static_cast<int>(v->size());
   GTEST_CHECK_(0 <= begin && begin <= size)
       << "Invalid shuffle range start " << begin << ": must be in range [0, "
@@ -320,7 +320,7 @@ void ShuffleRange(internal::Random* random, int begin, int end,
 
 // Performs an in-place shuffle of the vector's elements.
 template <typename E>
-inline void Shuffle(internal::Random* random, std::vector<E>* v) {
+inline void Shuffle(internal::Random* random, ::essentia::VectorEx<E>* v) {
   ShuffleRange(random, 0, static_cast<int>(v->size()), v);
 }
 
@@ -718,13 +718,13 @@ class GTEST_API_ UnitTestImpl {
 
   // Returns the vector of environments that need to be set-up/torn-down
   // before/after the tests are run.
-  std::vector<Environment*>& environments() { return environments_; }
+  ::essentia::VectorEx<Environment*>& environments() { return environments_; }
 
   // Getters for the per-thread Google Test trace stack.
-  std::vector<TraceInfo>& gtest_trace_stack() {
+  ::essentia::VectorEx<TraceInfo>& gtest_trace_stack() {
     return *(gtest_trace_stack_.pointer());
   }
-  const std::vector<TraceInfo>& gtest_trace_stack() const {
+  const ::essentia::VectorEx<TraceInfo>& gtest_trace_stack() const {
     return gtest_trace_stack_.get();
   }
 
@@ -815,17 +815,17 @@ class GTEST_API_ UnitTestImpl {
 
   // The vector of environments that need to be set-up/torn-down
   // before/after the tests are run.
-  std::vector<Environment*> environments_;
+  ::essentia::VectorEx<Environment*> environments_;
 
   // The vector of TestCases in their original order.  It owns the
   // elements in the vector.
-  std::vector<TestCase*> test_cases_;
+  ::essentia::VectorEx<TestCase*> test_cases_;
 
   // Provides a level of indirection for the test case list to allow
   // easy shuffling and restoring the test case order.  The i-th
   // element of this vector is the index of the i-th test case in the
   // shuffled order.
-  std::vector<int> test_case_indices_;
+  ::essentia::VectorEx<int> test_case_indices_;
 
 #if GTEST_HAS_PARAM_TEST
   // ParameterizedTestRegistry object used to register value-parameterized
@@ -891,7 +891,7 @@ class GTEST_API_ UnitTestImpl {
 #endif  // GTEST_HAS_DEATH_TEST
 
   // A per-thread stack of traces created by the SCOPED_TRACE() macro.
-  internal::ThreadLocal<std::vector<TraceInfo> > gtest_trace_stack_;
+  internal::ThreadLocal<::essentia::VectorEx<TraceInfo> > gtest_trace_stack_;
 
   // The value of GTEST_FLAG(catch_exceptions) at the moment RunAllTests()
   // starts.
@@ -1026,7 +1026,7 @@ class TestResultAccessor {
     test_result->ClearTestPartResults();
   }
 
-  static const std::vector<testing::TestPartResult>& test_part_results(
+  static const ::essentia::VectorEx<testing::TestPartResult>& test_part_results(
       const TestResult& test_result) {
     return test_result.test_part_results();
   }

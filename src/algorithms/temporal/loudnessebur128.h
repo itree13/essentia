@@ -94,13 +94,13 @@ namespace standard {
 
 class LoudnessEBUR128 : public Algorithm {
  protected:
-  Input<std::vector<StereoSample> > _signal;
-  Output<std::vector<Real> > _momentaryLoudness;
-  Output<std::vector<Real> > _shortTermLoudness;
+  Input<::essentia::VectorEx<StereoSample> > _signal;
+  Output<::essentia::VectorEx<Real> > _momentaryLoudness;
+  Output<::essentia::VectorEx<Real> > _shortTermLoudness;
   Output<Real> _integratedLoudness;
   Output<Real> _loudnessRange;
-  //Output<std::vector<Real> > _momentaryLoudnessMax;
-  //Output<std::vector<Real> > _shortTermLoudnessMax;
+  //Output<::essentia::VectorEx<Real> > _momentaryLoudnessMax;
+  //Output<::essentia::VectorEx<Real> > _shortTermLoudnessMax;
 
   streaming::Algorithm* _loudnessEBUR128;
   streaming::VectorInput<StereoSample>* _vectorInput;

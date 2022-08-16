@@ -49,8 +49,8 @@ const char* TempoTap::description = DOC("This algorithm estimates the periods an
 void TempoTap::reset() {
   // WARNING: MAGIC NUMBER
   int nfeats = 11;
-  _featuresOld = vector<vector<Real> >(_numberFrames - _frameHop,
-                                       vector<Real>(nfeats, 0.0));
+  _featuresOld = ::essentia::VectorEx<::essentia::VectorEx<Real> >(_numberFrames - _frameHop,
+                                       ::essentia::VectorEx<Real>(nfeats, 0.0));
   _featuresNew.clear();
 }
 
@@ -96,7 +96,7 @@ void TempoTap::configure() {
 
   // if the user provided some tempo hints, use these to have a custom weighting
   // function instead of the Rayleigh one we would use normally
-  vector<Real> tempoHints = parameter("tempoHints").toVectorReal();
+  ::essentia::VectorEx<Real> tempoHints = parameter("tempoHints").toVectorReal();
   int nbeats = tempoHints.size();
   if (nbeats > 2) {
     // get the average period in these beats
@@ -137,9 +137,9 @@ void TempoTap::configure() {
 
 
 void TempoTap::compute() {
-  const std::vector<Real>& featuresFrame = _featuresFrame.get();
-  vector<Real>& period = _periods.get();
-  vector<Real>& phases = _phases.get();
+  const ::essentia::VectorEx<Real>& featuresFrame = _featuresFrame.get();
+  ::essentia::VectorEx<Real>& period = _periods.get();
+  ::essentia::VectorEx<Real>& phases = _phases.get();
 
   // buffer new frame of features
   _featuresNew.push_back(featuresFrame);
@@ -159,7 +159,7 @@ void TempoTap::compute() {
 
   // fill in the buffer of features on which to perform the analysis
   // featuresBuffer = _featuresOld[0:_numberFrames - _frameHop] + _featuresNew[0:_frameHop];
-  vector<vector<Real> > featuresBuffer(_featuresOld.size() + _featuresNew.size());
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > featuresBuffer(_featuresOld.size() + _featuresNew.size());
   int j = 0;
   for (int i=0; i<int(_featuresOld.size()); ++i, ++j) {
     featuresBuffer[j] = _featuresOld[i];
@@ -178,7 +178,7 @@ void TempoTap::compute() {
     _featuresOld[i] = _featuresNew[i - (int)_featuresOld.size() + _frameHop];
   }
 
-  vector<vector<Real> > features = transpose(featuresBuffer);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > features = transpose(featuresBuffer);
 
   computePeriods(features);
   computePhases(features);
@@ -187,8 +187,8 @@ void TempoTap::compute() {
   _featuresNew.clear();
 }
 
-void TempoTap::computePeriods(const vector<vector<Real> >& features) {
-  vector<Real>& period = _periods.get();
+void TempoTap::computePeriods(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& features) {
+  ::essentia::VectorEx<Real>& period = _periods.get();
   int nfeats = features.size();
 
   // compute the autocorrelation of each feature
@@ -206,8 +206,8 @@ void TempoTap::computePeriods(const vector<vector<Real> >& features) {
   _mcomb.resize(nfeats);
 
   for (int f=0; f<nfeats; f++) {
-    vector<Real>& mcomb = _mcomb[f];
-    mcomb = vector<Real>(_comblen, 0.0);
+    ::essentia::VectorEx<Real>& mcomb = _mcomb[f];
+    mcomb = ::essentia::VectorEx<Real>(_comblen, 0.0);
 
     for (int i=1; i<_comblen-1; i++) {
       for (int a=1; a<_maxelem+1; a++) {
@@ -234,9 +234,9 @@ void TempoTap::computePeriods(const vector<vector<Real> >& features) {
 }
 
 
-void TempoTap::computePhases(const vector<vector<Real> >& features) {
-  vector<Real>& phases = _phases.get();
-  vector<Real>& period = _periods.get();
+void TempoTap::computePhases(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& features) {
+  ::essentia::VectorEx<Real>& phases = _phases.get();
+  ::essentia::VectorEx<Real>& period = _periods.get();
 
   int nfeats = features.size();
   int nframe = features.empty() ? 0 : features[0].size();
@@ -248,11 +248,11 @@ void TempoTap::computePhases(const vector<vector<Real> >& features) {
   _phasesOut.resize(nfeats);
   phases.resize(nfeats);
   for (int f=0; f<nfeats; f++) {
-    vector<Real>& phasesOut = _phasesOut[f];
+    ::essentia::VectorEx<Real>& phasesOut = _phasesOut[f];
 
     // only try to find the phase if the period is within the specified acceptable range
     if (_minLag < period[f] && period[f] < _maxLag) {
-      phasesOut = vector<Real>(philen, 0.0);
+      phasesOut = ::essentia::VectorEx<Real>(philen, 0.0);
 
       for (int i=0; i<philen; i++) {
         for (int a=0; a<_nPeaks; a++)  {

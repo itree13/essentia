@@ -28,20 +28,20 @@ namespace standard {
 class SingleBeatLoudness : public Algorithm {
 
  protected:
-  Input<std::vector<AudioSample> > _beat;
+  Input<::essentia::VectorEx<AudioSample> > _beat;
   Output<Real> _loudness;
-  Output<std::vector<Real> > _loudnessBand;
+  Output<::essentia::VectorEx<Real> > _loudnessBand;
 
   int _beatWindowSize;
   int _beatDuration;
   bool _peakEnergy;
-  std::vector<Real> _frequencyBands;
+  ::essentia::VectorEx<Real> _frequencyBands;
 
   Algorithm* _window, *_spectrum, *_energy;
-  std::vector<Real> _beatWindow, _windowedBeat, _spec;
-  std::vector<Algorithm*> _energyBand;
+  ::essentia::VectorEx<Real> _beatWindow, _windowedBeat, _spec;
+  ::essentia::VectorEx<Algorithm*> _energyBand;
   Real _energyValue;
-  std::vector<Real> _energyBandValue;
+  ::essentia::VectorEx<Real> _energyBandValue;
 
  public:
   SingleBeatLoudness() {
@@ -94,9 +94,9 @@ namespace streaming {
 class SingleBeatLoudness : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _beat;
+  Sink<::essentia::VectorEx<Real> > _beat;
   Source<Real> _loudness;
-  Source<std::vector<Real> > _loudnessBand;
+  Source<::essentia::VectorEx<Real> > _loudnessBand;
 
 
  public:

@@ -20,7 +20,7 @@
 #ifndef ESSENTIA_STREAMUTIL_H
 #define ESSENTIA_STREAMUTIL_H
 
-#include <vector>
+#include "types.h"
 #include <set>
 #include <complex>
 
@@ -55,12 +55,12 @@ std::ostream& operator<<(std::ostream& out, const std::pair<T, U>& p) {
 }
 
 /**
- * Output a std::vector into an output stream.
+ * Output a ::essentia::VectorEx into an output stream.
  */
 template <typename T>
-std::ostream& operator<<(std::ostream& out, const std::vector<T>& v) {
+std::ostream& operator<<(std::ostream& out, const ::essentia::VectorEx<T>& v) {
   out << '['; if (!v.empty()) {
-    out << *v.begin(); typename std::vector<T>::const_iterator it = v.begin();
+    out << *v.begin(); typename ::essentia::VectorEx<T>::const_iterator it = v.begin();
     for (++it; it != v.end(); ++it) out << ", " << *it;
   }
   return out << ']';

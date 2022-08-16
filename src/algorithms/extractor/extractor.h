@@ -30,7 +30,7 @@ namespace standard {
 class Extractor : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Pool> _pool;
 
   Real _sampleRate;
@@ -43,7 +43,7 @@ class Extractor : public Algorithm {
   void connectTuning(streaming::VectorInput<Real>*, Pool&);
   void connectDynamics(streaming::VectorInput<Real>*, Pool&);
   void connectRhythm(streaming::VectorInput<Real>*, Pool&);
-  void computeMidLevel(const std::vector<Real>&, Pool&);
+  void computeMidLevel(const ::essentia::VectorEx<Real>&, Pool&);
   void computeHighLevel(Pool&);
   void computeRelativeIoi(Pool&);
   void postProcessOnsetRate(streaming::VectorInput<Real>*, Pool&);

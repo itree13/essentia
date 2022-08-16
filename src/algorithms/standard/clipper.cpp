@@ -37,8 +37,8 @@ void Clipper::configure() {
 }
 
 void Clipper::compute() {
-  const std::vector<Real>& input = _input.get();
-  std::vector<Real>& output = _output.get();
+  const ::essentia::VectorEx<Real>& input = _input.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
   int size = input.size();
   output.resize(size);
   for (int i = 0; i < size; ++i) {

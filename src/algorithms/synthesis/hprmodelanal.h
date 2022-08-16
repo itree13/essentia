@@ -32,12 +32,12 @@ class HprModelAnal : public Algorithm {
 
  protected:
 
-  Input<std::vector<Real> > _frame;
+  Input<::essentia::VectorEx<Real> > _frame;
   Input<Real> _pitch;
-  Output<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _frequencies;
-  Output<std::vector<Real> > _phases;
-  Output<std::vector<Real> >_res;
+  Output<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _frequencies;
+  Output<::essentia::VectorEx<Real> > _phases;
+  Output<::essentia::VectorEx<Real> >_res;
 
   Algorithm* _window;
   Algorithm* _fft;
@@ -94,7 +94,7 @@ class HprModelAnal : public Algorithm {
   void configure();
   void compute();
 
-  void updateStocInFrame(const std::vector<Real> frameIn, std::vector<Real> &frameAccumulator);
+  void updateStocInFrame(const ::essentia::VectorEx<Real> frameIn, ::essentia::VectorEx<Real> &frameAccumulator);
 
   static const char* name;
   static const char* category;
@@ -118,12 +118,12 @@ class HprModelAnal : public StreamingAlgorithmWrapper {
 
  protected:
   
-  Sink<std::vector<Real> > _frame; // input
+  Sink<::essentia::VectorEx<Real> > _frame; // input
   Sink<Real> _pitch; // input
-  Source<std::vector<Real> > _frequencies;
-  Source<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _phases;
-  Source<std::vector<Real> > _res;
+  Source<::essentia::VectorEx<Real> > _frequencies;
+  Source<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _phases;
+  Source<::essentia::VectorEx<Real> > _res;
 
  public:
   HprModelAnal() {

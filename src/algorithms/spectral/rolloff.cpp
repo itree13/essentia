@@ -36,7 +36,7 @@ const char* RollOff::description = DOC("This algorithm computes the roll-off fre
 
 void RollOff::compute() {
 
-  const std::vector<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
   Real& rolloff = _rolloff.get();
   rolloff = 0.0;
 

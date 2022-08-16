@@ -96,28 +96,28 @@ int main(int argc, char* argv[]) {
                                      "filename", outputResFilename);
                                      
  
-  vector<Real> audio;
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> audio;
+  ::essentia::VectorEx<Real> frame;
 
-  vector<Real> magnitudes;
-  vector<Real> frequencies;
-  vector<Real> phases;
-  vector<Real> res;
+  ::essentia::VectorEx<Real> magnitudes;
+  ::essentia::VectorEx<Real> frequencies;
+  ::essentia::VectorEx<Real> phases;
+  ::essentia::VectorEx<Real> res;
 
 
-  vector<Real> allaudio; // concatenated audio file output
-  vector<Real> allsineaudio; // concatenated audio file output
-  vector<Real> allresaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allsineaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allresaudio; // concatenated audio file output
   
   
   // accumulate estimated values   for all frames for cleaning tracks before synthesis
-  vector< vector<Real> > frequenciesAllFrames;
-  vector< vector<Real> > magnitudesAllFrames;
-  vector< vector<Real> > phasesAllFrames;
-  vector< vector<Real> > resAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > frequenciesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > magnitudesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > phasesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > resAllFrames;
 
-  vector<complex<Real> >  sfftframe; // sine model FFT frame
-  vector<Real> ifftframe; //  sine model IFFT frame
+  ::essentia::VectorEx<complex<Real> >  sfftframe; // sine model FFT frame
+  ::essentia::VectorEx<Real> ifftframe; //  sine model IFFT frame
 
 
   // analysis
@@ -135,9 +135,9 @@ int main(int argc, char* argv[]) {
   sprmodelanal->output("res").set(res);
   
 
- vector<Real> audioOutput;
-  vector<Real> audioSineOutput;
-  vector<Real> audioResOutput;
+ ::essentia::VectorEx<Real> audioOutput;
+  ::essentia::VectorEx<Real> audioSineOutput;
+  ::essentia::VectorEx<Real> audioResOutput;
 
 // Sinusoidal Model Synthesis (only harmonics)
   sprmodelsynth->input("magnitudes").set(magnitudes);

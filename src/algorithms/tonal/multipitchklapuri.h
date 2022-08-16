@@ -29,8 +29,8 @@ namespace standard {
 class MultiPitchKlapuri : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<std::vector<Real> > > _pitch;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _pitch;
 
   // Pre-processing
   Algorithm* _frameCutter;
@@ -57,7 +57,7 @@ class MultiPitchKlapuri : public Algorithm {
   int _binsInSemitone;
   int _binsInOctave;
   Real _referenceTerm;
-  std::vector<Real> _centSpectrum;
+  ::essentia::VectorEx<Real> _centSpectrum;
   int _numberBins;
 
  public:

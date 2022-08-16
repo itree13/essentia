@@ -76,8 +76,8 @@ Real SBic::logDet(const Array2D<Real>& matrix) const {
   int dim1 = matrix.dim1();
   int dim2 = matrix.dim2();
 
-  vector<Real> mp(dim1, 0.0);
-  vector<Real> vp(dim1, 0.0);
+  ::essentia::VectorEx<Real> mp(dim1, 0.0);
+  ::essentia::VectorEx<Real> vp(dim1, 0.0);
   Real a, logd = 0.0;
   Real z = 1.0 / Real(dim2);
   Real zz = z * z;
@@ -111,7 +111,7 @@ Real SBic::logDet(const Array2D<Real>& matrix) const {
   return logd;
 
   // another way of computing the same as above, with possibly less rounding errors, but more expensive.
-  //vector<Real> cov(dim1, 0.0);
+  //::essentia::VectorEx<Real> cov(dim1, 0.0);
   //for (int i=0; i<dim1; ++i) {
   //  Real mean = mp[i]/dim2;
   //  Real cov = 0.0;
@@ -205,7 +205,7 @@ void SBic::configure() {
 
 void SBic::compute() {
   const Array2D<Real>& features = _features.get();
-  vector<Real>& segmentation = _segmentation.get();
+  ::essentia::VectorEx<Real>& segmentation = _segmentation.get();
   Array2D<Real> window;
 
   int currSeg = 0, endSeg = 0, currIdx, prevSeg, nextSeg, i;

@@ -39,7 +39,7 @@ void Chromaprinter::configure() {
 }
 
 void Chromaprinter::compute() {
-  const std::vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   std::string& fingerprint = _fingerprint.get();
   unsigned inputSize;
 
@@ -52,11 +52,11 @@ void Chromaprinter::compute() {
   }
 
   // Copy the signal to new vector to expand it to the int16_t dynamic range before the cast.
-  std::vector<Real> signalScaled = signal;
+  ::essentia::VectorEx<Real> signalScaled = signal;
   std::transform(signalScaled.begin(), signalScaled.end(), signalScaled.begin(),
                  std::bind1st(std::multiplies<Real>(), pow(2,15)));
 
-  std::vector<int16_t> signalCast(signalScaled.begin(), signalScaled.end());
+  ::essentia::VectorEx<int16_t> signalCast(signalScaled.begin(), signalScaled.end());
 
   const int num_channels = 1;
 
@@ -155,14 +155,14 @@ AlgorithmStatus Chromaprinter::process() {
       return process();
     }
 
-    const vector<Real>& signal = _signal.tokens();
+    const ::essentia::VectorEx<Real>& signal = _signal.tokens();
 
     // Copy the signal to new vector to expand it to the int16_t dynamic range before the cast.
-    std::vector<Real> signalScaled = signal;
+    ::essentia::VectorEx<Real> signalScaled = signal;
     std::transform(signalScaled.begin(), signalScaled.end(), signalScaled.begin(),
                    std::bind1st(std::multiplies<Real>(), pow(2,15)));
 
-    std::vector<int16_t> signalCast(signalScaled.begin(), signalScaled.end());
+    ::essentia::VectorEx<int16_t> signalCast(signalScaled.begin(), signalScaled.end());
 
     if (_count == 0) initChromaprint();
 
@@ -176,7 +176,7 @@ AlgorithmStatus Chromaprinter::process() {
       if (_returnChromaprint) {
         // Only acquires tokens when we want to output the chromaprint.
         _fingerprint.acquire(1);
-        std::vector<std::string>& fingerprint = _fingerprint.tokens();
+        ::essentia::VectorEx<std::string>& fingerprint = _fingerprint.tokens();
         fingerprint[0] = fingerprintConcatenated;
         _fingerprint.release();
         fingerprintConcatenated.erase();

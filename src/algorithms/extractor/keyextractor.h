@@ -96,7 +96,7 @@ namespace standard {
 
 class KeyExtractor : public Algorithm {
  protected:
-  Input<std::vector<Real> > _audio;
+  Input<::essentia::VectorEx<Real> > _audio;
   Output<std::string> _key;
   Output<std::string> _scale;
   Output<Real> _strength;

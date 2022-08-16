@@ -50,8 +50,8 @@ void AudioOnsetsMarker::configure() {
 
 void AudioOnsetsMarker::compute() {
 
-  const vector<Real>& input = _input.get();
-  vector<Real>& output = _output.get();
+  const ::essentia::VectorEx<Real>& input = _input.get();
+  ::essentia::VectorEx<Real>& output = _output.get();
 
   output.resize(input.size(), Real(0.0));
   int burstSize = int(0.04 * _sampleRate);
@@ -150,8 +150,8 @@ AlgorithmStatus AudioOnsetsMarker::process() {
     return CONTINUE;
   }
 
-  const vector<Real>& input = _input.tokens();
-  vector<Real>& output = _output.tokens();
+  const ::essentia::VectorEx<Real>& input = _input.tokens();
+  ::essentia::VectorEx<Real>& output = _output.tokens();
 
   assert(output.size() == input.size());
 

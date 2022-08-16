@@ -29,12 +29,12 @@ class TempoTap : public Algorithm {
 
  protected:
   // input array of features
-  Input<std::vector<Real> > _featuresFrame;
+  Input<::essentia::VectorEx<Real> > _featuresFrame;
 
   // list of phase candidates
-  Output<std::vector<Real> > _phases;
+  Output<::essentia::VectorEx<Real> > _phases;
   // list of period estimates
-  Output<std::vector<Real> > _periods;
+  Output<::essentia::VectorEx<Real> > _periods;
 
 
  public:
@@ -57,7 +57,7 @@ class TempoTap : public Algorithm {
     declareParameter("numberFrames", "number of feature frames to buffer on", "(0,inf)", 1024);
     declareParameter("frameHop", "number of feature frames separating two evaluations", "(0,inf)", 1024);
     declareParameter("sampleRate", "the sampling rate of the audio signal [Hz]", "(0,inf)", 44100.);
-    declareParameter("tempoHints", "optional list of initial beat locations, to favor the detection of pre-determined tempo period and beats alignment [s]", "", std::vector<Real>());
+    declareParameter("tempoHints", "optional list of initial beat locations, to favor the detection of pre-determined tempo period and beats alignment [s]", "", ::essentia::VectorEx<Real>());
     declareParameter("maxTempo", "fastest tempo allowed to be detected [bpm]", "[60,250]", 208);
     declareParameter("minTempo", "slowest tempo allowed to be detected [bpm]", "[40,180]", 40);
   }
@@ -66,8 +66,8 @@ class TempoTap : public Algorithm {
   void configure();
   void compute();
 
-  void computePeriods(const std::vector<std::vector<Real> >& features);
-  void computePhases(const std::vector<std::vector<Real> >& features);
+  void computePeriods(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& features);
+  void computePhases(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& features);
 
   static const char* name;
   static const char* category;
@@ -80,16 +80,16 @@ class TempoTap : public Algorithm {
   Real _frameTime;
 
   // some memory space we need for computations
-  std::vector<std::vector<Real> > _acf;
-  std::vector<std::vector<Real> > _mcomb;
-  std::vector<std::vector<Real> > _phasesOut;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _acf;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _mcomb;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _phasesOut;
 
   // the cumulated frame features array
-  std::vector<std::vector<Real> > _featuresNew;
-  std::vector<std::vector<Real> > _featuresOld;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _featuresNew;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _featuresOld;
 
   // buffer to store peaks and magnitudes
-  std::vector<Real> _peaksPositions, _peaksMagnitudes;
+  ::essentia::VectorEx<Real> _peaksPositions, _peaksMagnitudes;
 
   // algorithms
   Algorithm* _autocorr;
@@ -104,7 +104,7 @@ class TempoTap : public Algorithm {
 
   int _comblen; // length of the multi comb filter
   int _maxelem; // maximum number of elements in the comb
-  std::vector<Real> _weighting; // comb output weighting
+  ::essentia::VectorEx<Real> _weighting; // comb output weighting
 
 }; // class TempoTap
 
@@ -119,9 +119,9 @@ namespace streaming {
 class TempoTap : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _featuresFrame;
-  Source<std::vector<Real> > _phases;
-  Source<std::vector<Real> > _periods;
+  Sink<::essentia::VectorEx<Real> > _featuresFrame;
+  Source<::essentia::VectorEx<Real> > _phases;
+  Source<::essentia::VectorEx<Real> > _periods;
 
  public:
   TempoTap() {

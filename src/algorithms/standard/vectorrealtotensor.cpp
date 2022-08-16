@@ -37,7 +37,7 @@ const char* VectorRealToTensor::description = DOC("This algorithm generates tens
 
 
 void VectorRealToTensor::configure() {
-  vector<int> shape = parameter("shape").toVectorInt();
+  ::essentia::VectorEx<int> shape = parameter("shape").toVectorInt();
   _patchHopSize = parameter("patchHopSize").toInt();
   _batchHopSize = parameter("batchHopSize").toInt();
   _lastPatchMode = parameter("lastPatchMode").toString();
@@ -75,7 +75,7 @@ void VectorRealToTensor::configure() {
     _patchHopSize = _timeStamps;
   }
 
-  _acc.assign(0, vector<vector<Real> >(_shape[2], vector<Real>(_shape[3], 0.0)));
+  _acc.assign(0, ::essentia::VectorEx<::essentia::VectorEx<Real> >(_shape[2], ::essentia::VectorEx<Real>(_shape[3], 0.0)));
   _push = false;
 
   if (_patchHopSize > _timeStamps) {
@@ -158,7 +158,7 @@ AlgorithmStatus VectorRealToTensor::process() {
 
   // Frames accumulation step.
   if (addPatch) {
-    const vector<vector<Real> >& frame = _frame.tokens();
+    const ::essentia::VectorEx<::essentia::VectorEx<Real> >& frame = _frame.tokens();
 
     // Sanity check.
     for (size_t i = 0; i < frame.size(); i++) {
@@ -182,7 +182,7 @@ AlgorithmStatus VectorRealToTensor::process() {
           if (frame.size() < 10) {
             E_WARNING("VectorRealToTensor: Last patch produced by repeating the last " << frame.size() << " frames. May result in unreliable predictions.");
           }
-          vector<vector<Real> > padded_frame = frame;
+          ::essentia::VectorEx<::essentia::VectorEx<Real> > padded_frame = frame;
 
           for (int i = 0; i < _timeStamps; i++) {
             padded_frame.push_back(frame[i % frame.size()]);
@@ -207,7 +207,7 @@ AlgorithmStatus VectorRealToTensor::process() {
   // 2) we have reached the end of the stream in accumulate mode
   // 3) we have reached the end of the stream with lastBatchMode = "push"
   if (_push) {
-    vector<int> shape = _shape;
+    ::essentia::VectorEx<int> shape = _shape;
     int batchHopSize = _batchHopSize;
 
     bool reshapeBatch = false;
@@ -268,7 +268,7 @@ AlgorithmStatus VectorRealToTensor::process() {
 }
 
 void VectorRealToTensor::reset() {
-  _acc.assign(0, vector<vector<Real> >(_shape[1], vector<Real>(_shape[2], 0.0)));
+  _acc.assign(0, ::essentia::VectorEx<::essentia::VectorEx<Real> >(_shape[1], ::essentia::VectorEx<Real>(_shape[2], 0.0)));
   _push = false;
 }
 

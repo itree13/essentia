@@ -28,7 +28,7 @@ using namespace essentia::streaming;
 
 
 TEST(Copy, Integer) {
-  vector<int> output;
+  ::essentia::VectorEx<int> output;
   int array[] = {1, 2, 3, 4};
   VectorInput<int>* gen = new VectorInput<int>(array);
   Copy<int>* copy = new Copy<int>();
@@ -36,12 +36,12 @@ TEST(Copy, Integer) {
   connect(copy->output("data"), output);
   scheduler::Network(gen).run();
 
-  vector<int> expected = arrayToVector<int>(array);
+  ::essentia::VectorEx<int> expected = arrayToVector<int>(array);
   EXPECT_VEC_EQ(output, expected);
 }
 
 TEST(Copy, Real) {
-  vector<Real> output;
+  ::essentia::VectorEx<Real> output;
   Real array[] = {1.1, 2.2, 3.3, 4.4};
   VectorInput<Real>* gen = new VectorInput<Real>(array);
   Copy<Real>* copy = new Copy<Real>();
@@ -49,12 +49,12 @@ TEST(Copy, Real) {
   connect(copy->output("data"), output);
   scheduler::Network(gen).run();
 
-  vector<Real> expected = arrayToVector<Real>(array);
+  ::essentia::VectorEx<Real> expected = arrayToVector<Real>(array);
   EXPECT_VEC_EQ(output, expected);
   }
 
 TEST(Copy, String) {
-  vector<string> output;
+  ::essentia::VectorEx<string> output;
   const char* array[] = {"foo", "bar", "foo-bar"};
   VectorInput<string>* gen = new VectorInput<string>(array);
   Copy<string>* copy = new Copy<string>();
@@ -62,22 +62,22 @@ TEST(Copy, String) {
   connect(copy->output("data"), output);
   scheduler::Network(gen).run();
 
-  vector<string> expected = arrayToVector<string>(array);
+  ::essentia::VectorEx<string> expected = arrayToVector<string>(array);
   EXPECT_VEC_EQ(output, expected);
 }
 
 TEST(Copy, VectorInt) {
-  vector<vector<int> > output;
+  ::essentia::VectorEx<::essentia::VectorEx<int> > output;
   int size = 3;
-  vector<vector<int> > v(size, vector<int>(size));
+  ::essentia::VectorEx<::essentia::VectorEx<int> > v(size, ::essentia::VectorEx<int>(size));
   for (int i=0; i<size; i++) {
     for (int j=0; j<size; j++) {
       v[i][j] = rand();
     }
   }
 
-  VectorInput<vector<int> >* gen = new VectorInput<vector<int> >(&v);
-  Copy<vector<int> >* copy = new Copy<vector<int> >();
+  VectorInput<::essentia::VectorEx<int> >* gen = new VectorInput<::essentia::VectorEx<int> >(&v);
+  Copy<::essentia::VectorEx<int> >* copy = new Copy<::essentia::VectorEx<int> >();
   connect(gen->output("data"), copy->input("data"));
   connect(copy->output("data"), output);
   scheduler::Network(gen).run();
@@ -85,17 +85,17 @@ TEST(Copy, VectorInt) {
 }
 
 TEST(Copy, VectorReal) {
-  vector<vector<Real> > output;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > output;
   int size = 3;
-  vector<vector<Real> > v(size, vector<Real>(size));
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > v(size, ::essentia::VectorEx<Real>(size));
   for (int i=0; i<size; i++) {
     for (int j=0; j<size; j++) {
       v[i][j] = Real(rand()/Real(RAND_MAX));
     }
   }
 
-  VectorInput<vector<Real> >* gen = new VectorInput<vector<Real> >(&v);
-  Copy<vector<Real> >* copy = new Copy<vector<Real> >();
+  VectorInput<::essentia::VectorEx<Real> >* gen = new VectorInput<::essentia::VectorEx<Real> >(&v);
+  Copy<::essentia::VectorEx<Real> >* copy = new Copy<::essentia::VectorEx<Real> >();
   connect(gen->output("data"), copy->input("data"));
   connect(copy->output("data"), output);
   scheduler::Network(gen).run();

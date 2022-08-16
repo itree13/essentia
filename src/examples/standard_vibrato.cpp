@@ -75,33 +75,33 @@ int main(int argc, char* argv[]) {
   Pool pool;
 
   // set audio load:
-  vector<Real> audio;
+  ::essentia::VectorEx<Real> audio;
   audioload->output("audio").set(audio);
 
   // set frameCutter:
-  vector<Real> frame;
+  ::essentia::VectorEx<Real> frame;
   frameCutter->input("signal").set(audio);
   frameCutter->output("frame").set(frame);
 
   // set windowing:
-  vector<Real> windowedframe;
+  ::essentia::VectorEx<Real> windowedframe;
   window->input("frame").set(frame);
   window->output("frame").set(windowedframe);
 
   // set spectrum:
-  vector<Real> spec;
+  ::essentia::VectorEx<Real> spec;
   spectrum->input("frame").set(windowedframe);
   spectrum->output("spectrum").set(spec);
 
   // set pitch extraction:
   Real thisPitch = 0., thisConf = 0;
-  vector<Real> pitch;
+  ::essentia::VectorEx<Real> pitch;
   pitchDetect->input("spectrum").set(spec);
   pitchDetect->output("pitch").set(thisPitch);
   pitchDetect->output("pitchConfidence").set(thisConf);
     
   // set vibrato extraction:
-  vector<Real> vibFreq, vibExt;
+  ::essentia::VectorEx<Real> vibFreq, vibExt;
   vibrato->input("pitch").set(pitch);
   vibrato->output("vibratoFrequency").set(vibFreq);
   vibrato->output("vibratoExtend").set(vibExt);

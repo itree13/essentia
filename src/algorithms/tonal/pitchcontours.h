@@ -28,12 +28,12 @@ namespace standard {
 class PitchContours : public Algorithm {
 
  private:
-  Input<std::vector<std::vector<Real> > > _peakBins;
-  Input<std::vector<std::vector<Real> > > _peakSaliences;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _peakBins;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _peakSaliences;
 
-  Output<std::vector<std::vector<Real> > > _contoursBins;
-  Output<std::vector<std::vector<Real> > > _contoursSaliences;
-  Output<std::vector<Real> > _contoursStartTimes;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _contoursBins;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _contoursSaliences;
+  Output<::essentia::VectorEx<Real> > _contoursStartTimes;
   Output<Real> _duration;
 
   Real _sampleRate;
@@ -43,10 +43,10 @@ class PitchContours : public Algorithm {
   Real _peakDistributionThreshold;
   //Real _timeContinuity;
 
-  std::vector<std::vector<Real> > _salientPeaksBins;
-  std::vector<std::vector<Real> > _salientPeaksValues;
-  std::vector<std::vector<Real> > _nonSalientPeaksBins;
-  std::vector<std::vector<Real> > _nonSalientPeaksValues;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _salientPeaksBins;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _salientPeaksValues;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _nonSalientPeaksBins;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _nonSalientPeaksValues;
 
   Real _timeContinuityInFrames;
   Real _minDurationInFrames;
@@ -54,9 +54,9 @@ class PitchContours : public Algorithm {
   size_t _numberFrames;
   Real _frameDuration;
 
-  void removePeak(std::vector<std::vector<Real> >& peaksBins, std::vector<std::vector<Real> >& peaksValues, size_t i, int j);
-  int findNextPeak(std::vector<std::vector<Real> >& peaksBins, std::vector<Real>& contoursBins, size_t i, bool backward=false);
-  void trackPitchContour(size_t& index, std::vector<Real>& contourBins, std::vector <Real>& contourSaliences);
+  void removePeak(::essentia::VectorEx<::essentia::VectorEx<Real> >& peaksBins, ::essentia::VectorEx<::essentia::VectorEx<Real> >& peaksValues, size_t i, int j);
+  int findNextPeak(::essentia::VectorEx<::essentia::VectorEx<Real> >& peaksBins, ::essentia::VectorEx<Real>& contoursBins, size_t i, bool backward=false);
+  void trackPitchContour(size_t& index, ::essentia::VectorEx<Real>& contourBins, ::essentia::VectorEx <Real>& contourSaliences);
 
  public:
   PitchContours() {
@@ -103,11 +103,11 @@ namespace streaming {
 class PitchContours : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::vector<Real> > > _peakBins;
-  Sink<std::vector<std::vector<Real> > > _peakSaliences;
-  Source<std::vector<std::vector<Real> > > _contoursBins;
-  Source<std::vector<std::vector<Real> > > _contoursSaliences;
-  Source<std::vector<Real> > _contoursStartTimes;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _peakBins;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _peakSaliences;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _contoursBins;
+  Source<::essentia::VectorEx<::essentia::VectorEx<Real> > > _contoursSaliences;
+  Source<::essentia::VectorEx<Real> > _contoursStartTimes;
   Source<Real> _duration;
 
  public:

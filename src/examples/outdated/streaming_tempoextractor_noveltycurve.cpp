@@ -96,7 +96,7 @@ Real roundToDecimal(Real x, int n) {
 }
 
 void computeNoveltyCurve(Pool& pool, const string& audioFilename, int frameSize, int hopSize,
-                         const vector<Real>& bands, const string& windowType, const string& weightCurve,
+                         const ::essentia::VectorEx<Real>& bands, const string& windowType, const string& weightCurve,
                          Real startTime=0., Real endTime=2000.) {
 
   Real sampleRate = pool.value<Real>("sampleRate");
@@ -139,8 +139,8 @@ void computeNoveltyCurve(Pool& pool, const string& audioFilename, int frameSize,
     noveltyCurve = standard::AlgorithmFactory::create("NoveltyCurve",
                                                       "frameRate", frameRate,
                                                       "weightCurve", weightCurve);
-  vector<Real> novelty;
-  noveltyCurve->input("frequencyBands").set(pool.value<vector<vector<Real> > >("frequencyBands"));
+  ::essentia::VectorEx<Real> novelty;
+  noveltyCurve->input("frequencyBands").set(pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("frequencyBands"));
   noveltyCurve->output("novelty").set(novelty);
   noveltyCurve->compute();
   delete noveltyCurve;
@@ -158,7 +158,7 @@ void computeNoveltyCurve(Pool& pool, const string& audioFilename, int frameSize,
 }
 
 bool computeTempogram(Pool& pool, Real frameRate, Real tempoFrameSize, Real tempoOverlap) {
-  VectorInput<Real>* gen = new VectorInput<Real>(&pool.value<vector<Real> >("noveltyCurve"));
+  VectorInput<Real>* gen = new VectorInput<Real>(&pool.value<::essentia::VectorEx<Real> >("noveltyCurve"));
   Algorithm* bpmHist = AlgorithmFactory::create("BpmHistogram",
                                                 "frameRate", frameRate,
                                                 "frameSize", tempoFrameSize,
@@ -170,8 +170,8 @@ bool computeTempogram(Pool& pool, Real frameRate, Real tempoFrameSize, Real temp
                                                 "tolerance", 5.0,
                                                 "normalize", false,
                                                 "weightByMagnitude", true);
-  vector<vector<vector<Real> > > sinusoids;
-  VectorOutput<vector<vector<Real> > >* storage = new VectorOutput<vector<vector<Real> > >(&sinusoids);
+  ::essentia::VectorEx<::essentia::VectorEx<::essentia::VectorEx<Real> > > sinusoids;
+  VectorOutput<::essentia::VectorEx<::essentia::VectorEx<Real> > >* storage = new VectorOutput<::essentia::VectorEx<::essentia::VectorEx<Real> > >(&sinusoids);
   connect(*gen, bpmHist->input("novelty"));
   connect(bpmHist->output("bpm"), pool, "peaksBpm");
   connect(bpmHist->output("bpmMagnitude"), pool, "peaksMagnitude");
@@ -183,7 +183,7 @@ bool computeTempogram(Pool& pool, Real frameRate, Real tempoFrameSize, Real temp
   runGenerator(gen);
   deleteNetwork(gen);
 
-  if (pool.value<vector<Real> >("peaksBpm") == vector<Real>(1, 0)) {
+  if (pool.value<::essentia::VectorEx<Real> >("peaksBpm") == ::essentia::VectorEx<Real>(1, 0)) {
     return false;
   }
 
@@ -192,7 +192,7 @@ bool computeTempogram(Pool& pool, Real frameRate, Real tempoFrameSize, Real temp
   }
 
   // just for testing;
-  //const vector<Real> & sine = pool.value<vector<Real> >("sinusoid");
+  //const ::essentia::VectorEx<Real> & sine = pool.value<::essentia::VectorEx<Real> >("sinusoid");
   //cout << "sine: " << endl;
   //for (int i=0; i < (int)sine.size(); i++) {
   //  cout << sine[i] << endl;
@@ -202,7 +202,7 @@ bool computeTempogram(Pool& pool, Real frameRate, Real tempoFrameSize, Real temp
 
 void cleanPool(Pool& pool) {
   pool.remove("noveltyCurve");
-  pool.set("noveltyCurve", pool.value<vector<Real> >("sinusoid"));
+  pool.set("noveltyCurve", pool.value<::essentia::VectorEx<Real> >("sinusoid"));
   pool.remove("peaksBpm");
   pool.remove("peaksMagnitude");
   pool.remove("harmonicBpm");
@@ -244,7 +244,7 @@ int main(int argc, char* argv[]) {
   int hopSize = frameSize/2;
   string windowType = "hann";
   string weightCurve = "inverse_quadratic";
-  vector<Real> bands = arrayToVector<Real>(barkBands);
+  ::essentia::VectorEx<Real> bands = arrayToVector<Real>(barkBands);
 
   // parameters for beat and tempo extraction:
   Real frameRate = sampleRate/Real(hopSize);
@@ -253,21 +253,21 @@ int main(int argc, char* argv[]) {
 
   Real startTime = 0;
   Real endTime = 2000;
-  vector<Real> bpms;
+  ::essentia::VectorEx<Real> bpms;
   // keep all the possible candidates and decide at the end which one we keep.
   // This is done only for the mirex tempo contest, where we have to give  2
   // bpms and the algorithm may throw only one candidate from harmonicBpm
   // output
-  vector<Real> allBpmCandidates, allBpmMagnitudes;
+  ::essentia::VectorEx<Real> allBpmCandidates, allBpmMagnitudes;
 
   computeNoveltyCurve(pool, audioFilename, frameSize, hopSize, bands, windowType,
                       weightCurve, startTime, endTime);
   bool ok = computeTempogram(pool, frameRate, tempoFrameSize, tempoOverlap);
   if (ok) {
-    while (bpms != pool.value<vector<Real> >("harmonicBpm")) {
-      bpms = pool.value<vector<Real> >("harmonicBpm");
-      const vector<Real> peaksBpm = pool.value<vector<Real> >("peaksBpm");
-      const vector<Real> peaksMag = pool.value<vector<Real> >("peaksMagnitude");
+    while (bpms != pool.value<::essentia::VectorEx<Real> >("harmonicBpm")) {
+      bpms = pool.value<::essentia::VectorEx<Real> >("harmonicBpm");
+      const ::essentia::VectorEx<Real> peaksBpm = pool.value<::essentia::VectorEx<Real> >("peaksBpm");
+      const ::essentia::VectorEx<Real> peaksMag = pool.value<::essentia::VectorEx<Real> >("peaksMagnitude");
       allBpmCandidates.insert(allBpmCandidates.end(), peaksBpm.begin(), peaksBpm.end());
       allBpmMagnitudes.insert(allBpmMagnitudes.end(), peaksMag.begin(), peaksMag.end());
       cleanPool(pool);
@@ -278,15 +278,15 @@ int main(int argc, char* argv[]) {
     Real minBpmBound = 40.;
 
     const int nbins = 100;
-    std::vector<int> dist(nbins);
-    std::vector<Real> distx(nbins);
+    ::essentia::VectorEx<int> dist(nbins);
+    ::essentia::VectorEx<Real> distx(nbins);
 
     for (int i=0; i<int(allBpmCandidates.size());i++) allBpmCandidates[i] /= 2.;
 
     // MEGA HACK: only for MIREX-2010 tempo estimation
 
     // group similar bpms:
-    vector<Real> groupedBpms, groupedMagnitudes;
+    ::essentia::VectorEx<Real> groupedBpms, groupedMagnitudes;
     groupedBpms.push_back(allBpmCandidates[0]);
     groupedMagnitudes.push_back(allBpmMagnitudes[0]);
     size_t size = 0;
@@ -352,7 +352,7 @@ int main(int argc, char* argv[]) {
     //  cout << "bpm: " << it->second << "\t value: " << it->first << endl;
     //}
 
-    vector<Real> bpmResult(2, 0.0), bpmRatio(2, 0.0), bpmStrength(2, 0.0);
+    ::essentia::VectorEx<Real> bpmResult(2, 0.0), bpmRatio(2, 0.0), bpmStrength(2, 0.0);
     // assume that there's only one bpm (this is a request from MIREX -> songs
     // will have constant bpm for the tempo contest)
 

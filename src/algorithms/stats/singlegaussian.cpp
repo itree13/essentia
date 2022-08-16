@@ -36,11 +36,11 @@ const char* SingleGaussian::description = DOC("This algorithm estimates the sing
 "  application in music information retrieval,” Vienna University of\n"
 "  Technology, 2006.");
 
-vector<Real> SingleGaussian::meanMatrix(const Array2D<Real>& matrix, int dim = 1) const {
+::essentia::VectorEx<Real> SingleGaussian::meanMatrix(const Array2D<Real>& matrix, int dim = 1) const {
 
   int rows = matrix.dim1();
   int columns = matrix.dim2();
-  vector<Real> means;
+  ::essentia::VectorEx<Real> means;
 
   if (dim == 1) {
     means.resize(columns);
@@ -91,7 +91,7 @@ Array2D<Real> SingleGaussian::covarianceMatrix(const Array2D<Real>& matrix, bool
 
   int rows = matrix.dim1();
   int columns = matrix.dim2();
-  vector<Real> means(columns, 0.0);
+  ::essentia::VectorEx<Real> means(columns, 0.0);
   Array2D<Real> cov(columns, columns);
 
   if (lowmem) {
@@ -99,7 +99,7 @@ Array2D<Real> SingleGaussian::covarianceMatrix(const Array2D<Real>& matrix, bool
     means = meanMatrix(matrix,1);
 
     // compute covariance matrix
-    vector<Real> dim1(rows);
+    ::essentia::VectorEx<Real> dim1(rows);
 
     for (int i=0; i<columns; i++) {
       Real m1 = means[i];
@@ -194,7 +194,7 @@ void SingleGaussian::compute() {
     throw EssentiaException("SingleGaussian: Cannot operate on a matrix with one row");
   }
 
-  vector<Real>& mean = _mean.get();
+  ::essentia::VectorEx<Real>& mean = _mean.get();
   Array2D<Real>& covariance = _covariance.get();
   Array2D<Real>& inverseCovariance = _inverseCovariance.get();
 

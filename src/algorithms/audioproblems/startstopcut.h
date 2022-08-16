@@ -28,7 +28,7 @@ namespace standard {
 
 class StartStopCut : public Algorithm {
  private:
-  Input<std::vector<Real> > _audio;
+  Input<::essentia::VectorEx<Real> > _audio;
   Output<int> _startCut;
   Output<int> _stopCut;
 
@@ -65,7 +65,7 @@ class StartStopCut : public Algorithm {
 
   void configure();
   void compute();
-  void findNonSilentFrame(std::vector<Real> audio, int &nonSilentFrame, uint lastFrame);
+  void findNonSilentFrame(::essentia::VectorEx<Real> audio, int &nonSilentFrame, uint lastFrame);
 
   static const char* name;
   static const char* category;
@@ -84,7 +84,7 @@ namespace streaming {
 
 class StartStopCut : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<Real> > _audio;
+  Sink<::essentia::VectorEx<Real> > _audio;
   Source<int> _startCut;
   Source<int> _stopCut;
 

@@ -27,7 +27,7 @@ namespace streaming {
 
 class RingBufferVectorOutput : public Algorithm {
  protected:
-  Sink< std::vector<Real> > _input;
+  Sink< ::essentia::VectorEx<Real> > _input;
   class RingBufferImpl* _impl;
 
  public:

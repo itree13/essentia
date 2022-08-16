@@ -45,7 +45,7 @@ void FadeDetection::configure() {
 
 void FadeDetection::compute() {
 
-  const vector<Real>& rms = _rms.get();
+  const ::essentia::VectorEx<Real>& rms = _rms.get();
   if (rms.empty()) {
     // throw exception as mean of empty arrays cannot be computed
     throw EssentiaException("FadeDetection: RMS array is empty");
@@ -60,7 +60,7 @@ void FadeDetection::compute() {
 
   // FADE-IN
   bool fade = false;
-  vector<pair<int,int> > fade_in_vector;
+  ::essentia::VectorEx<pair<int,int> > fade_in_vector;
   int fade_in_start = 0;
   int fade_in_stop;
   Real fade_in_start_value = 0.0;
@@ -102,7 +102,7 @@ void FadeDetection::compute() {
 
   // FADE-OUT
   fade = false;
-  vector<pair<int, int> > fade_out_vector;
+  ::essentia::VectorEx<pair<int, int> > fade_out_vector;
   int fade_out_start;
   int fade_out_stop = 0;
   Real fade_out_stop_value = 0.0;

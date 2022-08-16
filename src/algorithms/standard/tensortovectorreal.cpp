@@ -72,7 +72,7 @@ AlgorithmStatus TensorToVectorReal::process() {
     return process();
   }
 
-  vector<vector<Real> >& frame = _frame.tokens();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& frame = _frame.tokens();
 
   int i = 0;
   for (int j = 0; j < _batchSize; j++) {

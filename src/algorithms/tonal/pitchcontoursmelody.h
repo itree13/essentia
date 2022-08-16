@@ -30,12 +30,12 @@ namespace standard {
 class PitchContoursMelody : public Algorithm {
 
  private:
-  Input<std::vector<std::vector<Real> > > _contoursBins;
-  Input<std::vector<std::vector<Real> > > _contoursSaliences;
-  Input<std::vector<Real> > _contoursStartTimes;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _contoursBins;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _contoursSaliences;
+  Input<::essentia::VectorEx<Real> > _contoursStartTimes;
   Input<Real> _duration;
-  Output<std::vector<Real> > _pitch;
-  Output<std::vector<Real> > _pitchConfidence;
+  Output<::essentia::VectorEx<Real> > _pitch;
+  Output<::essentia::VectorEx<Real> > _pitchConfidence;
 
   Algorithm* _movingAverage;
   Algorithm* _frameCutter;
@@ -77,27 +77,27 @@ class PitchContoursMelody : public Algorithm {
 
   Real _centToHertzBase;
 
-  std::vector<size_t> _contoursStartIndices;
-  std::vector<size_t> _contoursEndIndices;
-  std::vector<Real> _contoursBinsMean;
-  std::vector<Real> _contoursSaliencesTotal;  // total salience (sum of per-frame saliences)
-  std::vector<Real> _contoursSaliencesMean;
-  std::vector<Real> _contoursBinsStddev;
+  ::essentia::VectorEx<size_t> _contoursStartIndices;
+  ::essentia::VectorEx<size_t> _contoursEndIndices;
+  ::essentia::VectorEx<Real> _contoursBinsMean;
+  ::essentia::VectorEx<Real> _contoursSaliencesTotal;  // total salience (sum of per-frame saliences)
+  ::essentia::VectorEx<Real> _contoursSaliencesMean;
+  ::essentia::VectorEx<Real> _contoursBinsStddev;
 
-  std::vector<Real> _melodyPitchMean;               // melody pitch mean function
-  std::vector <std::pair <int,int> > _duplicates;   // pairs of contour duplicates
-  std::vector<size_t> _contoursSelected;    // indices of the selected contours
-  std::vector<size_t> _contoursIgnored;     // indices of the ignored contours
-  std::vector<size_t> _contoursSelectedInitially;
-  std::vector<size_t> _contoursIgnoredInitially;
+  ::essentia::VectorEx<Real> _melodyPitchMean;               // melody pitch mean function
+  ::essentia::VectorEx <std::pair <int,int> > _duplicates;   // pairs of contour duplicates
+  ::essentia::VectorEx<size_t> _contoursSelected;    // indices of the selected contours
+  ::essentia::VectorEx<size_t> _contoursIgnored;     // indices of the ignored contours
+  ::essentia::VectorEx<size_t> _contoursSelectedInitially;
+  ::essentia::VectorEx<size_t> _contoursIgnoredInitially;
   size_t _numberContours;
 
-  void voicingDetection(const std::vector<std::vector<Real> >& contoursBins,
-                        const std::vector<std::vector<Real> >& contoursSaliences,
-                        const std::vector<Real>& contoursStartTimes);
-  bool detectVoiceVibrato(std::vector<Real> contourBins, const Real binMean);
-  void computeMelodyPitchMean(const std::vector<std::vector<Real> >& contoursBins);
-  void detectContourDuplicates(const std::vector<std::vector<Real> >& contoursBins);
+  void voicingDetection(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins,
+                        const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursSaliences,
+                        const ::essentia::VectorEx<Real>& contoursStartTimes);
+  bool detectVoiceVibrato(::essentia::VectorEx<Real> contourBins, const Real binMean);
+  void computeMelodyPitchMean(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins);
+  void detectContourDuplicates(const ::essentia::VectorEx<::essentia::VectorEx<Real> >& contoursBins);
   void removeContourDuplicates();
   void removePitchOutliers();
 
@@ -159,12 +159,12 @@ namespace streaming {
 class PitchContoursMelody : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::vector<Real> > > _contoursBins;
-  Sink<std::vector<std::vector<Real> > > _contoursSaliences;
-  Sink<std::vector<Real> > _contoursStartTimes;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _contoursBins;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _contoursSaliences;
+  Sink<::essentia::VectorEx<Real> > _contoursStartTimes;
   Sink<Real> _duration;
-  Source<std::vector<Real> > _pitch;
-  Source<std::vector<Real> > _pitchConfidence;
+  Source<::essentia::VectorEx<Real> > _pitch;
+  Source<::essentia::VectorEx<Real> > _pitchConfidence;
 
  public:
   PitchContoursMelody() {

@@ -28,7 +28,7 @@ using namespace std;
 using namespace essentia;
 using namespace standard;
 
-std::vector< std::vector<Real> > readIn2dData(const char* filename);
+::essentia::VectorEx< ::essentia::VectorEx<Real> > readIn2dData(const char* filename);
 
 int main(int argc, char* argv[]) {
 
@@ -90,22 +90,22 @@ int main(int argc, char* argv[]) {
                                      "filename", outputStocFilename);
 
 
-  vector<Real> audio;
-  vector<Real> frame;
-  vector<Real> wframe;
-  vector<complex<Real> > fftframe;
+  ::essentia::VectorEx<Real> audio;
+  ::essentia::VectorEx<Real> frame;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<complex<Real> > fftframe;
 
-  vector<Real> magnitudes;
-  vector<Real> frequencies;
-  vector<Real> phases;
-  vector<Real> stocenv;
+  ::essentia::VectorEx<Real> magnitudes;
+  ::essentia::VectorEx<Real> frequencies;
+  ::essentia::VectorEx<Real> phases;
+  ::essentia::VectorEx<Real> stocenv;
 
-  vector<complex<Real> >  sfftframe; // sine model FFT frame
-  vector<Real> ifftframe;
+  ::essentia::VectorEx<complex<Real> >  sfftframe; // sine model FFT frame
+  ::essentia::VectorEx<Real> ifftframe;
 
-  vector<Real> allaudio; // concatenated audio file output
-  vector<Real> allsineaudio; // concatenated audio file output
-  vector<Real> allstocaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allsineaudio; // concatenated audio file output
+  ::essentia::VectorEx<Real> allstocaudio; // concatenated audio file output
 
   // analysis
   audioLoader->output("audio").set(audio);
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
   stocmodelanal->output("stocenv").set(stocenv);
 
   // Synthesis
-  vector<Real> audioStocOutput;
+  ::essentia::VectorEx<Real> audioStocOutput;
   stocmodelsynth->input("stocenv").set(stocenv);
   stocmodelsynth->output("frame").set(audioStocOutput); // outputs a frame
 
@@ -180,13 +180,13 @@ int main(int argc, char* argv[]) {
 
 
 // support functinos to read data from numpy
-std::vector< std::vector<Real> > readIn2dData(const char* filename)
+::essentia::VectorEx< ::essentia::VectorEx<Real> > readIn2dData(const char* filename)
 {
     /* Function takes a char* filename argument and returns a
      * 2d dynamic array containing the data
      */
 
-    std::vector< std::vector<Real> > table;
+    ::essentia::VectorEx< ::essentia::VectorEx<Real> > table;
     std::fstream ifs;
 
     /*  open file  */
@@ -209,7 +209,7 @@ std::vector< std::vector<Real> > readIn2dData(const char* filename)
             continue;
 
 
-        std::vector<Real> row;
+        ::essentia::VectorEx<Real> row;
 
         while (ss >> buf)
             row.push_back(buf);

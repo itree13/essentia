@@ -32,8 +32,8 @@ class StochasticModelSynth : public Algorithm {
 
  protected:
 
-  Input<std::vector<Real> > _stocenv;
-  Output<std::vector<Real> > _frame;
+  Input<::essentia::VectorEx<Real> > _stocenv;
+  Output<::essentia::VectorEx<Real> > _frame;
 
   Real _stocf;
   int _fftSize;
@@ -79,7 +79,7 @@ class StochasticModelSynth : public Algorithm {
   void configure();
   void compute();
 
-  void getFFTFromEnvelope(const std::vector<Real> magResDB, std::vector<std::complex<Real> > &fftStoc);
+  void getFFTFromEnvelope(const ::essentia::VectorEx<Real> magResDB, ::essentia::VectorEx<std::complex<Real> > &fftStoc);
 
   static const char* name;
   static const char* category;
@@ -103,8 +103,8 @@ class StochasticModelSynth : public StreamingAlgorithmWrapper {
 
  protected:
 
-  Sink<std::vector<Real> > _stocenv;
-  Source<std::vector<Real> > _frame; // output
+  Sink<::essentia::VectorEx<Real> > _stocenv;
+  Source<::essentia::VectorEx<Real> > _frame; // output
 
  public:
   StochasticModelSynth() {

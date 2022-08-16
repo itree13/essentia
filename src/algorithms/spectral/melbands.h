@@ -31,8 +31,8 @@ namespace standard {
 class MelBands : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrumInput;
-  Output<std::vector<Real> > _bandsOutput;
+  Input<::essentia::VectorEx<Real> > _spectrumInput;
+  Output<::essentia::VectorEx<Real> > _bandsOutput;
 
   Algorithm* _triangularBands;
 
@@ -74,8 +74,8 @@ class MelBands : public Algorithm {
   void calculateFilterFrequencies();
   void setWarpingFunctions(std::string warping, std::string weighting);
 
-  std::vector<std::vector<Real> > _filterCoefficients;
-  std::vector<Real> _filterFrequencies;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _filterCoefficients;
+  ::essentia::VectorEx<Real> _filterFrequencies;
   int _numBands;
   Real _sampleRate;
 
@@ -99,8 +99,8 @@ namespace streaming {
 class MelBands : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrumInput;
-  Source<std::vector<Real> > _bandsOutput;
+  Sink<::essentia::VectorEx<Real> > _spectrumInput;
+  Source<::essentia::VectorEx<Real> > _bandsOutput;
 
  public:
   MelBands() {

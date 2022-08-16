@@ -70,8 +70,8 @@ void FrameCutter::reset() {
 
 void FrameCutter::compute() {
 
-  const vector<Real>& buffer = _buffer.get();
-  vector<Real>& frame = _frame.get();
+  const ::essentia::VectorEx<Real>& buffer = _buffer.get();
+  ::essentia::VectorEx<Real>& frame = _frame.get();
 
   // if we're already lastFrame or the input stream is empty, don't return any frame
   if (_lastFrame || buffer.empty()) {
@@ -324,12 +324,12 @@ AlgorithmStatus FrameCutter::process() {
   }
 
   // some semantic description to not get mixed up between the 2 meanings
-  // of a vector<Real> (which acts both as a stream of Real tokens at the
-  // input and as a single vector<Real> token at the output)
-  typedef vector<AudioSample> Frame;
+  // of a ::essentia::VectorEx<Real> (which acts both as a stream of Real tokens at the
+  // input and as a single ::essentia::VectorEx<Real> token at the output)
+  typedef ::essentia::VectorEx<AudioSample> Frame;
 
   // get the audio input and copy it as a frame to the output
-  const vector<AudioSample>& audio = _audio.tokens();
+  const ::essentia::VectorEx<AudioSample>& audio = _audio.tokens();
   Frame& frame = _frames.firstToken();
 
 
@@ -371,7 +371,7 @@ AlgorithmStatus FrameCutter::process() {
       return OK;
 
     case ADD_NOISE: {
-      vector<AudioSample> inputFrame(_frameSize, 0.0);
+      ::essentia::VectorEx<AudioSample> inputFrame(_frameSize, 0.0);
       fastcopy(&inputFrame[0]+zeropadSize, &frame[0], acquireSize);
       _noiseAdder->input("signal").set(inputFrame);
       _noiseAdder->output("signal").set(frame);

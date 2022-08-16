@@ -36,7 +36,7 @@ const char* Entropy::description = DOC("This algorithm computes the Shannon entr
 "  Acoustics, Speech, and Signal Processing (ICASSP'04).");
 
 void Entropy::compute() {
-    vector<Real> array = _array.get();
+    ::essentia::VectorEx<Real> array = _array.get();
     Real& entropy = _entropy.get();
     
     if (array.size() == 0) {

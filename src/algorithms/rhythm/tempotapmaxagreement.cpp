@@ -70,8 +70,8 @@ void TempoTapMaxAgreement::reset() {
 }
 
 void TempoTapMaxAgreement::compute() {
-  vector<vector<Real> > tickCandidates = _tickCandidates.get(); // we need a copy
-  vector<Real>& ticks = _ticks.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > tickCandidates = _tickCandidates.get(); // we need a copy
+  ::essentia::VectorEx<Real>& ticks = _ticks.get();
   Real& confidence = _confidence.get();
 
   // sanity checks
@@ -99,7 +99,7 @@ void TempoTapMaxAgreement::compute() {
   }
 
   int numberMethods = (int) tickCandidates.size();
-  vector<vector<Real> > infogain(numberMethods, vector<Real> (numberMethods, 0.));
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > infogain(numberMethods, ::essentia::VectorEx<Real> (numberMethods, 0.));
 
   for (int i=0; i<numberMethods; ++i) {
     for (int j=i+1; j<numberMethods; ++j) {
@@ -107,10 +107,10 @@ void TempoTapMaxAgreement::compute() {
     }
   }
 
-  vector<Real> temp1;
+  ::essentia::VectorEx<Real> temp1;
   temp1.reserve(2*numberMethods); // reserve more than maximum we will ever
 
-  vector<Real> distanceInfogain;
+  ::essentia::VectorEx<Real> distanceInfogain;
   distanceInfogain.reserve(numberMethods);
 
   for (int i=0; i<numberMethods; ++i) {
@@ -132,16 +132,16 @@ void TempoTapMaxAgreement::compute() {
 }
 
 
-Real TempoTapMaxAgreement::computeBeatInfogain(vector<Real>& ticks1,
-                                               vector<Real>& ticks2) {
+Real TempoTapMaxAgreement::computeBeatInfogain(::essentia::VectorEx<Real>& ticks1,
+                                               ::essentia::VectorEx<Real>& ticks2) {
 
   // return zero information gain on empty or too short tick sequencies
   if (ticks1.size()<2 || ticks2.size()<2) {
     return 0;
   }
 
-  vector<Real> forwardError;
-  vector<Real> backwardError;
+  ::essentia::VectorEx<Real> forwardError;
+  ::essentia::VectorEx<Real> backwardError;
 
   // ticks2 compared to ticks1
   FindBeatError(ticks2, ticks1, forwardError);
@@ -157,18 +157,18 @@ Real TempoTapMaxAgreement::computeBeatInfogain(vector<Real>& ticks1,
 }
 
 
-void TempoTapMaxAgreement::removeFirstSeconds(vector<Real>& ticks) {
+void TempoTapMaxAgreement::removeFirstSeconds(::essentia::VectorEx<Real>& ticks) {
   size_t removeTicks=0;
   for (; removeTicks<ticks.size(); ++removeTicks) {
     if (ticks[removeTicks] >= _minTickTime) break;
   }
-  vector<Real>(ticks.begin()+removeTicks, ticks.end()).swap(ticks);
+  ::essentia::VectorEx<Real>(ticks.begin()+removeTicks, ticks.end()).swap(ticks);
 }
 
 
-void TempoTapMaxAgreement::FindBeatError(const vector<Real>& ticks1,
-                                         const vector<Real>& ticks2,
-                                         vector<Real>& beatError) {
+void TempoTapMaxAgreement::FindBeatError(const ::essentia::VectorEx<Real>& ticks1,
+                                         const ::essentia::VectorEx<Real>& ticks2,
+                                         ::essentia::VectorEx<Real>& beatError) {
   beatError.reserve(ticks2.size());
 
   // Calculate relative error for each beat sample
@@ -202,7 +202,7 @@ void TempoTapMaxAgreement::FindBeatError(const vector<Real>& ticks1,
 }
 
 
-Real TempoTapMaxAgreement::FindEntropy(vector<Real>& beatError) {
+Real TempoTapMaxAgreement::FindEntropy(::essentia::VectorEx<Real>& beatError) {
   // fix the beat errors which are out of range in a way similar to princarg,
   // but for [-0.5, 0.5]
 
@@ -231,7 +231,7 @@ Real TempoTapMaxAgreement::FindEntropy(vector<Real>& beatError) {
 }
 
 
-size_t TempoTapMaxAgreement::closestTick(const vector<Real>& ticks, Real x) {
+size_t TempoTapMaxAgreement::closestTick(const ::essentia::VectorEx<Real>& ticks, Real x) {
   // find closest to x tick in ticks
   Real minDistance=-1;
   size_t j=0;
@@ -251,7 +251,7 @@ size_t TempoTapMaxAgreement::closestTick(const vector<Real>& ticks, Real x) {
 }
 
 
-void TempoTapMaxAgreement::histogram(const vector<Real>& array, vector<Real>& counter) {
+void TempoTapMaxAgreement::histogram(const ::essentia::VectorEx<Real>& array, ::essentia::VectorEx<Real>& counter) {
   counter.clear();
   counter.resize(_histogramBins.size()+1);
   for (size_t i=0; i<array.size(); ++i) {

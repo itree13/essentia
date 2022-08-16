@@ -29,8 +29,8 @@ class MonoMixer : public Algorithm {
 
  protected:
   Input<int> _channels;
-  Input<std::vector<StereoSample> > _inputAudio;
-  Output<std::vector<Real> > _outputAudio;
+  Input<::essentia::VectorEx<StereoSample> > _inputAudio;
+  Output<::essentia::VectorEx<Real> > _outputAudio;
 
   std::string _type;
 

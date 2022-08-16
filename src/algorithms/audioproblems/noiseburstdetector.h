@@ -29,8 +29,8 @@ namespace standard {
 
 class NoiseBurstDetector : public Algorithm {
  private:
-  Input<std::vector<Real>> _frame;
-  Output<std::vector<Real>> _indexes;
+  Input<::essentia::VectorEx<Real>> _frame;
+  Output<::essentia::VectorEx<Real>> _indexes;
 
   Real _threshold;
   Real _thresholdCoeff;
@@ -39,7 +39,7 @@ class NoiseBurstDetector : public Algorithm {
 
   Algorithm* _Clipper;
 
-  Real robustRMS(std::vector<Real> x, Real k);
+  Real robustRMS(::essentia::VectorEx<Real> x, Real k);
   void updateEMA(Real x);
 
  public:
@@ -79,8 +79,8 @@ namespace streaming {
 
 class NoiseBurstDetector : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<Real>> _frame;
-  Source<std::vector<Real>> _indexes;
+  Sink<::essentia::VectorEx<Real>> _frame;
+  Source<::essentia::VectorEx<Real>> _indexes;
 
  public:
   NoiseBurstDetector() {

@@ -29,8 +29,8 @@ namespace standard {
 class OnsetRate : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _onsetTimes;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _onsetTimes;
   Output<Real> _onsetRate;
 
   Real _sampleRate;
@@ -106,7 +106,7 @@ class OnsetRate : public AlgorithmComposite {
  protected:
   SinkProxy<Real> _signal;
 
-  Source<std::vector<Real> > _onsetTimes;
+  Source<::essentia::VectorEx<Real> > _onsetTimes;
   Source<Real> _onsetRate;
 
   Algorithm* _frameCutter;

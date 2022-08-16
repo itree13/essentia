@@ -28,11 +28,11 @@ namespace standard {
 class LPC : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _lpc;
-  Output<std::vector<Real> > _reflection;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _lpc;
+  Output<::essentia::VectorEx<Real> > _reflection;
   Algorithm* _correlation;
-  std::vector<Real> _r;
+  ::essentia::VectorEx<Real> _r;
   int _p;
 
  public:
@@ -72,9 +72,9 @@ namespace streaming {
 class LPC : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
-  Source<std::vector<Real> > _lpc;
-  Source<std::vector<Real> > _reflection;
+  Sink<::essentia::VectorEx<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _lpc;
+  Source<::essentia::VectorEx<Real> > _reflection;
 
  public:
   LPC() {

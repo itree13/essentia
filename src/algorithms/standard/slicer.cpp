@@ -167,8 +167,8 @@ AlgorithmStatus Slicer::process() {
   }
 
   // we are copying a slice, get the audio input and copy it to the output
-  const vector<Real>& input = _input.tokens();
-  vector<Real>& output = _output.firstToken();
+  const ::essentia::VectorEx<Real>& input = _input.tokens();
+  ::essentia::VectorEx<Real>& output = _output.firstToken();
 
   assert((int)input.size() == _input.acquireSize());
   output.resize(input.size());
@@ -225,7 +225,7 @@ void Slicer::configure() {
 
 void Slicer::createInnerNetwork() {
   _slicer = streaming::AlgorithmFactory::create("Slicer");
-  _storage = new streaming::VectorOutput<vector<Real> >();
+  _storage = new streaming::VectorOutput<::essentia::VectorEx<Real> >();
   _gen = new streaming::VectorInput<Real>();
 
   *_gen                     >>  _slicer->input("audio");
@@ -235,8 +235,8 @@ void Slicer::createInnerNetwork() {
 }
 
 void Slicer::compute() {
-  const vector<Real>& audio = _audio.get();
-  vector<vector<Real> >& output = _output.get();
+  const ::essentia::VectorEx<Real>& audio = _audio.get();
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >& output = _output.get();
   output.clear();
 
   _gen->setVector(&audio);

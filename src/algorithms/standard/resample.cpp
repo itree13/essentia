@@ -47,8 +47,8 @@ void Resample::configure() {
 }
 
 void Resample::compute() {
-  const std::vector<Real>& signal = _signal.get();
-  std::vector<Real>& resampled = _resampled.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
+  ::essentia::VectorEx<Real>& resampled = _resampled.get();
 
   if (_factor == 1.0) {
     resampled = signal;
@@ -140,8 +140,8 @@ AlgorithmStatus Resample::process() {
 
   EXEC_DEBUG("data acquired");
 
-  const vector<AudioSample>& signal = _signal.tokens();
-  vector<AudioSample>& resampled = _resampled.tokens();
+  const ::essentia::VectorEx<AudioSample>& signal = _signal.tokens();
+  ::essentia::VectorEx<AudioSample>& resampled = _resampled.tokens();
 
   EXEC_DEBUG("signal size:" << signal.size());
   EXEC_DEBUG("resampled size:" << resampled.size());

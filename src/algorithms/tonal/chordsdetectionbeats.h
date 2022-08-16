@@ -30,10 +30,10 @@ namespace standard {
 class ChordsDetectionBeats : public Algorithm {
 
   protected:
-    Input<std::vector<std::vector<Real> > > _pcp;
-    Input<std::vector<Real> > _ticks;
-    Output<std::vector<std::string> > _chords;
-    Output<std::vector<Real> > _strength;
+    Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _pcp;
+    Input<::essentia::VectorEx<Real> > _ticks;
+    Output<::essentia::VectorEx<std::string> > _chords;
+    Output<::essentia::VectorEx<Real> > _strength;
 
     Algorithm* _chordsAlgo;
     Real _sampleRate; 

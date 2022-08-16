@@ -74,9 +74,9 @@ namespace standard {
 // depends on it
 class StereoDemuxer : public Algorithm {
  protected:
-  Input<std::vector<StereoSample> > _audio;
-  Output<std::vector<AudioSample> > _left;
-  Output<std::vector<AudioSample> > _right;
+  Input<::essentia::VectorEx<StereoSample> > _audio;
+  Output<::essentia::VectorEx<AudioSample> > _left;
+  Output<::essentia::VectorEx<AudioSample> > _right;
 
   streaming::Algorithm* _demuxer;
   streaming::VectorInput<StereoSample, 4096>* _audiogen;

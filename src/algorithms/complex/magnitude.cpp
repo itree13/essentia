@@ -35,12 +35,12 @@ const char* Magnitude::description = DOC("This algorithm computes the absolute v
 
 void Magnitude::compute() {
 
-  const std::vector<std::complex<Real> >& cmplex = _complex.get();
-  std::vector<Real>& magnitude = _magnitude.get();
+  const ::essentia::VectorEx<std::complex<Real> >& cmplex = _complex.get();
+  ::essentia::VectorEx<Real>& magnitude = _magnitude.get();
 
   magnitude.resize(cmplex.size());
 
-  for (std::vector<Real>::size_type i=0; i<magnitude.size(); i++) {
+  for (::essentia::VectorEx<Real>::size_type i=0; i<magnitude.size(); i++) {
     magnitude[i] = sqrt(cmplex[i].real()*cmplex[i].real() + cmplex[i].imag()*cmplex[i].imag());
   }
 }

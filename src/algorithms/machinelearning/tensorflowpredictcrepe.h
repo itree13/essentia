@@ -40,7 +40,7 @@ class TensorflowPredictCREPE : public AlgorithmComposite {
   Algorithm* _tensorToVectorReal;
 
   SinkProxy<Real> _signal;
-  SourceProxy<std::vector<Real> > _predictions;
+  SourceProxy<::essentia::VectorEx<Real> > _predictions;
 
   scheduler::Network* _network;
   bool _configured;
@@ -93,8 +93,8 @@ namespace standard {
 // depends on it
 class TensorflowPredictCREPE : public Algorithm {
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<std::vector<Real> > > _predictions;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<::essentia::VectorEx<Real> > > _predictions;
 
   streaming::Algorithm* _tensorflowPredictCREPE;
   streaming::VectorInput<Real>* _vectorInput;

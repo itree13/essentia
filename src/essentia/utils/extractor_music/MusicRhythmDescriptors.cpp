@@ -80,7 +80,7 @@ void MusicRhythmDescriptors::createNetworkBeatsLoudness(SourceBase& source, Pool
   Real sampleRate = options.value<Real>("analysisSampleRate");
 
   AlgorithmFactory& factory = AlgorithmFactory::instance();
-  vector<Real> ticks = pool.value<vector<Real> >(nameSpace + "beats_position");
+  ::essentia::VectorEx<Real> ticks = pool.value<::essentia::VectorEx<Real> >(nameSpace + "beats_position");
   Algorithm* beatsLoudness = factory.create("BeatsLoudness",
                                             "sampleRate", sampleRate,
                                             "beats", ticks);

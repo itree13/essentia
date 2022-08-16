@@ -47,8 +47,8 @@ const char* NoveltyCurve::description = DOC("This algorithm computes the \"novel
 "http://resources.mpi%2Dinf.mpg.de/MIR/tempogramtoolbox\n\n");
 
 
-vector<Real> NoveltyCurve::weightCurve(int size, WeightType type) {
-  vector<Real> result(size, 0.0);
+::essentia::VectorEx<Real> NoveltyCurve::weightCurve(int size, WeightType type) {
+  ::essentia::VectorEx<Real> result(size, 0.0);
   int halfSize = size/2;
   int sqrHalfSize = halfSize*halfSize;
   int sqrSize = size*size;
@@ -112,11 +112,11 @@ vector<Real> NoveltyCurve::weightCurve(int size, WeightType type) {
  * Resulting output vector size is equal to the input vector. The first value is always set 
  * to 0 because for it the derivative cannot be defined.
  */
-vector<Real> NoveltyCurve::noveltyFunction(const vector<Real>& spec, Real C, int meanSize) {
+::essentia::VectorEx<Real> NoveltyCurve::noveltyFunction(const ::essentia::VectorEx<Real>& spec, Real C, int meanSize) {
   int size = spec.size();
   int dsize = size - 1;
 
-  vector<Real> logSpec(size, 0.0), novelty(dsize, 0.0);
+  ::essentia::VectorEx<Real> logSpec(size, 0.0), novelty(dsize, 0.0);
   for (int i=0; i<size; i++) logSpec[i] = log10(1 + C*spec[i]);
 
   // differentiate log spec and keep only positive variations
@@ -148,12 +148,12 @@ vector<Real> NoveltyCurve::noveltyFunction(const vector<Real>& spec, Real C, int
   if (_normalize) {
     Real maxValue = *max_element(novelty.begin(), novelty.end());
     if (maxValue != 0) {
-      vector<Real>::iterator it = novelty.begin();
+      ::essentia::VectorEx<Real>::iterator it = novelty.begin();
       for (;it!=novelty.end(); ++it) *it /= maxValue;
     }
   }
   Algorithm * mavg = AlgorithmFactory::create("MovingAverage", "size", meanSize);
-  vector<Real> novelty_ma;
+  ::essentia::VectorEx<Real> novelty_ma;
   mavg->input("signal").set(novelty);
   mavg->output("signal").set(novelty_ma);
   mavg->compute();
@@ -179,19 +179,19 @@ void NoveltyCurve::configure() {
 
 
 void NoveltyCurve::compute() {
-  const vector<vector<Real> >& frequencyBands = _frequencyBands.get();
-  vector<Real>& novelty = _novelty.get();
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& frequencyBands = _frequencyBands.get();
+  ::essentia::VectorEx<Real>& novelty = _novelty.get();
   if (frequencyBands.empty())
     throw EssentiaException("NoveltyCurve::compute, cannot compute from an empty input matrix");
 
   int nFrames = frequencyBands.size();
   int nBands = (int)frequencyBands[0].size();
-  //vector<Real> weights = weightCurve(nBands);
+  //::essentia::VectorEx<Real> weights = weightCurve(nBands);
   novelty.resize(nFrames-1);
   fill(novelty.begin(), novelty.end(), Real(0.0));
 
-  vector<vector<Real> > t_frequencyBands = essentia::transpose(frequencyBands); // [bands x frames]
-  vector<vector<Real> > noveltyBands(nBands);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > t_frequencyBands = essentia::transpose(frequencyBands); // [bands x frames]
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > noveltyBands(nBands);
 
   int meanSize = int(0.1 * _frameRate); // integral number of frames in 2*0.05 second
 
@@ -209,14 +209,14 @@ void NoveltyCurve::compute() {
   if (_type == HYBRID) {
     // EAylon: By trial-&-error I found that combining weightings (flat, quadratic,
     // linear and inverse quadratic) was giving better results.   
-    vector<Real> aweights = weightCurve(nBands, FLAT);
-    vector<Real> bweights = weightCurve(nBands, QUADRATIC);
-    vector<Real> cweights = weightCurve(nBands, LINEAR);
-    vector<Real> dweights = weightCurve(nBands, INVERSE_QUADRATIC);
+    ::essentia::VectorEx<Real> aweights = weightCurve(nBands, FLAT);
+    ::essentia::VectorEx<Real> bweights = weightCurve(nBands, QUADRATIC);
+    ::essentia::VectorEx<Real> cweights = weightCurve(nBands, LINEAR);
+    ::essentia::VectorEx<Real> dweights = weightCurve(nBands, INVERSE_QUADRATIC);
 
-    vector<Real> bnovelty(nFrames-1, 0.0);
-    vector<Real> cnovelty(nFrames-1, 0.0);
-    vector<Real> dnovelty(nFrames-1, 0.0);
+    ::essentia::VectorEx<Real> bnovelty(nFrames-1, 0.0);
+    ::essentia::VectorEx<Real> cnovelty(nFrames-1, 0.0);
+    ::essentia::VectorEx<Real> dnovelty(nFrames-1, 0.0);
 
     for (int frameIdx=0; frameIdx<nFrames-1; frameIdx++) { // noveltyBands is a derivative whose size is nframes-1
       for (int bandIdx=0; bandIdx<nBands; bandIdx++) {
@@ -235,7 +235,7 @@ void NoveltyCurve::compute() {
   }
   else {
     // TODO weight curve should be pre-computed in configure() method
-    vector<Real> weights = weightCurve(nBands, _type);
+    ::essentia::VectorEx<Real> weights = weightCurve(nBands, _type);
 
     for (int frameIdx=0; frameIdx<nFrames-1; frameIdx++) {
       for (int bandIdx=0; bandIdx<nBands; bandIdx++) {
@@ -246,7 +246,7 @@ void NoveltyCurve::compute() {
 
   // smoothing
   Algorithm * mavg = AlgorithmFactory::create("MovingAverage", "size", meanSize);
-  vector<Real> novelty_ma;
+  ::essentia::VectorEx<Real> novelty_ma;
   mavg->input("signal").set(novelty);
   mavg->output("signal").set(novelty_ma);
   mavg->compute();
@@ -274,7 +274,7 @@ const char* NoveltyCurve::description = standard::NoveltyCurve::description;
 NoveltyCurve::NoveltyCurve() : AlgorithmComposite() {
 
   _noveltyCurve = standard::AlgorithmFactory::create("NoveltyCurve");
-  _poolStorage = new PoolStorage<vector<Real> >(&_pool, "internal.frequencyBands");
+  _poolStorage = new PoolStorage<::essentia::VectorEx<Real> >(&_pool, "internal.frequencyBands");
 
   declareInput(_frequencyBands, 1, "frequencyBands", "the frequency bands");
   declareOutput(_novelty, 0, "novelty", "the novelty curve as a single vector");
@@ -302,8 +302,8 @@ void NoveltyCurve::reset() {
 AlgorithmStatus NoveltyCurve::process() {
   if (!shouldStop()) return PASS;
 
-  vector<Real> novelty;
-  _noveltyCurve->input("frequencyBands").set(_pool.value<vector<vector<Real> > >("internal.frequencyBands"));
+  ::essentia::VectorEx<Real> novelty;
+  _noveltyCurve->input("frequencyBands").set(_pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("internal.frequencyBands"));
   _noveltyCurve->output("novelty").set(novelty);
   _noveltyCurve->compute();
 

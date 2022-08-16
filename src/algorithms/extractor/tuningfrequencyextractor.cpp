@@ -122,14 +122,14 @@ void TuningFrequencyExtractor::createInnerNetwork() {
 }
 
 void TuningFrequencyExtractor::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   _vectorInput->setVector(&signal);
 
   _network->run();
 
-  vector<Real>& frequency = _tuningFrequency.get();
+  ::essentia::VectorEx<Real>& frequency = _tuningFrequency.get();
 
-  frequency = _pool.value<vector<Real> >("tuningFrequency");
+  frequency = _pool.value<::essentia::VectorEx<Real> >("tuningFrequency");
 }
 
 } // namespace standard

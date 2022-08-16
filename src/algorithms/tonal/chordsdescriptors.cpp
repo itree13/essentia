@@ -56,7 +56,7 @@ int ChordsDescriptors::chordIndex(const string& chord) {
 }
 
 
-map<int, Real> ChordsDescriptors::chordsHistogram(const vector<string>& chords) {
+map<int, Real> ChordsDescriptors::chordsHistogram(const ::essentia::VectorEx<string>& chords) {
   map<int, Real> histogram;
 
   // Initialize
@@ -96,7 +96,7 @@ map<int, Real> ChordsDescriptors::chordsHistogramNorm(map<int, Real>& histogram,
 
 
 void ChordsDescriptors::compute() {
-  const vector<string>& chords = _chords.get();
+  const ::essentia::VectorEx<string>& chords = _chords.get();
 
   if (chords.empty()) {
     throw EssentiaException("ChordsDescriptors: Chords input empty");
@@ -124,7 +124,7 @@ void ChordsDescriptors::compute() {
   map<int, Real> chordsHist = chordsHistogram(chords);
   map<int, Real> chordsHistNorm = chordsHistogramNorm(chordsHist, key);
 
-  vector<Real>& chordsHistNormVect = _chordsHistogram.get();
+  ::essentia::VectorEx<Real>& chordsHistNormVect = _chordsHistogram.get();
   chordsHistNormVect.resize(0); // erase anything that was in there
   for (int i=0; i<int(ARRAY_SIZE(circleOfFifth)); ++i) {
     chordsHistNormVect.push_back(chordsHistNorm[i]);
@@ -210,7 +210,7 @@ AlgorithmStatus ChordsDescriptors::process() {
   standard::Algorithm* algo = _chordsAlgo;
   string key = *(string*)_key.getFirstToken();
   string scale = *(string*)_scale.getFirstToken();
-  vector<Real> chordsHist;
+  ::essentia::VectorEx<Real> chordsHist;
   Real cnr, ccr;
   string ckey, cscale;
 

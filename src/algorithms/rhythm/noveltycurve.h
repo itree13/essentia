@@ -28,8 +28,8 @@ namespace standard {
 class NoveltyCurve : public Algorithm {
 
  protected:
-  Input<std::vector<std::vector<Real> > > _frequencyBands;
-  Output<std::vector<Real> > _novelty;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _frequencyBands;
+  Output<::essentia::VectorEx<Real> > _novelty;
 
   enum WeightType {
     FLAT, TRIANGLE, INVERSE_TRIANGLE, PARABOLA, INVERSE_PARABOLA,
@@ -40,8 +40,8 @@ class NoveltyCurve : public Algorithm {
   WeightType _type;
   bool _normalize;
 
-  std::vector<Real> weightCurve(int size, WeightType type);
-  std::vector<Real> noveltyFunction(const std::vector<Real>& spec, Real C, int meanSize);
+  ::essentia::VectorEx<Real> weightCurve(int size, WeightType type);
+  ::essentia::VectorEx<Real> noveltyFunction(const ::essentia::VectorEx<Real>& spec, Real C, int meanSize);
 
  public:
 
@@ -56,7 +56,7 @@ class NoveltyCurve : public Algorithm {
     declareParameter("frameRate", "the sampling rate of the input audio", "[1,inf)", 44100./128.);
     declareParameter("weightCurveType", "the type of weighting to be used for the bands novelty","{flat,triangle,inverse_triangle,parabola,inverse_parabola,linear,quadratic,inverse_quadratic,hybrid,supplied}",
                      "hybrid");
-    declareParameter("weightCurve", "vector containing the weights for each frequency band. Only if weightCurveType==supplied", "", std::vector<Real>(0));
+    declareParameter("weightCurve", "vector containing the weights for each frequency band. Only if weightCurveType==supplied", "", ::essentia::VectorEx<Real>(0));
     declareParameter("normalize", "whether to normalize each band's energy", "{true,false}", false);
   }
 
@@ -82,7 +82,7 @@ namespace streaming {
 class NoveltyCurve : public AlgorithmComposite {
 
  protected:
-  SinkProxy<std::vector<Real> > _frequencyBands;
+  SinkProxy<::essentia::VectorEx<Real> > _frequencyBands;
   Source<Real> _novelty;
 
   Pool _pool;
@@ -97,7 +97,7 @@ class NoveltyCurve : public AlgorithmComposite {
     declareParameter("frameRate", "the sampling rate of the input audio", "[1,inf)", 44100./128.);
     declareParameter("weightCurveType", "the type of weighting to be used for the bands novelty","{flat,triangle,inverse_triangle,parabola,inverse_parabola,linear,quadratic,inverse_quadratic,supplied}",
                      "inverse_quadratic");
-    declareParameter("weightCurve", "vector containing the weights for each frequency band. Only if weightCurveType==supplied", "", std::vector<Real>(0));
+    declareParameter("weightCurve", "vector containing the weights for each frequency band. Only if weightCurveType==supplied", "", ::essentia::VectorEx<Real>(0));
     declareParameter("normalize", "whether to normalize each band's energy", "{true,false}", false);
   }
 

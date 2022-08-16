@@ -33,11 +33,11 @@ class HarmonicModelAnal : public Algorithm {
  protected:
 
 
-  Input<std::vector<std::complex<Real> > > _fft;
+  Input<::essentia::VectorEx<std::complex<Real> > > _fft;
   Input<Real> _pitch;
-  Output<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _frequencies;
-  Output<std::vector<Real> > _phases;
+  Output<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _frequencies;
+  Output<::essentia::VectorEx<Real> > _phases;
 
   Algorithm* _sineModelAnal;
  
@@ -45,7 +45,7 @@ class HarmonicModelAnal : public Algorithm {
   Real _sampleRate;
   int _nH ; // number of harmonics
  Real _harmDevSlope;
-  std::vector<Real> _lasthfreq;
+  ::essentia::VectorEx<Real> _lasthfreq;
 
 
 
@@ -90,7 +90,7 @@ class HarmonicModelAnal : public Algorithm {
   void configure();
   void compute();
 
-  void harmonicDetection(const std::vector<Real> pfreq, const std::vector<Real> pmag, const std::vector<Real> pphase, const Real f0, const int nH,  std::vector<Real> hfreqp, Real fs, Real harmDevSlope/*=0.01*/,  std::vector<Real> &hfreq,  std::vector<Real> &hmag,  std::vector<Real> &hphase);
+  void harmonicDetection(const ::essentia::VectorEx<Real> pfreq, const ::essentia::VectorEx<Real> pmag, const ::essentia::VectorEx<Real> pphase, const Real f0, const int nH,  ::essentia::VectorEx<Real> hfreqp, Real fs, Real harmDevSlope/*=0.01*/,  ::essentia::VectorEx<Real> &hfreq,  ::essentia::VectorEx<Real> &hmag,  ::essentia::VectorEx<Real> &hphase);
 
 
   static const char* name;
@@ -115,11 +115,11 @@ class HarmonicModelAnal : public StreamingAlgorithmWrapper {
 
  protected:
   
-  Sink<std::vector<std::complex<Real> > > _fft; // input
+  Sink<::essentia::VectorEx<std::complex<Real> > > _fft; // input
   Sink<Real> _pitch; // input
-  Source<std::vector<Real> > _frequencies;
-  Source<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _phases;
+  Source<::essentia::VectorEx<Real> > _frequencies;
+  Source<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _phases;
   
 
  public:

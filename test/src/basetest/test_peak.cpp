@@ -116,8 +116,8 @@ TEST(Peak, PeaksToReals) {
   Real positionsArray [] = {1, 0, 1, 4, 5};
   Real magnitudesArray [] = {2, 2, 3, 1, 6};
   util::Peak peaksArray [] = {util::Peak(1,2),util::Peak(0,2),util::Peak(1,3),util::Peak(4,1),util::Peak(5,6)};
-  vector<util::Peak> peaks = arrayToVector<util::Peak>(peaksArray);
-  vector<Real> positions, magnitudes;
+  ::essentia::VectorEx<util::Peak> peaks = arrayToVector<util::Peak>(peaksArray);
+  ::essentia::VectorEx<Real> positions, magnitudes;
   peaksToReals(peaks, positions, magnitudes);
   EXPECT_VEC_EQ(positions, arrayToVector<Real>(positionsArray));
   EXPECT_VEC_EQ(magnitudes, arrayToVector<Real>(magnitudesArray));
@@ -127,22 +127,22 @@ TEST(Peak, RealsToPeaks) {
   Real positionsArray [] = {1, 0, 1, 4, 5};
   Real magnitudesArray [] = {2, 2, 3, 1, 6};
   util::Peak peaksArray [] = {util::Peak(1,2),util::Peak(0,2),util::Peak(1,3),util::Peak(4,1),util::Peak(5,6)};
-  vector<Real> positions = arrayToVector<Real>(positionsArray);
-  vector<Real> magnitudes = arrayToVector<Real>(magnitudesArray);
-  vector<util::Peak> peaks = realsToPeaks(positions, magnitudes);
+  ::essentia::VectorEx<Real> positions = arrayToVector<Real>(positionsArray);
+  ::essentia::VectorEx<Real> magnitudes = arrayToVector<Real>(magnitudesArray);
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(positions, magnitudes);
   EXPECT_VEC_EQ(peaks, arrayToVector<util::Peak>(peaksArray));
 }
 
 TEST(Peak, SortMagnitudeDescendingPositionDescending) {
   Real positions [] = {1, 0, 1, 4, 5};
   Real magnitudes[] = {2, 2, 3, 1, 6};
-  vector<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
                                           arrayToVector<Real>(magnitudes));
   sort(peaks.begin(), peaks.end(),
        ComparePeakMagnitude<std::greater<Real>, std::greater<Real> >());
   Real expectedPos[] = {5,1,1,0,4};
   Real expectedMag[] = {6,3,2,2,1};
-  vector<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
+  ::essentia::VectorEx<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
                                                  arrayToVector<Real>(expectedMag));
   EXPECT_VEC_EQ(peaks, expectedPeaks);
 }
@@ -150,13 +150,13 @@ TEST(Peak, SortMagnitudeDescendingPositionDescending) {
 TEST(Peak, SortMagnitudeAscendingPositionDescending) {
   Real positions [] = {1, 0, 1, 4, 5};
   Real magnitudes[] = {2, 2, 3, 1, 6};
-  vector<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
                                           arrayToVector<Real>(magnitudes));
   sort(peaks.begin(), peaks.end(),
        ComparePeakMagnitude<std::less<Real>, std::greater<Real> >());
   Real expectedPos[] = {4,1,0,1,5};
   Real expectedMag[] = {1,2,2,3,6};
-  vector<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
+  ::essentia::VectorEx<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
                                                  arrayToVector<Real>(expectedMag));
   EXPECT_VEC_EQ(peaks, expectedPeaks);
 }
@@ -164,13 +164,13 @@ TEST(Peak, SortMagnitudeAscendingPositionDescending) {
 TEST(Peak, SortMagnitudeDescendingPositionAscending) {
   Real positions [] = {1, 0, 1, 4, 5};
   Real magnitudes[] = {2, 2, 3, 1, 6};
-  vector<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
                                           arrayToVector<Real>(magnitudes));
   sort(peaks.begin(), peaks.end(),
        ComparePeakMagnitude<std::greater<Real>, std::less<Real> >());
   Real expectedPos[] = {5,1,0,1,4};
   Real expectedMag[] = {6,3,2,2,1};
-  vector<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
+  ::essentia::VectorEx<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
                                                  arrayToVector<Real>(expectedMag));
   EXPECT_VEC_EQ(peaks, expectedPeaks);
 }
@@ -178,13 +178,13 @@ TEST(Peak, SortMagnitudeDescendingPositionAscending) {
 TEST(Peak, SortMagnitudeAscendingPositionAscending) {
   Real positions [] = {1, 0, 1, 4, 5};
   Real magnitudes[] = {2, 2, 3, 1, 6};
-  vector<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
                                           arrayToVector<Real>(magnitudes));
   sort(peaks.begin(), peaks.end(),
        ComparePeakMagnitude<std::less<Real>, std::less<Real> >());
   Real expectedPos[] = {4,0,1,1,5};
   Real expectedMag[] = {1,2,2,3,6};
-  vector<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
+  ::essentia::VectorEx<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
                                                  arrayToVector<Real>(expectedMag));
   EXPECT_VEC_EQ(peaks, expectedPeaks);
 }
@@ -195,13 +195,13 @@ TEST(Peak, SortMagnitudeAscendingPositionAscending) {
 TEST(Peak, SortPositionDescendingMagnitudeDescending) {
   Real positions [] = {1, 0, 1, 4, 5};
   Real magnitudes[] = {2, 2, 3, 1, 6};
-  vector<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
                                           arrayToVector<Real>(magnitudes));
   sort(peaks.begin(), peaks.end(),
        ComparePeakPosition<std::greater<Real>, std::greater<Real> >());
   Real expectedPos[] = {5,4,1,1,0};
   Real expectedMag[] = {6,1,3,2,2};
-  vector<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
+  ::essentia::VectorEx<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
                                                  arrayToVector<Real>(expectedMag));
   EXPECT_VEC_EQ(peaks, expectedPeaks);
 }
@@ -209,13 +209,13 @@ TEST(Peak, SortPositionDescendingMagnitudeDescending) {
 TEST(Peak, SortPositionAscendingMagnitudeDescending) {
   Real positions [] = {1, 0, 1, 4, 5};
   Real magnitudes[] = {2, 2, 3, 1, 6};
-  vector<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
                                           arrayToVector<Real>(magnitudes));
   sort(peaks.begin(), peaks.end(),
        ComparePeakPosition<std::less<Real>, std::greater<Real> >());
   Real expectedPos[] = {0,1,1,4,5};
   Real expectedMag[] = {2,3,2,1,6};
-  vector<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
+  ::essentia::VectorEx<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
                                                  arrayToVector<Real>(expectedMag));
   EXPECT_VEC_EQ(peaks, expectedPeaks);
 }
@@ -223,13 +223,13 @@ TEST(Peak, SortPositionAscendingMagnitudeDescending) {
 TEST(Peak, SortPositionDescendingMagnitudeAscending) {
   Real positions [] = {1, 0, 1, 4, 5};
   Real magnitudes[] = {2, 2, 3, 1, 6};
-  vector<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
                                           arrayToVector<Real>(magnitudes));
   sort(peaks.begin(), peaks.end(),
        ComparePeakPosition<std::greater<Real>, std::less<Real> >());
   Real expectedPos[] = {5,4,1,1,0};
   Real expectedMag[] = {6,1,2,3,2};
-  vector<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
+  ::essentia::VectorEx<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
                                                  arrayToVector<Real>(expectedMag));
   EXPECT_VEC_EQ(peaks, expectedPeaks);
 }
@@ -237,13 +237,13 @@ TEST(Peak, SortPositionDescendingMagnitudeAscending) {
 TEST(Peak, SortPositionAscendingMagnitudeAscending) {
   Real positions [] = {1, 0, 1, 4, 5};
   Real magnitudes[] = {2, 2, 3, 1, 6};
-  vector<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
+  ::essentia::VectorEx<util::Peak> peaks = realsToPeaks(arrayToVector<Real>(positions),
                                           arrayToVector<Real>(magnitudes));
   sort(peaks.begin(), peaks.end(),
        ComparePeakPosition<std::less<Real>, std::less<Real> >());
   Real expectedPos[] = {0,1,1,4,5};
   Real expectedMag[] = {2,2,3,1,6};
-  vector<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
+  ::essentia::VectorEx<util::Peak> expectedPeaks= realsToPeaks(arrayToVector<Real>(expectedPos),
                                                  arrayToVector<Real>(expectedMag));
   EXPECT_VEC_EQ(peaks, expectedPeaks);
 }

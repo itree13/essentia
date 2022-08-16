@@ -36,9 +36,9 @@ int main(int argc, char* argv[]) {
   essentia::init();
 
   Real onsetRate;
-  vector<Real> onsets;
+  ::essentia::VectorEx<Real> onsets;
 
-  vector<Real> audio, unused;
+  ::essentia::VectorEx<Real> audio, unused;
 
   // File Input
   Algorithm* audiofile = AlgorithmFactory::create("MonoLoader",

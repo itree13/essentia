@@ -97,23 +97,23 @@ int main(int argc, char* argv[]) {
 
 
 
-  vector<Real> audio;
-  vector<Real> frame;
-  vector<Real> wframe;
-  vector<complex<Real> > fftframe;
+  ::essentia::VectorEx<Real> audio;
+  ::essentia::VectorEx<Real> frame;
+  ::essentia::VectorEx<Real> wframe;
+  ::essentia::VectorEx<complex<Real> > fftframe;
 
-  vector<Real> magnitudes;
-  vector<Real> frequencies;
-  vector<Real> phases;
+  ::essentia::VectorEx<Real> magnitudes;
+  ::essentia::VectorEx<Real> frequencies;
+  ::essentia::VectorEx<Real> phases;
 
-  vector<complex<Real> >  sfftframe; // sine model FFT frame
-  vector<Real> ifftframe;
-  vector<Real> alladuio; // concatenated audio file output
+  ::essentia::VectorEx<complex<Real> >  sfftframe; // sine model FFT frame
+  ::essentia::VectorEx<Real> ifftframe;
+  ::essentia::VectorEx<Real> alladuio; // concatenated audio file output
  
 
-  vector< vector<Real> > frequenciesAllFrames;
-  vector< vector<Real> > magnitudesAllFrames;
-  vector< vector<Real> > phasesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > frequenciesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > magnitudesAllFrames;
+  ::essentia::VectorEx< ::essentia::VectorEx<Real> > phasesAllFrames;
 
   // analysis
   audioLoader->output("audio").set(audio);
@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
   ifft->input("fft").set(sfftframe);
   ifft->output("frame").set(ifftframe);
 
-  vector<Real> audioOutput;
+  ::essentia::VectorEx<Real> audioOutput;
 
   overlapAdd->input("signal").set(ifftframe);
   overlapAdd->output("signal").set(audioOutput);

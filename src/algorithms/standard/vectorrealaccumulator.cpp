@@ -34,7 +34,7 @@ VectorRealAccumulator::VectorRealAccumulator() {
   declareInput(_value, "data", "the input signal");
   declareOutput(_array, 0, "array", "the accumulated signal in one single frame"); 
 
-  _vectorOutput = new VectorOutput<vector<Real> >(&_accu);
+  _vectorOutput = new VectorOutput<::essentia::VectorEx<Real> >(&_accu);
   _value >> _vectorOutput->input("data");
 }
 

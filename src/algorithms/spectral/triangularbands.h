@@ -31,15 +31,15 @@ namespace standard {
 class TriangularBands : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrumInput;
-  Output<std::vector<Real> > _bandsOutput;
+  Input<::essentia::VectorEx<Real> > _spectrumInput;
+  Output<::essentia::VectorEx<Real> > _bandsOutput;
   
-  std::vector<Real> _bandFrequencies;
-  std::vector<Real> _freqBands;
+  ::essentia::VectorEx<Real> _bandFrequencies;
+  ::essentia::VectorEx<Real> _freqBands;
   int _nBands;
   Real _sampleRate;
   bool _isLog;
-  std::vector<std::vector<Real> > _filterCoefficients;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _filterCoefficients;
   Real _inputSize;
   std::string _normalize;
   std::string _type;
@@ -88,8 +88,8 @@ namespace streaming {
 class TriangularBands : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrumInput;
-  Source<std::vector<Real> > _bandsOutput;
+  Sink<::essentia::VectorEx<Real> > _spectrumInput;
+  Source<::essentia::VectorEx<Real> > _bandsOutput;
 
 
  public:

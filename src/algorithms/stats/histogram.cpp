@@ -45,7 +45,7 @@ void Histogram::configure() {
   tempBinEdges.resize(_numberBins+1);
 
   tempBinEdges[0] = _minValue;
-  for(std::vector<Real>::iterator it = tempBinEdges.begin()+1; it != tempBinEdges.end(); it++) {
+  for(::essentia::VectorEx<Real>::iterator it = tempBinEdges.begin()+1; it != tempBinEdges.end(); it++) {
     *it = *(it-1) + binWidth;
   }
 
@@ -53,9 +53,9 @@ void Histogram::configure() {
 
 void Histogram::compute() {
   
-  const std::vector<Real>& array = _array.get();
-  std::vector<Real>& histogram = _histogram.get();
-  std::vector<Real>& binEdges = _binEdges.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
+  ::essentia::VectorEx<Real>& histogram = _histogram.get();
+  ::essentia::VectorEx<Real>& binEdges = _binEdges.get();
   
   histogram.resize(_numberBins);
   binEdges.assign(tempBinEdges.begin(), tempBinEdges.end());
@@ -70,17 +70,17 @@ void Histogram::compute() {
   if(_normalize != "none") {
     Real denominator = 0;
     if(_normalize == "unit_sum") {
-      for(std::vector<Real>::iterator it = histogram.begin(); it != histogram.end(); it++) {
+      for(::essentia::VectorEx<Real>::iterator it = histogram.begin(); it != histogram.end(); it++) {
         denominator += *it;
       }
     }
     else if(_normalize == "unit_max") {
-      for(std::vector<Real>::iterator it = histogram.begin(); it != histogram.end(); it++) {
+      for(::essentia::VectorEx<Real>::iterator it = histogram.begin(); it != histogram.end(); it++) {
         if(*it > denominator)
           denominator = *it;
       }
     }
-    for(std::vector<Real>::iterator it = histogram.begin(); it != histogram.end(); it++) { 
+    for(::essentia::VectorEx<Real>::iterator it = histogram.begin(); it != histogram.end(); it++) { 
       *it = *it/denominator;    
     }
   }

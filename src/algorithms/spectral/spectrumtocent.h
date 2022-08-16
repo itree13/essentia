@@ -32,12 +32,12 @@ namespace standard {
 class SpectrumToCent : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _spectrumInput;
-  Output<std::vector<Real> > _bandsOutput;
-  Output<std::vector<Real> > _freqOutput;
+  Input<::essentia::VectorEx<Real> > _spectrumInput;
+  Output<::essentia::VectorEx<Real> > _bandsOutput;
+  Output<::essentia::VectorEx<Real> > _freqOutput;
 
-  std::vector<Real> _bandFrequencies;
-  std::vector<Real> _freqBands;
+  ::essentia::VectorEx<Real> _bandFrequencies;
+  ::essentia::VectorEx<Real> _freqBands;
 
   int _nBands;
   Real _centBinRes;
@@ -86,9 +86,9 @@ namespace streaming {
 class SpectrumToCent : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrumInput;
-  Source<std::vector<Real> > _bandsOutput;
-  Source<std::vector<Real> > _freqOutput;
+  Sink<::essentia::VectorEx<Real> > _spectrumInput;
+  Source<::essentia::VectorEx<Real> > _bandsOutput;
+  Source<::essentia::VectorEx<Real> > _freqOutput;
 
  public:
   SpectrumToCent() {

@@ -63,8 +63,8 @@ void Windowing::createWindow(const std::string& windowtype) {
 
 void Windowing::compute() {
 
-  const std::vector<Real>& signal = _frame.get();
-  std::vector<Real>& windowedSignal = _windowedFrame.get();
+  const ::essentia::VectorEx<Real>& signal = _frame.get();
+  ::essentia::VectorEx<Real>& windowedSignal = _windowedFrame.get();
 
   if (signal.size() <= 1) {
     throw EssentiaException("Windowing: frame size should be larger than 1");

@@ -34,8 +34,8 @@ const char* HumDetector::description = essentia::standard::HumDetector::descript
 
 
 template< typename T >
-typename std::vector<T>::iterator 
-   HumDetector::insertSorted(std::vector<T> & vec, T const& item) {
+typename ::essentia::VectorEx<T>::iterator 
+   HumDetector::insertSorted(::essentia::VectorEx<T> & vec, T const& item) {
     return vec.insert(std::upper_bound(vec.begin(), 
                                        vec.end(), 
                                        item), item);
@@ -43,10 +43,10 @@ typename std::vector<T>::iterator
 
 
 template <typename T>
-vector<size_t> HumDetector::sort_indexes(const vector<T> &v) {
+::essentia::VectorEx<size_t> HumDetector::sort_indexes(const ::essentia::VectorEx<T> &v) {
 
   // Initialize original index locations.
-  vector<size_t> idx(v.size());
+  ::essentia::VectorEx<size_t> idx(v.size());
   iota(idx.begin(), idx.end(), 0);
 
   // Sort indexes based on comparing values in v.
@@ -181,13 +181,13 @@ void HumDetector::configure() {
 AlgorithmStatus HumDetector::process() {
   if (!shouldStop()) return PASS;
 
-  if (!_pool.contains<vector<vector<Real> > >("psd")) {
+  if (!_pool.contains<::essentia::VectorEx<::essentia::VectorEx<Real> > >("psd")) {
     // Do not push anything in the case of empty signal.
     E_WARNING("HumDetector: empty input signal");
     return FINISHED;
   }
 
-  const vector<vector<Real> >& psd = _pool.value<vector<vector<Real> > >("psd");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& psd = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("psd");
 
   _timeStamps = psd.size();
   _spectSize = psd[0].size();
@@ -198,10 +198,10 @@ AlgorithmStatus HumDetector::process() {
            " Try to process a longer audio stream or to reduce the hopSize parameter");
 
     _rMatrix.push(TNT::Array2D<Real>());
-    _frequencies.push(vector<Real>());
-    _saliences.push(vector<Real>());
-    _starts.push(vector<Real>());
-    _ends.push(vector<Real>());
+    _frequencies.push(::essentia::VectorEx<Real>());
+    _saliences.push(::essentia::VectorEx<Real>());
+    _starts.push(::essentia::VectorEx<Real>());
+    _ends.push(::essentia::VectorEx<Real>());
 
     return FINISHED;
   }
@@ -221,9 +221,9 @@ AlgorithmStatus HumDetector::process() {
   _Q1sample = (uint)(_Q1 * _timeWindow + 0.5);
 
   _iterations = _timeStamps - _timeWindow + 1;
-  vector<vector<Real> > psdWindow(_spectSize, vector<Real>(_timeWindow, 0.f));
-  vector<vector<Real> > r(_spectSize, vector<Real>(_iterations, 0.f));
-  vector<size_t> psdIdxs(_timeWindow, 0);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > psdWindow(_spectSize, ::essentia::VectorEx<Real>(_timeWindow, 0.f));
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > r(_spectSize, ::essentia::VectorEx<Real>(_iterations, 0.f));
+  ::essentia::VectorEx<size_t> psdIdxs(_timeWindow, 0);
   Real Q0, Q1;
 
   // Initialize the PSD and r (quantile ratios) matrices.
@@ -253,8 +253,8 @@ AlgorithmStatus HumDetector::process() {
   }
 
   // Apply the median filter frequency-wise.
-  vector<Real> rSpec = vector<Real>(_spectSize, 0.f);
-  vector<Real> filtered = vector<Real>(_spectSize, 0.f);
+  ::essentia::VectorEx<Real> rSpec = ::essentia::VectorEx<Real>(_spectSize, 0.f);
+  ::essentia::VectorEx<Real> filtered = ::essentia::VectorEx<Real>(_spectSize, 0.f);
   _Smoothing->configure("kernelSize", _medianFilterSize); 
   _Smoothing->output("filteredArray").set(filtered);
   _Smoothing->input("array").set(rSpec);
@@ -284,11 +284,11 @@ AlgorithmStatus HumDetector::process() {
 
   _rMatrix.push(vecvecToArray2D(r));
   
-  vector<Real> frequencies, magnitudes;
-  vector<Real> salienceFunction;
-  vector<Real> salienceBins, salienceValues;
-  vector<vector<Real> >peakBins(_iterations);
-  vector<vector<Real> >peakSaliences(_iterations);
+  ::essentia::VectorEx<Real> frequencies, magnitudes;
+  ::essentia::VectorEx<Real> salienceFunction;
+  ::essentia::VectorEx<Real> salienceBins, salienceValues;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >peakBins(_iterations);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >peakSaliences(_iterations);
   bool peakBinsNotEmpty = false;
   Real threshold;
 
@@ -327,9 +327,9 @@ AlgorithmStatus HumDetector::process() {
       peakBinsNotEmpty = true;
   }
 
-  std::vector<std::vector<Real> > contoursBins;
-  std::vector<std::vector<Real> > contoursSaliences;
-  std::vector<Real> contoursStartTimes, contoursEndsTimes, contoursFreqsMean, contoursSaliencesMean;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > contoursBins;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > contoursSaliences;
+  ::essentia::VectorEx<Real> contoursStartTimes, contoursEndsTimes, contoursFreqsMean, contoursSaliencesMean;
   Real duration;
 
   if (peakBinsNotEmpty) {
@@ -437,7 +437,7 @@ void HumDetector::createInnerNetwork() {
 
 
 void HumDetector::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   if (!signal.size()) {
     throw EssentiaException("HumDetector: empty input signal");
   }
@@ -446,16 +446,16 @@ void HumDetector::compute() {
   _network->run();
 
   TNT::Array2D<Real>& rMatrix = _rMatrix.get();
-  vector<Real>& frequencies = _frequencies.get();
-  vector<Real>& amplitudes = _saliences.get();
-  vector<Real>& starts = _starts.get();
-  vector<Real>& ends = _ends.get();
+  ::essentia::VectorEx<Real>& frequencies = _frequencies.get();
+  ::essentia::VectorEx<Real>& amplitudes = _saliences.get();
+  ::essentia::VectorEx<Real>& starts = _starts.get();
+  ::essentia::VectorEx<Real>& ends = _ends.get();
 
-  rMatrix = _pool.value<vector<TNT::Array2D<Real> > >("r")[0];
-  frequencies = _pool.value<vector<Real> >("frequencies");
-  amplitudes = _pool.value<vector<Real> >("saliences");
-  starts = _pool.value<vector<Real> >("starts");
-  ends = _pool.value<vector<Real> >("ends");
+  rMatrix = _pool.value<::essentia::VectorEx<TNT::Array2D<Real> > >("r")[0];
+  frequencies = _pool.value<::essentia::VectorEx<Real> >("frequencies");
+  amplitudes = _pool.value<::essentia::VectorEx<Real> >("saliences");
+  starts = _pool.value<::essentia::VectorEx<Real> >("starts");
+  ends = _pool.value<::essentia::VectorEx<Real> >("ends");
 
   reset();
 }

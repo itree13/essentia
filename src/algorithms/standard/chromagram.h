@@ -31,12 +31,12 @@ namespace standard {
 class Chromagram : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _chromagram;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _chromagram;
 
   Algorithm* _spectrumCQ;
   
-  std::vector<Real> _chromaBuffer;
+  ::essentia::VectorEx<Real> _chromaBuffer;
 
   unsigned _binsPerOctave;
   unsigned _octaves;
@@ -94,8 +94,8 @@ namespace streaming {
 class Chromagram : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
-  Source<std::vector<Real> > _chromagram;
+  Sink<::essentia::VectorEx<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _chromagram;
 
  public:
   Chromagram() {

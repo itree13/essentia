@@ -28,7 +28,7 @@ namespace standard {
 class ZeroCrossingRate : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
+  Input<::essentia::VectorEx<Real> > _signal;
   Output<Real> _zeroCrossingRate;
   float _threshold;
 
@@ -61,7 +61,7 @@ namespace streaming {
 class ZeroCrossingRate : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
+  Sink<::essentia::VectorEx<Real> > _signal;
   Source<Real> _zeroCrossingRate;
 
  public:

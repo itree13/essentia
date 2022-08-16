@@ -28,7 +28,7 @@ namespace standard {
 class StartStopSilence : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _frame;
+  Input<::essentia::VectorEx<Real> > _frame;
   Output<int> _startSilenceSource;
   Output<int> _stopSilenceSource;
 
@@ -79,7 +79,7 @@ class StartStopSilence : public Algorithm {
 
   Source<int> _startSilenceSource;
   Source<int> _stopSilenceSource;
-  Sink<std::vector<Real> > _frame;
+  Sink<::essentia::VectorEx<Real> > _frame;
 
  public:
   StartStopSilence() {

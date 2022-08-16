@@ -29,9 +29,9 @@ namespace standard {
 
 class ClickDetector : public Algorithm {
  private:
-  Input<std::vector<Real>> _frame;
-  Output<std::vector<Real>> _clickStarts;
-  Output<std::vector<Real>> _clickEnds;
+  Input<::essentia::VectorEx<Real>> _frame;
+  Output<::essentia::VectorEx<Real>> _clickStarts;
+  Output<::essentia::VectorEx<Real>> _clickEnds;
 
   int _order;
   int _frameSize;
@@ -50,7 +50,7 @@ class ClickDetector : public Algorithm {
   Algorithm* _MatchedFilter;
   Algorithm* _Clipper;
 
-  Real robustPower(std::vector<Real> x, Real k);
+  Real robustPower(::essentia::VectorEx<Real> x, Real k);
 
  public:
   ClickDetector() {
@@ -102,9 +102,9 @@ namespace streaming {
 class ClickDetector : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real>> _frame;
-  Source<std::vector<Real>> _clickStarts;
-  Source<std::vector<Real>> _clickEnds;
+  Sink<::essentia::VectorEx<Real>> _frame;
+  Source<::essentia::VectorEx<Real>> _clickStarts;
+  Source<::essentia::VectorEx<Real>> _clickEnds;
 
  public:
   ClickDetector() {

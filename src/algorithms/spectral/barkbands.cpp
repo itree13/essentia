@@ -37,7 +37,7 @@ const char* BarkBands::description = DOC("This algorithm computes energy in Bark
 void BarkBands::configure() {
   static Real bandsFreq[] = { 0.0, 50.0, 100.0, 150.0, 200.0, 300.0, 400.0, 510.0, 630.0, 770.0, 920.0, 1080.0, 1270.0, 1480.0, 1720.0, 2000.0, 2320.0, 2700.0, 3150.0, 3700.0, 4400.0, 5300.0, 6400.0, 7700.0, 9500.0, 12000.0, 15500.0, 20500.0, 27000.0 };
 
-  vector<Real> bands = arrayToVector<Real>(bandsFreq);
+  ::essentia::VectorEx<Real> bands = arrayToVector<Real>(bandsFreq);
   bands.resize(parameter("numberBands").toInt() + 1);
 
   _freqBands->configure("frequencyBands", bands,
@@ -46,8 +46,8 @@ void BarkBands::configure() {
 
 void BarkBands::compute() {
 
-  const vector<Real>& spectrum = _spectrumInput.get();
-  vector<Real>& bands = _bandsOutput.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrumInput.get();
+  ::essentia::VectorEx<Real>& bands = _bandsOutput.get();
 
   _freqBands->input("spectrum").set(spectrum);
   _freqBands->output("bands").set(bands);

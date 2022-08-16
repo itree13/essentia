@@ -34,9 +34,9 @@ const char* MonoMixer::description = DOC("This algorithm downmixes the signal in
 "  http://en.wikipedia.org/wiki/Downmixing\n");
 
 void MonoMixer::compute() {
-  const vector<StereoSample>& input = _inputAudio.get();
+  const ::essentia::VectorEx<StereoSample>& input = _inputAudio.get();
   const int& nChannels = _channels.get();
-  vector<Real>& output = _outputAudio.get();
+  ::essentia::VectorEx<Real>& output = _outputAudio.get();
 
   int size = input.size();
   output.resize(size);
@@ -102,8 +102,8 @@ AlgorithmStatus MonoMixer::process() {
 
 
   int nChannels = _channels.lastTokenProduced();
-  const vector<StereoSample>& input = _inputAudio.tokens();
-  vector<AudioSample>& output = _outputAudio.tokens();
+  const ::essentia::VectorEx<StereoSample>& input = _inputAudio.tokens();
+  ::essentia::VectorEx<AudioSample>& output = _outputAudio.tokens();
 
   if (nChannels == 1) {
     for (int i=0; i<int(input.size()); i++) {

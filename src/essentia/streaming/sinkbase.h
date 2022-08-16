@@ -79,7 +79,7 @@ class SinkBase : public Connector {
   ReaderID id() const;
   virtual void setId(ReaderID id);
 
-  // should return a vector<TokenType>*
+  // should return a ::essentia::VectorEx<TokenType>*
   virtual const void* getTokens() const = 0;
 
   // should return a TokenType*

@@ -85,7 +85,7 @@ namespace standard {
 // depends on it
 class MonoLoader : public Algorithm {
  protected:
-  Output<std::vector<AudioSample> > _audio;
+  Output<::essentia::VectorEx<AudioSample> > _audio;
 
   streaming::Algorithm* _loader;
   streaming::VectorOutput<AudioSample>* _audioStorage;

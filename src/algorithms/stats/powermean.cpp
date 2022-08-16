@@ -37,7 +37,7 @@ const char* PowerMean::description = DOC("This algorithm computes the power mean
 
 void PowerMean::compute() {
 
-  const std::vector<Real>& array = _array.get();
+  const ::essentia::VectorEx<Real>& array = _array.get();
   Real& powerMean = _powerMean.get();
 
   if (array.empty()) throw EssentiaException("PowerMean: input array is empty");

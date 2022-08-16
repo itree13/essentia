@@ -36,7 +36,7 @@ const char* Leq::description = DOC("This algorithm computes the Equivalent sound
 
 void Leq::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& leq = _leq.get();
 
   if (signal.empty()) {
@@ -63,7 +63,7 @@ void Leq::reset() {
 }
 
 void Leq::consume() {
-  const vector<Real>& signal = *((const vector<Real>*)_signal.getTokens());
+  const ::essentia::VectorEx<Real>& signal = *((const ::essentia::VectorEx<Real>*)_signal.getTokens());
 
   _energy += energy(signal);
   _size += signal.size();

@@ -30,11 +30,11 @@ namespace standard {
 class MaxFilter : public Algorithm {
 
  protected:
-  Input<vector<Real> > _array;
-  Output<vector<Real> > _filtered;
+  Input<::essentia::VectorEx<Real> > _array;
+  Output<::essentia::VectorEx<Real> > _filtered;
 
   // circular buffer containing past values
-  vector<Real> _buffer;
+  ::essentia::VectorEx<Real> _buffer;
   Real _curMax;
   bool _filledBuffer;
   int _bufferFillIdx;   

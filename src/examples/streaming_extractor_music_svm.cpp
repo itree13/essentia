@@ -66,7 +66,7 @@ int process_single_file(Algorithm *extractor, string descriptorsFilename, string
   pool.removeNamespace("rhythm");
   pool.removeNamespace("tonal");
 
-  vector<string> keys = pool.descriptorNames("metadata.version");
+  ::essentia::VectorEx<string> keys = pool.descriptorNames("metadata.version");
   for (int i=0; i<(int) keys.size(); ++i) {
       string k = keys[i];
       string newk = "metadata.version.lowlevel." + k.substr(17);
@@ -90,8 +90,8 @@ int main(int argc, char* argv[]) {
   // Returns: 1 on essentia error
 
   string profileFilename;
-  vector<string> inputFilenames;
-  vector<string> outputFilenames;
+  ::essentia::VectorEx<string> inputFilenames;
+  ::essentia::VectorEx<string> outputFilenames;
 
   if (argc < 3) {
       usage(argv[0]);
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
 
     setExtractorDefaultOptions(options);
     setExtractorOptions(profileFilename, options);  
-    vector<string> svmModels = options.value<vector<string> >("highlevel.svm_models");
+    ::essentia::VectorEx<string> svmModels = options.value<::essentia::VectorEx<string> >("highlevel.svm_models");
     
     extractor = AlgorithmFactory::create("MusicExtractorSVM", "svms", svmModels);
   }

@@ -83,23 +83,23 @@ void PitchYinProbabilistic::configure() {
 AlgorithmStatus PitchYinProbabilistic::process() {
   if (!shouldStop()) return PASS;
 
-  if (!_pool.contains<vector<vector<Real> > >("frequencies") || !_pool.contains<vector<vector<Real> > >("probabilities") || !_pool.contains<vector<Real> >("RMS")) {
+  if (!_pool.contains<::essentia::VectorEx<::essentia::VectorEx<Real> > >("frequencies") || !_pool.contains<::essentia::VectorEx<::essentia::VectorEx<Real> > >("probabilities") || !_pool.contains<::essentia::VectorEx<Real> >("RMS")) {
     // do not push anything in the case of empty signal
     E_WARNING("PitchYinProbabilistic: empty input signal");
     return FINISHED;
   }
 
-  const vector<vector<Real> >& pitchCandidates = _pool.value<vector<vector<Real> > >("frequencies");
-  const vector<vector<Real> >& probabilities = _pool.value<vector<vector<Real> > >("probabilities");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& pitchCandidates = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("frequencies");
+  const ::essentia::VectorEx<::essentia::VectorEx<Real> >& probabilities = _pool.value<::essentia::VectorEx<::essentia::VectorEx<Real> > >("probabilities");
 
-  vector<Real> tempPitch;
+  ::essentia::VectorEx<Real> tempPitch;
   _yinProbabilitiesHMM->input("pitchCandidates").set(pitchCandidates);
   _yinProbabilitiesHMM->input("probabilities").set(probabilities);
   _yinProbabilitiesHMM->output("pitch").set(tempPitch);
   _yinProbabilitiesHMM->compute();
 
   // voiced probabilities
-  vector<Real> oF0Probs (probabilities.size(), 0.0);
+  ::essentia::VectorEx<Real> oF0Probs (probabilities.size(), 0.0);
   for (size_t j = 0; j < probabilities.size(); ++j) {  
     Real voicedProb = 0;
     for (size_t i = 0; i < probabilities[j].size(); ++i) {
@@ -110,7 +110,7 @@ AlgorithmStatus PitchYinProbabilistic::process() {
   _voicedProbabilities.push(oF0Probs);
 
 
-  vector<Real> _tempPitchVoicing(tempPitch.size());
+  ::essentia::VectorEx<Real> _tempPitchVoicing(tempPitch.size());
   for (size_t iFrame = 0; iFrame < tempPitch.size(); ++iFrame) {
     if (tempPitch[iFrame] < 0 && (_outputUnvoiced=="zero")) continue;
     if (_outputUnvoiced == "abs") {
@@ -189,7 +189,7 @@ void PitchYinProbabilistic::createInnerNetwork() {
 }
 
 void PitchYinProbabilistic::compute() {
-  const vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   if (!signal.size()) {
     throw EssentiaException("PitchYinProbabilistic: empty input signal");
   }
@@ -197,11 +197,11 @@ void PitchYinProbabilistic::compute() {
   _vectorInput->setVector(&signal);
   _network->run();
 
-  vector<Real>& pitch = _pitch.get();
-  vector<Real>& voicedProbas = _voicedProbabilities.get();
+  ::essentia::VectorEx<Real>& pitch = _pitch.get();
+  ::essentia::VectorEx<Real>& voicedProbas = _voicedProbabilities.get();
 
-  pitch = _pool.value<vector<Real> >("pitch");
-  voicedProbas = _pool.value<vector<Real> >("voicedProbabilities");
+  pitch = _pool.value<::essentia::VectorEx<Real> >("pitch");
+  voicedProbas = _pool.value<::essentia::VectorEx<Real> >("voicedProbabilities");
 
   reset();
 }

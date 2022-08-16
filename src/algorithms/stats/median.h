@@ -28,7 +28,7 @@ namespace standard {
 class Median : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _median;
 
  public:
@@ -58,7 +58,7 @@ namespace streaming {
 class Median : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _median;
 
  public:

@@ -29,8 +29,8 @@ namespace standard {
 class SuperFluxPeaks : public Algorithm {
     
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _peaks;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _peaks;
     
   Algorithm* _movAvg;
   Algorithm* _maxf;
@@ -99,14 +99,14 @@ class SuperFluxPeaks : public AccumulatorAlgorithm {
             
  protected:
   Sink<Real> _signal;
-  Source<std::vector<Real> > _peaks;
+  Source<::essentia::VectorEx<Real> > _peaks;
   
   standard::Algorithm * _algo; 
 
   float current_t;
   float framerate,_combine;
   
-  std::vector<Real> onsetTimes;
+  ::essentia::VectorEx<Real> onsetTimes;
     
  public:
   SuperFluxPeaks() {

@@ -53,7 +53,7 @@ set_debug_level(PyObject* self, PyObject* arg) {
 
 static PyObject* log_debug(PyObject* notUsed, PyObject* args) {
   // parse args to get Source alg, name and source alg and source name
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
   if (argsV.size() != 2 ||
       (!PyInt_Check(argsV[0]) && !PyLong_Check(argsV[0])) ||
       !PyString_Check(argsV[1])) {
@@ -173,7 +173,7 @@ normalize(PyObject* self, PyObject* arg) {
     PyErr_SetString(PyExc_TypeError, (char*)" requires argument types:numpy array or list");
     return NULL;
   }
-  vector<Real>* array = reinterpret_cast<vector<Real>*>(VectorReal::fromPythonRef(arg));
+  ::essentia::VectorEx<Real>* array = reinterpret_cast<::essentia::VectorEx<Real>*>(VectorReal::fromPythonRef(arg));
   essentia::normalize(*array);
   RogueVector<Real>* result = new RogueVector<Real>(array->size(), 0.);
   for (int i=0; i<int(array->size()); ++i) { (*result)[i] = (*array)[i]; }
@@ -189,8 +189,8 @@ derivative(PyObject* self, PyObject* arg) {
     PyErr_SetString(PyExc_TypeError, (char*)" requires argument types:numpy array or list");
     return NULL;
   }
-  vector<Real>* array = reinterpret_cast<vector<Real>*>(VectorReal::fromPythonRef(arg));
-  vector<Real> derivative = essentia::derivative(*array);
+  ::essentia::VectorEx<Real>* array = reinterpret_cast<::essentia::VectorEx<Real>*>(VectorReal::fromPythonRef(arg));
+  ::essentia::VectorEx<Real> derivative = essentia::derivative(*array);
   RogueVector<Real>* result = new RogueVector<Real>(derivative.size(), 0.);
   for (int i=0; i<int(array->size()); ++i) { (*result)[i] = derivative[i]; }
   return VectorReal::toPythonRef(result);
@@ -406,7 +406,7 @@ template <typename T>
 PyObject* algorithmInfo(T* algo) {
   PyObject* result = PyDict_New();
 
-  vector<string> info(3, "");
+  ::essentia::VectorEx<string> info(3, "");
   PyObject* sublist = PyList_New(0);
 
   // add general description & version number
@@ -506,7 +506,7 @@ static PyObject* standard_info(PyObject* self, PyObject* args) {
 
 template<typename T>
 static PyObject* algorithmKeys() {
-  vector<string> algoNames = T::keys();
+  ::essentia::VectorEx<string> algoNames = T::keys();
   return VectorString::toPythonCopy(&algoNames);
 }
 
@@ -520,7 +520,7 @@ static PyObject* skeys() {
 
 static PyObject* totalProduced(PyObject* notUsed, PyObject* args) {
   // parse args to get Source alg, name and source alg and source name
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
   if (argsV.size() != 2 ||
       (!PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) ||
       !PyString_Check(argsV[1]))) {
@@ -542,7 +542,7 @@ static PyObject* totalProduced(PyObject* notUsed, PyObject* args) {
 
 static PyObject* connect(PyObject* notUsed, PyObject* args) {
   // parse args to get Source alg and name and Sink alg and name
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
 
   if (argsV.size() != 4 ||
       (  !PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) &&
@@ -579,7 +579,7 @@ static PyObject* connect(PyObject* notUsed, PyObject* args) {
 
 static PyObject* poolConnect(PyObject* notUsed, PyObject* args) {
   // parse args into (source alg, source name, pool, key name)
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
 
   if (argsV.size() != 4 ||
       (  !PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) &&
@@ -611,7 +611,7 @@ static PyObject* poolConnect(PyObject* notUsed, PyObject* args) {
 
 static PyObject* fileOutputConnect(PyObject* notUsed, PyObject* args) {
   // parse args into (source alg, source name, pool, key name)
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
 
   if (argsV.size() != 3 ||
       (  !PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) &&
@@ -649,7 +649,7 @@ static PyObject* fileOutputConnect(PyObject* notUsed, PyObject* args) {
 
 static PyObject* nowhereConnect(PyObject* notUsed, PyObject* args) {
   // parse args into (source alg, source name)
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
 
   if (argsV.size() != 2 ||
       (  !PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) &&
@@ -720,7 +720,7 @@ static PyObject* reset(PyObject* notUsed, PyObject* obj) {
 
 static PyObject* disconnect(PyObject* notUsed, PyObject* args) {
   // parse args to get Source alg and name and Sink alg and name
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
 
   if (argsV.size() != 4 ||
       (  !PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) &&
@@ -769,7 +769,7 @@ static PyObject* disconnect(PyObject* notUsed, PyObject* args) {
 
 static PyObject* poolDisconnect(PyObject* notUsed, PyObject* args) {
   // parse args into (source alg, source name, pool, key name)
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
 
   if (argsV.size() != 4 ||
       (  !PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) &&
@@ -802,7 +802,7 @@ static PyObject* poolDisconnect(PyObject* notUsed, PyObject* args) {
 
 static PyObject* fileOutputDisconnect(PyObject* notUsed, PyObject* args) {
   // parse args into (source alg, source name, pool, key name)
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
 
   if (argsV.size() != 3 ||
       (  !PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) &&
@@ -842,7 +842,7 @@ static PyObject* fileOutputDisconnect(PyObject* notUsed, PyObject* args) {
 
 static PyObject* nowhereDisconnect(PyObject* notUsed, PyObject* args) {
   // parse args into (source alg, source name)
-  vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
 
   if (argsV.size() != 2 ||
       (  !PyType_IsSubtype(argsV[0]->ob_type, &PyStreamingAlgorithmType) &&
@@ -869,7 +869,7 @@ static PyObject* nowhereDisconnect(PyObject* notUsed, PyObject* args) {
 
 // This function quickly compares two numpy matrices
 static PyObject* almostEqualArray(PyObject* notUsed, PyObject* args) {
-  vector<PyObject*> argv = unpack(args);
+  ::essentia::VectorEx<PyObject*> argv = unpack(args);
 
   if (argv.size() != 3 ||
       !PyArray_Check(argv[0]) || !PyArray_Check(argv[1]) ||
@@ -937,7 +937,7 @@ static PyObject* almostEqualArray(PyObject* notUsed, PyObject* args) {
 
 static PyObject*
 postProcessTicks(PyObject* self, PyObject* args) {
-  std::vector<PyObject*> argsV = unpack(args);
+  ::essentia::VectorEx<PyObject*> argsV = unpack(args);
   if (argsV.size() == 3) {
     if (!PyArray_Check(argsV[0]) ||
         !PyArray_Check(argsV[1]) ||
@@ -946,10 +946,10 @@ postProcessTicks(PyObject* self, PyObject* args) {
       return NULL;
     }
 
-    vector<Real>* ticks = reinterpret_cast<vector<Real>*>(VectorReal::fromPythonRef(argsV[0]));
-    vector<Real>* ticksAmp = reinterpret_cast<vector<Real>*>(VectorReal::fromPythonRef(argsV[1]));
+    ::essentia::VectorEx<Real>* ticks = reinterpret_cast<::essentia::VectorEx<Real>*>(VectorReal::fromPythonRef(argsV[0]));
+    ::essentia::VectorEx<Real>* ticksAmp = reinterpret_cast<::essentia::VectorEx<Real>*>(VectorReal::fromPythonRef(argsV[1]));
     Real period = PyFloat_AS_DOUBLE(argsV[2]);
-    vector<Real> prunedTicks = essentia::postProcessTicks(*ticks, *ticksAmp, period);
+    ::essentia::VectorEx<Real> prunedTicks = essentia::postProcessTicks(*ticks, *ticksAmp, period);
     RogueVector<Real>* result = new RogueVector<Real>(prunedTicks.size(), 0.);
     for (int i=0; i<int(prunedTicks.size()); ++i) { (*result)[i] = prunedTicks[i]; }
 
@@ -961,8 +961,8 @@ postProcessTicks(PyObject* self, PyObject* args) {
       return NULL;
     }
 
-    vector<Real>* ticks = reinterpret_cast<vector<Real>*>(VectorReal::fromPythonRef(argsV[0]));
-    vector<Real> prunedTicks = essentia::postProcessTicks(*ticks);
+    ::essentia::VectorEx<Real>* ticks = reinterpret_cast<::essentia::VectorEx<Real>*>(VectorReal::fromPythonRef(argsV[0]));
+    ::essentia::VectorEx<Real> prunedTicks = essentia::postProcessTicks(*ticks);
     RogueVector<Real>* result = new RogueVector<Real>(prunedTicks.size(), 0.);
     for (int i=0; i<int(prunedTicks.size()); ++i) { (*result)[i] = prunedTicks[i]; }
 

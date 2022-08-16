@@ -72,8 +72,8 @@ void OnsetDetection::configure() {
 }
 
 void OnsetDetection::compute() {
-  const vector<Real>& spectrum = _spectrum.get();
-  const vector<Real>& phase = _phase.get();
+  const ::essentia::VectorEx<Real>& spectrum = _spectrum.get();
+  const ::essentia::VectorEx<Real>& phase = _phase.get();
 
   if (spectrum.empty()) {
     throw EssentiaException("OnsetDetection: OnsetDetection cannot be computed on an empty spectrum");
@@ -187,7 +187,7 @@ void OnsetDetection::compute() {
           initialized with zero vector while we feed it with log-magnitudes instead of magnitudes.
 
     */
-    vector <Real> melbands;
+    ::essentia::VectorEx<Real> melbands;
     _melBands->input("spectrum").set(spectrum);
     _melBands->output("bands").set(melbands);
     _melBands->compute();

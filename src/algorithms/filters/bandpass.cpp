@@ -41,12 +41,12 @@ void BandPass::configure() {
   Real c = (tan(M_PI*fb/fs) - 1) / (tan(M_PI*fb/fs) + 1);
   Real d = -cos(2*M_PI*fc/fs);
 
-  vector<Real> b(3, 0.0);
+  ::essentia::VectorEx<Real> b(3, 0.0);
   b[0] = (1.0+c)/2.0;
   b[1] = 0.0;
   b[2] = -(1.0+c)/2.0;
 
-  vector<Real> a(3, 0.0);
+  ::essentia::VectorEx<Real> a(3, 0.0);
   a[0] = 1.0;
   a[1] = d*(1.0-c);
   a[2] = -c;

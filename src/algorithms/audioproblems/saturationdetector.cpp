@@ -70,16 +70,16 @@ void SaturationDetector::configure() {
 
 
 void SaturationDetector::compute() {
-  const vector<Real> cFrame = _frame.get();
-  vector<Real>& starts = _starts.get();
-  vector<Real>& ends = _ends.get();
+  const ::essentia::VectorEx<Real> cFrame = _frame.get();
+  ::essentia::VectorEx<Real>& starts = _starts.get();
+  ::essentia::VectorEx<Real>& ends = _ends.get();
 
-  vector<Real> frame = cFrame;
+  ::essentia::VectorEx<Real> frame = cFrame;
   rectify(frame);
 
   Real start, end, duration;
   
-  std::vector<uint> uFlanks, dFlanks;
+  ::essentia::VectorEx<uint> uFlanks, dFlanks;
 
   Real delta;
   bool currentMask, pastMask;

@@ -28,7 +28,7 @@ namespace standard {
 class StrongPeak : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _spectrum;
   Output<Real> _strongPeak;
 
  public:
@@ -57,7 +57,7 @@ namespace streaming {
 class StrongPeak : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _strongPeak;
 
  public:

@@ -23,7 +23,7 @@ using namespace essentia;
 
 DEFINE_PYTHON_TYPE(VectorVectorReal);
 
-PyObject* VectorVectorReal::toPythonCopy(const vector<vector<Real> >* v) {
+PyObject* VectorVectorReal::toPythonCopy(const ::essentia::VectorEx<::essentia::VectorEx<Real> >* v) {
   npy_intp dims[2] = { 0, 0 };
   dims[0] = v->size();
   if (!v->empty()) dims[1] = (*v)[0].size();
@@ -94,7 +94,7 @@ void* VectorVectorReal::fromPythonCopy(PyObject* obj) {
   }
 
   int size = PyList_Size(obj);
-  vector<vector<Real> >* v = new vector<vector<Real> >(size, vector<Real>());
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >* v = new ::essentia::VectorEx<::essentia::VectorEx<Real> >(size, ::essentia::VectorEx<Real>());
 
   for (int i=0; i<size; i++) {
     PyObject* row = PyList_GetItem(obj, i);
@@ -146,7 +146,7 @@ void* VectorVectorReal::fromPythonCopy(PyObject* obj) {
 }
 
 Parameter* VectorVectorReal::toParameter(PyObject* obj) {
-  vector<vector<Real> >* value = (vector<vector<Real> >*)fromPythonCopy(obj);
+  ::essentia::VectorEx<::essentia::VectorEx<Real> >* value = (::essentia::VectorEx<::essentia::VectorEx<Real> >*)fromPythonCopy(obj);
   Parameter* result = new Parameter(*value);
   delete value;
   return result;

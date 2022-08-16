@@ -28,8 +28,8 @@ namespace standard {
 class Scale : public Algorithm {
 
  protected:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _scaled;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _scaled;
 
   Real _factor, _maxValue;
   bool _clipping;

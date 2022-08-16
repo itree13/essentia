@@ -28,14 +28,14 @@ namespace standard {
 class Viterbi : public Algorithm {
 
  protected:
-  Input<std::vector<std::vector<Real> > > _observationProbabilities;
-  Input<std::vector<Real> > _initialization;
-  Input<std::vector<int> > _fromIndex;
-  Input<std::vector<int> > _toIndex;
-  Input<std::vector<Real> > _transitionProbabilities;
-  Output<std::vector<int> > _path;
+  Input<::essentia::VectorEx<::essentia::VectorEx<Real> > > _observationProbabilities;
+  Input<::essentia::VectorEx<Real> > _initialization;
+  Input<::essentia::VectorEx<int> > _fromIndex;
+  Input<::essentia::VectorEx<int> > _toIndex;
+  Input<::essentia::VectorEx<Real> > _transitionProbabilities;
+  Output<::essentia::VectorEx<int> > _path;
 
-  std::vector<int> _tempPath; 
+  ::essentia::VectorEx<int> _tempPath; 
 
  public:
   Viterbi() {
@@ -71,12 +71,12 @@ namespace streaming {
 class Viterbi : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::vector<Real> > > _observationProbabilities;
-  Sink<std::vector<Real> > _initialization;
-  Sink<std::vector<int> > _fromIndex;
-  Sink<std::vector<int> > _toIndex;
-  Sink<std::vector<Real> > _transitionProbabilities;
-  Source<std::vector<int> > _path;
+  Sink<::essentia::VectorEx<::essentia::VectorEx<Real> > > _observationProbabilities;
+  Sink<::essentia::VectorEx<Real> > _initialization;
+  Sink<::essentia::VectorEx<int> > _fromIndex;
+  Sink<::essentia::VectorEx<int> > _toIndex;
+  Sink<::essentia::VectorEx<Real> > _transitionProbabilities;
+  Source<::essentia::VectorEx<int> > _path;
 
  public:
   Viterbi() {

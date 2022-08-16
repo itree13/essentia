@@ -23,7 +23,7 @@ using namespace essentia;
 
 DEFINE_PYTHON_TYPE(VectorVectorString);
 
-PyObject* VectorVectorString::toPythonCopy(const vector<vector<string> >* v) {
+PyObject* VectorVectorString::toPythonCopy(const ::essentia::VectorEx<::essentia::VectorEx<string> >* v) {
   PyObject* result = PyList_New(v->size());
 
   for (int i=0; i<int(v->size()); ++i) {
@@ -46,7 +46,7 @@ void* VectorVectorString::fromPythonCopy(PyObject* obj) {
     throw EssentiaException("VectorVectorString::fromPythonCopy: input not a PyList");
   }
   int size = PyList_Size(obj);
-  vector<vector<string> >* v = new vector<vector<string> >(size);
+  ::essentia::VectorEx<::essentia::VectorEx<string> >* v = new ::essentia::VectorEx<::essentia::VectorEx<string> >(size);
 
   for (int i=0; i<size; ++i) {
     PyObject* row = PyList_GetItem(obj, i);
@@ -72,7 +72,7 @@ void* VectorVectorString::fromPythonCopy(PyObject* obj) {
 }
 
 Parameter* VectorVectorString::toParameter(PyObject* obj) {
-  vector<vector<string> >* value = (vector<vector<string> >*)fromPythonCopy(obj);
+  ::essentia::VectorEx<::essentia::VectorEx<string> >* value = (::essentia::VectorEx<::essentia::VectorEx<string> >*)fromPythonCopy(obj);
   Parameter* result = new Parameter(*value);
   delete value;
   return result;

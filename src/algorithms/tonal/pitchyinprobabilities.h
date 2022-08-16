@@ -28,19 +28,19 @@ namespace standard {
 class PitchYinProbabilities : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _pitch;
-  Output<std::vector<Real> > _probabilities;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _pitch;
+  Output<::essentia::VectorEx<Real> > _probabilities;
   Output<Real> _RMS;
 
   Algorithm* _FFT;
   Algorithm* _IFFT;
   Algorithm* _RMSALGO;
 
-  std::vector<Real> _yin;
-  std::vector<Real> _peakProb;
-  std::vector<Real> _freq;
-  std::vector<Real> _peakProb_freq;
+  ::essentia::VectorEx<Real> _yin;
+  ::essentia::VectorEx<Real> _peakProb;
+  ::essentia::VectorEx<Real> _freq;
+  ::essentia::VectorEx<Real> _peakProb_freq;
 
   int _frameSize;
   Real _sampleRate;
@@ -75,9 +75,9 @@ class PitchYinProbabilities : public Algorithm {
   static const char* description;
 
  protected:
-  Real parabolicInterpolation(const std::vector<Real> yinBuffer, const size_t tau, const size_t yinBufferSize);
-  void slowDifference(const std::vector<Real> sig, std::vector<Real> &yinBuffer);
-  void fastDifference(const std::vector<Real> in, std::vector<Real> &yinBuffer, const size_t yinBufferSize);
+  Real parabolicInterpolation(const ::essentia::VectorEx<Real> yinBuffer, const size_t tau, const size_t yinBufferSize);
+  void slowDifference(const ::essentia::VectorEx<Real> sig, ::essentia::VectorEx<Real> &yinBuffer);
+  void fastDifference(const ::essentia::VectorEx<Real> in, ::essentia::VectorEx<Real> &yinBuffer, const size_t yinBufferSize);
 };
 
 } // namespace standard
@@ -92,9 +92,9 @@ namespace streaming {
 class PitchYinProbabilities : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _signal;
-  Source<std::vector<Real> > _pitch;
-  Source<std::vector<Real> > _probabilities;
+  Sink<::essentia::VectorEx<Real> > _signal;
+  Source<::essentia::VectorEx<Real> > _pitch;
+  Source<::essentia::VectorEx<Real> > _probabilities;
   Source<Real> _RMS;
 
   Algorithm* _FFT;

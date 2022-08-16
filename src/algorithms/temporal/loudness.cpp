@@ -37,7 +37,7 @@ const char* Loudness::description = DOC("This algorithm computes the loudness of
 
 void Loudness::compute() {
 
-  const std::vector<Real>& signal = _signal.get();
+  const ::essentia::VectorEx<Real>& signal = _signal.get();
   Real& loudness = _loudness.get();
 
   Real signalEnergy = energy(signal);

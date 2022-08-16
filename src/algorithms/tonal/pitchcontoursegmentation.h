@@ -29,11 +29,11 @@ namespace standard {
 class PitchContourSegmentation : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _pitch;
-  Input<std::vector<Real> > _signal;
-  Output<std::vector<Real> > _onset;
-  Output<std::vector<Real> > _duration;
-  Output<std::vector<Real> > _MIDIpitch;
+  Input<::essentia::VectorEx<Real> > _pitch;
+  Input<::essentia::VectorEx<Real> > _signal;
+  Output<::essentia::VectorEx<Real> > _onset;
+  Output<::essentia::VectorEx<Real> > _duration;
+  Output<::essentia::VectorEx<Real> > _MIDIpitch;
     
   Algorithm* frameCutter;
   Algorithm* RMS;
@@ -70,9 +70,9 @@ class PitchContourSegmentation : public Algorithm {
   Real _tuningFreq;
   Real _hopSize;
   Real _sampleRate;
-  std::vector<Real> startC;
-  std::vector<Real> endC;
-  std::vector<Real> pitch;
+  ::essentia::VectorEx<Real> startC;
+  ::essentia::VectorEx<Real> endC;
+  ::essentia::VectorEx<Real> pitch;
   int _hopSizeFeat;
   int _frameSizeFeat;
   Real _pitchDistanceThreshold;

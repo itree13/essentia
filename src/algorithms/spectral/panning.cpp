@@ -46,7 +46,7 @@ const char* Panning::description = DOC("This algorithm characterizes panorama di
 "  classification: descriptors, databases, and classifiers. PhD Thesis.");
 
 
-void Panning::correctAudibleAngle(vector<Real>& ratios) {
+void Panning::correctAudibleAngle(::essentia::VectorEx<Real>& ratios) {
   Real x = 0;
 
   for(int i = 0; i < (int)ratios.size(); i++) {
@@ -61,8 +61,8 @@ void Panning::correctAudibleAngle(vector<Real>& ratios) {
   }
 }
 
-void Panning::calculateHistogram(const vector<Real>& subL, const vector<Real>& subR,
-                                 vector<Real>& subRatios, vector<Real>& histogram)
+void Panning::calculateHistogram(const ::essentia::VectorEx<Real>& subL, const ::essentia::VectorEx<Real>& subR,
+                                 ::essentia::VectorEx<Real>& subRatios, ::essentia::VectorEx<Real>& histogram)
 {
   //if (histogram.size() != _panningBins) histogram.resize(_panningBins);
   histogram.assign(histogram.size(), 0.);
@@ -78,7 +78,7 @@ void Panning::calculateHistogram(const vector<Real>& subL, const vector<Real>& s
   }
 }
 
-void Panning::calculateCoefficients(const vector<Real>& histAcum, vector<complex<Real> >& coeffs) {
+void Panning::calculateCoefficients(const ::essentia::VectorEx<Real>& histAcum, ::essentia::VectorEx<complex<Real> >& coeffs) {
   int sizeHist = (int)histAcum.size(), i;
   if ((int)coeffs.size() != sizeHist) coeffs.resize(sizeHist);
 
@@ -104,8 +104,8 @@ void Panning::configure() {
 }
 
 void Panning::compute() {
-  const vector<Real>& spectrumLeft = _spectrumLeft.get();
-  const vector<Real>& spectrumRight = _spectrumRight.get();
+  const ::essentia::VectorEx<Real>& spectrumLeft = _spectrumLeft.get();
+  const ::essentia::VectorEx<Real>& spectrumRight = _spectrumRight.get();
   Array2D<Real>& panningCoeffs = _panningCoeffs.get();
   // a little story:
   // when panning used to be extractor_panning, the extractor used _frameSize/2
@@ -132,20 +132,20 @@ void Panning::compute() {
   int specSize = (int) spectrumLeft.size();
   Real fftSize = 2 *_panningBins;
   Real average = _averageFrames ? 1./Real(_averageFrames) : 0;
-  vector<Real> histogram(_panningBins);
-  vector<Real> ratios(specSize);
-  vector<Real> specL(specSize);
-  vector<Real> specR(specSize);
-  vector<Real> subRatios, subSpecL, subSpecR;
-  vector<vector<Real> > panCoeffs(_numBands, vector<Real>(_numCoeffs));
+  ::essentia::VectorEx<Real> histogram(_panningBins);
+  ::essentia::VectorEx<Real> ratios(specSize);
+  ::essentia::VectorEx<Real> specL(specSize);
+  ::essentia::VectorEx<Real> specR(specSize);
+  ::essentia::VectorEx<Real> subRatios, subSpecL, subSpecR;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > panCoeffs(_numBands, ::essentia::VectorEx<Real>(_numCoeffs));
 
   // Pre-processing
-  vector<complex<Real> > inputCoeffs;
-  vector<Real> outputCoeffs;
+  ::essentia::VectorEx<complex<Real> > inputCoeffs;
+  ::essentia::VectorEx<Real> outputCoeffs;
   _ifft->input("fft").set(inputCoeffs);
   _ifft->output("frame").set(outputCoeffs);
 
-  vector<Real> melBands(_numBands + 1, 0.0);
+  ::essentia::VectorEx<Real> melBands(_numBands + 1, 0.0);
   Real melDiff, melInc, auxTrans;
 
   melBands[0] = 0.0;
@@ -174,7 +174,7 @@ void Panning::compute() {
     int begin =  (int)floor(melBands[i]);
     int n_elems = (int)floor(melBands[i+1] - melBands[i] + 1);
     if (begin + n_elems > specSize) n_elems = specSize - begin;
-    vector<Real>::const_iterator it = specL.begin()+begin;
+    ::essentia::VectorEx<Real>::const_iterator it = specL.begin()+begin;
     subSpecL.assign(it, it + n_elems);
     it = specR.begin()+begin;
     subSpecR.assign(it, it+n_elems);

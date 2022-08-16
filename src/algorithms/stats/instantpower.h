@@ -28,7 +28,7 @@ namespace standard {
 class InstantPower : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _array;
+  Input<::essentia::VectorEx<Real> > _array;
   Output<Real> _power;
 
  public:
@@ -57,7 +57,7 @@ namespace streaming {
 class InstantPower : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _array;
+  Sink<::essentia::VectorEx<Real> > _array;
   Source<Real> _rms;
 
  public:

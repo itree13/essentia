@@ -36,7 +36,7 @@ namespace standard {
 class PitchYinFFT : public Algorithm {
 
  private:
-  Input<std::vector<Real> > _spectrum;
+  Input<::essentia::VectorEx<Real> > _spectrum;
   Output<Real> _pitch;
   Output<Real> _pitchConfidence;
 
@@ -44,13 +44,13 @@ class PitchYinFFT : public Algorithm {
   Algorithm* _cart2polar;
   Algorithm* _peakDetect;
 
-  std::vector<Real> _resPhase;    /** complex vector to compute square difference function */
-  std::vector<Real> _resNorm;
-  std::vector<Real> _sqrMag;      /** square difference function */
-  std::vector<Real> _weight;      /** spectral weighting window (psychoacoustic model) */
-  std::vector<Real> _yin;         /** Yin function */
-  std::vector<Real> _positions;   /** autocorrelation peak positions */
-  std::vector<Real> _amplitudes;  /** autocorrelation peak amplitudes */
+  ::essentia::VectorEx<Real> _resPhase;    /** complex vector to compute square difference function */
+  ::essentia::VectorEx<Real> _resNorm;
+  ::essentia::VectorEx<Real> _sqrMag;      /** square difference function */
+  ::essentia::VectorEx<Real> _weight;      /** spectral weighting window (psychoacoustic model) */
+  ::essentia::VectorEx<Real> _yin;         /** Yin function */
+  ::essentia::VectorEx<Real> _positions;   /** autocorrelation peak positions */
+  ::essentia::VectorEx<Real> _amplitudes;  /** autocorrelation peak amplitudes */
   Real _sampleRate;               /** sampling rate of the audio signal */
   bool _interpolate;              /** whether to use peak interpolation */
   int _frameSize;
@@ -108,7 +108,7 @@ namespace streaming {
 class PitchYinFFT : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrum;
+  Sink<::essentia::VectorEx<Real> > _spectrum;
   Source<Real> _pitch;
   Source<Real> _pitchConfidence;
 

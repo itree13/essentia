@@ -48,7 +48,7 @@ void Pool::checkIntegrity() const {
   // grab locks for all data structures
   GLOBAL_LOCK;
 
-  vector<string> descNames = descriptorNamesNoLocking();
+  ::essentia::VectorEx<string> descNames = descriptorNamesNoLocking();
   std::sort(descNames.begin(), descNames.end());
 
   for (int i=0; i<int(descNames.size()-1); ++i) {
@@ -77,18 +77,18 @@ void Pool::remove(const string& name) {
   }
 
   SEARCH_AND_DESTROY(Real, SingleReal);
-  SEARCH_AND_DESTROY(vector<Real>, Real);
-  SEARCH_AND_DESTROY(vector<Real>, SingleVectorReal);
-  SEARCH_AND_DESTROY(vector<vector<Real> >, VectorReal);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<Real>, Real);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<Real>, SingleVectorReal);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<::essentia::VectorEx<Real> >, VectorReal);
 
   SEARCH_AND_DESTROY(string, SingleString);
-  SEARCH_AND_DESTROY(vector<string>, String);
-  SEARCH_AND_DESTROY(vector<string>, SingleVectorString);
-  SEARCH_AND_DESTROY(vector<vector<string> >, VectorString);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<string>, String);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<string>, SingleVectorString);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<::essentia::VectorEx<string> >, VectorString);
 
-  SEARCH_AND_DESTROY(vector<TNT::Array2D<Real> >, Array2DReal);
-  SEARCH_AND_DESTROY(vector<Tensor<Real> >, TensorReal);
-  SEARCH_AND_DESTROY(vector<StereoSample>, StereoSample);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<TNT::Array2D<Real> >, Array2DReal);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<Tensor<Real> >, TensorReal);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<StereoSample>, StereoSample);
 
   #undef SEARCH_AND_DESTROY
 }
@@ -119,25 +119,25 @@ void Pool::removeNamespace(const string& ns) {
   }
 
   SEARCH_AND_DESTROY(Real, SingleReal);
-  SEARCH_AND_DESTROY(vector<Real>, Real);
-  SEARCH_AND_DESTROY(vector<Real>, SingleVectorReal);
-  SEARCH_AND_DESTROY(vector<vector<Real> >, VectorReal);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<Real>, Real);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<Real>, SingleVectorReal);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<::essentia::VectorEx<Real> >, VectorReal);
 
   SEARCH_AND_DESTROY(string, SingleString);
-  SEARCH_AND_DESTROY(vector<string>, String);
-  SEARCH_AND_DESTROY(vector<string>, SingleVectorString);  
-  SEARCH_AND_DESTROY(vector<vector<string> >, VectorString);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<string>, String);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<string>, SingleVectorString);  
+  SEARCH_AND_DESTROY(::essentia::VectorEx<::essentia::VectorEx<string> >, VectorString);
 
-  SEARCH_AND_DESTROY(vector<Tensor<Real> >, TensorReal);
-  SEARCH_AND_DESTROY(vector<TNT::Array2D<Real> >, Array2DReal);
-  SEARCH_AND_DESTROY(vector<StereoSample>, StereoSample);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<Tensor<Real> >, TensorReal);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<TNT::Array2D<Real> >, Array2DReal);
+  SEARCH_AND_DESTROY(::essentia::VectorEx<StereoSample>, StereoSample);
 
   #undef SEARCH_AND_DESTROY
 }
 
 
-vector<string> Pool::descriptorNames() const {
-  vector<string> descNames;
+::essentia::VectorEx<string> Pool::descriptorNames() const {
+  ::essentia::VectorEx<string> descNames;
   int i=0;
 
   #define ADD_DESC_NAMES(type, tname)                                          \
@@ -152,25 +152,25 @@ vector<string> Pool::descriptorNames() const {
   }
 
   ADD_DESC_NAMES(Real, SingleReal);
-  ADD_DESC_NAMES(vector<Real>, Real);
-  ADD_DESC_NAMES(vector<Real>, SingleVectorReal);
-  ADD_DESC_NAMES(vector<vector<Real> >, VectorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<Real>, Real);
+  ADD_DESC_NAMES(::essentia::VectorEx<Real>, SingleVectorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<::essentia::VectorEx<Real> >, VectorReal);
   ADD_DESC_NAMES(string, SingleString);
-  ADD_DESC_NAMES(vector<string>, String);
-  ADD_DESC_NAMES(vector<string>, SingleVectorString);  
-  ADD_DESC_NAMES(vector<vector<string> >, VectorString);
-  ADD_DESC_NAMES(vector<TNT::Array2D<Real> >, Array2DReal);
-  ADD_DESC_NAMES(vector<Tensor<Real> >, TensorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<string>, String);
+  ADD_DESC_NAMES(::essentia::VectorEx<string>, SingleVectorString);  
+  ADD_DESC_NAMES(::essentia::VectorEx<::essentia::VectorEx<string> >, VectorString);
+  ADD_DESC_NAMES(::essentia::VectorEx<TNT::Array2D<Real> >, Array2DReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<Tensor<Real> >, TensorReal);
   ADD_DESC_NAMES(Tensor<Real>, SingleTensorReal);
-  ADD_DESC_NAMES(vector<StereoSample>, StereoSample);
+  ADD_DESC_NAMES(::essentia::VectorEx<StereoSample>, StereoSample);
 
   #undef ADD_DESC_NAMES
 
   return descNames;
 }
 
-vector<string> Pool::descriptorNames(const std::string& ns) const {
-  vector<string> descNames;
+::essentia::VectorEx<string> Pool::descriptorNames(const std::string& ns) const {
+  ::essentia::VectorEx<string> descNames;
   #define ADD_DESC_NAMES(type, tname)                            \
   {                                                              \
     MutexLocker lock(mutex##tname);                              \
@@ -183,17 +183,17 @@ vector<string> Pool::descriptorNames(const std::string& ns) const {
   }
 
   ADD_DESC_NAMES(Real, SingleReal);
-  ADD_DESC_NAMES(vector<Real>, Real);
-  ADD_DESC_NAMES(vector<Real>, SingleVectorReal);
-  ADD_DESC_NAMES(vector<vector<Real> >, VectorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<Real>, Real);
+  ADD_DESC_NAMES(::essentia::VectorEx<Real>, SingleVectorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<::essentia::VectorEx<Real> >, VectorReal);
   ADD_DESC_NAMES(string, SingleString);
-  ADD_DESC_NAMES(vector<string>, String);
-  ADD_DESC_NAMES(vector<string>, SingleVectorString);
-  ADD_DESC_NAMES(vector<vector<string> >, VectorString);
-  ADD_DESC_NAMES(vector<TNT::Array2D<Real> >, Array2DReal);
-  ADD_DESC_NAMES(vector<Tensor<Real> >, TensorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<string>, String);
+  ADD_DESC_NAMES(::essentia::VectorEx<string>, SingleVectorString);
+  ADD_DESC_NAMES(::essentia::VectorEx<::essentia::VectorEx<string> >, VectorString);
+  ADD_DESC_NAMES(::essentia::VectorEx<TNT::Array2D<Real> >, Array2DReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<Tensor<Real> >, TensorReal);
   ADD_DESC_NAMES(Tensor<Real>, SingleTensorReal);
-  ADD_DESC_NAMES(vector<StereoSample>, StereoSample);
+  ADD_DESC_NAMES(::essentia::VectorEx<StereoSample>, StereoSample);
 
   #undef ADD_DESC_NAMES
 
@@ -202,8 +202,8 @@ vector<string> Pool::descriptorNames(const std::string& ns) const {
 
 
 // WARNING: this function assumes that a GLOBAL_LOCK is already obtained
-vector<string> Pool::descriptorNamesNoLocking() const {
-  vector<string> descNames(_poolReal.size()         +
+::essentia::VectorEx<string> Pool::descriptorNamesNoLocking() const {
+  ::essentia::VectorEx<string> descNames(_poolReal.size()         +
                            _poolVectorReal.size()   +
                            _poolString.size()       +
                            _poolVectorString.size() +
@@ -225,16 +225,16 @@ vector<string> Pool::descriptorNamesNoLocking() const {
   }
 
   ADD_DESC_NAMES(Real, SingleReal);
-  ADD_DESC_NAMES(vector<Real>, Real);
-  ADD_DESC_NAMES(vector<Real>, SingleVectorReal);
-  ADD_DESC_NAMES(vector<vector<Real> >, VectorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<Real>, Real);
+  ADD_DESC_NAMES(::essentia::VectorEx<Real>, SingleVectorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<::essentia::VectorEx<Real> >, VectorReal);
   ADD_DESC_NAMES(string, SingleString);
-  ADD_DESC_NAMES(vector<string>, String);
-  ADD_DESC_NAMES(vector<string>, SingleVectorString);
-  ADD_DESC_NAMES(vector<vector<string> >, VectorString);
-  ADD_DESC_NAMES(vector<TNT::Array2D<Real> >, Array2DReal);
-  ADD_DESC_NAMES(vector<Tensor<Real> >, TensorReal);
-  ADD_DESC_NAMES(vector<StereoSample>, StereoSample);
+  ADD_DESC_NAMES(::essentia::VectorEx<string>, String);
+  ADD_DESC_NAMES(::essentia::VectorEx<string>, SingleVectorString);
+  ADD_DESC_NAMES(::essentia::VectorEx<::essentia::VectorEx<string> >, VectorString);
+  ADD_DESC_NAMES(::essentia::VectorEx<TNT::Array2D<Real> >, Array2DReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<Tensor<Real> >, TensorReal);
+  ADD_DESC_NAMES(::essentia::VectorEx<StereoSample>, StereoSample);
 
 
   #undef ADD_DESC_NAMES
@@ -243,7 +243,7 @@ vector<string> Pool::descriptorNamesNoLocking() const {
 }
 
 void Pool::validateKey(const string& name) {
-  std::vector<std::string> allNames = descriptorNamesNoLocking();
+  ::essentia::VectorEx<std::string> allNames = descriptorNamesNoLocking();
   for (int i=0; i<int(allNames.size()); ++i) {
     /* first check if name already exists in another sub-pool */
     if (name == allNames[i]) {
@@ -291,9 +291,9 @@ void Pool::add(const string& name, const type& value, bool validityCheck) {  \
 
 
 SPECIALIZE_ADD_IMPL(Real, Real);
-SPECIALIZE_ADD_IMPL(vector<Real>, VectorReal);
+SPECIALIZE_ADD_IMPL(::essentia::VectorEx<Real>, VectorReal);
 SPECIALIZE_ADD_IMPL(string, String);
-SPECIALIZE_ADD_IMPL(vector<string>, VectorString);
+SPECIALIZE_ADD_IMPL(::essentia::VectorEx<string>, VectorString);
 SPECIALIZE_ADD_IMPL(StereoSample, StereoSample);
 
 
@@ -358,8 +358,8 @@ void Pool::set(const string& name, const type& value, bool validityCheck) {  \
 
 SPECIALIZE_SET_IMPL(Real, Real)
 SPECIALIZE_SET_IMPL(string, String)
-SPECIALIZE_SET_IMPL(vector<Real>, VectorReal)
-SPECIALIZE_SET_IMPL(vector<string>, VectorString)
+SPECIALIZE_SET_IMPL(::essentia::VectorEx<Real>, VectorReal)
+SPECIALIZE_SET_IMPL(::essentia::VectorEx<string>, VectorString)
 
 // special set for Tensor<Real>
 void Pool::set(const string& name, const Tensor<Real>& value, bool validityCheck) {
@@ -387,23 +387,23 @@ void Pool::set(const string& name, const Tensor<Real>& value, bool validityCheck
 void Pool::merge(Pool& p, const string& mergeType) {
 
   #define MERGE_POOL(t, tname) {                                                     \
-    vector<string> descNames;                                                        \
+    ::essentia::VectorEx<string> descNames;                                                        \
     descNames.reserve(p.get##tname##Pool().size());                                  \
     {                                                                                \
       MutexLocker lock(p.mutex##tname);                                              \
-      for (map<string, vector<t> >::const_iterator it = p.get##tname##Pool().begin();\
+      for (map<string, ::essentia::VectorEx<t> >::const_iterator it = p.get##tname##Pool().begin();\
            it != p.get##tname##Pool().end();                                         \
            ++it) {                                                                   \
         descNames.push_back(it->first);                                              \
       }                                                                              \
     }                                                                                \
     for (int i=0; i < int(descNames.size()); ++i) {                                  \
-      merge(descNames[i], p.value<vector<t> >(descNames[i]), mergeType);             \
+      merge(descNames[i], p.value<::essentia::VectorEx<t> >(descNames[i]), mergeType);             \
     }                                                                                \
   }
 
   #define MERGE_SINGLE_POOL(t, tname) {                                      \
-    vector<string> descNames;                                                \
+    ::essentia::VectorEx<string> descNames;                                                \
     descNames.reserve(p.get##tname##Pool().size());                          \
     {                                                                        \
       MutexLocker lock(p.mutex##tname);                                    \
@@ -421,15 +421,15 @@ void Pool::merge(Pool& p, const string& mergeType) {
   // single value:
   MERGE_SINGLE_POOL(Real, SingleReal);
   MERGE_SINGLE_POOL(string, SingleString);
-  MERGE_SINGLE_POOL(vector<Real>, SingleVectorReal);
-  MERGE_SINGLE_POOL(vector<string>, SingleVectorString);
+  MERGE_SINGLE_POOL(::essentia::VectorEx<Real>, SingleVectorReal);
+  MERGE_SINGLE_POOL(::essentia::VectorEx<string>, SingleVectorString);
   MERGE_SINGLE_POOL(Tensor<Real>, SingleTensorReal);
 
   // multiple value:
   MERGE_POOL(Real, Real);
   MERGE_POOL(string, String);
-  MERGE_POOL(vector<Real>, VectorReal);
-  MERGE_POOL(vector<string>, VectorString);
+  MERGE_POOL(::essentia::VectorEx<Real>, VectorReal);
+  MERGE_POOL(::essentia::VectorEx<string>, VectorString);
   MERGE_POOL(StereoSample, StereoSample);
   MERGE_POOL(TNT::Array2D<Real>, Array2DReal);
   MERGE_POOL(Tensor<Real>, TensorReal);
@@ -439,14 +439,14 @@ void Pool::merge(Pool& p, const string& mergeType) {
 }
 
 #define SPECIALIZE_MERGE_IMPL(type, tname)                                                             \
-void Pool::merge(const string& name, const vector<type>& value, const string& mergeType) {             \
+void Pool::merge(const string& name, const ::essentia::VectorEx<type>& value, const string& mergeType) {             \
   if (value.empty()) return;                                                                           \
                                                                                                        \
   /* first check if the pool has ever seen this key before, if it has, we can
    * just add it, if not, we need to run some validation tests */                                      \
   {                                                                                                    \
     MutexLocker lock(mutex##tname);                                                                    \
-    map<string, vector<type> >::iterator it = _pool##tname.find(name);                                 \
+    map<string, ::essentia::VectorEx<type> >::iterator it = _pool##tname.find(name);                                 \
     if (it != _pool##tname.end()) {                                                                    \
       if (mergeType == "") {                                                                           \
         throw EssentiaException("Pool::merge, cannot merge descriptor names with the same name:" +     \
@@ -467,7 +467,7 @@ void Pool::merge(const string& name, const vector<type>& value, const string& me
         if (value.size() != _pool##tname[name].size()) {                                               \
           throw EssentiaException("Pool::merge, cannot interleave descriptors with different sizes :", name);\
         }                                                                                              \
-        vector<type> temp = _pool##tname[name];                                                        \
+        ::essentia::VectorEx<type> temp = _pool##tname[name];                                                        \
         _pool##tname.erase(it);\
         _pool##tname[name].push_back(temp[0]);                                                         \
         _pool##tname[name].push_back(value[0]);                                                        \
@@ -494,9 +494,9 @@ void Pool::merge(const string& name, const vector<type>& value, const string& me
 }
 
 SPECIALIZE_MERGE_IMPL(Real, Real);
-SPECIALIZE_MERGE_IMPL(vector<Real>, VectorReal);
+SPECIALIZE_MERGE_IMPL(::essentia::VectorEx<Real>, VectorReal);
 SPECIALIZE_MERGE_IMPL(string, String);
-SPECIALIZE_MERGE_IMPL(vector<string>, VectorString);
+SPECIALIZE_MERGE_IMPL(::essentia::VectorEx<string>, VectorString);
 SPECIALIZE_MERGE_IMPL(StereoSample, StereoSample);
 SPECIALIZE_MERGE_IMPL(Tensor<Real>, TensorReal);
 
@@ -528,17 +528,17 @@ void Pool::mergeSingle(const string& name, const type& value, const string& merg
 
 SPECIALIZE_MERGE_SINGLE_IMPL(Real, Real)
 SPECIALIZE_MERGE_SINGLE_IMPL(string, String)
-SPECIALIZE_MERGE_SINGLE_IMPL(vector<Real>, VectorReal)
-SPECIALIZE_MERGE_SINGLE_IMPL(vector<string>, VectorString)
+SPECIALIZE_MERGE_SINGLE_IMPL(::essentia::VectorEx<Real>, VectorReal)
+SPECIALIZE_MERGE_SINGLE_IMPL(::essentia::VectorEx<string>, VectorString)
 SPECIALIZE_MERGE_SINGLE_IMPL(Tensor<Real>, TensorReal)
 
 
-void Pool::merge(const string& name, const vector<Array2D<Real> >& value, const string& mergeType) {
+void Pool::merge(const string& name, const ::essentia::VectorEx<Array2D<Real> >& value, const string& mergeType) {
   /* first check if the pool has ever seen this key before, if it has, we can
    * just add it, if not, we need to run some validation tests */
   {
     MutexLocker lock(mutexArray2DReal);
-    map<string, vector<Array2D<Real> > >::iterator it = _poolArray2DReal.find(name);
+    map<string, ::essentia::VectorEx<Array2D<Real> > >::iterator it = _poolArray2DReal.find(name);
     if (it != _poolArray2DReal.end()) {
       if (mergeType == "") {
         throw EssentiaException("Pool::merge, cannot merge descriptor names with the same name:" +
@@ -562,7 +562,7 @@ void Pool::merge(const string& name, const vector<Array2D<Real> >& value, const 
         if (value.size() != _poolArray2DReal[name].size()) {
           throw EssentiaException("Pool::merge, cannot interleave descriptors with different sizes :", name);
         }
-        vector<Array2D<Real> > temp = _poolArray2DReal[name];
+        ::essentia::VectorEx<Array2D<Real> > temp = _poolArray2DReal[name];
         _poolArray2DReal.erase(it);
         _poolArray2DReal[name].push_back(temp[0].copy());
         _poolArray2DReal[name].push_back(value[0].copy());
@@ -598,9 +598,9 @@ bool Pool::isSingleValue(const string& name) {
     }                                                                          \
   }
   SEARCH_SINGLE(Real, SingleReal);
-  SEARCH_SINGLE(vector<Real>, SingleVectorReal);
+  SEARCH_SINGLE(::essentia::VectorEx<Real>, SingleVectorReal);
   SEARCH_SINGLE(string, SingleString);
-  SEARCH_SINGLE(vector<string>, SingleVectorString);
+  SEARCH_SINGLE(::essentia::VectorEx<string>, SingleVectorString);
   SEARCH_SINGLE(Tensor<Real>, SingleTensorReal);
 
   #undef SEARCH_SINGLE

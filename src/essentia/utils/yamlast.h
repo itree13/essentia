@@ -91,14 +91,14 @@ class YamlScalarNode : public YamlNode {
 
 class YamlSequenceNode : public YamlNode {
  public:
-  const std::vector<YamlNode*>& getData() const { return _data; }
+  const ::essentia::VectorEx<YamlNode*>& getData() const { return _data; }
   void add(YamlNode* n) { _data.push_back(n); }
   virtual ~YamlSequenceNode();
   const int size() const { return int(_data.size()); }
   const bool empty() const { return _data.empty(); }
 
  private:
-  std::vector<YamlNode*> _data;
+  ::essentia::VectorEx<YamlNode*> _data;
 };
 
 

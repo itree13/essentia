@@ -33,10 +33,10 @@ typedef std::pair<int,Real> mypair;
 class SineModelAnal : public Algorithm {
 
  protected:
-  Input<std::vector<std::complex<Real> > > _fft;
-  Output<std::vector<Real> > _magnitudes;
-  Output<std::vector<Real> > _frequencies;
-  Output<std::vector<Real> > _phases;
+  Input<::essentia::VectorEx<std::complex<Real> > > _fft;
+  Output<::essentia::VectorEx<Real> > _magnitudes;
+  Output<::essentia::VectorEx<Real> > _frequencies;
+  Output<::essentia::VectorEx<Real> > _phases;
   Algorithm* _peakDetect;
   Algorithm* _cartesianToPolar;
 
@@ -76,11 +76,11 @@ class SineModelAnal : public Algorithm {
   void configure();
   void compute();
 
-  void phaseInterpolation(std::vector<Real> fftphase, std::vector<Real> peakFrequencies, std::vector<Real>& peakPhases);
-  void sinusoidalTracking(std::vector<Real>& peakMags, std::vector<Real>& peakFrequencies, std::vector<Real>& peakPhases, const std::vector<Real> tfreq, Real freqDevOffset, Real freqDevSlope,  std::vector<Real> &tmagn, std::vector<Real> &tfreqn, std::vector<Real> &tphasen );
+  void phaseInterpolation(::essentia::VectorEx<Real> fftphase, ::essentia::VectorEx<Real> peakFrequencies, ::essentia::VectorEx<Real>& peakPhases);
+  void sinusoidalTracking(::essentia::VectorEx<Real>& peakMags, ::essentia::VectorEx<Real>& peakFrequencies, ::essentia::VectorEx<Real>& peakPhases, const ::essentia::VectorEx<Real> tfreq, Real freqDevOffset, Real freqDevSlope,  ::essentia::VectorEx<Real> &tmagn, ::essentia::VectorEx<Real> &tfreqn, ::essentia::VectorEx<Real> &tphasen );
   void cleaningSineTrack();
 
-  std::vector<Real> _lasttpeakFrequency;
+  ::essentia::VectorEx<Real> _lasttpeakFrequency;
 
 
   static const char* name;
@@ -88,10 +88,10 @@ class SineModelAnal : public Algorithm {
   static const char* description;
 
  private:
-  void sort_indexes(std::vector<int> &idx, const std::vector<Real> &v, bool ascending);
-  void copy_vector_from_indexes(std::vector<Real> &out, const std::vector<Real> v, const std::vector<int> idx);
-  void copy_int_vector_from_indexes(std::vector<int> &out, const std::vector<int> v, const std::vector<int> idx);
-  void erase_vector_from_indexes(std::vector<Real> &v, const std::vector<int> idx);
+  void sort_indexes(::essentia::VectorEx<int> &idx, const ::essentia::VectorEx<Real> &v, bool ascending);
+  void copy_vector_from_indexes(::essentia::VectorEx<Real> &out, const ::essentia::VectorEx<Real> v, const ::essentia::VectorEx<int> idx);
+  void copy_int_vector_from_indexes(::essentia::VectorEx<int> &out, const ::essentia::VectorEx<int> v, const ::essentia::VectorEx<int> idx);
+  void erase_vector_from_indexes(::essentia::VectorEx<Real> &v, const ::essentia::VectorEx<int> idx);
 
   // support functions for sort_indexes()
   static bool comparator_up ( const mypair& l, const mypair& r);
@@ -110,10 +110,10 @@ namespace streaming {
 class SineModelAnal : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<std::complex<Real> > > _fft; // input
-  Source<std::vector<Real> > _frequencies;
-  Source<std::vector<Real> > _magnitudes;
-  Source<std::vector<Real> > _phases;
+  Sink<::essentia::VectorEx<std::complex<Real> > > _fft; // input
+  Source<::essentia::VectorEx<Real> > _frequencies;
+  Source<::essentia::VectorEx<Real> > _magnitudes;
+  Source<::essentia::VectorEx<Real> > _phases;
 
  public:
   SineModelAnal() {

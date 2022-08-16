@@ -54,7 +54,7 @@ void FreesoundLowlevelDescriptors::createNetwork(SourceBase& source, Pool& pool)
   // Silence Rate
   Real thresholds_dB[] = { -20, -30, -60 };
 
-  vector<Real> thresholds(ARRAY_SIZE(thresholds_dB));
+  ::essentia::VectorEx<Real> thresholds(ARRAY_SIZE(thresholds_dB));
   for (uint i=0; i<thresholds.size(); i++) {
     thresholds[i] = db2lin(thresholds_dB[i]/2.0);
   }
@@ -311,7 +311,7 @@ inline Real squeezeRange(Real& x, Real& x1, Real& x2) {
 void FreesoundLowlevelDescriptors::computeAverageLoudness(Pool& pool) { // after computing network
 
   // TODO: would this fail on empty signal?
-  vector<Real> levelArray = pool.value<vector<Real> >(nameSpace + "loudness");
+  ::essentia::VectorEx<Real> levelArray = pool.value<::essentia::VectorEx<Real> >(nameSpace + "loudness");
   pool.remove(nameSpace + "loudness");
 
   // Maximum dynamic

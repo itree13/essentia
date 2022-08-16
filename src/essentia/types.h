@@ -30,8 +30,6 @@
 #include <typeinfo>
 #include <string.h>
 #include "config.h"
-#include "debugging.h"
-#include "streamutil.h"
 #include <unsupported/Eigen/CXX11/Tensor>
 
 
@@ -62,7 +60,15 @@ typedef __int64 sint64;
 
 #endif // OS_WIN32
 
+namespace essentia {
+  
+template <class T>
+class VectorEx : public ::std::vector<T> {
+public:
+  using std::vector<T>::vector;
+};
 
+}
 
 
 #include <algorithm>
@@ -98,6 +104,9 @@ namespace std {
 #define M_PI 3.14159265358979323846
 #endif
 
+
+#include "debugging.h"
+#include "streamutil.h"
 
 namespace essentia {
 
@@ -164,9 +173,9 @@ struct case_insensitive_str_cmp
 
 
 template <class T>
-class OrderedMap : public std::vector<std::pair<std::string, T*> > {
+class OrderedMap : public ::essentia::VectorEx<std::pair<std::string, T*> > {
  public:
-  typedef typename std::vector<std::pair<std::string, T*> > BaseClass;
+  typedef typename ::essentia::VectorEx<std::pair<std::string, T*> > BaseClass;
 
   int size() const { return (int)BaseClass::size(); }
 
@@ -201,8 +210,8 @@ class OrderedMap : public std::vector<std::pair<std::string, T*> > {
     return operator[](str.c_str());
   }
 
-  std::vector<std::string> keys() const {
-    std::vector<std::string> result(this->size());
+  ::essentia::VectorEx<std::string> keys() const {
+    ::essentia::VectorEx<std::string> result(this->size());
     for (int i=0; i<this->size(); i++) {
       result[i] = this->at(i).first;
     }
@@ -258,8 +267,8 @@ class EssentiaMap : public std::map<KeyType, ValueType, Compare> {
     return BaseClass::insert(std::make_pair(key, value));
   }
 
-  std::vector<std::string> keys() const {
-    std::vector<std::string> result;
+  ::essentia::VectorEx<std::string> keys() const {
+    ::essentia::VectorEx<std::string> result;
     result.reserve(BaseClass::size());
     std::ostringstream stream;
     typename BaseClass::const_iterator it = this->begin();
@@ -372,7 +381,7 @@ inline bool sameType(const TypeProxy& lhs, const TypeProxy& rhs) {
     return typeid(TokenType);                              \
   }                                                        \
   virtual const std::type_info& vectorTypeInfo() const {   \
-    return typeid(std::vector<TokenType>);                 \
+    return typeid(::essentia::VectorEx<TokenType>);                 \
   }
 
 

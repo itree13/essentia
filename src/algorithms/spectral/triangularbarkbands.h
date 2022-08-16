@@ -38,8 +38,8 @@ class TriangularBarkBands : public Algorithm {
     }
 
  protected:
-  Input<std::vector<Real> > _spectrumInput;
-  Output<std::vector<Real> > _bandsOutput;
+  Input<::essentia::VectorEx<Real> > _spectrumInput;
+  Output<::essentia::VectorEx<Real> > _bandsOutput;
     
     bool _isLog;
 
@@ -77,7 +77,7 @@ class TriangularBarkBands : public Algorithm {
   void calculateFilterCoefficients();
   void setWarpingFunctions(std::string warping, std::string weighting);
 
-  std::vector<std::vector<Real> > _filterCoefficients;
+  ::essentia::VectorEx<::essentia::VectorEx<Real> > _filterCoefficients;
   int _numBands;
   Real _sampleRate;
 
@@ -98,8 +98,8 @@ namespace streaming {
 class TriangularBarkBands : public StreamingAlgorithmWrapper {
 
  protected:
-  Sink<std::vector<Real> > _spectrumInput;
-  Source<std::vector<Real> > _bandsOutput;
+  Sink<::essentia::VectorEx<Real> > _spectrumInput;
+  Source<::essentia::VectorEx<Real> > _bandsOutput;
 
  public:
   TriangularBarkBands() {

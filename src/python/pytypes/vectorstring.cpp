@@ -25,7 +25,7 @@ using namespace essentia;
 DEFINE_PYTHON_TYPE(VectorString);
 
 
-PyObject* VectorString::toPythonCopy(const vector<string>* v) {
+PyObject* VectorString::toPythonCopy(const ::essentia::VectorEx<string>* v) {
   int size = v->size();
   PyObject* result = PyList_New(size);
 
@@ -44,7 +44,7 @@ void* VectorString::fromPythonCopy(PyObject* obj) {
   }
 
   int size = int(PyList_Size(obj));
-  vector<string>* v = new vector<string>(size, "");
+  ::essentia::VectorEx<string>* v = new ::essentia::VectorEx<string>(size, "");
 
   for (int i=0; i<size; ++i) {
     PyObject* item = PyList_GET_ITEM(obj, i);
@@ -59,7 +59,7 @@ void* VectorString::fromPythonCopy(PyObject* obj) {
 }
 
 Parameter* VectorString::toParameter(PyObject* obj) {
-  vector<string>* value = (vector<string>*)fromPythonCopy(obj);
+  ::essentia::VectorEx<string>* value = (::essentia::VectorEx<string>*)fromPythonCopy(obj);
   Parameter* result = new Parameter(*value);
   delete value;
   return result;

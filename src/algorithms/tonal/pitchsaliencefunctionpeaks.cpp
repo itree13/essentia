@@ -61,10 +61,10 @@ void PitchSalienceFunctionPeaks::configure() {
 }
 
 void PitchSalienceFunctionPeaks::compute() {
-  const vector<Real>& salienceFunction = _salienceFunction.get();
+  const ::essentia::VectorEx<Real>& salienceFunction = _salienceFunction.get();
 
-  vector <Real>& salienceBins = _salienceBins.get();
-  vector <Real>& salienceValues = _salienceValues.get();
+  ::essentia::VectorEx<Real>& salienceBins = _salienceBins.get();
+  ::essentia::VectorEx<Real>& salienceValues = _salienceValues.get();
 
   // find salience function peaks
   _peakDetection->input("array").set(salienceFunction);

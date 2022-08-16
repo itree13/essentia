@@ -85,7 +85,7 @@ template <> inline long long int nextPowerTwo(long long int n) {
 /**
  * Returns the L2-norm of an array
  */
-template <typename T> T norm(const std::vector<T>& array) {
+template <typename T> T norm(const ::essentia::VectorEx<T>& array) {
   if (array.empty()) {
     throw EssentiaException("trying to calculate norm of empty array");
   }
@@ -102,7 +102,7 @@ template <typename T> T norm(const std::vector<T>& array) {
 /**
  * Returns the sum of squared values of an array
  */
-template <typename T> T sumSquare(const std::vector<T> array) {
+template <typename T> T sumSquare(const ::essentia::VectorEx<T> array) {
   T sum = 0.0;
   for (size_t i = 0; i < array.size(); ++i) {
     sum += array[i] * array[i];
@@ -113,7 +113,7 @@ template <typename T> T sumSquare(const std::vector<T> array) {
 /**
  * returns the sum of an array, unrolled version.
  */
-template <typename T> T sum(const std::vector<T>& array, int start, int end) {
+template <typename T> T sum(const ::essentia::VectorEx<T>& array, int start, int end) {
   T sum = 0.0;
   int i = start;
 
@@ -139,14 +139,14 @@ template <typename T> T sum(const std::vector<T>& array, int start, int end) {
 /**
  * returns the mean of an array, unrolled version.
  */
-template <typename T> T mean(const std::vector<T>& array, int start, int end) {
+template <typename T> T mean(const ::essentia::VectorEx<T>& array, int start, int end) {
   return sum(array, start, end) / (end - start);
 }
 
 /**
  * returns the sum of an array.
  */
-template <typename T> T sum(const std::vector<T>& array) {
+template <typename T> T sum(const ::essentia::VectorEx<T>& array) {
   if (array.empty()) return 0;
   return sum(array, 0, array.size());
 }
@@ -154,7 +154,7 @@ template <typename T> T sum(const std::vector<T>& array) {
 /**
  * returns the mean of an array.
  */
-template <typename T> T mean(const std::vector<T>& array) {
+template <typename T> T mean(const ::essentia::VectorEx<T>& array) {
   if (array.empty())
     throw EssentiaException("trying to calculate mean of empty array");
   return mean(array, 0, array.size());
@@ -164,7 +164,7 @@ template <typename T> T mean(const std::vector<T>& array) {
  * returns the mean of an array of TNT::Array2D*
  */
 template <typename T>
-  TNT::Array2D<T> meanMatrix(const std::vector<TNT::Array2D<T>* >& array) {
+  TNT::Array2D<T> meanMatrix(const ::essentia::VectorEx<TNT::Array2D<T>* >& array) {
   if (array.empty())
     throw EssentiaException("trying to calculate mean of empty array");
   //return mean(array, 0, array.size());
@@ -181,7 +181,7 @@ template <typename T>
  * returns the mean of an array of TNT::Array2D
  */
 template <typename T>
-  TNT::Array2D<T> meanMatrix(const std::vector<TNT::Array2D<T> >& array) {
+  TNT::Array2D<T> meanMatrix(const ::essentia::VectorEx<TNT::Array2D<T> >& array) {
   if (array.empty())
     throw EssentiaException("trying to calculate mean of empty array");
   //return mean(array, 0, array.size());
@@ -196,7 +196,7 @@ template <typename T>
 
 // returns the mean of frames
 template <typename T>
-std::vector<T> meanFrames(const std::vector<std::vector<T> >& frames, int beginIdx=0, int endIdx=-1) {
+::essentia::VectorEx<T> meanFrames(const ::essentia::VectorEx<::essentia::VectorEx<T> >& frames, int beginIdx=0, int endIdx=-1) {
   if (frames.empty()) {
     throw EssentiaException("trying to calculate mean of empty array of frames");
   }
@@ -204,13 +204,13 @@ std::vector<T> meanFrames(const std::vector<std::vector<T> >& frames, int beginI
   if (endIdx == -1) endIdx = (int)frames.size();
   uint vsize = frames[0].size();
 
-  std::vector<T> result(vsize, (T)0.0);
-  typename std::vector<std::vector<T> >::const_iterator it = frames.begin() + beginIdx;
-  typename std::vector<std::vector<T> >::const_iterator end = frames.begin() + endIdx;
+  ::essentia::VectorEx<T> result(vsize, (T)0.0);
+  typename ::essentia::VectorEx<::essentia::VectorEx<T> >::const_iterator it = frames.begin() + beginIdx;
+  typename ::essentia::VectorEx<::essentia::VectorEx<T> >::const_iterator end = frames.begin() + endIdx;
   for (; it!=end; ++it) {
-	typename std::vector<T>::const_iterator itFrame = it->begin();
-	typename std::vector<T>::const_iterator endFrame = it->end();
-	typename std::vector<T>::iterator itResult = result.begin();
+	typename ::essentia::VectorEx<T>::const_iterator itFrame = it->begin();
+	typename ::essentia::VectorEx<T>::const_iterator endFrame = it->end();
+	typename ::essentia::VectorEx<T>::iterator itResult = result.begin();
     for (; itFrame != endFrame; ++itFrame, ++itResult) {
       *itResult += *itFrame;
     }
@@ -222,7 +222,7 @@ std::vector<T> meanFrames(const std::vector<std::vector<T> >& frames, int beginI
 
 // returns the median of frames
 template <typename T>
-std::vector<T> medianFrames(const std::vector<std::vector<T> >& frames, int beginIdx=0, int endIdx=-1) {
+::essentia::VectorEx<T> medianFrames(const ::essentia::VectorEx<::essentia::VectorEx<T> >& frames, int beginIdx=0, int endIdx=-1) {
   if (frames.empty()) {
     throw EssentiaException("trying to calculate mean of empty array of frames");
   }
@@ -232,13 +232,13 @@ std::vector<T> medianFrames(const std::vector<std::vector<T> >& frames, int begi
   uint vsize = frames[0].size();
   uint fsize = endIdx - beginIdx;
 
-  std::vector<T> result(vsize, (T)0.0);
-  std::vector<T> temp;
+  ::essentia::VectorEx<T> result(vsize, (T)0.0);
+  ::essentia::VectorEx<T> temp;
   temp.reserve(fsize);
 
   for (uint i=0; i<vsize; ++i) {
-    typename std::vector<std::vector<T> >::const_iterator it = frames.begin() + beginIdx;
-    typename std::vector<std::vector<T> >::const_iterator end = frames.begin() + endIdx;
+    typename ::essentia::VectorEx<::essentia::VectorEx<T> >::const_iterator it = frames.begin() + beginIdx;
+    typename ::essentia::VectorEx<::essentia::VectorEx<T> >::const_iterator end = frames.begin() + endIdx;
 
     temp.clear();
     for (; it!=end; ++it) {
@@ -261,7 +261,7 @@ std::vector<T> medianFrames(const std::vector<std::vector<T> >& frames, int begi
 
 // returns the variance of frames
 template <typename T>
-std::vector<T> varianceFrames(const std::vector<std::vector<T> >& frames) {
+::essentia::VectorEx<T> varianceFrames(const ::essentia::VectorEx<::essentia::VectorEx<T> >& frames) {
   if (frames.empty()) {
     throw EssentiaException("trying to calculate variance of empty array of frames");
   }
@@ -269,9 +269,9 @@ std::vector<T> varianceFrames(const std::vector<std::vector<T> >& frames) {
   uint nframes = frames.size();
   uint vsize = frames[0].size();
 
-  std::vector<T> m = meanFrames(frames);
+  ::essentia::VectorEx<T> m = meanFrames(frames);
 
-  std::vector<T> result(vsize, (T)0.0);
+  ::essentia::VectorEx<T> result(vsize, (T)0.0);
   T diff;
   for (uint i=0; i<nframes; i++) {
     for (uint j=0; j<vsize; j++) {
@@ -287,13 +287,13 @@ std::vector<T> varianceFrames(const std::vector<std::vector<T> >& frames) {
 
 // returns the sum of frames 
 template <typename T>
-std::vector<T> sumFrames(const std::vector<std::vector<T> >& frames) {
+::essentia::VectorEx<T> sumFrames(const ::essentia::VectorEx<::essentia::VectorEx<T> >& frames) {
   if (frames.empty()) {
     throw EssentiaException("sumFrames: trying to calculate sum of empty input frames");
   }
   size_t nframes = frames.size();
   size_t vsize = frames[0].size();
-  std::vector<T> result(vsize, (T)0);
+  ::essentia::VectorEx<T> result(vsize, (T)0);
   for (size_t j=0; j<vsize; j++) {
     for (size_t i=0; i<nframes; i++) {
       result[j] += frames[i][j];
@@ -304,7 +304,7 @@ std::vector<T> sumFrames(const std::vector<std::vector<T> >& frames) {
 
 
 template <typename T>
-std::vector<T> skewnessFrames(const std::vector<std::vector<T> >& frames) {
+::essentia::VectorEx<T> skewnessFrames(const ::essentia::VectorEx<::essentia::VectorEx<T> >& frames) {
   if (frames.empty()) {
     throw EssentiaException("trying to calculate skewness of empty array of frames");
   }
@@ -312,11 +312,11 @@ std::vector<T> skewnessFrames(const std::vector<std::vector<T> >& frames) {
   uint nframes = frames.size();
   uint vsize = frames[0].size();
 
-  std::vector<T> m = meanFrames(frames);
+  ::essentia::VectorEx<T> m = meanFrames(frames);
 
-  std::vector<T> result(vsize, (T)0.0);
-  std::vector<T> m3(vsize, (T)0.0);
-  std::vector<T> m2(vsize, (T)0.0);
+  ::essentia::VectorEx<T> result(vsize, (T)0.0);
+  ::essentia::VectorEx<T> m3(vsize, (T)0.0);
+  ::essentia::VectorEx<T> m2(vsize, (T)0.0);
   T diff;
   for (uint i=0; i<nframes; i++) {
     for (uint j=0; j<vsize; j++) {
@@ -336,7 +336,7 @@ std::vector<T> skewnessFrames(const std::vector<std::vector<T> >& frames) {
 }
 
 template <typename T>
-std::vector<T> kurtosisFrames(const std::vector<std::vector<T> >& frames) {
+::essentia::VectorEx<T> kurtosisFrames(const ::essentia::VectorEx<::essentia::VectorEx<T> >& frames) {
   if (frames.empty()) {
     throw EssentiaException("trying to calculate kurtosis of empty array of frames");
   }
@@ -344,11 +344,11 @@ std::vector<T> kurtosisFrames(const std::vector<std::vector<T> >& frames) {
   uint nframes = frames.size();
   uint vsize = frames[0].size();
 
-  std::vector<T> m = meanFrames(frames);
+  ::essentia::VectorEx<T> m = meanFrames(frames);
 
-  std::vector<T> result(vsize, (T)0.0);
-  std::vector<T> m2(vsize, (T)0.0);
-  std::vector<T> m4(vsize, (T)0.0);
+  ::essentia::VectorEx<T> result(vsize, (T)0.0);
+  ::essentia::VectorEx<T> m2(vsize, (T)0.0);
+  ::essentia::VectorEx<T> m4(vsize, (T)0.0);
   T diff;
   for (uint i=0; i<nframes; i++) {
     for (uint j=0; j<vsize; j++) {
@@ -369,12 +369,12 @@ std::vector<T> kurtosisFrames(const std::vector<std::vector<T> >& frames) {
 
 
 // returns the median of an array
-template <typename T> T median(const std::vector<T>& array) {
+template <typename T> T median(const ::essentia::VectorEx<T>& array) {
   if (array.empty())
     throw EssentiaException("trying to calculate median of empty array");
 
   // median has sense only on sorted array
-  std::vector<T> sorted_array = array;
+  ::essentia::VectorEx<T> sorted_array = array;
   std::sort(sorted_array.begin(), sorted_array.end());
 
   uint size = sorted_array.size();
@@ -391,14 +391,14 @@ template <typename T> T median(const std::vector<T>& array) {
 
 // returns the absolute value of each element of the array
 template <typename T>
-void rectify(std::vector<T>& array) {
+void rectify(::essentia::VectorEx<T>& array) {
   for (int i=0; i<(int)array.size(); i++) {
     array[i] = fabs(array[i]);
   }
 }
 
 // returns the sum of the squared array = the energy of the array
-template <typename T> T energy(const std::vector<T>& array) {
+template <typename T> T energy(const ::essentia::VectorEx<T>& array) {
   if (array.empty())
     throw EssentiaException("trying to calculate energy of empty array");
 
@@ -406,7 +406,7 @@ template <typename T> T energy(const std::vector<T>& array) {
 }
 
 // returns the instantaneous power of an array
-template <typename T> T instantPower(const std::vector<T>& array) {
+template <typename T> T instantPower(const ::essentia::VectorEx<T>& array) {
   return energy(array) / array.size();
 }
 
@@ -425,13 +425,13 @@ template <typename T> T instantPower(const std::vector<T>& array) {
 #define LOG_SILENCE_CUTOFF -23.025850929940457
 
 // returns true if the signal average energy is below a cutoff value, here -90dB
-template <typename T> bool isSilent(const std::vector<T>& array) {
+template <typename T> bool isSilent(const ::essentia::VectorEx<T>& array) {
   return instantPower(array) < SILENCE_CUTOFF;
 }
 
 // returns the variance of an array of TNT::Array2D<T> elements
 template <typename T>
-  TNT::Array2D<T> varianceMatrix(const std::vector<TNT::Array2D<T> >& array, const TNT::Array2D<T> & mean) {
+  TNT::Array2D<T> varianceMatrix(const ::essentia::VectorEx<TNT::Array2D<T> >& array, const TNT::Array2D<T> & mean) {
   if (array.empty())
     throw EssentiaException("trying to calculate variance of empty array");
 
@@ -447,7 +447,7 @@ template <typename T>
 }
 // returns the variance of an array of TNT::Array2D<T>* elements
 template <typename T>
-  TNT::Array2D<T> varianceMatrix(const std::vector<TNT::Array2D<T>* >& array, const TNT::Array2D<T> & mean) {
+  TNT::Array2D<T> varianceMatrix(const ::essentia::VectorEx<TNT::Array2D<T>* >& array, const TNT::Array2D<T> & mean) {
   if (array.empty())
     throw EssentiaException("trying to calculate variance of empty array");
 
@@ -463,7 +463,7 @@ template <typename T>
 }
 
 // returns the variance of an array
-template <typename T> T variance(const std::vector<T>& array, const T mean) {
+template <typename T> T variance(const ::essentia::VectorEx<T>& array, const T mean) {
   if (array.empty())
     throw EssentiaException("trying to calculate variance of empty array");
 
@@ -478,7 +478,7 @@ template <typename T> T variance(const std::vector<T>& array, const T mean) {
 }
 
 // returns the skewness of an array
-template <typename T> T skewness(const std::vector<T>& array, const T mean) {
+template <typename T> T skewness(const ::essentia::VectorEx<T>& array, const T mean) {
   if (array.empty())
     throw EssentiaException("trying to calculate skewness of empty array");
 
@@ -502,7 +502,7 @@ template <typename T> T skewness(const std::vector<T>& array, const T mean) {
 }
 
 // returns the kurtosis of an array
-template <typename T> T kurtosis(const std::vector<T>& array, const T mean) {
+template <typename T> T kurtosis(const ::essentia::VectorEx<T>& array, const T mean) {
   if (array.empty())
     throw EssentiaException("trying to calculate kurtosis of empty array");
 
@@ -527,7 +527,7 @@ template <typename T> T kurtosis(const std::vector<T>& array, const T mean) {
 
 
 // returns the standard deviation of an array
-template <typename T> T stddev(const std::vector<T>& array, const T mean) {
+template <typename T> T stddev(const ::essentia::VectorEx<T>& array, const T mean) {
   if (array.empty())
     throw EssentiaException("trying to calculate stddev of empty array");
 
@@ -742,13 +742,13 @@ inline Real hz2cents(Real hz) {
   return 12 * std::log(hz/440)/std::log(2.) + 69;
 }
 
-inline int argmin(const std::vector<Real>& input) {
+inline int argmin(const ::essentia::VectorEx<Real>& input) {
   if (input.empty())
     throw EssentiaException("trying to get argmin of empty array");
   return std::min_element(input.begin(), input.end()) - input.begin();
 }
 
-inline int argmax(const std::vector<Real>& input) {
+inline int argmax(const ::essentia::VectorEx<Real>& input) {
   if (input.empty())
     throw EssentiaException("trying to get argmax of empty array");
   return std::max_element(input.begin(), input.end()) - input.begin();
@@ -756,7 +756,7 @@ inline int argmax(const std::vector<Real>& input) {
 
 // normalize a vector so its largest value gets mapped to 1
 // if zero, the vector isn't touched
-template <typename T> void normalize(std::vector<T>& array) {
+template <typename T> void normalize(::essentia::VectorEx<T>& array) {
   if (array.empty()) return;
 
   T maxElement = *std::max_element(array.begin(), array.end());
@@ -769,9 +769,9 @@ template <typename T> void normalize(std::vector<T>& array) {
 }
 
 // normalize to the max(abs(array))
-template <typename T> void normalizeAbs(std::vector<T>& array) {
+template <typename T> void normalizeAbs(::essentia::VectorEx<T>& array) {
   if (array.empty()) return;
-  std::vector<T> absArray = array;
+  ::essentia::VectorEx<T> absArray = array;
   rectify(absArray);
   T maxElement = *std::max_element(absArray.begin(), absArray.end());
 
@@ -784,7 +784,7 @@ template <typename T> void normalizeAbs(std::vector<T>& array) {
 
 // normalize a vector so it's sum is equal to 1. the vector is not touched if
 // it contains negative elements or the sum is zero
-template <typename T> void normalizeSum(std::vector<T>& array) {
+template <typename T> void normalizeSum(::essentia::VectorEx<T>& array) {
   if (array.empty()) return;
 
   //T sumElements = std::accumulate(array.begin(), array.end(), (T) 0.0);
@@ -804,12 +804,12 @@ template <typename T> void normalizeSum(std::vector<T>& array) {
 // returns the difference and approximate derivative vector of a vector
 // derivative(x), for a vector x, is [x(1)-x(0)  x(2)-x(1) ... x(n-1)-x(n-2)]
 template <typename T>
-std::vector<T> derivative(const std::vector<T>& array) {
+::essentia::VectorEx<T> derivative(const ::essentia::VectorEx<T>& array) {
   if (array.size() < 2) {
      throw EssentiaException("trying to calculate approximate derivative of empty or single-element array");
   }
 
-  std::vector<T> result(array.size()-1, (T)0.0);
+  ::essentia::VectorEx<T> result(array.size()-1, (T)0.0);
   for (int i=0; i<(int)result.size(); i++) {
     result[i] = array[i+1] - array[i];
   }
@@ -830,12 +830,12 @@ class PairCompare : public std::binary_function<T, U, bool> {
 // sorts two vectors by the cmp function. If the first elements of the pairs
 // are equal, then it sorts by using cmp on the second value of the pair
 template <typename T, typename U, typename Comparator>
-void sortpair(std::vector<T>& v1, std::vector<U>& v2) {
+void sortpair(::essentia::VectorEx<T>& v1, ::essentia::VectorEx<U>& v2) {
   if (v1.size() != v2.size()) {
     throw EssentiaException("Cannot sort vectors of different size");
   }
   int size = v1.size();
-  std::vector<std::pair<T, U> > tmp(size);
+  ::essentia::VectorEx<std::pair<T, U> > tmp(size);
   for (int i=0; i<size; i++)
     tmp[i] = std::make_pair(v1[i], v2[i]);
   std::sort(tmp.begin(), tmp.end(), PairCompare<T, U, Comparator>());
@@ -892,7 +892,7 @@ void hist(const T* array, uint n, int* n_array, T* x_array, uint n_bins) {
   }
 
   // cutoff contains the boundaries between the bins
-  std::vector<T> cutoff(n_bins - 1);
+  ::essentia::VectorEx<T> cutoff(n_bins - 1);
   for (uint i=0; i<n_bins-1; i++) {
     cutoff[i] = (x_array[i] + x_array[i+1]) / 2.0;
   }
@@ -904,7 +904,7 @@ void hist(const T* array, uint n, int* n_array, T* x_array, uint n_bins) {
   // 2nd version: O(n·log(n)) time, O(n) space
 
   // implementation of 2nd version
-  std::vector<T> dist(array, array+n);
+  ::essentia::VectorEx<T> dist(array, array+n);
   std::sort(dist.begin(), dist.end());
   uint current_cutoff_idx = 0;
   T current_cutoff = cutoff[0];
@@ -931,7 +931,7 @@ void hist(const T* array, uint n, int* n_array, T* x_array, uint n_bins) {
  * returns in output the number of occurence of each value in the input vector
  */
 template <typename T>
-void bincount(const std::vector<T>& input, std::vector<T>& output) {
+void bincount(const ::essentia::VectorEx<T>& input, ::essentia::VectorEx<T>& output) {
   output.clear();
   output.resize( (int) ( std::max<Real>( input[argmax(input)], 0.) + 0.5 ) + 1);
   uint index = 0;
@@ -949,8 +949,8 @@ void bincount(const std::vector<T>& input, std::vector<T>& output) {
  * do not have the same size.
  */
 template <typename T>
-std::vector<std::vector<T> > transpose(const std::vector<std::vector<T> >& m) {
-  if (m.empty()) return std::vector<std::vector<T> >();
+::essentia::VectorEx<::essentia::VectorEx<T> > transpose(const ::essentia::VectorEx<::essentia::VectorEx<T> >& m) {
+  if (m.empty()) return ::essentia::VectorEx<::essentia::VectorEx<T> >();
 
   int nrows = m.size();
   int ncols = m[0].size();
@@ -963,7 +963,7 @@ std::vector<std::vector<T> > transpose(const std::vector<std::vector<T> >& m) {
     }
   }
 
-  std::vector<std::vector<T> > result(ncols, std::vector<Real>(nrows));
+  ::essentia::VectorEx<::essentia::VectorEx<T> > result(ncols, ::essentia::VectorEx<Real>(nrows));
   for (int i=0; i<nrows; i++) {
     for (int j=0; j<ncols; j++) {
       result[j][i] = m[i][j];
@@ -1051,7 +1051,7 @@ inline std::string equivalentKey(const std::string key) {
  * Throws an exception if the input chromagram is empty.
  */
 template <typename T>
-void rotateChroma(std::vector<std::vector<T> >& inputMatrix, int oti) {
+void rotateChroma(::essentia::VectorEx<::essentia::VectorEx<T> >& inputMatrix, int oti) {
   if (inputMatrix.empty())
     throw EssentiaException("rotateChroma: trying to rotate an empty matrix");
   for (size_t i=0; i<inputMatrix.size(); i++) {
@@ -1065,7 +1065,7 @@ void rotateChroma(std::vector<std::vector<T> >& inputMatrix, int oti) {
  * Throws an exception either one of the input arrays are empty.
  */
 template <typename T>
-T dotProduct(const std::vector<T>& xArray, const std::vector<T>& yArray) {
+T dotProduct(const ::essentia::VectorEx<T>& xArray, const ::essentia::VectorEx<T>& yArray) {
   if (xArray.empty() || yArray.empty())
     throw EssentiaException("dotProduct: trying to calculate the dotProduct of empty arrays!");
   return std::inner_product(xArray.begin(), xArray.end(), yArray.begin(), 0.0);
@@ -1076,11 +1076,11 @@ T dotProduct(const std::vector<T>& xArray, const std::vector<T>& yArray) {
  * returns the q-th percentile of an 1D input array (same as numpy percentile implementation).	
  * Throws an exception if the input array is empty.	
  */ 
-template <typename T> T percentile(const std::vector<T>& array, Real qpercentile) {
+template <typename T> T percentile(const ::essentia::VectorEx<T>& array, Real qpercentile) {
   if (array.empty())
     throw EssentiaException("percentile: trying to calculate percentile of empty array");
 
-  std::vector<T> sorted_array = array;
+  ::essentia::VectorEx<T> sorted_array = array;
   // sort the array
   std::sort(sorted_array.begin(), sorted_array.end());
   qpercentile /= 100.;
@@ -1104,7 +1104,7 @@ template <typename T> T percentile(const std::vector<T>& array, Real qpercentile
 /**
  * Sample covariance
  */
-template <typename T> T covariance(const std::vector<T>& x, const T xMean, const std::vector<T>& y, const T yMean) {
+template <typename T> T covariance(const ::essentia::VectorEx<T>& x, const T xMean, const ::essentia::VectorEx<T>& y, const T yMean) {
   if (x.empty())
     throw EssentiaException("trying to calculate covariance of empty array");
   if (y.empty())
@@ -1126,7 +1126,7 @@ template <typename T> T covariance(const std::vector<T>& x, const T xMean, const
  * Returns the sample Pearson correlation coefficient of a pair of vectors as described in,
  * https://en.wikipedia.org/wiki/Pearson_correlation_coefficient
  */
-template <typename T> T pearsonCorrelationCoefficient(const std::vector<T>& x, const std::vector<T>& y) {
+template <typename T> T pearsonCorrelationCoefficient(const ::essentia::VectorEx<T>& x, const ::essentia::VectorEx<T>& y) {
   if (x.empty())
     throw EssentiaException("trying to calculate covariance of empty array");
   if (y.empty())
@@ -1161,7 +1161,7 @@ template <typename T> T pearsonCorrelationCoefficient(const std::vector<T>& x, c
  * returns a 2D binary vector of m X n shape
  */
 template <typename T>
-void heavisideStepFunction(std::vector<std::vector<T> >& inputArray) {
+void heavisideStepFunction(::essentia::VectorEx<::essentia::VectorEx<T> >& inputArray) {
   if (inputArray.empty())
     throw EssentiaException("heavisideStepFunction: found empty array as input!");
 
@@ -1181,14 +1181,14 @@ void heavisideStepFunction(std::vector<std::vector<T> >& inputArray) {
  * TODO: [add other distance metrics beside euclidean such as cosine, mahanalobis etc as a configurable parameter]
  */
 template <typename T>
-std::vector<std::vector<T> > pairwiseDistance(const std::vector<std::vector<T> >& m, const std::vector<std::vector<T> >& n) {
+::essentia::VectorEx<::essentia::VectorEx<T> > pairwiseDistance(const ::essentia::VectorEx<::essentia::VectorEx<T> >& m, const ::essentia::VectorEx<::essentia::VectorEx<T> >& n) {
 
   if (m.empty() || n.empty())
     throw EssentiaException("pairwiseDistance: found empty array as input!");
 
   size_t mSize = m.size();
   size_t nSize = n.size();
-  std::vector<std::vector<T> > pdist(mSize, std::vector<T>(nSize));
+  ::essentia::VectorEx<::essentia::VectorEx<T> > pdist(mSize, ::essentia::VectorEx<T>(nSize));
   for (size_t i=0; i<mSize; i++) {
       for (size_t j=0; j<nSize; j++) {
           Real item = dotProduct(m[i], m[i]) - 2*dotProduct(m[i], n[j]) + dotProduct(n[j], n[j]);

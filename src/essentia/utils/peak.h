@@ -97,23 +97,23 @@ class ComparePeakMagnitude : public std::binary_function<Real, Real, bool> {
     }
 };
 
-// from 2 vector<Real> to vector<Peak>:
-inline std::vector<Peak> realsToPeaks(const std::vector<Real>& pos,
-                                      const std::vector<Real>& mag) {
+// from 2 ::essentia::VectorEx<Real> to ::essentia::VectorEx<Peak>:
+inline ::essentia::VectorEx<Peak> realsToPeaks(const ::essentia::VectorEx<Real>& pos,
+                                      const ::essentia::VectorEx<Real>& mag) {
   int size = pos.size();
   if (size != int(mag.size())) {
       throw EssentiaException("realsToPeaks: position vector size != magnitude vector size");
   }
-  std::vector<Peak> peaks(size);
+  ::essentia::VectorEx<Peak> peaks(size);
   for (int i=0; i<size; i++) {
     peaks[i] = Peak(pos[i], mag[i]);
   }
   return peaks;
 }
 
-// from vector<Peak> to 2 vector<Real>
-inline void peaksToReals(const std::vector<Peak>& peaks,
-                         std::vector<Real>& pos, std::vector<Real>& mag) {
+// from ::essentia::VectorEx<Peak> to 2 ::essentia::VectorEx<Real>
+inline void peaksToReals(const ::essentia::VectorEx<Peak>& peaks,
+                         ::essentia::VectorEx<Real>& pos, ::essentia::VectorEx<Real>& mag) {
   int size = peaks.size();
   if (size != int(pos.size())) pos.resize(size);
   if (size != int(mag.size())) mag.resize(size);

@@ -28,8 +28,8 @@ namespace standard {
 class MedianFilter : public Algorithm {
   
  private:
-  Input<std::vector<Real>> _array;
-  Output<std::vector<Real>> _filteredArray;
+  Input<::essentia::VectorEx<Real>> _array;
+  Output<::essentia::VectorEx<Real>> _filteredArray;
 
   int _kernelSize;
 
@@ -62,8 +62,8 @@ namespace streaming {
 
 class MedianFilter : public StreamingAlgorithmWrapper {
  protected:
-  Sink<std::vector<Real>> _array;
-  Source<std::vector<Real>> _filteredArray;
+  Sink<::essentia::VectorEx<Real>> _array;
+  Source<::essentia::VectorEx<Real>> _filteredArray;
 
  public:
   MedianFilter() {

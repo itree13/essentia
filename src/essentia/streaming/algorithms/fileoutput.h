@@ -33,8 +33,8 @@ template <typename TokenType> inline void write_binary(std::ostream* _stream,
   _stream->write((const char*) &value, sizeof(TokenType));
 }
 
-template <> void inline write_binary<std::vector<Real> >(std::ostream* _stream,
-                                                  const std::vector<Real>& value) {
+template <> void inline write_binary<::essentia::VectorEx<Real> >(std::ostream* _stream,
+                                                  const ::essentia::VectorEx<Real>& value) {
   _stream->write((const char*) &value[0], value.size() * sizeof(Real));
 }
 
