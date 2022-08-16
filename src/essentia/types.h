@@ -90,6 +90,8 @@ public:
   VectorExT(size_t size) : vec_(size) {}
   VectorExT(size_t count, const T& val) : vec_(count, val) {}
   VectorExT(std::initializer_list<T> _Ilist) : vec_(_Ilist) {}
+  template <class InputIterator>
+  VectorExT(InputIterator first, InputIterator last) : vec_(first, last) {}
 
   typedef size_t size_type;
   typedef T value_type;
@@ -100,6 +102,7 @@ public:
     typedef value_type& reference;
 		typedef value_type* pointer;
 		typedef std::bidirectional_iterator_tag iterator_category;
+		typedef std::ptrdiff_t difference_type;
 
     VEC_ITERATOR itr;
     T* view_pos = nullptr;
@@ -121,7 +124,6 @@ public:
       return view_pos ? view_pos : (const value_type *)&(*itr);
 		}
 
-		/// Increment to next chunk in list, or to end() iterator.
 		Iterator operator ++() {
       if (view_pos)
         ++view_pos;
@@ -138,6 +140,14 @@ public:
         ++itr;
 			return old;
 		}
+    
+		Iterator operator --() {
+      if (view_pos)
+        --view_pos;
+      else
+        --itr;
+			return *this;
+		}
 
 		bool operator ==(const Iterator &rhs) const {
 			return (view_pos == rhs.view_pos && itr == rhs.itr);
@@ -147,7 +157,7 @@ public:
 			return !(view_pos == rhs.view_pos && itr == rhs.itr);
 		}
 
-    ptrdiff_t operator-(const Iterator& rhs) const {
+    difference_type operator-(const Iterator& rhs) const {
       if (view_pos)
         return view_pos - rhs.view_pos;
       return itr - rhs.itr;
@@ -305,7 +315,19 @@ public:
   void assign(Iterator<Y> first, Iterator<Y> last) {
     make_vector().assign(first, last);
   }
-  
+
+  template <class Y>
+  void insert(iterator position, Iterator<Y> first, Iterator<Y> last) {  
+     if (view_.size()) {
+      vec_.assign(view_.begin(), position.view_pos);
+      vec_.insert(vec_.end(), first, last);
+      vec_.insert(vec_.end(), position.view_pos + 1, view_.end());
+      view_.clear();
+    } else {
+      vec_.insert(position.itr, first, last);
+    }
+  }
+
 private:
   ::std::vector<T>& make_vector() {
     if (view_.size()) {
