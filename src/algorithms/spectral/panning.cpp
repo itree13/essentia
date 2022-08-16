@@ -174,7 +174,7 @@ void Panning::compute() {
     int begin =  (int)floor(melBands[i]);
     int n_elems = (int)floor(melBands[i+1] - melBands[i] + 1);
     if (begin + n_elems > specSize) n_elems = specSize - begin;
-    ::essentia::VectorEx<Real>::const_iterator it = specL.begin()+begin;
+    auto it = specL.begin()+begin;
     subSpecL.assign(it, it + n_elems);
     it = specR.begin()+begin;
     subSpecR.assign(it, it+n_elems);

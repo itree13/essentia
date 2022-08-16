@@ -62,18 +62,274 @@ typedef __int64 sint64;
 
 namespace essentia {
   
-template <class T>
-class VectorEx : public ::std::vector<T> {
+template<typename T>
+class array_view {
+  T* ptr_;
+  std::size_t len_;
 public:
-  using std::vector<T>::vector;
+  array_view() : ptr_(nullptr), len_(0) {}
+  array_view(T* ptr, std::size_t len) noexcept: ptr_{ptr}, len_{len} {}
+
+  T& operator[](size_t i) noexcept { return ptr_[i]; }
+  const T& operator[](size_t i) const noexcept { return ptr_[i]; }
+  auto size() const noexcept { return len_; }
+  T* data() noexcept { return ptr_; }
+  const T* data() const noexcept { return ptr_; }
+
+  auto begin() noexcept { return ptr_; }
+  auto end() noexcept { return ptr_ + len_; }
+  const auto begin() const noexcept { return ptr_; }
+  const auto end() const noexcept { return ptr_ + len_; }
+  void clear() { ptr_ = nullptr; len_ = 0; }
+};
+
+template <typename T, typename VEC_T>
+class VectorExT {
+public:
+  VectorExT() {}
+  VectorExT(size_t size) : vec_(size) {}
+  VectorExT(size_t count, const T& val) : vec_(count, val) {}
+  VectorExT(std::initializer_list<T> _Ilist) : vec_(_Ilist) {}
+
+  typedef size_t size_type;
+  typedef T value_type;
+
+  template <class VEC_ITERATOR>
+  struct Iterator {   
+    typedef T value_type;
+    typedef value_type& reference;
+		typedef value_type* pointer;
+		typedef std::bidirectional_iterator_tag iterator_category;
+
+    VEC_ITERATOR itr;
+    T* view_pos = nullptr;
+
+		reference operator *() {
+			return view_pos ? *view_pos : (reference)*itr;
+		}
+
+		const value_type& operator *() const {
+			return view_pos ? *view_pos : (const value_type&)*itr;
+		}
+
+		pointer operator ->() {
+      return view_pos ? view_pos : (pointer)&(*itr);
+		}
+
+		/// Dereference iterator, returns const InputIteratorHelper or OutputIteratorHelper wrapper.
+		const value_type *operator ->() const {
+      return view_pos ? view_pos : (const value_type *)&(*itr);
+		}
+
+		/// Increment to next chunk in list, or to end() iterator.
+		Iterator operator ++() {
+      if (view_pos)
+        ++view_pos;
+      else
+        ++itr;
+			return *this;
+		}
+  
+    Iterator operator ++(int) {
+      Iterator old = *this;
+      if (view_pos)
+        ++view_pos;
+      else
+        ++itr;
+			return old;
+		}
+
+		bool operator ==(const Iterator &rhs) const {
+			return (view_pos == rhs.view_pos && itr == rhs.itr);
+		}
+
+		bool operator !=(const Iterator &rhs) const {
+			return !(view_pos == rhs.view_pos && itr == rhs.itr);
+		}
+
+    ptrdiff_t operator-(const Iterator& rhs) const {
+      if (view_pos)
+        return view_pos - rhs.view_pos;
+      return itr - rhs.itr;
+    }
+
+    Iterator operator + (int d) {
+      Iterator newitr;
+      if (view_pos)
+        newitr.view_pos = view_pos + d;
+      else
+        newitr.itr = itr + d;
+      return newitr;
+    }
+
+    Iterator operator - (int d) {
+      Iterator newitr;
+      if (view_pos)
+        newitr.view_pos = view_pos - d;
+      else
+        newitr.itr = itr - d;
+      return newitr;
+    }
+  };
+
+  typedef Iterator<typename ::std::vector<T>::iterator> iterator;
+  typedef Iterator<typename ::std::vector<T>::const_iterator> const_iterator;
+
+  void setReferenceData(T* data, size_t size) {
+    view_ = array_view<T>(data, size);
+    vec_.clear();
+  }
+
+  void push_back(const T& v) {
+    make_vector().push_back(v);
+  }
+
+  T* data() {
+    return (view_.size()) ? view_.data() : (T*)vec_.data();
+  }
+
+  const T* data() const {
+    return (view_.size()) ? view_.data() : (const T*)vec_.data();
+  }
+
+  size_t size() const {
+    return (view_.size()) ? view_.size() : vec_.size();
+  }
+
+  T& operator[](size_t i) {
+    return (view_.size()) ? view_[i] : (T&)vec_[i];
+  }
+
+  const T& operator[](size_t i) const {
+    return (view_.size()) ? view_[i] : (const T&)vec_[i];
+  }
+
+  T& at(size_t i) {
+    return (view_.size()) ? view_[i] : (T&)vec_[i];
+  }
+
+  const T& at(size_t i) const {
+    return (view_.size()) ? view_[i] : (const T&)vec_[i];
+  }
+
+  void resize(size_t new_size) {
+    if (new_size <= view_.size()) {
+      view_ = array_view<T>(view_.data(), new_size);
+    } else {
+      make_vector().resize(new_size);
+    }
+  }
+  
+  void resize (size_type n, const value_type& val) {
+    clear();
+    vec_.resize(n, val);
+  }
+
+  bool empty() const {
+    return view_.size() == 0 && vec_.empty();
+  }
+
+  void clear() {
+    view_.clear();
+    vec_.clear();
+  }
+
+  iterator begin() {
+    iterator it;
+    it.view_pos = view_.begin();
+    it.itr = vec_.begin();
+    return it;
+  }
+
+  iterator end() {
+    iterator it;
+    it.view_pos = view_.size() ? view_.end() : nullptr;
+    it.itr = vec_.end();
+    return it;
+  }
+
+  const_iterator begin() const {
+    const_iterator it;
+    it.view_pos = view_.begin();
+    it.itr = vec_.begin();
+    return it;
+  }
+
+  const_iterator end() const {
+    const_iterator it;
+    it.view_pos = view_.size() ? view_.end() : nullptr;
+    it.itr = vec_.end();
+    return it;
+  }
+
+  T& front() {
+    return *begin();
+  }
+  
+  const T& front() const {
+    return *begin();
+  }
+
+  T& back() {
+    return (view_.size()) ? *(view_.begin() + view_.size() - 1) : (const T&)vec_.back();
+  }
+  
+  const T& back() const {
+    return (view_.size()) ? *(view_.begin() + view_.size() - 1) : (const T&)vec_.back();
+  }
+
+  void erase(iterator it) {
+    if (view_.size()) {
+      vec_.reserve(view_.size() - 1);
+      vec_.assign(view_.begin(), it.view_pos);
+      vec_.insert(vec_.end(), it.view_pos + 1, view_.end());
+      view_.clear();
+    } else {
+      vec_.erase(it.itr);
+    }
+  }
+
+  void reserve(size_t sz) {
+    vec_.reserve(sz);
+  }
+
+  void assign(size_type n, const value_type& val) {
+    make_vector().assign(n, val);
+  }
+
+  void assign(std::initializer_list<value_type> il) {
+    make_vector().assign(il);
+  }
+
+  template <class Y>
+  void assign(Iterator<Y> first, Iterator<Y> last) {
+    make_vector().assign(first, last);
+  }
+  
+private:
+  ::std::vector<T>& make_vector() {
+    if (view_.size()) {
+      vec_.assign(view_.begin(), view_.end());
+    }
+    view_.clear();
+    return vec_;
+  }
+
+private:
+  ::std::vector<VEC_T> vec_;
+  array_view<T> view_;
+};
+
+template<class T>
+struct VectorEx : public VectorExT<T, T> {
+  using VectorExT<T, T>::VectorExT;
+};
+template<>
+struct VectorEx<bool> : public VectorExT<bool, int> {
+  using VectorExT<bool, int>::VectorExT;
 };
 
 }
-
-
-#include <algorithm>
-#define STD_MAX (std::max)
-#define STD_MIN (std::min)
 
 #ifdef min
 #undef min

@@ -27,40 +27,33 @@ namespace essentia {
 
 
 template <typename T>
-class RogueVector : public ::essentia::VectorEx<T> {
- protected:
-  bool _ownsMemory;
-
+class RogueVector : public VectorEx<T> {
+  T* data_ = nullptr;
+  size_t size_ = 0;
  public:
-  RogueVector(T* tab = 0, size_t size = 0) : ::essentia::VectorEx<T>(), _ownsMemory(false) {
-    setData(tab);
-    setSize(size);
+  RogueVector(T* tab = 0, size_t size = 0) {
+    VectorEx<T>::setReferenceData(tab, size);
   }
 
-  RogueVector(uint size, T value) : ::essentia::VectorEx<T>(size, value), _ownsMemory(true) {}
+  RogueVector(uint size, T value) : VectorEx<T>(size, value) {}
 
-  RogueVector(const RogueVector<T>& v) : ::essentia::VectorEx<T>(), _ownsMemory(false) {
-    setData(const_cast<T*>(v.data()));
-    setSize(v.size());
+  RogueVector(const RogueVector<T>& v) : VectorEx<T>() {
+    VectorEx<T>::setReferenceData(const_cast<T*>(v.data()), v.size());
   }
 
   ~RogueVector() {
-    if (!_ownsMemory) {
-      setData(0);
-      setSize(0);
-    }
   }
 
   // Those need to be implementation specific
-  void setData(T* data) {}
-  void setSize(size_t size) {}
+  void setData(T* data) { data_ = data; VectorEx<T>::setReferenceData(data_, size_);}
+  void setSize(size_t size) { size_ = size; VectorEx<T>::setReferenceData(data_, size_); }
 };
 
 // // Clang/LLVM implementation
 // #if defined(__clang__) || defined(__EMSCRIPTEN__)
 
 // // TODO: this is a big hack that relies on clang/libcpp not changing the memory
-// //       layout of the ::essentia::VectorEx (very dangerous, but works for now...)
+// //       layout of the VectorEx (very dangerous, but works for now...)
 
 // template <typename T>
 // void RogueVector<T>::setData(T* data) { *reinterpret_cast<T**>(this) = data; }
