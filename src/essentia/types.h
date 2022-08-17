@@ -86,16 +86,6 @@ public:
 template <typename T, typename VEC_T>
 class VectorExT {
 public:
-  VectorExT() {}
-  VectorExT(size_t size) : vec_(size) {}
-  VectorExT(size_t count, const T& val) : vec_(count, val) {}
-  VectorExT(std::initializer_list<T> _Ilist) : vec_(_Ilist) {}
-  template <class InputIterator>
-  VectorExT(InputIterator first, InputIterator last) : vec_(first, last) {}
-
-  typedef size_t size_type;
-  typedef T value_type;
-
   template <class VEC_ITERATOR>
   struct Iterator {   
     typedef T value_type;
@@ -163,7 +153,7 @@ public:
       return itr - rhs.itr;
     }
 
-    Iterator operator + (int d) {
+    Iterator operator + (int d) const {
       Iterator newitr;
       if (view_pos)
         newitr.view_pos = view_pos + d;
@@ -172,7 +162,7 @@ public:
       return newitr;
     }
 
-    Iterator operator - (int d) {
+    Iterator operator - (int d) const {
       Iterator newitr;
       if (view_pos)
         newitr.view_pos = view_pos - d;
@@ -188,6 +178,15 @@ public:
 
   typedef Iterator<typename ::std::vector<T>::iterator> iterator;
   typedef Iterator<typename ::std::vector<T>::const_iterator> const_iterator;
+  typedef size_t size_type;
+  typedef T value_type;
+
+  VectorExT() {}
+  VectorExT(size_t size) : vec_(size) {}
+  VectorExT(std::initializer_list<T> _Ilist) : vec_(_Ilist) {}
+  template <class X, class Y>
+  VectorExT(const X& first, const Y& last) : vec_(first, last) {}
+
 
   void setReferenceData(T* data, size_t size) {
     view_ = array_view<T>(data, size);
@@ -307,21 +306,17 @@ public:
     vec_.reserve(sz);
   }
 
-  void assign(size_type n, const value_type& val) {
-    make_vector().assign(n, val);
-  }
-
   void assign(std::initializer_list<value_type> il) {
     make_vector().assign(il);
   }
 
-  template <class Y>
-  void assign(Iterator<Y> first, Iterator<Y> last) {
+  template <class X, class Y>
+  void assign(const X& first, const Y& last) {
     make_vector().assign(first, last);
   }
 
   template <class Y>
-  void insert(iterator position, Iterator<Y> first, Iterator<Y> last) {  
+  void insert(iterator position, const Y& first, const Y& last) {  
      if (view_.size()) {
       vec_.assign(view_.begin(), position.view_pos);
       vec_.insert(vec_.end(), first, last);
