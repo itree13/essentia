@@ -81,6 +81,7 @@ public:
   const auto begin() const noexcept { return ptr_; }
   const auto end() const noexcept { return ptr_ + len_; }
   void clear() { ptr_ = nullptr; len_ = 0; }
+  void swap(array_view<T>& t) { std::swap(ptr_, t.ptr_); std::swap(len_, t.len_); }
 };
 
 template <typename T, typename VEC_T>
@@ -97,21 +98,32 @@ public:
     VEC_ITERATOR itr;
     T* view_pos = nullptr;
 
+    Iterator() = default;
+    Iterator(const Iterator& t) {
+      itr = t.itr;
+      view_pos = t.view_pos;
+    }
+
+    template <class Y>
+    Iterator(const Y& t) {
+      itr = t.itr;
+      view_pos = t.view_pos;
+    }
+
 		reference operator *() {
 			return view_pos ? *view_pos : (reference)*itr;
 		}
 
-		const value_type& operator *() const {
-			return view_pos ? *view_pos : (const value_type&)*itr;
+		value_type& operator *() const {
+			return view_pos ? *view_pos : (value_type&)*itr;
 		}
 
 		pointer operator ->() {
       return view_pos ? view_pos : (pointer)&(*itr);
 		}
 
-		/// Dereference iterator, returns const InputIteratorHelper or OutputIteratorHelper wrapper.
-		const value_type *operator ->() const {
-      return view_pos ? view_pos : (const value_type *)&(*itr);
+		value_type *operator ->() const {
+      return view_pos ? view_pos : (value_type *)&(*itr);
 		}
 
 		Iterator operator ++() {
@@ -186,6 +198,7 @@ public:
   VectorExT(std::initializer_list<T> _Ilist) : vec_(_Ilist) {}
   template <class X, class Y>
   VectorExT(const X& first, const Y& last) : vec_(first, last) {}
+  VectorExT(const VectorExT& t) : vec_(t.vec_) {}
 
 
   void setReferenceData(T* data, size_t size) {
@@ -195,6 +208,13 @@ public:
 
   void push_back(const T& v) {
     make_vector().push_back(v);
+  }
+
+  void pop_back() {
+    if (view_.size())
+      view_ = array_view<T>(view_.data(), view_.size() - 1);
+    else
+      vec_.pop_back();
   }
 
   T* data() {
@@ -291,15 +311,39 @@ public:
     return (view_.size()) ? *(view_.begin() + view_.size() - 1) : (const T&)vec_.back();
   }
 
-  void erase(iterator it) {
+  iterator erase(iterator it) {
     if (view_.size()) {
+      assert(it.view_pos);
       vec_.reserve(view_.size() - 1);
       vec_.assign(view_.begin(), it.view_pos);
-      vec_.insert(vec_.end(), it.view_pos + 1, view_.end());
+      if (it.view_pos != view_.end())
+          vec_.insert(vec_.end(), it.view_pos + 1, view_.end());
       view_.clear();
+      it.itr = vec_.begin() + (it.view_pos - view_.begin());
+      it.view_pos = nullptr;
     } else {
-      vec_.erase(it.itr);
+      assert(!it.view_pos);
+      it.itr = vec_.erase(it.itr);
     }
+    return it;
+  }
+
+  iterator erase(iterator first, iterator last) {
+    iterator it;
+    if (view_.size()) {
+      assert(first.view_pos && last.view_pos);
+      vec_.reserve(view_.size() - (last - first));
+      vec_.assign(view_.begin(), first.view_pos);
+      if (last.view_pos != view_.end())
+          vec_.insert(vec_.end(), last.view_pos + 1, view_.end());
+      view_.clear();
+      it.itr = vec_.begin() + (first.view_pos - view_.begin());
+      it.view_pos = nullptr;
+    } else {
+      assert(!first.view_pos && !last.view_pos);
+      it.itr = vec_.erase(first.itr, last.itr);
+    }
+    return it;
   }
 
   void reserve(size_t sz) {
@@ -315,16 +359,28 @@ public:
     make_vector().assign(first, last);
   }
 
-  template <class Y>
-  void insert(iterator position, const Y& first, const Y& last) {  
-     if (view_.size()) {
+  template <class X, class Y>
+  void insert(iterator position, const X& first, const Y& last) {
+    if (view_.size()) {
+      assert(position.view_pos);
       vec_.assign(view_.begin(), position.view_pos);
       vec_.insert(vec_.end(), first, last);
-      vec_.insert(vec_.end(), position.view_pos + 1, view_.end());
+      if (position.view_pos != view_.end())
+        vec_.insert(vec_.end(), position.view_pos + 1, view_.end());
       view_.clear();
     } else {
+      assert(!position.view_pos);
       vec_.insert(position.itr, first, last);
     }
+  }
+
+  void insert(iterator position, const value_type& val) {
+    insert(position, 1, val);
+  }
+
+  void swap(VectorExT<T, VEC_T>& t) {
+    vec_.swap(t.vec_);
+    view_.swap(t.view_);
   }
 
 private:
