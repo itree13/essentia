@@ -409,7 +409,7 @@ void OnsetDetectionGlobal::computeBeatEmphasis() {
 
   // Matlab M.Davies: take top 40% of weights, zero the rest (not in the paper!)
   ::essentia::VectorEx<Real> sorted;
-  sorted.reserve(_numberERBBands);
+  sorted.resize(_numberERBBands);
   copy(weightsERB.begin(), weightsERB.end(), sorted.begin());
   sort(sorted.begin(), sorted.end());
   Real threshold = sorted[int(floor(_numberERBBands * 0.6))];
