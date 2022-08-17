@@ -98,7 +98,7 @@ public:
     VEC_ITERATOR itr;
     T* view_pos = nullptr;
 
-    Iterator() = default;
+    Iterator(VEC_ITERATOR _t) = default;
     Iterator(const Iterator& t) {
       itr = t.itr;
       view_pos = t.view_pos;
@@ -283,7 +283,7 @@ public:
 
   const_iterator begin() const {
     const_iterator it;
-    it.view_pos = view_.begin();
+    it.view_pos = view_.size() ? view_.begin() : nullptr;
     it.itr = vec_.begin();
     return it;
   }
@@ -318,9 +318,9 @@ public:
       vec_.assign(view_.begin(), it.view_pos);
       if (it.view_pos != view_.end())
           vec_.insert(vec_.end(), it.view_pos + 1, view_.end());
-      view_.clear();
       it.itr = vec_.begin() + (it.view_pos - view_.begin());
       it.view_pos = nullptr;
+      view_.clear();
     } else {
       assert(!it.view_pos);
       it.itr = vec_.erase(it.itr);
@@ -336,9 +336,9 @@ public:
       vec_.assign(view_.begin(), first.view_pos);
       if (last.view_pos != view_.end())
           vec_.insert(vec_.end(), last.view_pos + 1, view_.end());
-      view_.clear();
       it.itr = vec_.begin() + (first.view_pos - view_.begin());
       it.view_pos = nullptr;
+      view_.clear();
     } else {
       assert(!first.view_pos && !last.view_pos);
       it.itr = vec_.erase(first.itr, last.itr);
