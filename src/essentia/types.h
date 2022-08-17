@@ -98,7 +98,7 @@ public:
     VEC_ITERATOR itr;
     T* view_pos = nullptr;
 
-    Iterator(VEC_ITERATOR _t) = default;
+    Iterator() = default;
     Iterator(const Iterator& t) {
       itr = t.itr;
       view_pos = t.view_pos;
