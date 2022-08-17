@@ -180,6 +180,10 @@ public:
         newitr.itr = itr - d;
       return newitr;
     }
+
+    bool operator < (const Iterator& rhs) const {
+      return view_pos ? view_pos < rhs.view_pos : itr < rhs.itr;
+    }
   };
 
   typedef Iterator<typename ::std::vector<T>::iterator> iterator;
