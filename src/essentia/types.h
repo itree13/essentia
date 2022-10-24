@@ -402,8 +402,8 @@ struct VectorEx : public VectorExT<T, T> {
   using VectorExT<T, T>::VectorExT;
 };
 template<>
-struct VectorEx<bool> : public VectorExT<bool, int> {
-  using VectorExT<bool, int>::VectorExT;
+struct VectorEx<bool> : public VectorExT<bool, char> {
+  using VectorExT<bool, char>::VectorExT;
 };
 
 }
